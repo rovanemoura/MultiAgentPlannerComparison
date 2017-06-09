@@ -1,0 +1,26 @@
+#!/bin/bash
+#planners=("parser" "arvand" "lama-2008" "lpgn" "madagascar" "probe" "yahsp2-mt" "preprocess-old" "preprocess" "randward" "search")
+#planners=("probe" "yahsp2-mt" "preprocess-old" "preprocess" "randward" "search")
+planners=("search")
+
+cd "$(dirname "$0")"
+ROOT=$PWD
+
+
+for item in ${planners[*]}
+do
+	planner_path="$ROOT"/src/"$item"
+	echo -e "\n**************************"
+	echo "*** Compiling" $item "***" 
+	echo -e "**************************\n"
+	cd $planner_path
+	./build
+
+	if [ $? -ne 0 ]; then
+		echo -e "\nCompilation error when compiling:" $item 
+		exit 1
+	fi
+
+done
+
+echo -e "\nPlanner ready to the International Planning Competition 2014"

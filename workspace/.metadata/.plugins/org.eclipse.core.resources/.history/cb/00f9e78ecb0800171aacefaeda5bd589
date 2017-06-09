@@ -1,0 +1,39 @@
+package jia;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import jason.asSemantics.DefaultInternalAction;
+import jason.asSemantics.TransitionSystem;
+import jason.asSemantics.Unifier;
+import jason.asSyntax.StringTermImpl;
+import jason.asSyntax.Term;
+
+public class solutionParser extends DefaultInternalAction {
+
+	private static final long serialVersionUID = 1475248221992032023L;
+
+	@Override
+	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
+		String name = args[1].toString();
+		File file = new File("/home/rovane/planners/results/r1/domap/p01/"+name+".out");
+		String actions = "";
+		FileReader fileReader = new FileReader(file);
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String line;
+		while ((line = bufferedReader.readLine()) != null) {
+			line = line.toLowerCase();
+			line = line.replace("(", "");
+			line = line.replaceFirst(" ", "(\"");
+			line = line.replace(" ", "\",\"");
+			line = line.replace(")", "\"); ");
+			actions += line;
+		}
+		fileReader.close();
+		actions += ".";
+//		System.out.println(actions);
+		return un.unifies(args[0], new StringTermImpl(actions));
+	}
+}
+

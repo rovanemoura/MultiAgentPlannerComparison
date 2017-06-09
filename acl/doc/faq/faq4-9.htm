@@ -1,0 +1,53 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>Allegro CL FAQ: 4.9: Allegro Composer</title>
+</head>
+
+<body>
+
+<h3>4.9: Allegro Composer</h3>
+
+<blockquote>
+  <p><a href="#4.9-1">Q 4.9-1) Why does composer:start-composer sometimes warn that
+  &quot;fcntl failed&quot;?</a></p>
+</blockquote>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="4.9-1"></a><strong>Q 4.9-1)</strong> Why does <strong>composer:start-composer</strong>
+sometimes warn that &quot;fcntl failed&quot;? </p>
+
+<p><strong>A 4.9-1)</strong> On some versions of Solaris, after loading in foreign code
+contained in a shared library (a .so file), the call to <strong>composer:start-composer</strong>
+can produce a warning: </p>
+
+<p>USER(1): (composer:start-composer) <br>
+Warning: fcntl failed <br>
+[1] USER(2): </p>
+
+<p>That is, if you do <font face="Courier New">(require :composer)</font>, load some
+shared libraries, and then call <strong>composer:start-composer</strong>, you may get the
+error above. If you load a shared library into an image that has composer built into it,
+you will get the same warning. </p>
+
+<p>If you do see this warning, you can safely ignore it, in our experience. Composer
+appears to work even though the warning is printed. If you are really bothered by the
+warning, you can <font face="Courier New">(require :composer)</font> after loading your
+shared libraries. This should make the warning go away.</p>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq4-10.htm">4.10 AllegroStore</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq4-8.htm">4.8 Allegro ODBC</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999, 2004, Franz Inc., Berkeley, CA.&nbsp; All rights reserved.</small><br>
+<small>$Revision: 1.1.1.1 $</small></p>
+</body>
+</html>

@@ -1,0 +1,2743 @@
+rm: cannot remove 'out/domain.pddl': No such file or directory
+rm: cannot remove 'out/problem.pddl': No such file or directory
+./plan.sh: line 29: ./ma-to-pddl.py: Permission denied
+./plan.sh: line 30: ./fast-downward.py: Permission denied
+cp: cannot stat 'sas_plan': No such file or directory
+
+real	0m0.004s
+user	0m0.000s
+sys	0m0.000s
+
+Traceback (most recent call last):
+  File "./fast-downward.py", line 5, in <module>
+    from driver.main import main
+ValueError: bad marshal data (unknown type code)
+cp: cannot stat 'sas_plan': No such file or directory
+
+real	0m0.029s
+user	0m0.020s
+sys	0m0.000s
+
+Traceback (most recent call last):
+  File "./fast-downward.py", line 5, in <module>
+    from driver.main import main
+ValueError: bad marshal data (unknown type code)
+cp: cannot stat 'sas_plan': No such file or directory
+
+real	0m0.030s
+user	0m0.012s
+sys	0m0.008s
+
+INFO     Running translator.
+INFO     translator inputs: ['out/domain.pddl', 'out/problem.pddl']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.010s CPU, 0.010s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.010s CPU, 0.005s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.006s wall-clock]
+Preparing model... [0.020s CPU, 0.011s wall-clock]
+Generated 66 rules.
+Computing model... [2.460s CPU, 2.467s wall-clock]
+71795 relevant atoms
+117294 auxiliary atoms
+189089 final queue length
+262729 total queue pushes
+Completing instantiation... [3.010s CPU, 3.014s wall-clock]
+Instantiating: [5.550s CPU, 5.548s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.020s CPU, 0.024s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.030s CPU, 0.028s wall-clock]
+Collecting mutex groups... [0.010s CPU, 0.003s wall-clock]
+Choosing groups...
+1600 uncovered facts
+Choosing groups: [0.010s CPU, 0.009s wall-clock]
+Building translation key... [0.010s CPU, 0.011s wall-clock]
+Computing fact groups: [0.120s CPU, 0.118s wall-clock]
+Building STRIPS to SAS dictionary... [0.010s CPU, 0.004s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.004s wall-clock]
+Building mutex information...
+Building mutex information: [0.010s CPU, 0.005s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.100s CPU, 0.101s wall-clock]
+Translating task: [2.570s CPU, 2.576s wall-clock]
+24060 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+46 propositions removed
+Detecting unreachable propositions: [0.380s CPU, 0.375s wall-clock]
+Translator variables: 1646
+Translator derived variables: 0
+Translator facts: 5886
+Translator goal facts: 36
+Translator mutex groups: 56
+Translator total mutex groups size: 2816
+Translator operators: 66000
+Translator axioms: 0
+Translator task size: 263872
+Translator peak memory: 305396 KB
+Writing output... [0.490s CPU, 0.493s wall-clock]
+Done! [9.250s CPU, 9.249s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+1308 variables of 1646 necessary
+0 of 56 mutex groups necessary.
+66000 of 66000 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 5210
+Preprocessor derived variables: 0
+Preprocessor task size: 245138
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/planners/adp/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=adp(cost_type=1)', '--search', 'lazy_greedy(hff, preferred=hff)', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=1.20s]
+building causal graph...done! [t=1.20s]
+packing state variables...done! [t=1.20s]
+Variables: 1308
+Facts: 5210
+Bytes per state: 196
+done initalizing global data [t=1.20s]
+Conducting lazy best first search, (real) bound = 2147483647
+Initializing ADP heuristic...
+Initializing additive heuristic...
+Calculating Agents...
+Extending agent variables...
+Combining...
+Refining agents by joint action space...
+36->36 agents left
+36 agents left!
+Building propositions...
+Simplifying 86292 unary operators... done! [86292 unary operators]
+Creating agent operator sets...
+Best heuristic value: 3633 [g=0, 1 evaluated, 0 expanded, t=1.40s, 70144 KB]
+Best heuristic value: 3632 [g=3, 20 evaluated, 19 expanded, t=1.44s, 70144 KB]
+Best heuristic value: 3631 [g=4, 21 evaluated, 20 expanded, t=1.44s, 70144 KB]
+Best heuristic value: 3630 [g=5, 30 evaluated, 29 expanded, t=1.44s, 70144 KB]
+Best heuristic value: 3629 [g=8, 47 evaluated, 46 expanded, t=1.46s, 70144 KB]
+Best heuristic value: 3628 [g=9, 48 evaluated, 47 expanded, t=1.46s, 70144 KB]
+Best heuristic value: 3627 [g=10, 56 evaluated, 55 expanded, t=1.48s, 70144 KB]
+Best heuristic value: 3626 [g=13, 71 evaluated, 70 expanded, t=1.50s, 70144 KB]
+Best heuristic value: 3625 [g=14, 72 evaluated, 71 expanded, t=1.50s, 70144 KB]
+Best heuristic value: 3624 [g=15, 79 evaluated, 78 expanded, t=1.50s, 70144 KB]
+Best heuristic value: 3622 [g=18, 92 evaluated, 91 expanded, t=1.52s, 70144 KB]
+Best heuristic value: 3621 [g=19, 99 evaluated, 98 expanded, t=1.54s, 70144 KB]
+Best heuristic value: 3620 [g=22, 110 evaluated, 109 expanded, t=1.56s, 70144 KB]
+Best heuristic value: 3619 [g=23, 111 evaluated, 110 expanded, t=1.56s, 70144 KB]
+Best heuristic value: 3618 [g=24, 116 evaluated, 115 expanded, t=1.56s, 70144 KB]
+Best heuristic value: 3616 [g=27, 126 evaluated, 125 expanded, t=1.58s, 70144 KB]
+Best heuristic value: 3615 [g=28, 132 evaluated, 131 expanded, t=1.58s, 70144 KB]
+Best heuristic value: 3613 [g=31, 141 evaluated, 140 expanded, t=1.60s, 70144 KB]
+Best heuristic value: 3612 [g=32, 146 evaluated, 145 expanded, t=1.60s, 70144 KB]
+Best heuristic value: 3610 [g=35, 154 evaluated, 153 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3609 [g=36, 158 evaluated, 157 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3607 [g=39, 166 evaluated, 165 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3606 [g=40, 168 evaluated, 167 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3604 [g=43, 173 evaluated, 172 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3603 [g=44, 175 evaluated, 174 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3602 [g=46, 178 evaluated, 177 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3601 [g=47, 179 evaluated, 178 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 2516 [g=48, 180 evaluated, 179 expanded, t=1.68s, 70144 KB]
+Best heuristic value: 2515 [g=49, 183 evaluated, 182 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2514 [g=50, 186 evaluated, 185 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2513 [g=53, 192 evaluated, 191 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2512 [g=55, 194 evaluated, 193 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2511 [g=58, 198 evaluated, 197 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2510 [g=63, 212 evaluated, 211 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2509 [g=64, 213 evaluated, 212 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2508 [g=68, 217 evaluated, 216 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2507 [g=70, 219 evaluated, 218 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2506 [g=76, 225 evaluated, 224 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2505 [g=77, 226 evaluated, 225 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2504 [g=78, 227 evaluated, 226 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2503 [g=79, 228 evaluated, 227 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2502 [g=80, 229 evaluated, 228 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2501 [g=81, 230 evaluated, 229 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2122 [g=82, 231 evaluated, 230 expanded, t=1.80s, 70144 KB]
+Best heuristic value: 2120 [g=83, 233 evaluated, 232 expanded, t=1.80s, 70144 KB]
+Best heuristic value: 2118 [g=91, 248 evaluated, 247 expanded, t=1.82s, 70144 KB]
+Best heuristic value: 2117 [g=92, 250 evaluated, 249 expanded, t=1.82s, 70144 KB]
+Best heuristic value: 2116 [g=103, 281 evaluated, 280 expanded, t=1.86s, 70144 KB]
+Best heuristic value: 2113 [g=105, 283 evaluated, 282 expanded, t=1.86s, 70144 KB]
+Best heuristic value: 2112 [g=107, 286 evaluated, 285 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2111 [g=108, 288 evaluated, 287 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2110 [g=112, 297 evaluated, 296 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2109 [g=113, 298 evaluated, 297 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2108 [g=114, 299 evaluated, 298 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2107 [g=115, 300 evaluated, 299 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2106 [g=116, 301 evaluated, 300 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2105 [g=117, 302 evaluated, 301 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2104 [g=118, 303 evaluated, 302 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2103 [g=119, 304 evaluated, 303 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2102 [g=120, 305 evaluated, 304 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2101 [g=121, 306 evaluated, 305 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 1821 [g=122, 307 evaluated, 306 expanded, t=1.94s, 70144 KB]
+Best heuristic value: 1818 [g=129, 361 evaluated, 342 expanded, t=7.62s, 70144 KB]
+Best heuristic value: 1817 [g=133, 381 evaluated, 359 expanded, t=8.56s, 70144 KB]
+Best heuristic value: 1816 [g=134, 382 evaluated, 360 expanded, t=8.56s, 70144 KB]
+Best heuristic value: 1815 [g=135, 384 evaluated, 362 expanded, t=8.56s, 70144 KB]
+Best heuristic value: 1814 [g=141, 415 evaluated, 385 expanded, t=11.02s, 70144 KB]
+Best heuristic value: 1813 [g=142, 416 evaluated, 386 expanded, t=11.02s, 70144 KB]
+Best heuristic value: 1812 [g=143, 417 evaluated, 387 expanded, t=11.02s, 70144 KB]
+Best heuristic value: 1811 [g=144, 418 evaluated, 388 expanded, t=11.02s, 70144 KB]
+Best heuristic value: 1810 [g=153, 428 evaluated, 398 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1809 [g=154, 429 evaluated, 399 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1808 [g=155, 430 evaluated, 400 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1807 [g=156, 431 evaluated, 401 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1806 [g=157, 432 evaluated, 402 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1805 [g=158, 433 evaluated, 403 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1804 [g=159, 434 evaluated, 404 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1803 [g=160, 435 evaluated, 405 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1802 [g=161, 436 evaluated, 406 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1801 [g=162, 437 evaluated, 407 expanded, t=11.04s, 70144 KB]
+Best heuristic value: 1507 [g=163, 438 evaluated, 408 expanded, t=11.08s, 70144 KB]
+Best heuristic value: 1506 [g=164, 441 evaluated, 411 expanded, t=11.10s, 70144 KB]
+Best heuristic value: 1505 [g=165, 444 evaluated, 414 expanded, t=11.10s, 70144 KB]
+Best heuristic value: 1504 [g=168, 448 evaluated, 418 expanded, t=11.10s, 70144 KB]
+Best heuristic value: 1503 [g=169, 449 evaluated, 419 expanded, t=11.10s, 70144 KB]
+Best heuristic value: 1502 [g=170, 450 evaluated, 420 expanded, t=11.10s, 70144 KB]
+Best heuristic value: 1501 [g=171, 451 evaluated, 421 expanded, t=11.10s, 70144 KB]
+Best heuristic value: 1307 [g=172, 452 evaluated, 422 expanded, t=11.14s, 70144 KB]
+Best heuristic value: 1306 [g=174, 455 evaluated, 425 expanded, t=11.16s, 70144 KB]
+Best heuristic value: 1305 [g=176, 458 evaluated, 428 expanded, t=11.16s, 70144 KB]
+Best heuristic value: 1304 [g=180, 462 evaluated, 432 expanded, t=11.16s, 70144 KB]
+Best heuristic value: 1303 [g=181, 463 evaluated, 433 expanded, t=11.16s, 70144 KB]
+Best heuristic value: 1302 [g=182, 464 evaluated, 434 expanded, t=11.16s, 70144 KB]
+Best heuristic value: 1301 [g=183, 465 evaluated, 435 expanded, t=11.16s, 70144 KB]
+Best heuristic value: 1113 [g=184, 466 evaluated, 436 expanded, t=11.22s, 70144 KB]
+Best heuristic value: 1110 [g=199, 485 evaluated, 455 expanded, t=11.24s, 70144 KB]
+Best heuristic value: 1109 [g=204, 490 evaluated, 460 expanded, t=11.24s, 70144 KB]
+Best heuristic value: 1108 [g=212, 498 evaluated, 468 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 1107 [g=213, 499 evaluated, 469 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 1106 [g=214, 500 evaluated, 470 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 1105 [g=215, 501 evaluated, 471 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 1104 [g=216, 502 evaluated, 472 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 1103 [g=217, 503 evaluated, 473 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 1102 [g=218, 504 evaluated, 474 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 1101 [g=219, 505 evaluated, 475 expanded, t=11.26s, 70144 KB]
+Best heuristic value: 917 [g=220, 506 evaluated, 476 expanded, t=11.30s, 70144 KB]
+Best heuristic value: 916 [g=226, 522 evaluated, 487 expanded, t=12.80s, 70144 KB]
+Best heuristic value: 915 [g=228, 526 evaluated, 490 expanded, t=13.10s, 70144 KB]
+Best heuristic value: 810 [g=228, 528 evaluated, 492 expanded, t=13.14s, 70144 KB]
+Best heuristic value: 809 [g=235, 555 evaluated, 510 expanded, t=15.80s, 70144 KB]
+Best heuristic value: 808 [g=236, 557 evaluated, 512 expanded, t=15.82s, 70144 KB]
+Best heuristic value: 807 [g=242, 564 evaluated, 519 expanded, t=15.82s, 70144 KB]
+Best heuristic value: 806 [g=243, 565 evaluated, 520 expanded, t=15.82s, 70144 KB]
+Best heuristic value: 805 [g=244, 566 evaluated, 521 expanded, t=15.82s, 70144 KB]
+Best heuristic value: 804 [g=245, 567 evaluated, 522 expanded, t=15.82s, 70144 KB]
+Best heuristic value: 803 [g=246, 568 evaluated, 523 expanded, t=15.82s, 70144 KB]
+Best heuristic value: 802 [g=247, 569 evaluated, 524 expanded, t=15.82s, 70144 KB]
+Best heuristic value: 801 [g=248, 570 evaluated, 525 expanded, t=15.84s, 70144 KB]
+Best heuristic value: 717 [g=243, 819 evaluated, 718 expanded, t=32.66s, 70144 KB]
+Best heuristic value: 716 [g=259, 868 evaluated, 750 expanded, t=37.60s, 70144 KB]
+Best heuristic value: 715 [g=260, 869 evaluated, 751 expanded, t=37.60s, 70144 KB]
+Best heuristic value: 714 [g=261, 870 evaluated, 752 expanded, t=37.60s, 70144 KB]
+Best heuristic value: 713 [g=262, 871 evaluated, 753 expanded, t=37.60s, 70144 KB]
+Best heuristic value: 712 [g=263, 872 evaluated, 754 expanded, t=37.62s, 70144 KB]
+Best heuristic value: 711 [g=270, 884 evaluated, 766 expanded, t=37.62s, 70144 KB]
+Best heuristic value: 710 [g=271, 885 evaluated, 767 expanded, t=37.62s, 70144 KB]
+Best heuristic value: 709 [g=272, 886 evaluated, 768 expanded, t=37.62s, 70144 KB]
+Best heuristic value: 708 [g=273, 887 evaluated, 769 expanded, t=37.62s, 70144 KB]
+Best heuristic value: 707 [g=274, 888 evaluated, 770 expanded, t=37.62s, 70144 KB]
+Best heuristic value: 706 [g=275, 889 evaluated, 771 expanded, t=37.64s, 70144 KB]
+Best heuristic value: 705 [g=276, 890 evaluated, 772 expanded, t=37.64s, 70144 KB]
+Best heuristic value: 704 [g=277, 891 evaluated, 773 expanded, t=37.64s, 70144 KB]
+Best heuristic value: 703 [g=278, 892 evaluated, 774 expanded, t=37.64s, 70144 KB]
+Best heuristic value: 702 [g=279, 893 evaluated, 775 expanded, t=37.64s, 70144 KB]
+Best heuristic value: 701 [g=280, 894 evaluated, 776 expanded, t=37.64s, 70144 KB]
+Best heuristic value: 503 [g=281, 895 evaluated, 777 expanded, t=37.68s, 70144 KB]
+Best heuristic value: 502 [g=282, 896 evaluated, 778 expanded, t=37.68s, 70144 KB]
+Best heuristic value: 501 [g=283, 897 evaluated, 779 expanded, t=37.68s, 70144 KB]
+Best heuristic value: 402 [g=284, 898 evaluated, 780 expanded, t=37.72s, 70144 KB]
+Best heuristic value: 401 [g=285, 899 evaluated, 781 expanded, t=37.72s, 70144 KB]
+Best heuristic value: 310 [g=286, 900 evaluated, 782 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 309 [g=287, 902 evaluated, 784 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 308 [g=288, 903 evaluated, 785 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 307 [g=289, 904 evaluated, 786 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 306 [g=290, 905 evaluated, 787 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 305 [g=291, 906 evaluated, 788 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 304 [g=292, 907 evaluated, 789 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 303 [g=293, 908 evaluated, 790 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 302 [g=294, 909 evaluated, 791 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 301 [g=295, 910 evaluated, 792 expanded, t=37.78s, 70144 KB]
+Best heuristic value: 209 [g=296, 911 evaluated, 793 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 208 [g=297, 913 evaluated, 795 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 207 [g=298, 914 evaluated, 796 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 206 [g=299, 915 evaluated, 797 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 205 [g=300, 916 evaluated, 798 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 204 [g=301, 917 evaluated, 799 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 203 [g=302, 918 evaluated, 800 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 202 [g=303, 919 evaluated, 801 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 201 [g=304, 920 evaluated, 802 expanded, t=37.84s, 70144 KB]
+Best heuristic value: 102 [g=305, 921 evaluated, 803 expanded, t=37.88s, 70144 KB]
+Best heuristic value: 101 [g=306, 922 evaluated, 804 expanded, t=37.88s, 70144 KB]
+Solution found!
+Actual search time: 36.74s [t=37.94s]
+navigate_uav uav9 area41 area24 (1)
+take_picture uav9 area24 disaster11 (1)
+navigate_uav uav9 area24 area20 (1)
+navigate_uav uav9 area20 area10 (1)
+communicate_data uav9 cdm2 disaster11 area10 area13 (1)
+navigate_uav uav9 area10 area37 (1)
+take_picture uav9 area37 disaster10 (1)
+navigate_uav uav9 area37 area20 (1)
+navigate_uav uav9 area20 area10 (1)
+communicate_data uav9 cdm2 disaster10 area10 area13 (1)
+navigate_uav uav9 area10 area44 (1)
+take_picture uav9 area44 disaster13 (1)
+navigate_uav uav9 area44 area20 (1)
+navigate_uav uav9 area20 area10 (1)
+communicate_data uav9 cdm2 disaster13 area10 area13 (1)
+navigate_uav uav9 area10 area55 (1)
+take_picture uav9 area55 disaster7 (1)
+navigate_uav uav9 area55 area13 (1)
+communicate_data uav9 cdm2 disaster7 area13 area13 (1)
+navigate_uav uav9 area13 area7 (1)
+take_picture uav9 area7 disaster6 (1)
+navigate_uav uav9 area7 area20 (1)
+navigate_uav uav9 area20 area10 (1)
+communicate_data uav9 cdm2 disaster6 area10 area13 (1)
+navigate_uav uav9 area10 area11 (1)
+take_picture uav9 area11 disaster8 (1)
+navigate_uav uav9 area11 area1 (1)
+communicate_data uav9 cdm1 disaster8 area1 area1 (1)
+navigate_uav uav9 area1 area20 (1)
+take_picture uav9 area20 disaster15 (1)
+navigate_uav uav9 area20 area10 (1)
+communicate_data uav9 cdm2 disaster15 area10 area13 (1)
+navigate_uav uav9 area10 area27 (1)
+take_picture uav9 area27 disaster2 (1)
+navigate_uav uav9 area27 area23 (1)
+communicate_data uav9 cdm3 disaster2 area23 area21 (1)
+navigate_uav uav9 area23 area28 (1)
+take_picture uav9 area28 disaster16 (1)
+navigate_uav uav9 area28 area53 (1)
+communicate_data uav9 cdm6 disaster16 area53 area53 (1)
+navigate_uav uav9 area53 area38 (1)
+take_picture uav9 area38 disaster14 (1)
+navigate_uav uav9 area38 area2 (1)
+communicate_data uav9 cdm1 disaster14 area2 area1 (1)
+navigate_uav uav9 area2 area58 (1)
+take_picture uav9 area58 disaster1 (1)
+navigate_uav uav9 area58 area30 (1)
+communicate_data uav9 cdm4 disaster1 area30 area33 (1)
+take_picture usv9 area41 disaster9 (1)
+communicate_data usv9 cdm5 disaster9 area41 area41 (1)
+navigate_usv usv9 area41 area56 (1)
+sample_water usv9 usv9store area56 (1)
+navigate_usv usv9 area56 area41 (1)
+navigate_usv usv9 area41 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+drop_sample usv9 usv9store area53 area56 cdm6 (1)
+navigate_usv usv9 area53 area33 (1)
+navigate_usv usv9 area33 area29 (1)
+navigate_usv usv9 area29 area28 (1)
+sample_water usv9 usv9store area28 (1)
+navigate_usv usv9 area28 area29 (1)
+navigate_usv usv9 area29 area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area49 (1)
+navigate_usv usv9 area49 area44 (1)
+navigate_usv usv9 area44 area42 (1)
+navigate_usv usv9 area42 area41 (1)
+drop_sample usv9 usv9store area41 area28 cdm5 (1)
+navigate_usv usv9 area41 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+navigate_usv usv9 area53 area33 (1)
+sample_water usv9 usv9store area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area49 (1)
+navigate_usv usv9 area49 area44 (1)
+navigate_usv usv9 area44 area42 (1)
+navigate_usv usv9 area42 area41 (1)
+drop_sample usv9 usv9store area41 area33 cdm5 (1)
+navigate_usv usv8 area33 area29 (1)
+navigate_usv usv8 area29 area28 (1)
+navigate_usv usv8 area28 area27 (1)
+navigate_usv usv8 area27 area8 (1)
+sample_water usv8 usv8store area8 (1)
+navigate_usv usv8 area8 area27 (1)
+navigate_usv usv8 area27 area28 (1)
+navigate_usv usv8 area28 area29 (1)
+navigate_usv usv8 area29 area33 (1)
+drop_sample usv8 usv8store area33 area8 cdm4 (1)
+navigate_usv usv8 area33 area53 (1)
+navigate_usv usv8 area53 area13 (1)
+navigate_usv usv8 area13 area9 (1)
+navigate_usv usv8 area9 area4 (1)
+navigate_usv usv8 area4 area2 (1)
+sample_water usv8 usv8store area2 (1)
+navigate_usv usv8 area2 area1 (1)
+navigate_usv usv8 area1 area16 (1)
+navigate_usv usv8 area16 area18 (1)
+navigate_usv usv8 area18 area20 (1)
+navigate_usv usv8 area20 area19 (1)
+navigate_usv usv8 area19 area17 (1)
+navigate_usv usv8 area17 area38 (1)
+navigate_usv usv8 area38 area36 (1)
+navigate_usv usv8 area36 area21 (1)
+drop_sample usv8 usv8store area21 area2 cdm3 (1)
+navigate_usv usv8 area21 area36 (1)
+navigate_usv usv8 area36 area38 (1)
+navigate_usv usv8 area38 area35 (1)
+sample_water usv8 usv8store area35 (1)
+navigate_usv usv8 area35 area38 (1)
+navigate_usv usv8 area38 area36 (1)
+navigate_usv usv8 area36 area34 (1)
+navigate_usv usv8 area34 area22 (1)
+navigate_usv usv8 area22 area24 (1)
+navigate_usv usv8 area24 area29 (1)
+navigate_usv usv8 area29 area33 (1)
+navigate_usv usv8 area33 area53 (1)
+navigate_usv usv8 area53 area13 (1)
+drop_sample usv8 usv8store area13 area35 cdm2 (1)
+pickup_box ugv9 ugv9store cdm5 area41 box7 (1)
+navigate_ugv ugv9 area41 area43 (1)
+navigate_ugv ugv9 area43 area44 (1)
+navigate_ugv ugv9 area44 area50 (1)
+navigate_ugv ugv9 area50 area53 (1)
+navigate_ugv ugv9 area53 area13 (1)
+navigate_ugv ugv9 area13 area10 (1)
+navigate_ugv ugv8 area33 area53 (1)
+navigate_ugv ugv8 area53 area13 (1)
+pickup_box ugv8 ugv8store cdm2 area13 box2 (1)
+navigate_ugv ugv8 area13 area53 (1)
+navigate_ugv ugv8 area53 area33 (1)
+drop_box ugv8 ugv8store area33 box2 (1)
+pickup_box ugv8 ugv8store cdm4 area33 box6 (1)
+navigate_ugv ugv8 area33 area30 (1)
+navigate_ugv ugv8 area30 area24 (1)
+navigate_ugv ugv8 area24 area23 (1)
+navigate_ugv ugv8 area23 area25 (1)
+navigate_ugv ugv8 area25 area31 (1)
+drop_box ugv8 ugv8store area31 box6 (1)
+navigate_ugv ugv8 area31 area25 (1)
+navigate_ugv ugv8 area25 area23 (1)
+navigate_ugv ugv8 area23 area24 (1)
+navigate_ugv ugv8 area24 area30 (1)
+navigate_ugv ugv8 area30 area33 (1)
+navigate_ugv ugv8 area33 area53 (1)
+navigate_ugv ugv8 area53 area50 (1)
+navigate_ugv ugv8 area50 area44 (1)
+navigate_ugv ugv8 area44 area43 (1)
+navigate_ugv ugv8 area43 area41 (1)
+pickup_box ugv8 ugv8store cdm5 area41 box8 (1)
+navigate_ugv ugv8 area41 area43 (1)
+navigate_ugv ugv8 area43 area44 (1)
+navigate_ugv ugv8 area44 area50 (1)
+navigate_ugv ugv8 area50 area53 (1)
+navigate_ugv ugv8 area53 area33 (1)
+navigate_ugv ugv8 area33 area30 (1)
+navigate_ugv ugv8 area30 area24 (1)
+navigate_ugv ugv8 area24 area23 (1)
+navigate_ugv ugv8 area23 area21 (1)
+drop_box ugv8 ugv8store area21 box8 (1)
+take_picture usv8 area13 disaster5 (1)
+communicate_data usv8 cdm2 disaster5 area13 area13 (1)
+navigate_usv usv8 area13 area9 (1)
+navigate_usv usv8 area9 area4 (1)
+sample_water usv8 usv8store area4 (1)
+navigate_usv usv8 area4 area9 (1)
+navigate_usv usv8 area9 area13 (1)
+navigate_usv usv8 area13 area53 (1)
+drop_sample usv8 usv8store area53 area4 cdm6 (1)
+navigate_usv usv6 area21 area36 (1)
+take_picture usv6 area36 disaster4 (1)
+navigate_usv usv6 area36 area21 (1)
+communicate_data usv6 cdm3 disaster4 area21 area21 (1)
+navigate_usv usv6 area21 area36 (1)
+navigate_usv usv6 area36 area38 (1)
+navigate_usv usv6 area38 area17 (1)
+sample_water usv6 usv6store area17 (1)
+navigate_usv usv6 area17 area38 (1)
+navigate_usv usv6 area38 area36 (1)
+navigate_usv usv6 area36 area21 (1)
+drop_sample usv6 usv6store area21 area17 cdm3 (1)
+navigate_usv usv2 area1 area16 (1)
+navigate_usv usv2 area16 area18 (1)
+navigate_usv usv2 area18 area20 (1)
+navigate_usv usv2 area20 area19 (1)
+navigate_usv usv2 area19 area17 (1)
+navigate_usv usv2 area17 area38 (1)
+navigate_usv usv2 area38 area40 (1)
+navigate_usv usv2 area40 area39 (1)
+navigate_usv usv2 area39 area37 (1)
+sample_water usv2 usv2store area37 (1)
+navigate_usv usv2 area37 area39 (1)
+navigate_usv usv2 area39 area40 (1)
+navigate_usv usv2 area40 area38 (1)
+navigate_usv usv2 area38 area17 (1)
+navigate_usv usv2 area17 area19 (1)
+navigate_usv usv2 area19 area20 (1)
+navigate_usv usv2 area20 area18 (1)
+navigate_usv usv2 area18 area16 (1)
+navigate_usv usv2 area16 area1 (1)
+drop_sample usv2 usv2store area1 area37 cdm1 (1)
+navigate_usv usv2 area1 area16 (1)
+navigate_usv usv2 area16 area18 (1)
+navigate_usv usv2 area18 area20 (1)
+navigate_usv usv2 area20 area19 (1)
+navigate_usv usv2 area19 area17 (1)
+navigate_usv usv2 area17 area38 (1)
+navigate_usv usv2 area38 area40 (1)
+sample_water usv2 usv2store area40 (1)
+navigate_usv usv2 area40 area38 (1)
+navigate_usv usv2 area38 area17 (1)
+navigate_usv usv2 area17 area19 (1)
+navigate_usv usv2 area19 area20 (1)
+navigate_usv usv2 area20 area18 (1)
+navigate_usv usv2 area18 area16 (1)
+navigate_usv usv2 area16 area1 (1)
+drop_sample usv2 usv2store area1 area40 cdm1 (1)
+navigate_ugv ugv8 area21 area36 (1)
+navigate_ugv ugv8 area36 area35 (1)
+navigate_ugv ugv4 area13 area53 (1)
+pickup_box ugv4 ugv4store cdm6 area53 box9 (1)
+navigate_ugv ugv4 area53 area13 (1)
+navigate_ugv ugv4 area13 area10 (1)
+navigate_ugv ugv4 area10 area4 (1)
+navigate_ugv ugv4 area4 area3 (1)
+navigate_ugv ugv4 area3 area15 (1)
+drop_box ugv4 ugv4store area15 box9 (1)
+navigate_ugv ugv4 area15 area3 (1)
+navigate_ugv ugv4 area3 area4 (1)
+navigate_ugv ugv4 area4 area10 (1)
+navigate_ugv ugv4 area10 area13 (1)
+navigate_ugv ugv4 area13 area53 (1)
+pickup_box ugv4 ugv4store cdm6 area53 box10 (1)
+navigate_ugv ugv4 area53 area13 (1)
+navigate_ugv ugv4 area13 area10 (1)
+navigate_ugv ugv4 area10 area4 (1)
+navigate_ugv ugv4 area4 area3 (1)
+navigate_ugv ugv4 area3 area15 (1)
+navigate_ugv ugv4 area15 area18 (1)
+drop_box ugv4 ugv4store area18 box10 (1)
+navigate_ugv ugv8 area35 area36 (1)
+navigate_ugv ugv8 area36 area37 (1)
+navigate_ugv ugv8 area37 area18 (1)
+navigate_ugv ugv8 area18 area15 (1)
+navigate_ugv ugv8 area15 area16 (1)
+navigate_ugv ugv8 area16 area1 (1)
+pickup_box ugv8 ugv8store cdm1 area1 box3 (1)
+navigate_ugv ugv8 area1 area16 (1)
+navigate_ugv ugv8 area16 area15 (1)
+navigate_ugv ugv8 area15 area18 (1)
+navigate_ugv ugv8 area18 area37 (1)
+navigate_ugv ugv8 area37 area36 (1)
+navigate_ugv ugv8 area36 area35 (1)
+navigate_ugv ugv8 area35 area38 (1)
+navigate_ugv ugv8 area38 area40 (1)
+navigate_ugv ugv8 area40 area39 (1)
+drop_box ugv8 ugv8store area39 box3 (1)
+navigate_ugv ugv8 area39 area40 (1)
+navigate_ugv ugv8 area40 area38 (1)
+navigate_ugv ugv8 area38 area35 (1)
+navigate_ugv ugv8 area35 area36 (1)
+navigate_ugv ugv8 area36 area37 (1)
+navigate_ugv ugv8 area37 area18 (1)
+navigate_ugv ugv8 area18 area15 (1)
+navigate_ugv ugv8 area15 area16 (1)
+navigate_ugv ugv8 area16 area1 (1)
+pickup_box ugv8 ugv8store cdm1 area1 box1 (1)
+navigate_ugv ugv8 area1 area16 (1)
+navigate_ugv ugv8 area16 area15 (1)
+navigate_ugv ugv8 area15 area18 (1)
+navigate_ugv ugv8 area18 area37 (1)
+navigate_ugv ugv8 area37 area36 (1)
+navigate_ugv ugv8 area36 area35 (1)
+navigate_ugv ugv8 area35 area23 (1)
+navigate_ugv ugv8 area23 area25 (1)
+navigate_ugv ugv8 area25 area31 (1)
+navigate_ugv ugv8 area31 area29 (1)
+drop_box ugv8 ugv8store area29 box1 (1)
+navigate_usv usv8 area53 area49 (1)
+take_picture usv8 area49 disaster3 (1)
+communicate_data usv8 cdm6 disaster3 area49 area53 (1)
+navigate_ugv ugv9 area10 area7 (1)
+drop_box ugv9 ugv9store area7 box7 (1)
+pickup_box ugv7 ugv7store cdm4 area33 box4 (1)
+navigate_ugv ugv7 area33 area53 (1)
+navigate_ugv ugv7 area53 area50 (1)
+navigate_ugv ugv7 area50 area44 (1)
+navigate_ugv ugv7 area44 area43 (1)
+navigate_ugv ugv7 area43 area41 (1)
+navigate_ugv ugv7 area41 area56 (1)
+navigate_ugv ugv7 area56 area57 (1)
+navigate_ugv ugv7 area57 area54 (1)
+drop_box ugv7 ugv7store area54 box4 (1)
+pickup_box ugv6 ugv6store cdm3 area21 box5 (1)
+navigate_ugv ugv6 area21 area36 (1)
+navigate_ugv ugv6 area36 area37 (1)
+navigate_ugv ugv6 area37 area18 (1)
+navigate_ugv ugv6 area18 area15 (1)
+navigate_ugv ugv6 area15 area3 (1)
+navigate_ugv ugv6 area3 area4 (1)
+navigate_ugv ugv6 area4 area6 (1)
+drop_box ugv6 ugv6store area6 box5 (1)
+take_picture uav9 area30 disaster12 (1)
+communicate_data uav9 cdm4 disaster12 area30 area33 (1)
+Plan length: 307 step(s).
+Plan cost: 307
+Initial state h value: 3633.
+Expanded 805 state(s).
+Reopened 0 state(s).
+Evaluated 923 state(s).
+Evaluations: 923
+Generated 643366 state(s).
+Dead ends: 117 state(s).
+Search time: 36.74s
+Total time: 37.94s
+Solution found.
+Peak memory: 70144 KB
+
+real	0m49.788s
+user	0m48.496s
+sys	0m1.276s
+
+(navigate_uav uav9 area41 area24)
+(take_picture uav9 area24 disaster11)
+(navigate_uav uav9 area24 area20)
+(navigate_uav uav9 area20 area10)
+(communicate_data uav9 cdm2 disaster11 area10 area13)
+(navigate_uav uav9 area10 area37)
+(take_picture uav9 area37 disaster10)
+(navigate_uav uav9 area37 area20)
+(navigate_uav uav9 area20 area10)
+(communicate_data uav9 cdm2 disaster10 area10 area13)
+(navigate_uav uav9 area10 area44)
+(take_picture uav9 area44 disaster13)
+(navigate_uav uav9 area44 area20)
+(navigate_uav uav9 area20 area10)
+(communicate_data uav9 cdm2 disaster13 area10 area13)
+(navigate_uav uav9 area10 area55)
+(take_picture uav9 area55 disaster7)
+(navigate_uav uav9 area55 area13)
+(communicate_data uav9 cdm2 disaster7 area13 area13)
+(navigate_uav uav9 area13 area7)
+(take_picture uav9 area7 disaster6)
+(navigate_uav uav9 area7 area20)
+(navigate_uav uav9 area20 area10)
+(communicate_data uav9 cdm2 disaster6 area10 area13)
+(navigate_uav uav9 area10 area11)
+(take_picture uav9 area11 disaster8)
+(navigate_uav uav9 area11 area1)
+(communicate_data uav9 cdm1 disaster8 area1 area1)
+(navigate_uav uav9 area1 area20)
+(take_picture uav9 area20 disaster15)
+(navigate_uav uav9 area20 area10)
+(communicate_data uav9 cdm2 disaster15 area10 area13)
+(navigate_uav uav9 area10 area27)
+(take_picture uav9 area27 disaster2)
+(navigate_uav uav9 area27 area23)
+(communicate_data uav9 cdm3 disaster2 area23 area21)
+(navigate_uav uav9 area23 area28)
+(take_picture uav9 area28 disaster16)
+(navigate_uav uav9 area28 area53)
+(communicate_data uav9 cdm6 disaster16 area53 area53)
+(navigate_uav uav9 area53 area38)
+(take_picture uav9 area38 disaster14)
+(navigate_uav uav9 area38 area2)
+(communicate_data uav9 cdm1 disaster14 area2 area1)
+(navigate_uav uav9 area2 area58)
+(take_picture uav9 area58 disaster1)
+(navigate_uav uav9 area58 area30)
+(communicate_data uav9 cdm4 disaster1 area30 area33)
+(take_picture usv9 area41 disaster9)
+(communicate_data usv9 cdm5 disaster9 area41 area41)
+(navigate_usv usv9 area41 area56)
+(sample_water usv9 usv9store area56)
+(navigate_usv usv9 area56 area41)
+(navigate_usv usv9 area41 area42)
+(navigate_usv usv9 area42 area44)
+(navigate_usv usv9 area44 area49)
+(navigate_usv usv9 area49 area53)
+(drop_sample usv9 usv9store area53 area56 cdm6)
+(navigate_usv usv9 area53 area33)
+(navigate_usv usv9 area33 area29)
+(navigate_usv usv9 area29 area28)
+(sample_water usv9 usv9store area28)
+(navigate_usv usv9 area28 area29)
+(navigate_usv usv9 area29 area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area49)
+(navigate_usv usv9 area49 area44)
+(navigate_usv usv9 area44 area42)
+(navigate_usv usv9 area42 area41)
+(drop_sample usv9 usv9store area41 area28 cdm5)
+(navigate_usv usv9 area41 area42)
+(navigate_usv usv9 area42 area44)
+(navigate_usv usv9 area44 area49)
+(navigate_usv usv9 area49 area53)
+(navigate_usv usv9 area53 area33)
+(sample_water usv9 usv9store area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area49)
+(navigate_usv usv9 area49 area44)
+(navigate_usv usv9 area44 area42)
+(navigate_usv usv9 area42 area41)
+(drop_sample usv9 usv9store area41 area33 cdm5)
+(navigate_usv usv8 area33 area29)
+(navigate_usv usv8 area29 area28)
+(navigate_usv usv8 area28 area27)
+(navigate_usv usv8 area27 area8)
+(sample_water usv8 usv8store area8)
+(navigate_usv usv8 area8 area27)
+(navigate_usv usv8 area27 area28)
+(navigate_usv usv8 area28 area29)
+(navigate_usv usv8 area29 area33)
+(drop_sample usv8 usv8store area33 area8 cdm4)
+(navigate_usv usv8 area33 area53)
+(navigate_usv usv8 area53 area13)
+(navigate_usv usv8 area13 area9)
+(navigate_usv usv8 area9 area4)
+(navigate_usv usv8 area4 area2)
+(sample_water usv8 usv8store area2)
+(navigate_usv usv8 area2 area1)
+(navigate_usv usv8 area1 area16)
+(navigate_usv usv8 area16 area18)
+(navigate_usv usv8 area18 area20)
+(navigate_usv usv8 area20 area19)
+(navigate_usv usv8 area19 area17)
+(navigate_usv usv8 area17 area38)
+(navigate_usv usv8 area38 area36)
+(navigate_usv usv8 area36 area21)
+(drop_sample usv8 usv8store area21 area2 cdm3)
+(navigate_usv usv8 area21 area36)
+(navigate_usv usv8 area36 area38)
+(navigate_usv usv8 area38 area35)
+(sample_water usv8 usv8store area35)
+(navigate_usv usv8 area35 area38)
+(navigate_usv usv8 area38 area36)
+(navigate_usv usv8 area36 area34)
+(navigate_usv usv8 area34 area22)
+(navigate_usv usv8 area22 area24)
+(navigate_usv usv8 area24 area29)
+(navigate_usv usv8 area29 area33)
+(navigate_usv usv8 area33 area53)
+(navigate_usv usv8 area53 area13)
+(drop_sample usv8 usv8store area13 area35 cdm2)
+(pickup_box ugv9 ugv9store cdm5 area41 box7)
+(navigate_ugv ugv9 area41 area43)
+(navigate_ugv ugv9 area43 area44)
+(navigate_ugv ugv9 area44 area50)
+(navigate_ugv ugv9 area50 area53)
+(navigate_ugv ugv9 area53 area13)
+(navigate_ugv ugv9 area13 area10)
+(navigate_ugv ugv8 area33 area53)
+(navigate_ugv ugv8 area53 area13)
+(pickup_box ugv8 ugv8store cdm2 area13 box2)
+(navigate_ugv ugv8 area13 area53)
+(navigate_ugv ugv8 area53 area33)
+(drop_box ugv8 ugv8store area33 box2)
+(pickup_box ugv8 ugv8store cdm4 area33 box6)
+(navigate_ugv ugv8 area33 area30)
+(navigate_ugv ugv8 area30 area24)
+(navigate_ugv ugv8 area24 area23)
+(navigate_ugv ugv8 area23 area25)
+(navigate_ugv ugv8 area25 area31)
+(drop_box ugv8 ugv8store area31 box6)
+(navigate_ugv ugv8 area31 area25)
+(navigate_ugv ugv8 area25 area23)
+(navigate_ugv ugv8 area23 area24)
+(navigate_ugv ugv8 area24 area30)
+(navigate_ugv ugv8 area30 area33)
+(navigate_ugv ugv8 area33 area53)
+(navigate_ugv ugv8 area53 area50)
+(navigate_ugv ugv8 area50 area44)
+(navigate_ugv ugv8 area44 area43)
+(navigate_ugv ugv8 area43 area41)
+(pickup_box ugv8 ugv8store cdm5 area41 box8)
+(navigate_ugv ugv8 area41 area43)
+(navigate_ugv ugv8 area43 area44)
+(navigate_ugv ugv8 area44 area50)
+(navigate_ugv ugv8 area50 area53)
+(navigate_ugv ugv8 area53 area33)
+(navigate_ugv ugv8 area33 area30)
+(navigate_ugv ugv8 area30 area24)
+(navigate_ugv ugv8 area24 area23)
+(navigate_ugv ugv8 area23 area21)
+(drop_box ugv8 ugv8store area21 box8)
+(take_picture usv8 area13 disaster5)
+(communicate_data usv8 cdm2 disaster5 area13 area13)
+(navigate_usv usv8 area13 area9)
+(navigate_usv usv8 area9 area4)
+(sample_water usv8 usv8store area4)
+(navigate_usv usv8 area4 area9)
+(navigate_usv usv8 area9 area13)
+(navigate_usv usv8 area13 area53)
+(drop_sample usv8 usv8store area53 area4 cdm6)
+(navigate_usv usv6 area21 area36)
+(take_picture usv6 area36 disaster4)
+(navigate_usv usv6 area36 area21)
+(communicate_data usv6 cdm3 disaster4 area21 area21)
+(navigate_usv usv6 area21 area36)
+(navigate_usv usv6 area36 area38)
+(navigate_usv usv6 area38 area17)
+(sample_water usv6 usv6store area17)
+(navigate_usv usv6 area17 area38)
+(navigate_usv usv6 area38 area36)
+(navigate_usv usv6 area36 area21)
+(drop_sample usv6 usv6store area21 area17 cdm3)
+(navigate_usv usv2 area1 area16)
+(navigate_usv usv2 area16 area18)
+(navigate_usv usv2 area18 area20)
+(navigate_usv usv2 area20 area19)
+(navigate_usv usv2 area19 area17)
+(navigate_usv usv2 area17 area38)
+(navigate_usv usv2 area38 area40)
+(navigate_usv usv2 area40 area39)
+(navigate_usv usv2 area39 area37)
+(sample_water usv2 usv2store area37)
+(navigate_usv usv2 area37 area39)
+(navigate_usv usv2 area39 area40)
+(navigate_usv usv2 area40 area38)
+(navigate_usv usv2 area38 area17)
+(navigate_usv usv2 area17 area19)
+(navigate_usv usv2 area19 area20)
+(navigate_usv usv2 area20 area18)
+(navigate_usv usv2 area18 area16)
+(navigate_usv usv2 area16 area1)
+(drop_sample usv2 usv2store area1 area37 cdm1)
+(navigate_usv usv2 area1 area16)
+(navigate_usv usv2 area16 area18)
+(navigate_usv usv2 area18 area20)
+(navigate_usv usv2 area20 area19)
+(navigate_usv usv2 area19 area17)
+(navigate_usv usv2 area17 area38)
+(navigate_usv usv2 area38 area40)
+(sample_water usv2 usv2store area40)
+(navigate_usv usv2 area40 area38)
+(navigate_usv usv2 area38 area17)
+(navigate_usv usv2 area17 area19)
+(navigate_usv usv2 area19 area20)
+(navigate_usv usv2 area20 area18)
+(navigate_usv usv2 area18 area16)
+(navigate_usv usv2 area16 area1)
+(drop_sample usv2 usv2store area1 area40 cdm1)
+(navigate_ugv ugv8 area21 area36)
+(navigate_ugv ugv8 area36 area35)
+(navigate_ugv ugv4 area13 area53)
+(pickup_box ugv4 ugv4store cdm6 area53 box9)
+(navigate_ugv ugv4 area53 area13)
+(navigate_ugv ugv4 area13 area10)
+(navigate_ugv ugv4 area10 area4)
+(navigate_ugv ugv4 area4 area3)
+(navigate_ugv ugv4 area3 area15)
+(drop_box ugv4 ugv4store area15 box9)
+(navigate_ugv ugv4 area15 area3)
+(navigate_ugv ugv4 area3 area4)
+(navigate_ugv ugv4 area4 area10)
+(navigate_ugv ugv4 area10 area13)
+(navigate_ugv ugv4 area13 area53)
+(pickup_box ugv4 ugv4store cdm6 area53 box10)
+(navigate_ugv ugv4 area53 area13)
+(navigate_ugv ugv4 area13 area10)
+(navigate_ugv ugv4 area10 area4)
+(navigate_ugv ugv4 area4 area3)
+(navigate_ugv ugv4 area3 area15)
+(navigate_ugv ugv4 area15 area18)
+(drop_box ugv4 ugv4store area18 box10)
+(navigate_ugv ugv8 area35 area36)
+(navigate_ugv ugv8 area36 area37)
+(navigate_ugv ugv8 area37 area18)
+(navigate_ugv ugv8 area18 area15)
+(navigate_ugv ugv8 area15 area16)
+(navigate_ugv ugv8 area16 area1)
+(pickup_box ugv8 ugv8store cdm1 area1 box3)
+(navigate_ugv ugv8 area1 area16)
+(navigate_ugv ugv8 area16 area15)
+(navigate_ugv ugv8 area15 area18)
+(navigate_ugv ugv8 area18 area37)
+(navigate_ugv ugv8 area37 area36)
+(navigate_ugv ugv8 area36 area35)
+(navigate_ugv ugv8 area35 area38)
+(navigate_ugv ugv8 area38 area40)
+(navigate_ugv ugv8 area40 area39)
+(drop_box ugv8 ugv8store area39 box3)
+(navigate_ugv ugv8 area39 area40)
+(navigate_ugv ugv8 area40 area38)
+(navigate_ugv ugv8 area38 area35)
+(navigate_ugv ugv8 area35 area36)
+(navigate_ugv ugv8 area36 area37)
+(navigate_ugv ugv8 area37 area18)
+(navigate_ugv ugv8 area18 area15)
+(navigate_ugv ugv8 area15 area16)
+(navigate_ugv ugv8 area16 area1)
+(pickup_box ugv8 ugv8store cdm1 area1 box1)
+(navigate_ugv ugv8 area1 area16)
+(navigate_ugv ugv8 area16 area15)
+(navigate_ugv ugv8 area15 area18)
+(navigate_ugv ugv8 area18 area37)
+(navigate_ugv ugv8 area37 area36)
+(navigate_ugv ugv8 area36 area35)
+(navigate_ugv ugv8 area35 area23)
+(navigate_ugv ugv8 area23 area25)
+(navigate_ugv ugv8 area25 area31)
+(navigate_ugv ugv8 area31 area29)
+(drop_box ugv8 ugv8store area29 box1)
+(navigate_usv usv8 area53 area49)
+(take_picture usv8 area49 disaster3)
+(communicate_data usv8 cdm6 disaster3 area49 area53)
+(navigate_ugv ugv9 area10 area7)
+(drop_box ugv9 ugv9store area7 box7)
+(pickup_box ugv7 ugv7store cdm4 area33 box4)
+(navigate_ugv ugv7 area33 area53)
+(navigate_ugv ugv7 area53 area50)
+(navigate_ugv ugv7 area50 area44)
+(navigate_ugv ugv7 area44 area43)
+(navigate_ugv ugv7 area43 area41)
+(navigate_ugv ugv7 area41 area56)
+(navigate_ugv ugv7 area56 area57)
+(navigate_ugv ugv7 area57 area54)
+(drop_box ugv7 ugv7store area54 box4)
+(pickup_box ugv6 ugv6store cdm3 area21 box5)
+(navigate_ugv ugv6 area21 area36)
+(navigate_ugv ugv6 area36 area37)
+(navigate_ugv ugv6 area37 area18)
+(navigate_ugv ugv6 area18 area15)
+(navigate_ugv ugv6 area15 area3)
+(navigate_ugv ugv6 area3 area4)
+(navigate_ugv ugv6 area4 area6)
+(drop_box ugv6 ugv6store area6 box5)
+(take_picture uav9 area30 disaster12)
+(communicate_data uav9 cdm4 disaster12 area30 area33)
+; cost = 307 (unit cost)
+
+INFO     Running translator.
+INFO     translator inputs: ['out/domain.pddl', 'out/problem.pddl']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.010s CPU, 0.009s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.010s CPU, 0.005s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.006s wall-clock]
+Preparing model... [0.010s CPU, 0.010s wall-clock]
+Generated 66 rules.
+Computing model... [2.640s CPU, 2.649s wall-clock]
+71795 relevant atoms
+117294 auxiliary atoms
+189089 final queue length
+262729 total queue pushes
+Completing instantiation... [3.260s CPU, 3.249s wall-clock]
+Instantiating: [5.970s CPU, 5.967s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.020s CPU, 0.026s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.030s CPU, 0.030s wall-clock]
+Collecting mutex groups... [0.010s CPU, 0.004s wall-clock]
+Choosing groups...
+1600 uncovered facts
+Choosing groups: [0.010s CPU, 0.009s wall-clock]
+Building translation key... [0.010s CPU, 0.012s wall-clock]
+Computing fact groups: [0.120s CPU, 0.127s wall-clock]
+Building STRIPS to SAS dictionary... [0.010s CPU, 0.005s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.005s wall-clock]
+Building mutex information...
+Building mutex information: [0.010s CPU, 0.006s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.110s CPU, 0.109s wall-clock]
+Translating task: [2.730s CPU, 2.729s wall-clock]
+24060 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+46 propositions removed
+Detecting unreachable propositions: [0.380s CPU, 0.383s wall-clock]
+Translator variables: 1646
+Translator derived variables: 0
+Translator facts: 5886
+Translator goal facts: 36
+Translator mutex groups: 56
+Translator total mutex groups size: 2816
+Translator operators: 66000
+Translator axioms: 0
+Translator task size: 263872
+Translator peak memory: 305396 KB
+Writing output... [0.480s CPU, 0.493s wall-clock]
+Done! [9.840s CPU, 9.854s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+1308 variables of 1646 necessary
+0 of 56 mutex groups necessary.
+66000 of 66000 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 5210
+Preprocessor derived variables: 0
+Preprocessor task size: 245138
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/planners/adp/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=adp(cost_type=1)', '--search', 'lazy_greedy(hff, preferred=hff)', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=1.18s]
+building causal graph...done! [t=1.20s]
+packing state variables...done! [t=1.20s]
+Variables: 1308
+Facts: 5210
+Bytes per state: 196
+done initalizing global data [t=1.20s]
+Conducting lazy best first search, (real) bound = 2147483647
+Initializing ADP heuristic...
+Initializing additive heuristic...
+Calculating Agents...
+Extending agent variables...
+Combining...
+Refining agents by joint action space...
+36->36 agents left
+36 agents left!
+Building propositions...
+Simplifying 86292 unary operators... done! [86292 unary operators]
+Creating agent operator sets...
+Best heuristic value: 3633 [g=0, 1 evaluated, 0 expanded, t=1.42s, 70144 KB]
+Best heuristic value: 3632 [g=3, 22 evaluated, 21 expanded, t=1.44s, 70144 KB]
+Best heuristic value: 3631 [g=4, 23 evaluated, 22 expanded, t=1.44s, 70144 KB]
+Best heuristic value: 3630 [g=5, 27 evaluated, 26 expanded, t=1.46s, 70144 KB]
+Best heuristic value: 3628 [g=8, 50 evaluated, 49 expanded, t=1.48s, 70144 KB]
+Best heuristic value: 3627 [g=9, 54 evaluated, 53 expanded, t=1.48s, 70144 KB]
+Best heuristic value: 3626 [g=12, 70 evaluated, 69 expanded, t=1.50s, 70144 KB]
+Best heuristic value: 3625 [g=13, 76 evaluated, 75 expanded, t=1.52s, 70144 KB]
+Best heuristic value: 3624 [g=14, 79 evaluated, 78 expanded, t=1.52s, 70144 KB]
+Best heuristic value: 3622 [g=17, 91 evaluated, 90 expanded, t=1.54s, 70144 KB]
+Best heuristic value: 3621 [g=18, 99 evaluated, 98 expanded, t=1.54s, 70144 KB]
+Best heuristic value: 3620 [g=21, 109 evaluated, 108 expanded, t=1.56s, 70144 KB]
+Best heuristic value: 3619 [g=22, 113 evaluated, 112 expanded, t=1.56s, 70144 KB]
+Best heuristic value: 3618 [g=23, 116 evaluated, 115 expanded, t=1.58s, 70144 KB]
+Best heuristic value: 3617 [g=26, 125 evaluated, 124 expanded, t=1.58s, 70144 KB]
+Best heuristic value: 3616 [g=27, 128 evaluated, 127 expanded, t=1.58s, 70144 KB]
+Best heuristic value: 3615 [g=28, 131 evaluated, 130 expanded, t=1.60s, 70144 KB]
+Best heuristic value: 3613 [g=31, 141 evaluated, 140 expanded, t=1.60s, 70144 KB]
+Best heuristic value: 3612 [g=32, 144 evaluated, 143 expanded, t=1.60s, 70144 KB]
+Best heuristic value: 3610 [g=35, 153 evaluated, 152 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3609 [g=36, 156 evaluated, 155 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3607 [g=39, 162 evaluated, 161 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3606 [g=40, 165 evaluated, 164 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3604 [g=43, 171 evaluated, 170 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3603 [g=44, 173 evaluated, 172 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3602 [g=46, 175 evaluated, 174 expanded, t=1.66s, 70144 KB]
+Best heuristic value: 3601 [g=47, 176 evaluated, 175 expanded, t=1.66s, 70144 KB]
+Best heuristic value: 2516 [g=48, 177 evaluated, 176 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2515 [g=49, 180 evaluated, 179 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2514 [g=50, 183 evaluated, 182 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2513 [g=53, 190 evaluated, 189 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2512 [g=56, 193 evaluated, 192 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2511 [g=58, 196 evaluated, 195 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2510 [g=63, 210 evaluated, 209 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2509 [g=64, 211 evaluated, 210 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2508 [g=67, 214 evaluated, 213 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2507 [g=70, 217 evaluated, 216 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2506 [g=76, 223 evaluated, 222 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2505 [g=77, 224 evaluated, 223 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2504 [g=78, 225 evaluated, 224 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2503 [g=79, 226 evaluated, 225 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2502 [g=80, 227 evaluated, 226 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2501 [g=81, 228 evaluated, 227 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2119 [g=82, 229 evaluated, 228 expanded, t=1.80s, 70144 KB]
+Best heuristic value: 2117 [g=91, 246 evaluated, 245 expanded, t=1.84s, 70144 KB]
+Best heuristic value: 2116 [g=92, 248 evaluated, 247 expanded, t=1.84s, 70144 KB]
+Best heuristic value: 2115 [g=108, 280 evaluated, 279 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2113 [g=110, 282 evaluated, 281 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2112 [g=111, 283 evaluated, 282 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2111 [g=112, 285 evaluated, 284 expanded, t=1.88s, 70144 KB]
+Best heuristic value: 2110 [g=116, 296 evaluated, 295 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2109 [g=117, 297 evaluated, 296 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2108 [g=118, 298 evaluated, 297 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2107 [g=119, 299 evaluated, 298 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2106 [g=120, 300 evaluated, 299 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2105 [g=121, 301 evaluated, 300 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2104 [g=122, 302 evaluated, 301 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2103 [g=123, 303 evaluated, 302 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2102 [g=124, 304 evaluated, 303 expanded, t=1.92s, 70144 KB]
+Best heuristic value: 2101 [g=125, 305 evaluated, 304 expanded, t=1.92s, 70144 KB]
+Best heuristic value: 1821 [g=126, 306 evaluated, 305 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 1820 [g=134, 368 evaluated, 349 expanded, t=8.12s, 70144 KB]
+Best heuristic value: 1819 [g=138, 396 evaluated, 371 expanded, t=10.50s, 70144 KB]
+Best heuristic value: 1818 [g=139, 397 evaluated, 372 expanded, t=10.50s, 70144 KB]
+Best heuristic value: 1817 [g=140, 399 evaluated, 374 expanded, t=10.50s, 70144 KB]
+Best heuristic value: 1816 [g=146, 447 evaluated, 406 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1815 [g=147, 448 evaluated, 407 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1814 [g=148, 449 evaluated, 408 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1813 [g=149, 450 evaluated, 409 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1812 [g=150, 451 evaluated, 410 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1811 [g=151, 452 evaluated, 411 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1810 [g=152, 453 evaluated, 412 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1809 [g=153, 455 evaluated, 414 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1808 [g=154, 456 evaluated, 415 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1807 [g=155, 457 evaluated, 416 expanded, t=16.86s, 70144 KB]
+Best heuristic value: 1806 [g=156, 458 evaluated, 417 expanded, t=16.88s, 70144 KB]
+Best heuristic value: 1805 [g=157, 459 evaluated, 418 expanded, t=16.88s, 70144 KB]
+Best heuristic value: 1804 [g=158, 460 evaluated, 419 expanded, t=16.88s, 70144 KB]
+Best heuristic value: 1803 [g=159, 461 evaluated, 420 expanded, t=16.88s, 70144 KB]
+Best heuristic value: 1802 [g=160, 462 evaluated, 421 expanded, t=16.88s, 70144 KB]
+Best heuristic value: 1801 [g=161, 463 evaluated, 422 expanded, t=16.88s, 70144 KB]
+Best heuristic value: 1517 [g=162, 464 evaluated, 423 expanded, t=16.92s, 70144 KB]
+Best heuristic value: 1516 [g=169, 513 evaluated, 456 expanded, t=21.90s, 70144 KB]
+Best heuristic value: 1515 [g=170, 514 evaluated, 457 expanded, t=21.90s, 70144 KB]
+Best heuristic value: 1514 [g=171, 515 evaluated, 458 expanded, t=21.90s, 70144 KB]
+Best heuristic value: 1513 [g=172, 516 evaluated, 459 expanded, t=21.90s, 70144 KB]
+Best heuristic value: 1512 [g=175, 522 evaluated, 463 expanded, t=22.66s, 70144 KB]
+Best heuristic value: 1511 [g=176, 523 evaluated, 464 expanded, t=22.66s, 70144 KB]
+Best heuristic value: 1510 [g=177, 524 evaluated, 465 expanded, t=22.66s, 70144 KB]
+Best heuristic value: 1509 [g=185, 551 evaluated, 483 expanded, t=25.66s, 70144 KB]
+Best heuristic value: 1508 [g=186, 553 evaluated, 485 expanded, t=25.68s, 70144 KB]
+Best heuristic value: 1507 [g=192, 560 evaluated, 492 expanded, t=25.68s, 70144 KB]
+Best heuristic value: 1506 [g=193, 561 evaluated, 493 expanded, t=25.68s, 70144 KB]
+Best heuristic value: 1505 [g=194, 562 evaluated, 494 expanded, t=25.68s, 70144 KB]
+Best heuristic value: 1504 [g=195, 563 evaluated, 495 expanded, t=25.68s, 70144 KB]
+Best heuristic value: 1503 [g=196, 564 evaluated, 496 expanded, t=25.70s, 70144 KB]
+Best heuristic value: 1502 [g=197, 565 evaluated, 497 expanded, t=25.70s, 70144 KB]
+Best heuristic value: 1501 [g=198, 566 evaluated, 498 expanded, t=25.70s, 70144 KB]
+Best heuristic value: 1207 [g=199, 567 evaluated, 499 expanded, t=25.74s, 70144 KB]
+Best heuristic value: 1206 [g=201, 570 evaluated, 502 expanded, t=25.74s, 70144 KB]
+Best heuristic value: 1205 [g=203, 573 evaluated, 505 expanded, t=25.76s, 70144 KB]
+Best heuristic value: 1204 [g=207, 577 evaluated, 509 expanded, t=25.76s, 70144 KB]
+Best heuristic value: 1203 [g=208, 578 evaluated, 510 expanded, t=25.76s, 70144 KB]
+Best heuristic value: 1202 [g=209, 579 evaluated, 511 expanded, t=25.76s, 70144 KB]
+Best heuristic value: 1201 [g=210, 580 evaluated, 512 expanded, t=25.76s, 70144 KB]
+Best heuristic value: 1007 [g=211, 581 evaluated, 513 expanded, t=25.82s, 70144 KB]
+Best heuristic value: 1006 [g=212, 584 evaluated, 516 expanded, t=25.82s, 70144 KB]
+Best heuristic value: 1005 [g=213, 587 evaluated, 519 expanded, t=25.82s, 70144 KB]
+Best heuristic value: 1004 [g=216, 591 evaluated, 523 expanded, t=25.84s, 70144 KB]
+Best heuristic value: 1003 [g=217, 592 evaluated, 524 expanded, t=25.84s, 70144 KB]
+Best heuristic value: 1002 [g=218, 593 evaluated, 525 expanded, t=25.84s, 70144 KB]
+Best heuristic value: 1001 [g=219, 594 evaluated, 526 expanded, t=25.84s, 70144 KB]
+Best heuristic value: 813 [g=220, 595 evaluated, 527 expanded, t=25.88s, 70144 KB]
+Best heuristic value: 810 [g=235, 614 evaluated, 546 expanded, t=25.92s, 70144 KB]
+Best heuristic value: 809 [g=240, 619 evaluated, 551 expanded, t=25.92s, 70144 KB]
+Best heuristic value: 808 [g=248, 627 evaluated, 559 expanded, t=25.92s, 70144 KB]
+Best heuristic value: 807 [g=249, 628 evaluated, 560 expanded, t=25.94s, 70144 KB]
+Best heuristic value: 806 [g=250, 629 evaluated, 561 expanded, t=25.94s, 70144 KB]
+Best heuristic value: 805 [g=251, 630 evaluated, 562 expanded, t=25.94s, 70144 KB]
+Best heuristic value: 804 [g=252, 631 evaluated, 563 expanded, t=25.94s, 70144 KB]
+Best heuristic value: 803 [g=253, 632 evaluated, 564 expanded, t=25.94s, 70144 KB]
+Best heuristic value: 802 [g=254, 633 evaluated, 565 expanded, t=25.94s, 70144 KB]
+Best heuristic value: 801 [g=255, 634 evaluated, 566 expanded, t=25.94s, 70144 KB]
+Best heuristic value: 617 [g=256, 635 evaluated, 567 expanded, t=25.98s, 70144 KB]
+Best heuristic value: 616 [g=261, 650 evaluated, 579 expanded, t=27.02s, 70144 KB]
+Best heuristic value: 615 [g=264, 663 evaluated, 589 expanded, t=28.24s, 70144 KB]
+Best heuristic value: 614 [g=274, 687 evaluated, 603 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 613 [g=275, 688 evaluated, 604 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 612 [g=276, 689 evaluated, 605 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 611 [g=277, 690 evaluated, 606 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 609 [g=278, 691 evaluated, 607 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 608 [g=279, 693 evaluated, 609 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 607 [g=280, 694 evaluated, 610 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 606 [g=281, 695 evaluated, 611 expanded, t=31.92s, 70144 KB]
+Best heuristic value: 605 [g=282, 696 evaluated, 612 expanded, t=31.94s, 70144 KB]
+Best heuristic value: 604 [g=283, 697 evaluated, 613 expanded, t=31.94s, 70144 KB]
+Best heuristic value: 603 [g=284, 698 evaluated, 614 expanded, t=31.94s, 70144 KB]
+Best heuristic value: 602 [g=285, 699 evaluated, 615 expanded, t=31.94s, 70144 KB]
+Best heuristic value: 601 [g=286, 700 evaluated, 616 expanded, t=31.94s, 70144 KB]
+Best heuristic value: 403 [g=287, 701 evaluated, 617 expanded, t=31.98s, 70144 KB]
+Best heuristic value: 402 [g=288, 702 evaluated, 618 expanded, t=31.98s, 70144 KB]
+Best heuristic value: 401 [g=289, 703 evaluated, 619 expanded, t=31.98s, 70144 KB]
+Best heuristic value: 305 [g=290, 704 evaluated, 620 expanded, t=32.04s, 70144 KB]
+Best heuristic value: 304 [g=291, 705 evaluated, 621 expanded, t=32.04s, 70144 KB]
+Best heuristic value: 303 [g=292, 706 evaluated, 622 expanded, t=32.04s, 70144 KB]
+Best heuristic value: 302 [g=293, 707 evaluated, 623 expanded, t=32.04s, 70144 KB]
+Best heuristic value: 301 [g=294, 708 evaluated, 624 expanded, t=32.04s, 70144 KB]
+Best heuristic value: 211 [g=295, 709 evaluated, 625 expanded, t=32.08s, 70144 KB]
+Best heuristic value: 210 [g=299, 716 evaluated, 632 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 209 [g=300, 717 evaluated, 633 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 208 [g=301, 718 evaluated, 634 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 207 [g=302, 719 evaluated, 635 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 206 [g=303, 720 evaluated, 636 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 205 [g=304, 721 evaluated, 637 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 204 [g=305, 722 evaluated, 638 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 203 [g=306, 723 evaluated, 639 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 202 [g=307, 724 evaluated, 640 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 201 [g=308, 725 evaluated, 641 expanded, t=32.10s, 70144 KB]
+Best heuristic value: 102 [g=309, 726 evaluated, 642 expanded, t=32.14s, 70144 KB]
+Best heuristic value: 101 [g=310, 727 evaluated, 643 expanded, t=32.14s, 70144 KB]
+Solution found!
+Actual search time: 31.00s [t=32.20s]
+navigate_uav uav9 area41 area11 (1)
+take_picture uav9 area11 disaster8 (1)
+navigate_uav uav9 area11 area44 (1)
+navigate_uav uav9 area44 area50 (1)
+communicate_data uav9 cdm6 disaster8 area50 area53 (1)
+navigate_uav uav9 area50 area44 (1)
+take_picture uav9 area44 disaster13 (1)
+navigate_uav uav9 area44 area50 (1)
+communicate_data uav9 cdm6 disaster13 area50 area53 (1)
+navigate_uav uav9 area50 area7 (1)
+take_picture uav9 area7 disaster6 (1)
+navigate_uav uav9 area7 area20 (1)
+navigate_uav uav9 area20 area42 (1)
+communicate_data uav9 cdm5 disaster6 area42 area41 (1)
+navigate_uav uav9 area42 area28 (1)
+take_picture uav9 area28 disaster16 (1)
+navigate_uav uav9 area28 area10 (1)
+communicate_data uav9 cdm2 disaster16 area10 area13 (1)
+navigate_uav uav9 area10 area38 (1)
+take_picture uav9 area38 disaster14 (1)
+navigate_uav uav9 area38 area20 (1)
+navigate_uav uav9 area20 area42 (1)
+communicate_data uav9 cdm5 disaster14 area42 area41 (1)
+navigate_uav uav9 area42 area20 (1)
+take_picture uav9 area20 disaster15 (1)
+navigate_uav uav9 area20 area24 (1)
+navigate_uav uav9 area24 area49 (1)
+communicate_data uav9 cdm6 disaster15 area49 area53 (1)
+navigate_uav uav9 area49 area24 (1)
+take_picture uav9 area24 disaster11 (1)
+navigate_uav uav9 area24 area49 (1)
+communicate_data uav9 cdm6 disaster11 area49 area53 (1)
+navigate_uav uav9 area49 area27 (1)
+take_picture uav9 area27 disaster2 (1)
+navigate_uav uav9 area27 area53 (1)
+communicate_data uav9 cdm6 disaster2 area53 area53 (1)
+navigate_uav uav9 area53 area37 (1)
+take_picture uav9 area37 disaster10 (1)
+navigate_uav uav9 area37 area23 (1)
+communicate_data uav9 cdm3 disaster10 area23 area21 (1)
+navigate_uav uav9 area23 area55 (1)
+take_picture uav9 area55 disaster7 (1)
+navigate_uav uav9 area55 area49 (1)
+communicate_data uav9 cdm6 disaster7 area49 area53 (1)
+navigate_uav uav9 area49 area58 (1)
+take_picture uav9 area58 disaster1 (1)
+navigate_uav uav9 area58 area30 (1)
+communicate_data uav9 cdm4 disaster1 area30 area33 (1)
+take_picture usv9 area41 disaster9 (1)
+communicate_data usv9 cdm5 disaster9 area41 area41 (1)
+navigate_usv usv9 area41 area56 (1)
+sample_water usv9 usv9store area56 (1)
+navigate_usv usv9 area56 area41 (1)
+navigate_usv usv9 area41 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+drop_sample usv9 usv9store area53 area56 cdm6 (1)
+navigate_usv usv9 area53 area33 (1)
+navigate_usv usv9 area33 area29 (1)
+navigate_usv usv9 area29 area28 (1)
+sample_water usv9 usv9store area28 (1)
+navigate_usv usv9 area28 area29 (1)
+navigate_usv usv9 area29 area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area49 (1)
+navigate_usv usv9 area49 area44 (1)
+navigate_usv usv9 area44 area42 (1)
+navigate_usv usv9 area42 area41 (1)
+drop_sample usv9 usv9store area41 area28 cdm5 (1)
+navigate_usv usv9 area41 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+navigate_usv usv9 area53 area33 (1)
+sample_water usv9 usv9store area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area49 (1)
+navigate_usv usv9 area49 area44 (1)
+navigate_usv usv9 area44 area42 (1)
+navigate_usv usv9 area42 area41 (1)
+drop_sample usv9 usv9store area41 area33 cdm5 (1)
+navigate_usv usv8 area33 area29 (1)
+navigate_usv usv8 area29 area28 (1)
+navigate_usv usv8 area28 area27 (1)
+navigate_usv usv8 area27 area8 (1)
+sample_water usv8 usv8store area8 (1)
+navigate_usv usv8 area8 area27 (1)
+navigate_usv usv8 area27 area28 (1)
+navigate_usv usv8 area28 area29 (1)
+navigate_usv usv8 area29 area33 (1)
+drop_sample usv8 usv8store area33 area8 cdm4 (1)
+navigate_usv usv8 area33 area29 (1)
+navigate_usv usv8 area29 area24 (1)
+navigate_usv usv8 area24 area22 (1)
+navigate_usv usv8 area22 area21 (1)
+navigate_usv usv8 area21 area36 (1)
+navigate_usv usv8 area36 area38 (1)
+navigate_usv usv8 area38 area35 (1)
+sample_water usv8 usv8store area35 (1)
+navigate_usv usv8 area35 area38 (1)
+navigate_usv usv8 area38 area17 (1)
+navigate_usv usv8 area17 area19 (1)
+navigate_usv usv8 area19 area20 (1)
+navigate_usv usv8 area20 area18 (1)
+navigate_usv usv8 area18 area16 (1)
+navigate_usv usv8 area16 area1 (1)
+navigate_usv usv8 area1 area2 (1)
+navigate_usv usv8 area2 area4 (1)
+navigate_usv usv8 area4 area9 (1)
+navigate_usv usv8 area9 area13 (1)
+drop_sample usv8 usv8store area13 area35 cdm2 (1)
+navigate_usv usv8 area13 area9 (1)
+navigate_usv usv8 area9 area4 (1)
+navigate_usv usv8 area4 area2 (1)
+sample_water usv8 usv8store area2 (1)
+navigate_usv usv8 area2 area4 (1)
+navigate_usv usv8 area4 area9 (1)
+navigate_usv usv8 area9 area8 (1)
+navigate_usv usv8 area8 area27 (1)
+navigate_usv usv8 area27 area28 (1)
+navigate_usv usv8 area28 area29 (1)
+navigate_usv usv8 area29 area24 (1)
+navigate_usv usv8 area24 area22 (1)
+navigate_usv usv8 area22 area21 (1)
+drop_sample usv8 usv8store area21 area2 cdm3 (1)
+pickup_box ugv9 ugv9store cdm5 area41 box8 (1)
+navigate_ugv ugv9 area41 area43 (1)
+navigate_ugv ugv9 area43 area44 (1)
+navigate_ugv ugv9 area44 area50 (1)
+navigate_ugv ugv9 area50 area53 (1)
+navigate_ugv ugv9 area53 area33 (1)
+navigate_ugv ugv9 area33 area30 (1)
+navigate_ugv ugv9 area30 area27 (1)
+navigate_ugv ugv8 area33 area53 (1)
+navigate_ugv ugv8 area53 area13 (1)
+pickup_box ugv8 ugv8store cdm2 area13 box2 (1)
+navigate_ugv ugv8 area13 area53 (1)
+navigate_ugv ugv8 area53 area33 (1)
+drop_box ugv8 ugv8store area33 box2 (1)
+pickup_box ugv8 ugv8store cdm4 area33 box6 (1)
+navigate_ugv ugv8 area33 area30 (1)
+navigate_ugv ugv8 area30 area24 (1)
+navigate_ugv ugv8 area24 area23 (1)
+navigate_ugv ugv8 area23 area25 (1)
+navigate_ugv ugv8 area25 area31 (1)
+drop_box ugv8 ugv8store area31 box6 (1)
+navigate_ugv ugv8 area31 area25 (1)
+navigate_ugv ugv8 area25 area23 (1)
+navigate_ugv ugv8 area23 area24 (1)
+navigate_ugv ugv8 area24 area30 (1)
+navigate_ugv ugv8 area30 area33 (1)
+pickup_box ugv8 ugv8store cdm4 area33 box4 (1)
+navigate_ugv ugv8 area33 area53 (1)
+navigate_ugv ugv8 area53 area50 (1)
+navigate_ugv ugv8 area50 area44 (1)
+navigate_ugv ugv8 area44 area43 (1)
+navigate_ugv ugv8 area43 area55 (1)
+navigate_ugv ugv8 area55 area56 (1)
+navigate_ugv ugv8 area56 area57 (1)
+navigate_ugv ugv8 area57 area54 (1)
+drop_box ugv8 ugv8store area54 box4 (1)
+navigate_ugv ugv4 area13 area53 (1)
+navigate_ugv ugv4 area53 area50 (1)
+navigate_ugv ugv4 area50 area44 (1)
+navigate_ugv ugv4 area44 area43 (1)
+navigate_ugv ugv4 area43 area41 (1)
+pickup_box ugv4 ugv4store cdm5 area41 box7 (1)
+navigate_ugv ugv4 area41 area43 (1)
+navigate_ugv ugv4 area43 area44 (1)
+navigate_ugv ugv4 area44 area50 (1)
+navigate_ugv ugv4 area50 area53 (1)
+navigate_ugv ugv4 area53 area13 (1)
+navigate_ugv ugv4 area13 area10 (1)
+navigate_ugv ugv4 area10 area7 (1)
+drop_box ugv4 ugv4store area7 box7 (1)
+navigate_ugv ugv4 area7 area10 (1)
+navigate_ugv ugv4 area10 area13 (1)
+navigate_ugv ugv4 area13 area53 (1)
+pickup_box ugv4 ugv4store cdm6 area53 box9 (1)
+navigate_ugv ugv4 area53 area13 (1)
+navigate_ugv ugv4 area13 area10 (1)
+navigate_ugv ugv4 area10 area4 (1)
+navigate_ugv ugv4 area4 area3 (1)
+navigate_ugv ugv4 area3 area15 (1)
+drop_box ugv4 ugv4store area15 box9 (1)
+navigate_ugv ugv4 area15 area3 (1)
+navigate_ugv ugv4 area3 area4 (1)
+navigate_ugv ugv4 area4 area10 (1)
+navigate_ugv ugv4 area10 area13 (1)
+navigate_ugv ugv4 area13 area53 (1)
+pickup_box ugv4 ugv4store cdm6 area53 box10 (1)
+navigate_ugv ugv4 area53 area13 (1)
+navigate_ugv ugv4 area13 area10 (1)
+navigate_ugv ugv4 area10 area4 (1)
+navigate_ugv ugv4 area4 area3 (1)
+navigate_ugv ugv4 area3 area15 (1)
+navigate_ugv ugv4 area15 area18 (1)
+drop_box ugv4 ugv4store area18 box10 (1)
+navigate_usv usv8 area21 area36 (1)
+take_picture usv8 area36 disaster4 (1)
+navigate_usv usv8 area36 area21 (1)
+communicate_data usv8 cdm3 disaster4 area21 area21 (1)
+navigate_usv usv8 area21 area36 (1)
+navigate_usv usv8 area36 area38 (1)
+navigate_usv usv8 area38 area17 (1)
+sample_water usv8 usv8store area17 (1)
+navigate_usv usv8 area17 area38 (1)
+navigate_usv usv8 area38 area36 (1)
+navigate_usv usv8 area36 area21 (1)
+drop_sample usv8 usv8store area21 area17 cdm3 (1)
+take_picture usv4 area13 disaster5 (1)
+communicate_data usv4 cdm2 disaster5 area13 area13 (1)
+navigate_usv usv4 area13 area9 (1)
+navigate_usv usv4 area9 area4 (1)
+sample_water usv4 usv4store area4 (1)
+navigate_usv usv4 area4 area9 (1)
+navigate_usv usv4 area9 area13 (1)
+navigate_usv usv4 area13 area53 (1)
+drop_sample usv4 usv4store area53 area4 cdm6 (1)
+navigate_usv usv2 area1 area16 (1)
+navigate_usv usv2 area16 area18 (1)
+navigate_usv usv2 area18 area20 (1)
+navigate_usv usv2 area20 area19 (1)
+navigate_usv usv2 area19 area17 (1)
+navigate_usv usv2 area17 area38 (1)
+navigate_usv usv2 area38 area40 (1)
+navigate_usv usv2 area40 area39 (1)
+navigate_usv usv2 area39 area37 (1)
+sample_water usv2 usv2store area37 (1)
+navigate_usv usv2 area37 area39 (1)
+navigate_usv usv2 area39 area40 (1)
+navigate_usv usv2 area40 area38 (1)
+navigate_usv usv2 area38 area17 (1)
+navigate_usv usv2 area17 area19 (1)
+navigate_usv usv2 area19 area20 (1)
+navigate_usv usv2 area20 area18 (1)
+navigate_usv usv2 area18 area16 (1)
+navigate_usv usv2 area16 area1 (1)
+drop_sample usv2 usv2store area1 area37 cdm1 (1)
+navigate_usv usv2 area1 area16 (1)
+navigate_usv usv2 area16 area18 (1)
+navigate_usv usv2 area18 area20 (1)
+navigate_usv usv2 area20 area19 (1)
+navigate_usv usv2 area19 area17 (1)
+navigate_usv usv2 area17 area38 (1)
+navigate_usv usv2 area38 area40 (1)
+sample_water usv2 usv2store area40 (1)
+navigate_usv usv2 area40 area38 (1)
+navigate_usv usv2 area38 area17 (1)
+navigate_usv usv2 area17 area19 (1)
+navigate_usv usv2 area19 area20 (1)
+navigate_usv usv2 area20 area18 (1)
+navigate_usv usv2 area18 area16 (1)
+navigate_usv usv2 area16 area1 (1)
+drop_sample usv2 usv2store area1 area40 cdm1 (1)
+navigate_ugv ugv6 area21 area36 (1)
+navigate_ugv ugv6 area36 area37 (1)
+navigate_ugv ugv6 area37 area18 (1)
+navigate_ugv ugv6 area18 area15 (1)
+navigate_ugv ugv6 area15 area3 (1)
+navigate_ugv ugv6 area3 area1 (1)
+pickup_box ugv6 ugv6store cdm1 area1 box1 (1)
+navigate_ugv ugv6 area1 area3 (1)
+navigate_ugv ugv6 area3 area15 (1)
+navigate_ugv ugv6 area15 area18 (1)
+navigate_ugv ugv6 area18 area37 (1)
+navigate_ugv ugv6 area37 area36 (1)
+navigate_ugv ugv6 area36 area21 (1)
+navigate_ugv ugv6 area21 area23 (1)
+navigate_ugv ugv6 area23 area25 (1)
+navigate_ugv ugv6 area25 area31 (1)
+navigate_ugv ugv6 area31 area29 (1)
+drop_box ugv6 ugv6store area29 box1 (1)
+navigate_ugv ugv6 area29 area31 (1)
+navigate_ugv ugv6 area31 area25 (1)
+navigate_ugv ugv6 area25 area23 (1)
+navigate_ugv ugv6 area23 area21 (1)
+pickup_box ugv6 ugv6store cdm3 area21 box5 (1)
+navigate_ugv ugv6 area21 area36 (1)
+navigate_ugv ugv6 area36 area37 (1)
+navigate_ugv ugv6 area37 area18 (1)
+navigate_ugv ugv6 area18 area15 (1)
+navigate_ugv ugv6 area15 area3 (1)
+navigate_ugv ugv6 area3 area4 (1)
+navigate_ugv ugv6 area4 area6 (1)
+drop_box ugv6 ugv6store area6 box5 (1)
+navigate_usv usv4 area53 area49 (1)
+take_picture usv4 area49 disaster3 (1)
+communicate_data usv4 cdm6 disaster3 area49 area53 (1)
+navigate_ugv ugv9 area27 area30 (1)
+navigate_ugv ugv9 area30 area24 (1)
+navigate_ugv ugv9 area24 area23 (1)
+navigate_ugv ugv9 area23 area21 (1)
+drop_box ugv9 ugv9store area21 box8 (1)
+navigate_ugv ugv4 area18 area15 (1)
+navigate_ugv ugv4 area15 area16 (1)
+navigate_ugv ugv4 area16 area1 (1)
+pickup_box ugv4 ugv4store cdm1 area1 box3 (1)
+navigate_ugv ugv4 area1 area16 (1)
+navigate_ugv ugv4 area16 area15 (1)
+navigate_ugv ugv4 area15 area18 (1)
+navigate_ugv ugv4 area18 area37 (1)
+navigate_ugv ugv4 area37 area36 (1)
+navigate_ugv ugv4 area36 area35 (1)
+navigate_ugv ugv4 area35 area38 (1)
+navigate_ugv ugv4 area38 area40 (1)
+navigate_ugv ugv4 area40 area39 (1)
+drop_box ugv4 ugv4store area39 box3 (1)
+take_picture uav9 area30 disaster12 (1)
+communicate_data uav9 cdm4 disaster12 area30 area33 (1)
+Plan length: 311 step(s).
+Plan cost: 311
+Initial state h value: 3633.
+Expanded 644 state(s).
+Reopened 0 state(s).
+Evaluated 728 state(s).
+Evaluations: 728
+Generated 514458 state(s).
+Dead ends: 83 state(s).
+Search time: 31.00s
+Total time: 32.20s
+Solution found.
+Peak memory: 70144 KB
+
+real	0m44.810s
+user	0m43.348s
+sys	0m1.432s
+
+(navigate_uav uav9 area41 area11)
+(take_picture uav9 area11 disaster8)
+(navigate_uav uav9 area11 area44)
+(navigate_uav uav9 area44 area50)
+(communicate_data uav9 cdm6 disaster8 area50 area53)
+(navigate_uav uav9 area50 area44)
+(take_picture uav9 area44 disaster13)
+(navigate_uav uav9 area44 area50)
+(communicate_data uav9 cdm6 disaster13 area50 area53)
+(navigate_uav uav9 area50 area7)
+(take_picture uav9 area7 disaster6)
+(navigate_uav uav9 area7 area20)
+(navigate_uav uav9 area20 area42)
+(communicate_data uav9 cdm5 disaster6 area42 area41)
+(navigate_uav uav9 area42 area28)
+(take_picture uav9 area28 disaster16)
+(navigate_uav uav9 area28 area10)
+(communicate_data uav9 cdm2 disaster16 area10 area13)
+(navigate_uav uav9 area10 area38)
+(take_picture uav9 area38 disaster14)
+(navigate_uav uav9 area38 area20)
+(navigate_uav uav9 area20 area42)
+(communicate_data uav9 cdm5 disaster14 area42 area41)
+(navigate_uav uav9 area42 area20)
+(take_picture uav9 area20 disaster15)
+(navigate_uav uav9 area20 area24)
+(navigate_uav uav9 area24 area49)
+(communicate_data uav9 cdm6 disaster15 area49 area53)
+(navigate_uav uav9 area49 area24)
+(take_picture uav9 area24 disaster11)
+(navigate_uav uav9 area24 area49)
+(communicate_data uav9 cdm6 disaster11 area49 area53)
+(navigate_uav uav9 area49 area27)
+(take_picture uav9 area27 disaster2)
+(navigate_uav uav9 area27 area53)
+(communicate_data uav9 cdm6 disaster2 area53 area53)
+(navigate_uav uav9 area53 area37)
+(take_picture uav9 area37 disaster10)
+(navigate_uav uav9 area37 area23)
+(communicate_data uav9 cdm3 disaster10 area23 area21)
+(navigate_uav uav9 area23 area55)
+(take_picture uav9 area55 disaster7)
+(navigate_uav uav9 area55 area49)
+(communicate_data uav9 cdm6 disaster7 area49 area53)
+(navigate_uav uav9 area49 area58)
+(take_picture uav9 area58 disaster1)
+(navigate_uav uav9 area58 area30)
+(communicate_data uav9 cdm4 disaster1 area30 area33)
+(take_picture usv9 area41 disaster9)
+(communicate_data usv9 cdm5 disaster9 area41 area41)
+(navigate_usv usv9 area41 area56)
+(sample_water usv9 usv9store area56)
+(navigate_usv usv9 area56 area41)
+(navigate_usv usv9 area41 area42)
+(navigate_usv usv9 area42 area44)
+(navigate_usv usv9 area44 area49)
+(navigate_usv usv9 area49 area53)
+(drop_sample usv9 usv9store area53 area56 cdm6)
+(navigate_usv usv9 area53 area33)
+(navigate_usv usv9 area33 area29)
+(navigate_usv usv9 area29 area28)
+(sample_water usv9 usv9store area28)
+(navigate_usv usv9 area28 area29)
+(navigate_usv usv9 area29 area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area49)
+(navigate_usv usv9 area49 area44)
+(navigate_usv usv9 area44 area42)
+(navigate_usv usv9 area42 area41)
+(drop_sample usv9 usv9store area41 area28 cdm5)
+(navigate_usv usv9 area41 area42)
+(navigate_usv usv9 area42 area44)
+(navigate_usv usv9 area44 area49)
+(navigate_usv usv9 area49 area53)
+(navigate_usv usv9 area53 area33)
+(sample_water usv9 usv9store area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area49)
+(navigate_usv usv9 area49 area44)
+(navigate_usv usv9 area44 area42)
+(navigate_usv usv9 area42 area41)
+(drop_sample usv9 usv9store area41 area33 cdm5)
+(navigate_usv usv8 area33 area29)
+(navigate_usv usv8 area29 area28)
+(navigate_usv usv8 area28 area27)
+(navigate_usv usv8 area27 area8)
+(sample_water usv8 usv8store area8)
+(navigate_usv usv8 area8 area27)
+(navigate_usv usv8 area27 area28)
+(navigate_usv usv8 area28 area29)
+(navigate_usv usv8 area29 area33)
+(drop_sample usv8 usv8store area33 area8 cdm4)
+(navigate_usv usv8 area33 area29)
+(navigate_usv usv8 area29 area24)
+(navigate_usv usv8 area24 area22)
+(navigate_usv usv8 area22 area21)
+(navigate_usv usv8 area21 area36)
+(navigate_usv usv8 area36 area38)
+(navigate_usv usv8 area38 area35)
+(sample_water usv8 usv8store area35)
+(navigate_usv usv8 area35 area38)
+(navigate_usv usv8 area38 area17)
+(navigate_usv usv8 area17 area19)
+(navigate_usv usv8 area19 area20)
+(navigate_usv usv8 area20 area18)
+(navigate_usv usv8 area18 area16)
+(navigate_usv usv8 area16 area1)
+(navigate_usv usv8 area1 area2)
+(navigate_usv usv8 area2 area4)
+(navigate_usv usv8 area4 area9)
+(navigate_usv usv8 area9 area13)
+(drop_sample usv8 usv8store area13 area35 cdm2)
+(navigate_usv usv8 area13 area9)
+(navigate_usv usv8 area9 area4)
+(navigate_usv usv8 area4 area2)
+(sample_water usv8 usv8store area2)
+(navigate_usv usv8 area2 area4)
+(navigate_usv usv8 area4 area9)
+(navigate_usv usv8 area9 area8)
+(navigate_usv usv8 area8 area27)
+(navigate_usv usv8 area27 area28)
+(navigate_usv usv8 area28 area29)
+(navigate_usv usv8 area29 area24)
+(navigate_usv usv8 area24 area22)
+(navigate_usv usv8 area22 area21)
+(drop_sample usv8 usv8store area21 area2 cdm3)
+(pickup_box ugv9 ugv9store cdm5 area41 box8)
+(navigate_ugv ugv9 area41 area43)
+(navigate_ugv ugv9 area43 area44)
+(navigate_ugv ugv9 area44 area50)
+(navigate_ugv ugv9 area50 area53)
+(navigate_ugv ugv9 area53 area33)
+(navigate_ugv ugv9 area33 area30)
+(navigate_ugv ugv9 area30 area27)
+(navigate_ugv ugv8 area33 area53)
+(navigate_ugv ugv8 area53 area13)
+(pickup_box ugv8 ugv8store cdm2 area13 box2)
+(navigate_ugv ugv8 area13 area53)
+(navigate_ugv ugv8 area53 area33)
+(drop_box ugv8 ugv8store area33 box2)
+(pickup_box ugv8 ugv8store cdm4 area33 box6)
+(navigate_ugv ugv8 area33 area30)
+(navigate_ugv ugv8 area30 area24)
+(navigate_ugv ugv8 area24 area23)
+(navigate_ugv ugv8 area23 area25)
+(navigate_ugv ugv8 area25 area31)
+(drop_box ugv8 ugv8store area31 box6)
+(navigate_ugv ugv8 area31 area25)
+(navigate_ugv ugv8 area25 area23)
+(navigate_ugv ugv8 area23 area24)
+(navigate_ugv ugv8 area24 area30)
+(navigate_ugv ugv8 area30 area33)
+(pickup_box ugv8 ugv8store cdm4 area33 box4)
+(navigate_ugv ugv8 area33 area53)
+(navigate_ugv ugv8 area53 area50)
+(navigate_ugv ugv8 area50 area44)
+(navigate_ugv ugv8 area44 area43)
+(navigate_ugv ugv8 area43 area55)
+(navigate_ugv ugv8 area55 area56)
+(navigate_ugv ugv8 area56 area57)
+(navigate_ugv ugv8 area57 area54)
+(drop_box ugv8 ugv8store area54 box4)
+(navigate_ugv ugv4 area13 area53)
+(navigate_ugv ugv4 area53 area50)
+(navigate_ugv ugv4 area50 area44)
+(navigate_ugv ugv4 area44 area43)
+(navigate_ugv ugv4 area43 area41)
+(pickup_box ugv4 ugv4store cdm5 area41 box7)
+(navigate_ugv ugv4 area41 area43)
+(navigate_ugv ugv4 area43 area44)
+(navigate_ugv ugv4 area44 area50)
+(navigate_ugv ugv4 area50 area53)
+(navigate_ugv ugv4 area53 area13)
+(navigate_ugv ugv4 area13 area10)
+(navigate_ugv ugv4 area10 area7)
+(drop_box ugv4 ugv4store area7 box7)
+(navigate_ugv ugv4 area7 area10)
+(navigate_ugv ugv4 area10 area13)
+(navigate_ugv ugv4 area13 area53)
+(pickup_box ugv4 ugv4store cdm6 area53 box9)
+(navigate_ugv ugv4 area53 area13)
+(navigate_ugv ugv4 area13 area10)
+(navigate_ugv ugv4 area10 area4)
+(navigate_ugv ugv4 area4 area3)
+(navigate_ugv ugv4 area3 area15)
+(drop_box ugv4 ugv4store area15 box9)
+(navigate_ugv ugv4 area15 area3)
+(navigate_ugv ugv4 area3 area4)
+(navigate_ugv ugv4 area4 area10)
+(navigate_ugv ugv4 area10 area13)
+(navigate_ugv ugv4 area13 area53)
+(pickup_box ugv4 ugv4store cdm6 area53 box10)
+(navigate_ugv ugv4 area53 area13)
+(navigate_ugv ugv4 area13 area10)
+(navigate_ugv ugv4 area10 area4)
+(navigate_ugv ugv4 area4 area3)
+(navigate_ugv ugv4 area3 area15)
+(navigate_ugv ugv4 area15 area18)
+(drop_box ugv4 ugv4store area18 box10)
+(navigate_usv usv8 area21 area36)
+(take_picture usv8 area36 disaster4)
+(navigate_usv usv8 area36 area21)
+(communicate_data usv8 cdm3 disaster4 area21 area21)
+(navigate_usv usv8 area21 area36)
+(navigate_usv usv8 area36 area38)
+(navigate_usv usv8 area38 area17)
+(sample_water usv8 usv8store area17)
+(navigate_usv usv8 area17 area38)
+(navigate_usv usv8 area38 area36)
+(navigate_usv usv8 area36 area21)
+(drop_sample usv8 usv8store area21 area17 cdm3)
+(take_picture usv4 area13 disaster5)
+(communicate_data usv4 cdm2 disaster5 area13 area13)
+(navigate_usv usv4 area13 area9)
+(navigate_usv usv4 area9 area4)
+(sample_water usv4 usv4store area4)
+(navigate_usv usv4 area4 area9)
+(navigate_usv usv4 area9 area13)
+(navigate_usv usv4 area13 area53)
+(drop_sample usv4 usv4store area53 area4 cdm6)
+(navigate_usv usv2 area1 area16)
+(navigate_usv usv2 area16 area18)
+(navigate_usv usv2 area18 area20)
+(navigate_usv usv2 area20 area19)
+(navigate_usv usv2 area19 area17)
+(navigate_usv usv2 area17 area38)
+(navigate_usv usv2 area38 area40)
+(navigate_usv usv2 area40 area39)
+(navigate_usv usv2 area39 area37)
+(sample_water usv2 usv2store area37)
+(navigate_usv usv2 area37 area39)
+(navigate_usv usv2 area39 area40)
+(navigate_usv usv2 area40 area38)
+(navigate_usv usv2 area38 area17)
+(navigate_usv usv2 area17 area19)
+(navigate_usv usv2 area19 area20)
+(navigate_usv usv2 area20 area18)
+(navigate_usv usv2 area18 area16)
+(navigate_usv usv2 area16 area1)
+(drop_sample usv2 usv2store area1 area37 cdm1)
+(navigate_usv usv2 area1 area16)
+(navigate_usv usv2 area16 area18)
+(navigate_usv usv2 area18 area20)
+(navigate_usv usv2 area20 area19)
+(navigate_usv usv2 area19 area17)
+(navigate_usv usv2 area17 area38)
+(navigate_usv usv2 area38 area40)
+(sample_water usv2 usv2store area40)
+(navigate_usv usv2 area40 area38)
+(navigate_usv usv2 area38 area17)
+(navigate_usv usv2 area17 area19)
+(navigate_usv usv2 area19 area20)
+(navigate_usv usv2 area20 area18)
+(navigate_usv usv2 area18 area16)
+(navigate_usv usv2 area16 area1)
+(drop_sample usv2 usv2store area1 area40 cdm1)
+(navigate_ugv ugv6 area21 area36)
+(navigate_ugv ugv6 area36 area37)
+(navigate_ugv ugv6 area37 area18)
+(navigate_ugv ugv6 area18 area15)
+(navigate_ugv ugv6 area15 area3)
+(navigate_ugv ugv6 area3 area1)
+(pickup_box ugv6 ugv6store cdm1 area1 box1)
+(navigate_ugv ugv6 area1 area3)
+(navigate_ugv ugv6 area3 area15)
+(navigate_ugv ugv6 area15 area18)
+(navigate_ugv ugv6 area18 area37)
+(navigate_ugv ugv6 area37 area36)
+(navigate_ugv ugv6 area36 area21)
+(navigate_ugv ugv6 area21 area23)
+(navigate_ugv ugv6 area23 area25)
+(navigate_ugv ugv6 area25 area31)
+(navigate_ugv ugv6 area31 area29)
+(drop_box ugv6 ugv6store area29 box1)
+(navigate_ugv ugv6 area29 area31)
+(navigate_ugv ugv6 area31 area25)
+(navigate_ugv ugv6 area25 area23)
+(navigate_ugv ugv6 area23 area21)
+(pickup_box ugv6 ugv6store cdm3 area21 box5)
+(navigate_ugv ugv6 area21 area36)
+(navigate_ugv ugv6 area36 area37)
+(navigate_ugv ugv6 area37 area18)
+(navigate_ugv ugv6 area18 area15)
+(navigate_ugv ugv6 area15 area3)
+(navigate_ugv ugv6 area3 area4)
+(navigate_ugv ugv6 area4 area6)
+(drop_box ugv6 ugv6store area6 box5)
+(navigate_usv usv4 area53 area49)
+(take_picture usv4 area49 disaster3)
+(communicate_data usv4 cdm6 disaster3 area49 area53)
+(navigate_ugv ugv9 area27 area30)
+(navigate_ugv ugv9 area30 area24)
+(navigate_ugv ugv9 area24 area23)
+(navigate_ugv ugv9 area23 area21)
+(drop_box ugv9 ugv9store area21 box8)
+(navigate_ugv ugv4 area18 area15)
+(navigate_ugv ugv4 area15 area16)
+(navigate_ugv ugv4 area16 area1)
+(pickup_box ugv4 ugv4store cdm1 area1 box3)
+(navigate_ugv ugv4 area1 area16)
+(navigate_ugv ugv4 area16 area15)
+(navigate_ugv ugv4 area15 area18)
+(navigate_ugv ugv4 area18 area37)
+(navigate_ugv ugv4 area37 area36)
+(navigate_ugv ugv4 area36 area35)
+(navigate_ugv ugv4 area35 area38)
+(navigate_ugv ugv4 area38 area40)
+(navigate_ugv ugv4 area40 area39)
+(drop_box ugv4 ugv4store area39 box3)
+(take_picture uav9 area30 disaster12)
+(communicate_data uav9 cdm4 disaster12 area30 area33)
+; cost = 311 (unit cost)
+
+INFO     Running translator.
+INFO     translator inputs: ['out/domain.pddl', 'out/problem.pddl']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.010s CPU, 0.009s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.005s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.010s CPU, 0.006s wall-clock]
+Preparing model... [0.010s CPU, 0.010s wall-clock]
+Generated 66 rules.
+Computing model... [2.550s CPU, 2.553s wall-clock]
+71795 relevant atoms
+117294 auxiliary atoms
+189089 final queue length
+262729 total queue pushes
+Completing instantiation... [3.110s CPU, 3.111s wall-clock]
+Instantiating: [5.730s CPU, 5.730s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.020s CPU, 0.024s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.030s CPU, 0.028s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.003s wall-clock]
+Choosing groups...
+1600 uncovered facts
+Choosing groups: [0.010s CPU, 0.009s wall-clock]
+Building translation key... [0.010s CPU, 0.011s wall-clock]
+Computing fact groups: [0.110s CPU, 0.119s wall-clock]
+Building STRIPS to SAS dictionary... [0.010s CPU, 0.004s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.004s wall-clock]
+Building mutex information...
+Building mutex information: [0.010s CPU, 0.005s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.100s CPU, 0.102s wall-clock]
+Translating task: [2.640s CPU, 2.643s wall-clock]
+24060 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+46 propositions removed
+Detecting unreachable propositions: [0.390s CPU, 0.386s wall-clock]
+Translator variables: 1646
+Translator derived variables: 0
+Translator facts: 5886
+Translator goal facts: 36
+Translator mutex groups: 56
+Translator total mutex groups size: 2816
+Translator operators: 66000
+Translator axioms: 0
+Translator task size: 263872
+Translator peak memory: 305396 KB
+Writing output... [0.480s CPU, 0.478s wall-clock]
+Done! [9.500s CPU, 9.499s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+1308 variables of 1646 necessary
+0 of 56 mutex groups necessary.
+66000 of 66000 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 5210
+Preprocessor derived variables: 0
+Preprocessor task size: 245138
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/planners/adp/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=adp(cost_type=1)', '--search', 'lazy_greedy(hff, preferred=hff)', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=1.16s]
+building causal graph...done! [t=1.16s]
+packing state variables...done! [t=1.16s]
+Variables: 1308
+Facts: 5210
+Bytes per state: 196
+done initalizing global data [t=1.16s]
+Conducting lazy best first search, (real) bound = 2147483647
+Initializing ADP heuristic...
+Initializing additive heuristic...
+Calculating Agents...
+Extending agent variables...
+Combining...
+Refining agents by joint action space...
+36->36 agents left
+36 agents left!
+Building propositions...
+Simplifying 86292 unary operators... done! [86292 unary operators]
+Creating agent operator sets...
+Best heuristic value: 3633 [g=0, 1 evaluated, 0 expanded, t=1.38s, 70144 KB]
+Best heuristic value: 3632 [g=3, 18 evaluated, 17 expanded, t=1.42s, 70144 KB]
+Best heuristic value: 3631 [g=4, 24 evaluated, 23 expanded, t=1.42s, 70144 KB]
+Best heuristic value: 3630 [g=5, 29 evaluated, 28 expanded, t=1.42s, 70144 KB]
+Best heuristic value: 3629 [g=8, 45 evaluated, 44 expanded, t=1.44s, 70144 KB]
+Best heuristic value: 3628 [g=9, 46 evaluated, 45 expanded, t=1.44s, 70144 KB]
+Best heuristic value: 3627 [g=10, 55 evaluated, 54 expanded, t=1.46s, 70144 KB]
+Best heuristic value: 3625 [g=13, 69 evaluated, 68 expanded, t=1.48s, 70144 KB]
+Best heuristic value: 3624 [g=14, 78 evaluated, 77 expanded, t=1.50s, 70144 KB]
+Best heuristic value: 3622 [g=17, 90 evaluated, 89 expanded, t=1.50s, 70144 KB]
+Best heuristic value: 3621 [g=18, 98 evaluated, 97 expanded, t=1.52s, 70144 KB]
+Best heuristic value: 3619 [g=21, 108 evaluated, 107 expanded, t=1.54s, 70144 KB]
+Best heuristic value: 3618 [g=22, 115 evaluated, 114 expanded, t=1.54s, 70144 KB]
+Best heuristic value: 3616 [g=25, 127 evaluated, 126 expanded, t=1.56s, 70144 KB]
+Best heuristic value: 3615 [g=26, 131 evaluated, 130 expanded, t=1.56s, 70144 KB]
+Best heuristic value: 3613 [g=29, 140 evaluated, 139 expanded, t=1.58s, 70144 KB]
+Best heuristic value: 3612 [g=30, 145 evaluated, 144 expanded, t=1.58s, 70144 KB]
+Best heuristic value: 3610 [g=33, 153 evaluated, 152 expanded, t=1.60s, 70144 KB]
+Best heuristic value: 3609 [g=34, 157 evaluated, 156 expanded, t=1.60s, 70144 KB]
+Best heuristic value: 3607 [g=37, 164 evaluated, 163 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3606 [g=38, 167 evaluated, 166 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3604 [g=41, 173 evaluated, 172 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3603 [g=42, 175 evaluated, 174 expanded, t=1.62s, 70144 KB]
+Best heuristic value: 3602 [g=44, 178 evaluated, 177 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 3601 [g=45, 179 evaluated, 178 expanded, t=1.64s, 70144 KB]
+Best heuristic value: 2516 [g=46, 180 evaluated, 179 expanded, t=1.68s, 70144 KB]
+Best heuristic value: 2515 [g=47, 183 evaluated, 182 expanded, t=1.68s, 70144 KB]
+Best heuristic value: 2514 [g=48, 186 evaluated, 185 expanded, t=1.70s, 70144 KB]
+Best heuristic value: 2513 [g=57, 201 evaluated, 200 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2512 [g=58, 202 evaluated, 201 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2511 [g=62, 206 evaluated, 205 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2510 [g=64, 209 evaluated, 208 expanded, t=1.72s, 70144 KB]
+Best heuristic value: 2509 [g=71, 217 evaluated, 216 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2508 [g=74, 220 evaluated, 219 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2507 [g=76, 223 evaluated, 222 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2506 [g=78, 228 evaluated, 227 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2505 [g=79, 229 evaluated, 228 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2504 [g=80, 230 evaluated, 229 expanded, t=1.74s, 70144 KB]
+Best heuristic value: 2503 [g=81, 231 evaluated, 230 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2502 [g=82, 232 evaluated, 231 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2501 [g=83, 233 evaluated, 232 expanded, t=1.76s, 70144 KB]
+Best heuristic value: 2125 [g=84, 234 evaluated, 233 expanded, t=1.80s, 70144 KB]
+Best heuristic value: 2124 [g=86, 240 evaluated, 239 expanded, t=1.80s, 70144 KB]
+Best heuristic value: 2123 [g=87, 241 evaluated, 240 expanded, t=1.80s, 70144 KB]
+Best heuristic value: 2122 [g=88, 244 evaluated, 243 expanded, t=1.82s, 70144 KB]
+Best heuristic value: 2120 [g=98, 265 evaluated, 264 expanded, t=1.84s, 70144 KB]
+Best heuristic value: 2119 [g=99, 267 evaluated, 266 expanded, t=1.84s, 70144 KB]
+Best heuristic value: 2118 [g=115, 309 evaluated, 308 expanded, t=1.90s, 70144 KB]
+Best heuristic value: 2115 [g=119, 316 evaluated, 315 expanded, t=1.92s, 70144 KB]
+Best heuristic value: 2113 [g=126, 328 evaluated, 327 expanded, t=1.94s, 70144 KB]
+Best heuristic value: 2112 [g=127, 329 evaluated, 328 expanded, t=1.94s, 70144 KB]
+Best heuristic value: 2111 [g=128, 331 evaluated, 330 expanded, t=1.94s, 70144 KB]
+Best heuristic value: 2110 [g=137, 342 evaluated, 341 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2109 [g=138, 343 evaluated, 342 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2108 [g=139, 344 evaluated, 343 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2107 [g=140, 345 evaluated, 344 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2106 [g=141, 346 evaluated, 345 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2105 [g=142, 347 evaluated, 346 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2104 [g=143, 348 evaluated, 347 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2103 [g=144, 349 evaluated, 348 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2102 [g=145, 350 evaluated, 349 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 2101 [g=146, 351 evaluated, 350 expanded, t=1.96s, 70144 KB]
+Best heuristic value: 1621 [g=147, 352 evaluated, 351 expanded, t=2.00s, 70144 KB]
+Best heuristic value: 1618 [g=154, 406 evaluated, 387 expanded, t=8.70s, 70144 KB]
+Best heuristic value: 1617 [g=158, 426 evaluated, 404 expanded, t=9.88s, 70144 KB]
+Best heuristic value: 1616 [g=159, 427 evaluated, 405 expanded, t=9.88s, 70144 KB]
+Best heuristic value: 1615 [g=160, 429 evaluated, 407 expanded, t=9.88s, 70144 KB]
+Best heuristic value: 1614 [g=166, 460 evaluated, 430 expanded, t=13.04s, 70144 KB]
+Best heuristic value: 1613 [g=167, 461 evaluated, 431 expanded, t=13.04s, 70144 KB]
+Best heuristic value: 1612 [g=168, 462 evaluated, 432 expanded, t=13.04s, 70144 KB]
+Best heuristic value: 1611 [g=169, 463 evaluated, 433 expanded, t=13.04s, 70144 KB]
+Best heuristic value: 1610 [g=178, 473 evaluated, 443 expanded, t=13.06s, 70144 KB]
+Best heuristic value: 1609 [g=179, 474 evaluated, 444 expanded, t=13.06s, 70144 KB]
+Best heuristic value: 1608 [g=180, 475 evaluated, 445 expanded, t=13.06s, 70144 KB]
+Best heuristic value: 1607 [g=181, 476 evaluated, 446 expanded, t=13.06s, 70144 KB]
+Best heuristic value: 1606 [g=182, 477 evaluated, 447 expanded, t=13.06s, 70144 KB]
+Best heuristic value: 1605 [g=183, 478 evaluated, 448 expanded, t=13.06s, 70144 KB]
+Best heuristic value: 1604 [g=184, 479 evaluated, 449 expanded, t=13.06s, 70144 KB]
+Best heuristic value: 1603 [g=185, 480 evaluated, 450 expanded, t=13.08s, 70144 KB]
+Best heuristic value: 1602 [g=186, 481 evaluated, 451 expanded, t=13.08s, 70144 KB]
+Best heuristic value: 1601 [g=187, 482 evaluated, 452 expanded, t=13.08s, 70144 KB]
+Best heuristic value: 1307 [g=188, 483 evaluated, 453 expanded, t=13.12s, 70144 KB]
+Best heuristic value: 1306 [g=190, 486 evaluated, 456 expanded, t=13.12s, 70144 KB]
+Best heuristic value: 1305 [g=192, 489 evaluated, 459 expanded, t=13.12s, 70144 KB]
+Best heuristic value: 1304 [g=196, 493 evaluated, 463 expanded, t=13.14s, 70144 KB]
+Best heuristic value: 1303 [g=197, 494 evaluated, 464 expanded, t=13.14s, 70144 KB]
+Best heuristic value: 1302 [g=198, 495 evaluated, 465 expanded, t=13.14s, 70144 KB]
+Best heuristic value: 1301 [g=199, 496 evaluated, 466 expanded, t=13.14s, 70144 KB]
+Best heuristic value: 1113 [g=200, 497 evaluated, 467 expanded, t=13.18s, 70144 KB]
+Best heuristic value: 1110 [g=216, 518 evaluated, 488 expanded, t=13.22s, 70144 KB]
+Best heuristic value: 1109 [g=220, 522 evaluated, 492 expanded, t=13.22s, 70144 KB]
+Best heuristic value: 1108 [g=228, 530 evaluated, 500 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 1107 [g=229, 531 evaluated, 501 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 1106 [g=230, 532 evaluated, 502 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 1105 [g=231, 533 evaluated, 503 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 1104 [g=232, 534 evaluated, 504 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 1103 [g=233, 535 evaluated, 505 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 1102 [g=234, 536 evaluated, 506 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 1101 [g=235, 537 evaluated, 507 expanded, t=13.24s, 70144 KB]
+Best heuristic value: 916 [g=236, 538 evaluated, 508 expanded, t=13.30s, 70144 KB]
+Best heuristic value: 913 [g=243, 561 evaluated, 526 expanded, t=15.16s, 70144 KB]
+Best heuristic value: 912 [g=244, 564 evaluated, 529 expanded, t=15.16s, 70144 KB]
+Best heuristic value: 911 [g=246, 567 evaluated, 532 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 910 [g=247, 568 evaluated, 533 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 909 [g=248, 569 evaluated, 534 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 908 [g=249, 570 evaluated, 535 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 907 [g=250, 571 evaluated, 536 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 906 [g=251, 572 evaluated, 537 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 905 [g=252, 573 evaluated, 538 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 904 [g=253, 575 evaluated, 540 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 903 [g=254, 576 evaluated, 541 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 902 [g=255, 577 evaluated, 542 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 901 [g=256, 578 evaluated, 543 expanded, t=15.18s, 70144 KB]
+Best heuristic value: 710 [g=257, 579 evaluated, 544 expanded, t=15.24s, 70144 KB]
+Best heuristic value: 709 [g=264, 606 evaluated, 562 expanded, t=18.58s, 70144 KB]
+Best heuristic value: 708 [g=265, 608 evaluated, 564 expanded, t=18.58s, 70144 KB]
+Best heuristic value: 707 [g=271, 615 evaluated, 571 expanded, t=18.58s, 70144 KB]
+Best heuristic value: 706 [g=272, 616 evaluated, 572 expanded, t=18.58s, 70144 KB]
+Best heuristic value: 705 [g=273, 617 evaluated, 573 expanded, t=18.60s, 70144 KB]
+Best heuristic value: 704 [g=274, 618 evaluated, 574 expanded, t=18.60s, 70144 KB]
+Best heuristic value: 703 [g=275, 619 evaluated, 575 expanded, t=18.60s, 70144 KB]
+Best heuristic value: 702 [g=276, 620 evaluated, 576 expanded, t=18.60s, 70144 KB]
+Best heuristic value: 701 [g=277, 621 evaluated, 577 expanded, t=18.60s, 70144 KB]
+Best heuristic value: 502 [g=278, 622 evaluated, 578 expanded, t=18.64s, 70144 KB]
+Best heuristic value: 501 [g=279, 623 evaluated, 579 expanded, t=18.64s, 70144 KB]
+Best heuristic value: 402 [g=280, 624 evaluated, 580 expanded, t=18.68s, 70144 KB]
+Best heuristic value: 401 [g=281, 625 evaluated, 581 expanded, t=18.68s, 70144 KB]
+Best heuristic value: 304 [g=282, 626 evaluated, 582 expanded, t=18.74s, 70144 KB]
+Best heuristic value: 303 [g=283, 627 evaluated, 583 expanded, t=18.74s, 70144 KB]
+Best heuristic value: 302 [g=284, 628 evaluated, 584 expanded, t=18.74s, 70144 KB]
+Best heuristic value: 301 [g=285, 629 evaluated, 585 expanded, t=18.74s, 70144 KB]
+Best heuristic value: 212 [g=286, 630 evaluated, 586 expanded, t=18.78s, 70144 KB]
+Best heuristic value: 211 [g=293, 642 evaluated, 598 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 210 [g=294, 643 evaluated, 599 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 209 [g=295, 644 evaluated, 600 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 208 [g=296, 645 evaluated, 601 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 207 [g=297, 646 evaluated, 602 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 206 [g=298, 647 evaluated, 603 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 205 [g=299, 648 evaluated, 604 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 204 [g=300, 649 evaluated, 605 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 203 [g=301, 650 evaluated, 606 expanded, t=18.80s, 70144 KB]
+Best heuristic value: 202 [g=302, 651 evaluated, 607 expanded, t=18.82s, 70144 KB]
+Best heuristic value: 201 [g=303, 652 evaluated, 608 expanded, t=18.82s, 70144 KB]
+Best heuristic value: 111 [g=304, 653 evaluated, 609 expanded, t=18.86s, 70144 KB]
+Best heuristic value: 110 [g=308, 660 evaluated, 616 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 109 [g=309, 661 evaluated, 617 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 108 [g=310, 662 evaluated, 618 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 107 [g=311, 663 evaluated, 619 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 106 [g=312, 664 evaluated, 620 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 105 [g=313, 665 evaluated, 621 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 104 [g=314, 666 evaluated, 622 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 103 [g=315, 667 evaluated, 623 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 102 [g=316, 668 evaluated, 624 expanded, t=18.88s, 70144 KB]
+Best heuristic value: 101 [g=317, 669 evaluated, 625 expanded, t=18.88s, 70144 KB]
+Solution found!
+Actual search time: 17.78s [t=18.94s]
+navigate_uav uav9 area41 area37 (1)
+take_picture uav9 area37 disaster10 (1)
+navigate_uav uav9 area37 area11 (1)
+navigate_uav uav9 area11 area42 (1)
+communicate_data uav9 cdm5 disaster10 area42 area41 (1)
+navigate_uav uav9 area42 area11 (1)
+take_picture uav9 area11 disaster8 (1)
+navigate_uav uav9 area11 area20 (1)
+navigate_uav uav9 area20 area2 (1)
+communicate_data uav9 cdm1 disaster8 area2 area1 (1)
+navigate_uav uav9 area2 area20 (1)
+take_picture uav9 area20 disaster15 (1)
+navigate_uav uav9 area20 area2 (1)
+communicate_data uav9 cdm1 disaster15 area2 area1 (1)
+navigate_uav uav9 area2 area55 (1)
+take_picture uav9 area55 disaster7 (1)
+navigate_uav uav9 area55 area1 (1)
+communicate_data uav9 cdm1 disaster7 area1 area1 (1)
+navigate_uav uav9 area1 area7 (1)
+take_picture uav9 area7 disaster6 (1)
+navigate_uav uav9 area7 area21 (1)
+communicate_data uav9 cdm3 disaster6 area21 area21 (1)
+navigate_uav uav9 area21 area24 (1)
+take_picture uav9 area24 disaster11 (1)
+navigate_uav uav9 area24 area3 (1)
+communicate_data uav9 cdm1 disaster11 area3 area1 (1)
+navigate_uav uav9 area3 area27 (1)
+take_picture uav9 area27 disaster2 (1)
+navigate_uav uav9 area27 area21 (1)
+communicate_data uav9 cdm3 disaster2 area21 area21 (1)
+navigate_uav uav9 area21 area28 (1)
+take_picture uav9 area28 disaster16 (1)
+navigate_uav uav9 area28 area29 (1)
+communicate_data uav9 cdm4 disaster16 area29 area33 (1)
+navigate_uav uav9 area29 area38 (1)
+take_picture uav9 area38 disaster14 (1)
+navigate_uav uav9 area38 area1 (1)
+communicate_data uav9 cdm1 disaster14 area1 area1 (1)
+navigate_uav uav9 area1 area44 (1)
+take_picture uav9 area44 disaster13 (1)
+navigate_uav uav9 area44 area21 (1)
+communicate_data uav9 cdm3 disaster13 area21 area21 (1)
+navigate_uav uav9 area21 area58 (1)
+take_picture uav9 area58 disaster1 (1)
+navigate_uav uav9 area58 area29 (1)
+communicate_data uav9 cdm4 disaster1 area29 area33 (1)
+take_picture usv9 area41 disaster9 (1)
+communicate_data usv9 cdm5 disaster9 area41 area41 (1)
+navigate_usv usv9 area41 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+navigate_usv usv9 area53 area33 (1)
+navigate_usv usv9 area33 area29 (1)
+navigate_usv usv9 area29 area28 (1)
+sample_water usv9 usv9store area28 (1)
+navigate_usv usv9 area28 area29 (1)
+navigate_usv usv9 area29 area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area49 (1)
+navigate_usv usv9 area49 area44 (1)
+navigate_usv usv9 area44 area42 (1)
+navigate_usv usv9 area42 area41 (1)
+drop_sample usv9 usv9store area41 area28 cdm5 (1)
+navigate_usv usv9 area41 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+navigate_usv usv9 area53 area33 (1)
+sample_water usv9 usv9store area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area49 (1)
+navigate_usv usv9 area49 area44 (1)
+navigate_usv usv9 area44 area42 (1)
+navigate_usv usv9 area42 area41 (1)
+drop_sample usv9 usv9store area41 area33 cdm5 (1)
+navigate_usv usv9 area41 area56 (1)
+sample_water usv9 usv9store area56 (1)
+navigate_usv usv9 area56 area54 (1)
+navigate_usv usv9 area54 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+drop_sample usv9 usv9store area53 area56 cdm6 (1)
+navigate_usv usv9 area53 area49 (1)
+take_picture usv9 area49 disaster3 (1)
+navigate_usv usv9 area49 area53 (1)
+communicate_data usv9 cdm6 disaster3 area53 area53 (1)
+navigate_usv usv9 area53 area33 (1)
+navigate_usv usv9 area33 area29 (1)
+navigate_usv usv9 area29 area28 (1)
+navigate_usv usv9 area28 area27 (1)
+navigate_usv usv9 area27 area8 (1)
+sample_water usv9 usv9store area8 (1)
+navigate_usv usv9 area8 area27 (1)
+navigate_usv usv9 area27 area28 (1)
+navigate_usv usv9 area28 area29 (1)
+navigate_usv usv9 area29 area33 (1)
+drop_sample usv9 usv9store area33 area8 cdm4 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area13 (1)
+navigate_usv usv9 area13 area9 (1)
+navigate_usv usv9 area9 area4 (1)
+navigate_usv usv9 area4 area2 (1)
+sample_water usv9 usv9store area2 (1)
+navigate_usv usv9 area2 area1 (1)
+navigate_usv usv9 area1 area16 (1)
+navigate_usv usv9 area16 area18 (1)
+navigate_usv usv9 area18 area20 (1)
+navigate_usv usv9 area20 area19 (1)
+navigate_usv usv9 area19 area17 (1)
+navigate_usv usv9 area17 area38 (1)
+navigate_usv usv9 area38 area36 (1)
+navigate_usv usv9 area36 area21 (1)
+drop_sample usv9 usv9store area21 area2 cdm3 (1)
+navigate_usv usv9 area21 area22 (1)
+navigate_usv usv9 area22 area24 (1)
+navigate_usv usv9 area24 area29 (1)
+navigate_usv usv9 area29 area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area13 (1)
+navigate_usv usv9 area13 area9 (1)
+navigate_usv usv9 area9 area4 (1)
+sample_water usv9 usv9store area4 (1)
+navigate_usv usv9 area4 area9 (1)
+navigate_usv usv9 area9 area13 (1)
+navigate_usv usv9 area13 area53 (1)
+drop_sample usv9 usv9store area53 area4 cdm6 (1)
+navigate_usv usv9 area53 area33 (1)
+navigate_usv usv9 area33 area29 (1)
+navigate_usv usv9 area29 area24 (1)
+navigate_usv usv9 area24 area22 (1)
+navigate_usv usv9 area22 area34 (1)
+navigate_usv usv9 area34 area36 (1)
+navigate_usv usv9 area36 area38 (1)
+navigate_usv usv9 area38 area35 (1)
+sample_water usv9 usv9store area35 (1)
+navigate_usv usv9 area35 area38 (1)
+navigate_usv usv9 area38 area36 (1)
+navigate_usv usv9 area36 area21 (1)
+navigate_usv usv9 area21 area22 (1)
+navigate_usv usv9 area22 area24 (1)
+navigate_usv usv9 area24 area29 (1)
+navigate_usv usv9 area29 area33 (1)
+navigate_usv usv9 area33 area53 (1)
+navigate_usv usv9 area53 area13 (1)
+drop_sample usv9 usv9store area13 area35 cdm2 (1)
+pickup_box ugv9 ugv9store cdm5 area41 box7 (1)
+navigate_ugv ugv9 area41 area43 (1)
+navigate_ugv ugv9 area43 area44 (1)
+navigate_ugv ugv9 area44 area50 (1)
+navigate_ugv ugv9 area50 area53 (1)
+navigate_ugv ugv9 area53 area13 (1)
+navigate_ugv ugv9 area13 area10 (1)
+navigate_ugv ugv8 area33 area53 (1)
+navigate_ugv ugv8 area53 area13 (1)
+pickup_box ugv8 ugv8store cdm2 area13 box2 (1)
+navigate_ugv ugv8 area13 area53 (1)
+navigate_ugv ugv8 area53 area33 (1)
+drop_box ugv8 ugv8store area33 box2 (1)
+pickup_box ugv8 ugv8store cdm4 area33 box6 (1)
+navigate_ugv ugv8 area33 area30 (1)
+navigate_ugv ugv8 area30 area24 (1)
+navigate_ugv ugv8 area24 area23 (1)
+navigate_ugv ugv8 area23 area25 (1)
+navigate_ugv ugv8 area25 area31 (1)
+drop_box ugv8 ugv8store area31 box6 (1)
+navigate_ugv ugv8 area31 area25 (1)
+navigate_ugv ugv8 area25 area23 (1)
+navigate_ugv ugv8 area23 area24 (1)
+navigate_ugv ugv8 area24 area30 (1)
+navigate_ugv ugv8 area30 area33 (1)
+navigate_ugv ugv8 area33 area53 (1)
+navigate_ugv ugv8 area53 area50 (1)
+navigate_ugv ugv8 area50 area44 (1)
+navigate_ugv ugv8 area44 area43 (1)
+navigate_ugv ugv8 area43 area41 (1)
+pickup_box ugv8 ugv8store cdm5 area41 box8 (1)
+navigate_ugv ugv8 area41 area43 (1)
+navigate_ugv ugv8 area43 area44 (1)
+navigate_ugv ugv8 area44 area50 (1)
+navigate_ugv ugv8 area50 area53 (1)
+navigate_ugv ugv8 area53 area33 (1)
+navigate_ugv ugv8 area33 area30 (1)
+navigate_ugv ugv8 area30 area24 (1)
+navigate_ugv ugv8 area24 area23 (1)
+navigate_ugv ugv8 area23 area21 (1)
+drop_box ugv8 ugv8store area21 box8 (1)
+navigate_usv usv6 area21 area36 (1)
+take_picture usv6 area36 disaster4 (1)
+navigate_usv usv6 area36 area21 (1)
+communicate_data usv6 cdm3 disaster4 area21 area21 (1)
+navigate_usv usv6 area21 area36 (1)
+navigate_usv usv6 area36 area38 (1)
+navigate_usv usv6 area38 area17 (1)
+sample_water usv6 usv6store area17 (1)
+navigate_usv usv6 area17 area38 (1)
+navigate_usv usv6 area38 area36 (1)
+navigate_usv usv6 area36 area21 (1)
+drop_sample usv6 usv6store area21 area17 cdm3 (1)
+navigate_usv usv2 area1 area16 (1)
+navigate_usv usv2 area16 area18 (1)
+navigate_usv usv2 area18 area20 (1)
+navigate_usv usv2 area20 area19 (1)
+navigate_usv usv2 area19 area17 (1)
+navigate_usv usv2 area17 area38 (1)
+navigate_usv usv2 area38 area40 (1)
+navigate_usv usv2 area40 area39 (1)
+navigate_usv usv2 area39 area37 (1)
+sample_water usv2 usv2store area37 (1)
+navigate_usv usv2 area37 area39 (1)
+navigate_usv usv2 area39 area40 (1)
+navigate_usv usv2 area40 area38 (1)
+navigate_usv usv2 area38 area17 (1)
+navigate_usv usv2 area17 area19 (1)
+navigate_usv usv2 area19 area20 (1)
+navigate_usv usv2 area20 area18 (1)
+navigate_usv usv2 area18 area16 (1)
+navigate_usv usv2 area16 area1 (1)
+drop_sample usv2 usv2store area1 area37 cdm1 (1)
+navigate_usv usv2 area1 area16 (1)
+navigate_usv usv2 area16 area18 (1)
+navigate_usv usv2 area18 area20 (1)
+navigate_usv usv2 area20 area19 (1)
+navigate_usv usv2 area19 area17 (1)
+navigate_usv usv2 area17 area38 (1)
+navigate_usv usv2 area38 area40 (1)
+sample_water usv2 usv2store area40 (1)
+navigate_usv usv2 area40 area38 (1)
+navigate_usv usv2 area38 area17 (1)
+navigate_usv usv2 area17 area19 (1)
+navigate_usv usv2 area19 area20 (1)
+navigate_usv usv2 area20 area18 (1)
+navigate_usv usv2 area18 area16 (1)
+navigate_usv usv2 area16 area1 (1)
+drop_sample usv2 usv2store area1 area40 cdm1 (1)
+pickup_box ugv8 ugv8store cdm3 area21 box5 (1)
+navigate_ugv ugv8 area21 area36 (1)
+navigate_ugv ugv8 area36 area37 (1)
+navigate_ugv ugv8 area37 area18 (1)
+navigate_ugv ugv8 area18 area15 (1)
+navigate_ugv ugv8 area15 area3 (1)
+navigate_ugv ugv8 area3 area1 (1)
+pickup_box ugv7 ugv7store cdm4 area33 box4 (1)
+navigate_ugv ugv7 area33 area30 (1)
+take_picture ugv7 area30 disaster12 (1)
+navigate_ugv ugv7 area30 area33 (1)
+navigate_ugv ugv7 area33 area53 (1)
+navigate_ugv ugv7 area53 area50 (1)
+navigate_ugv ugv7 area50 area44 (1)
+navigate_ugv ugv7 area44 area43 (1)
+navigate_ugv ugv7 area43 area41 (1)
+communicate_data ugv7 cdm5 disaster12 area41 area41 (1)
+navigate_ugv ugv7 area41 area56 (1)
+navigate_ugv ugv7 area56 area57 (1)
+navigate_ugv ugv7 area57 area54 (1)
+drop_box ugv7 ugv7store area54 box4 (1)
+navigate_ugv ugv4 area13 area53 (1)
+pickup_box ugv4 ugv4store cdm6 area53 box9 (1)
+navigate_ugv ugv4 area53 area13 (1)
+navigate_ugv ugv4 area13 area10 (1)
+navigate_ugv ugv4 area10 area4 (1)
+navigate_ugv ugv4 area4 area3 (1)
+navigate_ugv ugv4 area3 area15 (1)
+drop_box ugv4 ugv4store area15 box9 (1)
+navigate_ugv ugv4 area15 area3 (1)
+navigate_ugv ugv4 area3 area4 (1)
+navigate_ugv ugv4 area4 area10 (1)
+navigate_ugv ugv4 area10 area13 (1)
+navigate_ugv ugv4 area13 area53 (1)
+pickup_box ugv4 ugv4store cdm6 area53 box10 (1)
+navigate_ugv ugv4 area53 area13 (1)
+navigate_ugv ugv4 area13 area10 (1)
+navigate_ugv ugv4 area10 area4 (1)
+navigate_ugv ugv4 area4 area3 (1)
+navigate_ugv ugv4 area3 area15 (1)
+navigate_ugv ugv4 area15 area18 (1)
+drop_box ugv4 ugv4store area18 box10 (1)
+take_picture usv9 area13 disaster5 (1)
+communicate_data usv9 cdm2 disaster5 area13 area13 (1)
+navigate_ugv ugv9 area10 area7 (1)
+drop_box ugv9 ugv9store area7 box7 (1)
+navigate_ugv ugv8 area1 area3 (1)
+navigate_ugv ugv8 area3 area4 (1)
+navigate_ugv ugv8 area4 area6 (1)
+drop_box ugv8 ugv8store area6 box5 (1)
+navigate_ugv ugv6 area21 area36 (1)
+navigate_ugv ugv6 area36 area37 (1)
+navigate_ugv ugv6 area37 area18 (1)
+navigate_ugv ugv6 area18 area15 (1)
+navigate_ugv ugv6 area15 area16 (1)
+navigate_ugv ugv6 area16 area1 (1)
+pickup_box ugv6 ugv6store cdm1 area1 box1 (1)
+navigate_ugv ugv6 area1 area16 (1)
+navigate_ugv ugv6 area16 area15 (1)
+navigate_ugv ugv6 area15 area18 (1)
+navigate_ugv ugv6 area18 area37 (1)
+navigate_ugv ugv6 area37 area36 (1)
+navigate_ugv ugv6 area36 area21 (1)
+navigate_ugv ugv6 area21 area23 (1)
+navigate_ugv ugv6 area23 area25 (1)
+navigate_ugv ugv6 area25 area31 (1)
+navigate_ugv ugv6 area31 area29 (1)
+drop_box ugv6 ugv6store area29 box1 (1)
+navigate_ugv ugv4 area18 area15 (1)
+navigate_ugv ugv4 area15 area16 (1)
+navigate_ugv ugv4 area16 area1 (1)
+pickup_box ugv4 ugv4store cdm1 area1 box3 (1)
+navigate_ugv ugv4 area1 area16 (1)
+navigate_ugv ugv4 area16 area15 (1)
+navigate_ugv ugv4 area15 area18 (1)
+navigate_ugv ugv4 area18 area37 (1)
+navigate_ugv ugv4 area37 area36 (1)
+navigate_ugv ugv4 area36 area35 (1)
+navigate_ugv ugv4 area35 area38 (1)
+navigate_ugv ugv4 area38 area40 (1)
+navigate_ugv ugv4 area40 area39 (1)
+drop_box ugv4 ugv4store area39 box3 (1)
+Plan length: 318 step(s).
+Plan cost: 318
+Initial state h value: 3633.
+Expanded 626 state(s).
+Reopened 0 state(s).
+Evaluated 670 state(s).
+Evaluations: 670
+Generated 500552 state(s).
+Dead ends: 43 state(s).
+Search time: 17.78s
+Total time: 18.94s
+Solution found.
+Peak memory: 70144 KB
+
+real	0m30.985s
+user	0m29.584s
+sys	0m1.376s
+
+(navigate_uav uav9 area41 area37)
+(take_picture uav9 area37 disaster10)
+(navigate_uav uav9 area37 area11)
+(navigate_uav uav9 area11 area42)
+(communicate_data uav9 cdm5 disaster10 area42 area41)
+(navigate_uav uav9 area42 area11)
+(take_picture uav9 area11 disaster8)
+(navigate_uav uav9 area11 area20)
+(navigate_uav uav9 area20 area2)
+(communicate_data uav9 cdm1 disaster8 area2 area1)
+(navigate_uav uav9 area2 area20)
+(take_picture uav9 area20 disaster15)
+(navigate_uav uav9 area20 area2)
+(communicate_data uav9 cdm1 disaster15 area2 area1)
+(navigate_uav uav9 area2 area55)
+(take_picture uav9 area55 disaster7)
+(navigate_uav uav9 area55 area1)
+(communicate_data uav9 cdm1 disaster7 area1 area1)
+(navigate_uav uav9 area1 area7)
+(take_picture uav9 area7 disaster6)
+(navigate_uav uav9 area7 area21)
+(communicate_data uav9 cdm3 disaster6 area21 area21)
+(navigate_uav uav9 area21 area24)
+(take_picture uav9 area24 disaster11)
+(navigate_uav uav9 area24 area3)
+(communicate_data uav9 cdm1 disaster11 area3 area1)
+(navigate_uav uav9 area3 area27)
+(take_picture uav9 area27 disaster2)
+(navigate_uav uav9 area27 area21)
+(communicate_data uav9 cdm3 disaster2 area21 area21)
+(navigate_uav uav9 area21 area28)
+(take_picture uav9 area28 disaster16)
+(navigate_uav uav9 area28 area29)
+(communicate_data uav9 cdm4 disaster16 area29 area33)
+(navigate_uav uav9 area29 area38)
+(take_picture uav9 area38 disaster14)
+(navigate_uav uav9 area38 area1)
+(communicate_data uav9 cdm1 disaster14 area1 area1)
+(navigate_uav uav9 area1 area44)
+(take_picture uav9 area44 disaster13)
+(navigate_uav uav9 area44 area21)
+(communicate_data uav9 cdm3 disaster13 area21 area21)
+(navigate_uav uav9 area21 area58)
+(take_picture uav9 area58 disaster1)
+(navigate_uav uav9 area58 area29)
+(communicate_data uav9 cdm4 disaster1 area29 area33)
+(take_picture usv9 area41 disaster9)
+(communicate_data usv9 cdm5 disaster9 area41 area41)
+(navigate_usv usv9 area41 area42)
+(navigate_usv usv9 area42 area44)
+(navigate_usv usv9 area44 area49)
+(navigate_usv usv9 area49 area53)
+(navigate_usv usv9 area53 area33)
+(navigate_usv usv9 area33 area29)
+(navigate_usv usv9 area29 area28)
+(sample_water usv9 usv9store area28)
+(navigate_usv usv9 area28 area29)
+(navigate_usv usv9 area29 area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area49)
+(navigate_usv usv9 area49 area44)
+(navigate_usv usv9 area44 area42)
+(navigate_usv usv9 area42 area41)
+(drop_sample usv9 usv9store area41 area28 cdm5)
+(navigate_usv usv9 area41 area42)
+(navigate_usv usv9 area42 area44)
+(navigate_usv usv9 area44 area49)
+(navigate_usv usv9 area49 area53)
+(navigate_usv usv9 area53 area33)
+(sample_water usv9 usv9store area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area49)
+(navigate_usv usv9 area49 area44)
+(navigate_usv usv9 area44 area42)
+(navigate_usv usv9 area42 area41)
+(drop_sample usv9 usv9store area41 area33 cdm5)
+(navigate_usv usv9 area41 area56)
+(sample_water usv9 usv9store area56)
+(navigate_usv usv9 area56 area54)
+(navigate_usv usv9 area54 area42)
+(navigate_usv usv9 area42 area44)
+(navigate_usv usv9 area44 area49)
+(navigate_usv usv9 area49 area53)
+(drop_sample usv9 usv9store area53 area56 cdm6)
+(navigate_usv usv9 area53 area49)
+(take_picture usv9 area49 disaster3)
+(navigate_usv usv9 area49 area53)
+(communicate_data usv9 cdm6 disaster3 area53 area53)
+(navigate_usv usv9 area53 area33)
+(navigate_usv usv9 area33 area29)
+(navigate_usv usv9 area29 area28)
+(navigate_usv usv9 area28 area27)
+(navigate_usv usv9 area27 area8)
+(sample_water usv9 usv9store area8)
+(navigate_usv usv9 area8 area27)
+(navigate_usv usv9 area27 area28)
+(navigate_usv usv9 area28 area29)
+(navigate_usv usv9 area29 area33)
+(drop_sample usv9 usv9store area33 area8 cdm4)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area13)
+(navigate_usv usv9 area13 area9)
+(navigate_usv usv9 area9 area4)
+(navigate_usv usv9 area4 area2)
+(sample_water usv9 usv9store area2)
+(navigate_usv usv9 area2 area1)
+(navigate_usv usv9 area1 area16)
+(navigate_usv usv9 area16 area18)
+(navigate_usv usv9 area18 area20)
+(navigate_usv usv9 area20 area19)
+(navigate_usv usv9 area19 area17)
+(navigate_usv usv9 area17 area38)
+(navigate_usv usv9 area38 area36)
+(navigate_usv usv9 area36 area21)
+(drop_sample usv9 usv9store area21 area2 cdm3)
+(navigate_usv usv9 area21 area22)
+(navigate_usv usv9 area22 area24)
+(navigate_usv usv9 area24 area29)
+(navigate_usv usv9 area29 area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area13)
+(navigate_usv usv9 area13 area9)
+(navigate_usv usv9 area9 area4)
+(sample_water usv9 usv9store area4)
+(navigate_usv usv9 area4 area9)
+(navigate_usv usv9 area9 area13)
+(navigate_usv usv9 area13 area53)
+(drop_sample usv9 usv9store area53 area4 cdm6)
+(navigate_usv usv9 area53 area33)
+(navigate_usv usv9 area33 area29)
+(navigate_usv usv9 area29 area24)
+(navigate_usv usv9 area24 area22)
+(navigate_usv usv9 area22 area34)
+(navigate_usv usv9 area34 area36)
+(navigate_usv usv9 area36 area38)
+(navigate_usv usv9 area38 area35)
+(sample_water usv9 usv9store area35)
+(navigate_usv usv9 area35 area38)
+(navigate_usv usv9 area38 area36)
+(navigate_usv usv9 area36 area21)
+(navigate_usv usv9 area21 area22)
+(navigate_usv usv9 area22 area24)
+(navigate_usv usv9 area24 area29)
+(navigate_usv usv9 area29 area33)
+(navigate_usv usv9 area33 area53)
+(navigate_usv usv9 area53 area13)
+(drop_sample usv9 usv9store area13 area35 cdm2)
+(pickup_box ugv9 ugv9store cdm5 area41 box7)
+(navigate_ugv ugv9 area41 area43)
+(navigate_ugv ugv9 area43 area44)
+(navigate_ugv ugv9 area44 area50)
+(navigate_ugv ugv9 area50 area53)
+(navigate_ugv ugv9 area53 area13)
+(navigate_ugv ugv9 area13 area10)
+(navigate_ugv ugv8 area33 area53)
+(navigate_ugv ugv8 area53 area13)
+(pickup_box ugv8 ugv8store cdm2 area13 box2)
+(navigate_ugv ugv8 area13 area53)
+(navigate_ugv ugv8 area53 area33)
+(drop_box ugv8 ugv8store area33 box2)
+(pickup_box ugv8 ugv8store cdm4 area33 box6)
+(navigate_ugv ugv8 area33 area30)
+(navigate_ugv ugv8 area30 area24)
+(navigate_ugv ugv8 area24 area23)
+(navigate_ugv ugv8 area23 area25)
+(navigate_ugv ugv8 area25 area31)
+(drop_box ugv8 ugv8store area31 box6)
+(navigate_ugv ugv8 area31 area25)
+(navigate_ugv ugv8 area25 area23)
+(navigate_ugv ugv8 area23 area24)
+(navigate_ugv ugv8 area24 area30)
+(navigate_ugv ugv8 area30 area33)
+(navigate_ugv ugv8 area33 area53)
+(navigate_ugv ugv8 area53 area50)
+(navigate_ugv ugv8 area50 area44)
+(navigate_ugv ugv8 area44 area43)
+(navigate_ugv ugv8 area43 area41)
+(pickup_box ugv8 ugv8store cdm5 area41 box8)
+(navigate_ugv ugv8 area41 area43)
+(navigate_ugv ugv8 area43 area44)
+(navigate_ugv ugv8 area44 area50)
+(navigate_ugv ugv8 area50 area53)
+(navigate_ugv ugv8 area53 area33)
+(navigate_ugv ugv8 area33 area30)
+(navigate_ugv ugv8 area30 area24)
+(navigate_ugv ugv8 area24 area23)
+(navigate_ugv ugv8 area23 area21)
+(drop_box ugv8 ugv8store area21 box8)
+(navigate_usv usv6 area21 area36)
+(take_picture usv6 area36 disaster4)
+(navigate_usv usv6 area36 area21)
+(communicate_data usv6 cdm3 disaster4 area21 area21)
+(navigate_usv usv6 area21 area36)
+(navigate_usv usv6 area36 area38)
+(navigate_usv usv6 area38 area17)
+(sample_water usv6 usv6store area17)
+(navigate_usv usv6 area17 area38)
+(navigate_usv usv6 area38 area36)
+(navigate_usv usv6 area36 area21)
+(drop_sample usv6 usv6store area21 area17 cdm3)
+(navigate_usv usv2 area1 area16)
+(navigate_usv usv2 area16 area18)
+(navigate_usv usv2 area18 area20)
+(navigate_usv usv2 area20 area19)
+(navigate_usv usv2 area19 area17)
+(navigate_usv usv2 area17 area38)
+(navigate_usv usv2 area38 area40)
+(navigate_usv usv2 area40 area39)
+(navigate_usv usv2 area39 area37)
+(sample_water usv2 usv2store area37)
+(navigate_usv usv2 area37 area39)
+(navigate_usv usv2 area39 area40)
+(navigate_usv usv2 area40 area38)
+(navigate_usv usv2 area38 area17)
+(navigate_usv usv2 area17 area19)
+(navigate_usv usv2 area19 area20)
+(navigate_usv usv2 area20 area18)
+(navigate_usv usv2 area18 area16)
+(navigate_usv usv2 area16 area1)
+(drop_sample usv2 usv2store area1 area37 cdm1)
+(navigate_usv usv2 area1 area16)
+(navigate_usv usv2 area16 area18)
+(navigate_usv usv2 area18 area20)
+(navigate_usv usv2 area20 area19)
+(navigate_usv usv2 area19 area17)
+(navigate_usv usv2 area17 area38)
+(navigate_usv usv2 area38 area40)
+(sample_water usv2 usv2store area40)
+(navigate_usv usv2 area40 area38)
+(navigate_usv usv2 area38 area17)
+(navigate_usv usv2 area17 area19)
+(navigate_usv usv2 area19 area20)
+(navigate_usv usv2 area20 area18)
+(navigate_usv usv2 area18 area16)
+(navigate_usv usv2 area16 area1)
+(drop_sample usv2 usv2store area1 area40 cdm1)
+(pickup_box ugv8 ugv8store cdm3 area21 box5)
+(navigate_ugv ugv8 area21 area36)
+(navigate_ugv ugv8 area36 area37)
+(navigate_ugv ugv8 area37 area18)
+(navigate_ugv ugv8 area18 area15)
+(navigate_ugv ugv8 area15 area3)
+(navigate_ugv ugv8 area3 area1)
+(pickup_box ugv7 ugv7store cdm4 area33 box4)
+(navigate_ugv ugv7 area33 area30)
+(take_picture ugv7 area30 disaster12)
+(navigate_ugv ugv7 area30 area33)
+(navigate_ugv ugv7 area33 area53)
+(navigate_ugv ugv7 area53 area50)
+(navigate_ugv ugv7 area50 area44)
+(navigate_ugv ugv7 area44 area43)
+(navigate_ugv ugv7 area43 area41)
+(communicate_data ugv7 cdm5 disaster12 area41 area41)
+(navigate_ugv ugv7 area41 area56)
+(navigate_ugv ugv7 area56 area57)
+(navigate_ugv ugv7 area57 area54)
+(drop_box ugv7 ugv7store area54 box4)
+(navigate_ugv ugv4 area13 area53)
+(pickup_box ugv4 ugv4store cdm6 area53 box9)
+(navigate_ugv ugv4 area53 area13)
+(navigate_ugv ugv4 area13 area10)
+(navigate_ugv ugv4 area10 area4)
+(navigate_ugv ugv4 area4 area3)
+(navigate_ugv ugv4 area3 area15)
+(drop_box ugv4 ugv4store area15 box9)
+(navigate_ugv ugv4 area15 area3)
+(navigate_ugv ugv4 area3 area4)
+(navigate_ugv ugv4 area4 area10)
+(navigate_ugv ugv4 area10 area13)
+(navigate_ugv ugv4 area13 area53)
+(pickup_box ugv4 ugv4store cdm6 area53 box10)
+(navigate_ugv ugv4 area53 area13)
+(navigate_ugv ugv4 area13 area10)
+(navigate_ugv ugv4 area10 area4)
+(navigate_ugv ugv4 area4 area3)
+(navigate_ugv ugv4 area3 area15)
+(navigate_ugv ugv4 area15 area18)
+(drop_box ugv4 ugv4store area18 box10)
+(take_picture usv9 area13 disaster5)
+(communicate_data usv9 cdm2 disaster5 area13 area13)
+(navigate_ugv ugv9 area10 area7)
+(drop_box ugv9 ugv9store area7 box7)
+(navigate_ugv ugv8 area1 area3)
+(navigate_ugv ugv8 area3 area4)
+(navigate_ugv ugv8 area4 area6)
+(drop_box ugv8 ugv8store area6 box5)
+(navigate_ugv ugv6 area21 area36)
+(navigate_ugv ugv6 area36 area37)
+(navigate_ugv ugv6 area37 area18)
+(navigate_ugv ugv6 area18 area15)
+(navigate_ugv ugv6 area15 area16)
+(navigate_ugv ugv6 area16 area1)
+(pickup_box ugv6 ugv6store cdm1 area1 box1)
+(navigate_ugv ugv6 area1 area16)
+(navigate_ugv ugv6 area16 area15)
+(navigate_ugv ugv6 area15 area18)
+(navigate_ugv ugv6 area18 area37)
+(navigate_ugv ugv6 area37 area36)
+(navigate_ugv ugv6 area36 area21)
+(navigate_ugv ugv6 area21 area23)
+(navigate_ugv ugv6 area23 area25)
+(navigate_ugv ugv6 area25 area31)
+(navigate_ugv ugv6 area31 area29)
+(drop_box ugv6 ugv6store area29 box1)
+(navigate_ugv ugv4 area18 area15)
+(navigate_ugv ugv4 area15 area16)
+(navigate_ugv ugv4 area16 area1)
+(pickup_box ugv4 ugv4store cdm1 area1 box3)
+(navigate_ugv ugv4 area1 area16)
+(navigate_ugv ugv4 area16 area15)
+(navigate_ugv ugv4 area15 area18)
+(navigate_ugv ugv4 area18 area37)
+(navigate_ugv ugv4 area37 area36)
+(navigate_ugv ugv4 area36 area35)
+(navigate_ugv ugv4 area35 area38)
+(navigate_ugv ugv4 area38 area40)
+(navigate_ugv ugv4 area40 area39)
+(drop_box ugv4 ugv4store area39 box3)
+; cost = 318 (unit cost)
+

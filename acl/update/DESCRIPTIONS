@@ -1,0 +1,84 @@
+[ DESCRIPTIONS File Last Updated: 23-Sep-15 16:25:48 GMT ]
+
+This directory contains all the publicly available patches for:
+
+     product: Allegro CL
+     version: 10.0
+     architecture: linux86
+     directory: update/
+
+There are two types of files in this directory:
+
+   DESCRIPTIONS
+    -- This information file.
+
+   p<m><p><nnn>.<vvv>
+    -- where <m> is 1 character denoting the Lisp version, <p> is 1
+       character denoting the product, <nnn> are 3 characters denoting
+       the patch, and <vvv> are 3 characters denoting the patch
+       version.
+
+For more information on installing and using patches, see
+ftp://ftp.franz.com/pub/patches/10.0/README.
+
+Patch File Descriptions
+
+   This section lists the descriptions of the patch files available in
+   this directory.  All patches publicly available as of the date on
+   the top of this file are listed here.  The descriptions listed are
+   admittedly cryptic and may not reveal all the problems that the
+   patches fix.  Also not every "known" problem is fixable by a patch
+   file.  Contact Franz Inc. (see below) if you have questions about
+   patches or have a problem which seems not to be fixed by any of the
+   patches in this directory.
+
+   Gaps in the numbering do not necessarily indicate missing patches.
+
+   If you have any questions about any patch or the patch loading
+   procedure, please contact Franz Inc. by email at bugs@franz.com, by
+   phone at (510) 452-2000 (during US Pacific time zone work hours), or
+   by fax at (510) 452-0182.
+
+
+_ _ _ _ _ Descriptions Listing _ _ _ _ _
+
+Patch                  Description
+
+pkn001.001 : More informative error message when an ambiguous dynamic dispatch is encountered.
+   Note: Loaded only if (featurep :jlinker) returns non-nil.
+pkk001.001 : Bad CG scrollbar failure in a 32-bit lisp on a 64-bit Mac.
+   Note: Loaded only if (featurep :common-graphics) returns non-nil.
+pkb007.001 : Fix dynamic-extent-closure handling in dead code.
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pka006.001 : Internal Franz patch: provide memory barriers.
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pkb005.001 : Remove false positive of dynamic-extent declarations on closures.
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pkb004.001 : Obey some make-load-forms when the fasl-circle default is nil.
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pkb003.001 : Reduce memory leakage with clos accessor methods during compilation (compiler component).
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pkb002.002 : Fix consing regression in make-restart compilation (but not for sparc64).
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pkb002.001 : Fix consing regression in make-restart compilation.
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pkb001.001 : Fix compile-file to reset previous source context.
+   Note: Loaded only if (featurep :compiler) returns non-nil.
+pka016.002 : Superseded by code/ffdyn.001.
+pka016.001 : Fix reloading of ssl libraries for delivered applications.
+pka014.001 : Reduce memory leakage with clos accessor methods during compilation (run-time component).
+pka013.001 : Have ensure-directories-exist signal better errors.
+pka012.001 : Improve with-output-to-buffer interface.
+pka011.001 : Add new function excl:gethash-random to randoly select key/value pairs from a hashtable.
+pka010.002 : Fixed excl::my-make-hash-table with :allocation argument.
+pka010.001 : excl::my-make-hash-table with :allocation argument.
+pka009.001 : Recognize Os-signaled stack overflow.
+pka008.001 : Fix enough-namestring behavior with :device :unspecific.
+pka007.001 : Fix repl to reset previous source context.
+pka006.001 : Quiet down the source-context printing for conditions.
+pka005.001 : Cache census debug info.
+pka004.001 : Add :null-terminate (default t) and result-vector keywords to sting-to-native and octets-to-native.
+pka003.002 : Fix with-standard-io-syntax to not cons as much (revised to fix a bug).
+pka003.001 : Fix with-standard-io-syntax to not cons as much.
+pka002.001 : Allow conditional update on complex slot-value.
+pka001.001 : Fix bogus local variable object validations.

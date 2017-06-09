@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+ROOT=$PWD
+
+cd $ROOT/src/parser-ff
+make clean
+make depend
+make
+cd $ROOT/
+scons --clean
+scons
+

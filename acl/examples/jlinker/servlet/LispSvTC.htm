@@ -1,0 +1,65 @@
+<html>
+<head>
+<!-- ;; $Id: LispSvTC.htm,v 5.0 2004/01/14 18:31:35 layer Exp $ -->
+<title>Testing Servlet Interface</title>
+<body>
+<h1>Testing Servlet Interface with Tomcat-4</h1>
+<hr>
+The default port used by Tomcat-4 is 8080.  
+If a different port is used, this file must be modified to
+mention the correct port.
+<p>
+This file assumes that the servlet container and the browser
+are running on the same machine.
+If the servlet container and the browser are running on
+separate machines, the uses of "localhost" in this file
+must be modified to the host name of the servlet container.
+<p>
+The directory name "jlex" is an arbitratry choice.
+
+<hr>
+
+<p>
+Lisp classes "user1" and "user1a" just display some messages.
+<p>
+Invoke Lisp class "user1" directly:
+<br>
+<a href="http://localhost:8080/jlex/servlet/User1Servlet">
+   Call the servlet (user1)</a>
+
+<p>
+Invoke Lisp class "user1a" in a separate work thread:
+<br>
+<a href="http://localhost:8080/jlex/servlet/User1ServletA">
+   Call the servlet (user1a)</a>
+<p><hr>
+<p>
+Lisp classes "user2", "user2a" and "user2b" allow Lisp expressions
+to be evaluate from the web browser form.
+<p>
+Invoke Lisp class "user2" directly:
+<br>
+<a href="http://localhost:8080/jlex/servlet/User2Servlet"
+   target=user2 >
+   Call the servlet (user2)</a>
+
+<p>
+Invoke Lisp class "user2a" in a common work thread:
+<br>
+<a href="http://localhost:8080/jlex/servlet/User2ServletA"
+   target=user2 >
+   Call the servlet (user2a)</a>
+
+<p>
+Invoke Lisp class "user2b" in a separate work threads:
+<br>
+<a href="http://localhost:8080/jlex/servlet/User2ServletB"
+   target=user2 >
+   Call the servlet (user2b)</a>
+
+<hr>
+
+<a href="mailto:bugs@Franz.com">bugs@Franz.com</a>
+
+</body>
+</html>

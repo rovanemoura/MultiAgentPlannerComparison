@@ -1,0 +1,12 @@
+/** Listing 1: CORBA IDL for the chat environment. */
+
+module chat {
+	interface ChatListenerI {
+		void messageReceived(in string message);
+	}
+
+	interface ChatServerI {
+		void addListener(in ChatListenerI listener);
+		void sendMessage(in string message);
+	}
+}

@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Installation</title>
+  </head>
+
+  <body>
+    <h1><a name="installation">Installing ORBLink</a></h1>
+<hr>
+In order to install configure ORBLink, it is necessary to modify one file: 
+<p>
+
+<center><strong>orblink-configure.cl</strong></center></p>
+
+This file is located in the <code>code</code> subdirectory of the ACL home directory - the same directory in which 
+<strong>orblink.fasl</strong> is located.
+
+ORBLink will run out-of-the box with no installation steps. However, in order to generate object references that can 
+be used by programs in other internet domains, you need to apprise ORBLink of the internet domain to use in these object references.
+
+In most cases, it is sufficient to complete the installation by modifying the string indicating the domain in <strong>orblink-configure.cl</strong>:
+<pre>
+(setf
+    (op:domain corba:orb)
+  ""   ; This may be modified to the actual domain, 
+       ;  for example, "franz.com"
+ )
+</pre>
+
+However, sometimes the default rules used by ORBLink to generate a
+fully-qualified hostname from a domain name do not work. In this case,
+you should set the IP of the host on which ORBLink is to be
+run directly as described in <strong>orblink-configure.cl</strong>:
+
+<pre>
+ (setf (op:host corba;orb)
+   "" ; Replace with, e.g., "192.0.0.2" 
+      ;  for the Internet address or fully-qualified 
+      ;  IP address of the given host
+  )
+</pre>
+
+By default these lines are commented out. 
+
+A natural question is: how can I be sure if the default method suffices?
+
+The simplest way: from a Lisp listener evaluate:
+<pre>
+     (require :orblink)
+     corba:orb
+</pre>
+
+This should print a description of the ORB, for example:
+
+<pre>
+ORBLINK:ORB Allegro ORBLink :version 1.0 :host "corba.franz.com" :user "stiller"
+</pre>
+
+The "host" field here should denote the fully qualified hostname of the host on which ORBLink is to be run. If it
+does not so denote, then you should set the host explicitly.
+
+This method also provides a simple check that the installation is successful.
+  </body>
+</html>

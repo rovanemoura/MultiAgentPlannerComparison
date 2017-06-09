@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Java</title>
+  </head>
+
+  <body>
+    <h1>Using ORBLink to bridge Lisp and Java</h1>
+<hr>
+<p>
+
+A comprehensive discussion of the issues involved in bridging Java and Lisp using ORBLink 
+requires in a certain sense full discussion of the installation and use of Java ORBs.
+<p>
+Fortunately, there are several good books on CORBA and Java available, for example, <strong>Programming with Visibroker</strong>, by Doug Pedrick, Jonathan Weedon, Jon Goldberg, and Erik Bliefield, Wiley, 1998.
+<p>
+A tutorial walking through a Lisp-Java application is available <a href="corba-cover-story-2.htm">here</a>.
+<p>
+<h2>Java applets and CORBA</h2>
+You can use CORBA to connect a Java applet to Lisp,  but doing so is more complicated than hooking up a Java
+application to a Lisp program. The reason it is more complicated is
+that a Java applet imposes security restrictions on network
+connections. The nature of these security restrictions tends to be
+highly enterprise-dependent, depending on such variables as:
+<p>
+<ol>
+	<li> The exact version of the browser your users are using, and
+what Java ORB you want to use.
+	<li> The security configuration of the browser.
+	<li> The version of JDK you are using; whether you are using the
+Java activator
+	<li> The firewall configuration at your site.
+	<li> Whether internet or intranet access is desired.
+	<li> Should the applet be usable to remote users who will tunnel
+through their own firewall?
+<p>
+There is no "one perfect solution" for all applications at this
+time. In general, for example, the you can use http tunnelling (using,
+for example, the Visigenic tunnelling tools) to allow internet applet
+users to tunnel through their own firewalls, but this often imposes an
+unacceptable performance overhead for things like callbacks.  Browsers
+tend to support different versions of the JDK as well; of course, if
+you are willing to use the Java plug-in, things can be somewhat
+simpler.
+<p>
+However, if you have control over the browser configuration and are
+running within an intranet so that firewall configuration is not a
+problem, hooking up to an applet is much easier.  Still, we suggest
+you begin by getting your application working correction as a Java
+application and only later addressing the more subtle security and
+browser issues that are required to get an applet solution to work
+reliably.
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Threading</title>
+  </head>
+
+  <body>
+    <h1>Threading in ORBLink</h1>
+<hr>
+<p>
+The IDL associated with threading is in the <code>ORBLink:ORB</code> pseudoInterface.
+<p>
+<pre>
+module ORBLink{
+  pseudo interface ORB : CORBA::ORB {
+    enum thread_policy_type {singly_threaded, thread_per_request};
+    attribute thread_policy_type thread_policy;	
+  };
+};
+</pre>
+<p>
+The 
+<code>enum</code>
+statement encodes the fact that there is a type named 
+<code>ORBLink:thread_policy_type</code>
+comprising the keywords 
+<code>:singly_threaded</code> and 
+<code>:thread_per_request</code>. 
+<p>
+Thus:
+<pre>
+	(typep :singly_threaded 'orblink:thread_policy_type)
+--> T
+
+</pre>
+<p>
+The ORB has an attribute named <code>thread_policy</code> whose value is always a member of that type.
+<p>
+The value of the attribute can be retrieved as follows:
+<p>
+<pre>
+	(op:thread_policy corba:orb)
+--> :THREAD_PER_REQUEST
+</pre>
+<p>
+The value of the attribute can be set using standard setf syntax:
+<p>
+<pre>
+	(setf (op:thread_policy corba:orb) :thread_per_request)
+</pre>
+<p>
+Thus, the IDL definitions describe how to access certain values but they
+do not describe the meaning of the values themselves; that is the purpose of this
+document.
+<p>
+When the ORB handles an incoming request, it spawns a separate Lisp
+thread, an instance of mp:process, if the value of the thread_policy
+attribute of 
+<code>
+corba:orb
+</code> is 
+<code>
+:thread_per_request
+</code>. 
+<p>
+This is the default and
+is the recommended settings. If the value of the attribute is set to
+<code>:singly_threaded</code>, however, then the request is executed in the same
+thread as was used to read the request from the wire.
+    <hr>
+  </body>
+</html>

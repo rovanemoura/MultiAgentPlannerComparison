@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <title>Exception handling in ORBLink</title>
+  </head>
+  <body>
+    <h1>Exception handling in ORBLink</h1>
+<hr>
+<ul>
+<li><a href="#introduction">Introduction</a>
+<li><a href="#serverbehavior">Server behavior on implementation exception</a>
+<li><a href="#break">When <code>(op:break_policy corba:orb)</code> is <code>:break</code></a>
+<li><a href="#return">When <code>(op:break_policy corba:orb)</code> is <code>:return</code></a>
+<li><a href="#default">Default server behavior</a>
+<li><a href="#failure">Default configuration failure modes</a>
+</ul>
+<p>
+<a name="introduction"></a><h2>Introduction to exception handling in ORBLink</h2>
+<p>
+This section describes how to customize the behavior of the ORB when 
+a Lisp implementation of a CORBA interface signals an unexpected exception.
+
+This section does not discuss handling of two other kinds of exceptions:
+<ul>
+<li>
+Customization of I/O exception handling is discussed in the section on <a href="connection.htm">connection management</a>.
+<li>
+Invocation of a CORBA operation on a Lisp client-side proxy may result
+in a condition being signalled to the client.  The behavior of the
+program in this case can be customized via the standard Common Lisp
+<code>handler-case</code> form and is outside the scope of this
+document.
+</ul>
+
+The IDL encapsulation for exception handling in ORBLink is encapsulated in the following IDL:
+<pre>
+module ORBLink {
+  pseudo interface ORB : CORBA::ORB {
+    enum break_policy_type {return,break};
+    attribute break_policy_type break_policy;
+ };
+};
+</pre>
+<p>
+<a name="serverbehavior"></a><h2>ORBLink server behavior on implementation exception</h2>
+<p>
+When a user's Lisp implementation of a CORBA interface signals a condition
+that is not a subtype of <code>CORBA:userexception</code>, or if it returns types
+that are not consistent with its IDL signature, one of two things
+occurs:
+<p>
+<ol>
+<li> <a name="breakoptionheader"></a>A debugger break loop is entered on the server or
+<li> <a name="returnoptionheader"></a>A corba system exception is returned to the client.
+</ol>
+
+Which of these occurs depends on the value of the <code>break_policy</code>
+attribute of <code>corba:orb</code>:
+
+<p>
+<a name="break"></a><h2><p> When <code>(op:break_policy corba:orb)</code> is <code>:break</code></h2>
+
+If the value of the <code>break_policy</code> attribute of <code>corba:orb</code> is <code>:break</code>,
+then option <a href="#breakoptionheader">1</a>. above will be selected:
+
+<pre>
+	(setf (op:break_policy corba:orb) :break)
+</pre>
+
+A debugger break loop will be started and will offer the user at least the following options:
+<p>
+
+<center>Debugger break loop options</center>
+<ul>
+<li>
+Returning a
+corba SYSTEM EXCEPTION to the client
+<li>Reinvoking the function
+that signalled the condition.
+</ul>
+<p>
+Thus, the user can fix or modify, and then recompile, the
+implementation code before re-invoking it.
+<p>
+As such, it is useful important to understand the concepts of <a href="dynamic.htm">dynamic ORBLink server reconfiguration</a> in 
+CORBA server development.
+
+<p>
+<a name="return"></a><h2><p>When <code>(op:break_policy corba:orb)</code> is <code>:return</code></h2>
+
+If the value of the <code>break_policy</code> attribute of <code>corba:orb</code> is <code>:return</code>,
+option <a href="#returnoptionheader">2</a> is selected. A CORBA system exception will be returned to the
+invoking client.
+
+<pre>
+	(setf (op:break_policy corba:orb) :return)
+</pre>
+
+<p>
+<a name="default"></a><h2> Default error handling</h2>
+<p>
+The default value of the <code>break_policy</code> attribute of <code>corba:orb</code> is:
+<center><pre>:break</pre></center>.
+
+<p>
+<a name="failure"></a><h2> Default configuration failure modes</h2>
+The invocation of a debugger by a server thread in response to an undeclared exception signalled by
+user code will not always result in a useful debugger output. 
+<p>
+In particular, if the server is being run from a standard console, for example in a Unix tty shell, the created debugger will
+attempt to share input with the main Lisp listener which will result in user input being sent to the incorrect
+thread. 
+<p>
+In consequence, when running an ORBLink server from a standard console, you should normally 
+set the value of the <code>break_policy</code> attribute of <code>corba:orb</code> to <code>:return</code>.
+<p>
+In general, we
+have found the emacs/Lisp environment to be quite powerful for multi-threaded CORBA/ORBLink development.
+<pre>
+
+
+
+
+
+
+</pre>
+
+
+
+  </body>
+</html>

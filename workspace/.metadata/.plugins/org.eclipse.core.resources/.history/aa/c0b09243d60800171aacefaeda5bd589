@@ -1,0 +1,72 @@
+package floods;
+
+import cartago.*;
+
+public class VehicleUgv extends Artifact {
+	
+	void init(String area, String store) {
+		defineObsProperty("at",area);
+		defineObsProperty("storage",store);
+	}
+	
+	@OPERATION void navigate(String from, String to, String areas) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		if (cond1.stringValue().equals(from) && areas.contains(to)) {
+			Thread.sleep(10);
+			getObsProperty("at").updateValue(to);
+		} else {
+		failed("Action navigate has failed.");
+    }
+	}
+	
+	@OPERATION void take_picture(String area, String disaster, String areas) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		if (cond1.stringValue().equals(area) && areas.contains(area)) {
+			Thread.sleep(10);
+			defineObsProperty("have_picture", disaster);
+		} else {
+			failed("Action take_picture has failed.");
+	    }
+	}
+	
+	@OPERATION void communicate_data(String at, String to, String cdmAt, String disaster, String areas) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		ObsProperty cond2 = getObsPropertyByTemplate("have_picture", disaster);
+		if (cond1.stringValue().equals(at) && cond2.stringValue().equals(disaster) && to.equals(cdmAt) && areas.contains(to)) {
+			Thread.sleep(10);
+			defineObsProperty("communicated_data", disaster);
+			removeObsPropertyByTemplate("have_picture", disaster);
+		} else {
+			failed("Action communicate_data has failed.");
+	    }
+	}	
+	
+	@OPERATION void pickup_box(String cdmAt, String area, ArtifactId boxId) throws InterruptedException, OperationException {
+		ObsProperty cond1 = getObsProperty("at");
+		ObsProperty cond2 = getObsProperty("storage");
+		if (cond1.stringValue().equals(area) && area.equals(cdmAt) && cond2.stringValue().equals("empty"))
+		{
+			Thread.sleep(10);
+			getObsProperty("storage").updateValue("full");
+			execLinkedOp(boxId, "updateLoc", getCurrentOpAgentId().getAgentName());
+			
+		} else {
+			failed("Action get_kit has failed.");
+	    }
+	}
+	
+	@OPERATION void drop_box(String area, ArtifactId boxId) throws InterruptedException, OperationException {
+		ObsProperty cond1 = getObsProperty("at");
+		ObsProperty cond2 = getObsProperty("storage");
+		if (cond1.stringValue().equals(area) && cond2.stringValue().equals("full"))
+		{
+			Thread.sleep(10);
+			getObsProperty("storage").updateValue("empty");
+			execLinkedOp(boxId, "updateLoc", area);
+		} else {
+			failed("Action drop_box has failed.");
+	    }
+	}	
+	
+}
+

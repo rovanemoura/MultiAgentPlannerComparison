@@ -1,0 +1,22 @@
+// This has been modified slightly from an Iona example
+
+// grid.idl
+
+
+module example{
+  interface grid {
+    readonly attribute short height;  // height of the grid
+    readonly attribute short width;   // width of the grid
+    typedef unsigned long seconds;
+
+    // IDL operations
+
+    // set the element [n,m] of the grid, to value:
+    void set(in short n, in short m, in string value);
+
+    void set_with_delay (in short n, in short m, in string value, seconds delay);
+    
+    // return element [n,m] of the grid:
+    string get(in short n, in short m);
+  };
+};

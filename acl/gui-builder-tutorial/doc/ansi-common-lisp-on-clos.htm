@@ -1,0 +1,987 @@
+<html>
+
+<head>
+<title>ANSI Common Lisp by Paul Graham</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>CLOS Intro</b></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h2><em>ANSI Common Lisp</em> by Paul Graham, Prentice Hall, 1996</h2>
+
+<p>The following material excerpted (with permission) from ANSI Common Lisp by Paul
+Graham. Chapter 11 covers a review of CLOS concepts. </p>
+
+<blockquote>
+  <p><a href="#clos-1">1.&nbsp;&nbsp; CLOS</a><br>
+  <a href="#oop-2">2.&nbsp;&nbsp; Object-Oriented programming</a><br>
+  <a href="#cai-3">3.&nbsp;&nbsp; Classes and Instances</a><br>
+  <a href="#sp-4">4.&nbsp;&nbsp; Slot Properties</a><br>
+  <a href="#super-5">5.&nbsp;&nbsp; Superclasses</a><br>
+  <a href="#pre-6">6.&nbsp;&nbsp; Precedence</a><br>
+  <a href="#gf-7">7.&nbsp;&nbsp; Generic Functions</a><br>
+  <a href="#aux-8">8.&nbsp;&nbsp; Auxiliary Methods</a><br>
+  <a href="#mc-9">9.&nbsp;&nbsp; Method Combination</a><br>
+  <a href="#enc-10">10. Encapsulation</a><br>
+  <a href="#two-11">11. Two Models</a><br>
+  <a href="#sum-12">12. Summary</a><br>
+  <a href="#ex-13">13. Exercises</a></p>
+</blockquote>
+
+<h2><a name="clos-1"></a>1. CLOS</h2>
+
+<p>The Common Lisp Object System, or CLOS, is a set of operators for doing object-oriented
+programming. Because of their common history it is conventional to treat these operators
+as a group. Technically, they are in no way distinguished from the rest of Common Lisp: <strong>defmethod</strong>
+is just as much (and just as little) an integral part of the language as <strong>defun</strong>.</p>
+
+<h2><a name="oop-2"></a>2. Object-Oriented programming</h2>
+
+<p>Object-oriented programming means a change in the way programs are organized. This
+change is analogous to the one that has taken place in the distribution of processor
+power. In 1970, a multi-user computer system meant one or two big mainframes connected to
+a large number of dumb terminals. Now it is more likely to mean a large number of
+workstations connected to one another by a network. The processing power of the system is
+now distributed among individual users instead of centralized in one big computer.</p>
+
+<p>Object-oriented programming breaks up traditional programs in much the same way.
+Instead of having a single program that operates on an inert mass of data, the data itself
+is told how to behave, and the program is implicit in the interactions of these new data
+&quot;objects.&quot;</p>
+
+<p>For example, suppose we want to write a program to find the areas of two-dimensional
+shapes. One way to do this would be to write a single function that looked at the type of
+its argument and behaved accordingly, as in Figure 11.1:</p>
+
+<blockquote>
+  <pre> (defstruct rectangle
+   height width)
+ (defstruct circle
+   radius)
+ (defun area (x)
+   (cond ((rectangle-p x)
+          (* (rectangle-height x)
+             (rectangle-width x)))
+         ((circle-p x)
+          (* pi (expt (circle-radius x) 2)))))
+
+&gt; (let ((r (make-rectangle)))
+    (setf (rectangle-height r) 2
+          (rectangle-width r)  3)
+    (area r))
+6
+
+<strong>Figure 11.1</strong></pre>
+</blockquote>
+
+<p>Using CLOS we might write an equivalent program as in Figure 11.2. In the
+object-oriented model, our program gets broken up into several distinct methods, each one
+intended for certain kinds of arguments. The two methods in Figure 11.2 implicitly define
+an area function that works just like the one in Figure 11.1. When we call <strong>area</strong>,
+looks at the type of the argument and invokes the corresponding method.</p>
+
+<blockquote>
+  <pre><a name="fig-11-2"></a>(defclass rectangle ()
+  (height width))
+(defclass circle ()
+  (radius))
+(defmethod area ((x rectangle))
+  (* (slot-value x 'height) 
+     (slot-value x 'width)))
+(defmethod area ((x circle))
+  (* pi (expt (slot-value x 'radius) 2)))
+
+&gt; (let ((r (make-instance 'rectangle)))
+    (setf (slot-value r 'height) 2
+          (slot-value r 'width)  3)
+    (area r))
+6
+
+<strong>Figure 11.2</strong></pre>
+</blockquote>
+
+<p>Together with this way of breaking up functions into distinct methods, object-oriented
+programming implies inheritance---both of slots and methods. The empty list given as the
+second argument in the two <strong>defclass</strong>es in Figure 11.2 is a list of
+superclasses. Suppose we define a new class of colored objects, and then a class of
+colored circles that has both colored and circle as superclasses:</p>
+
+<blockquote>
+  <pre>(defclass colored ()
+  (color))
+
+(defclass colored-circle (circle colored)
+  ())</pre>
+</blockquote>
+
+<p>When we make instances of <strong>colored-circle</strong>, we will see two kinds of
+inheritance: 
+
+<ol>
+  <li>Instances of <strong>colored-circle</strong> will have two slots: <strong>radius</strong>,
+    which is inherited from the circle class, and <strong>color</strong>, which is inherited
+    from the colored class.</li>
+  <li>Because there is no <strong>area</strong> method defined explicitly for instances of <strong>colored-circle</strong>,
+    if we call <strong>area</strong> on an instance of <strong>colored-circle</strong>, we
+    will get the method defined for the <strong>circle</strong> class.</li>
+</ol>
+
+<p>In practical terms, object-oriented programming means organizing a program in terms of
+methods, classes, instances, and inheritance. Why would you want to organize programs this
+way? One of the claims of the object-oriented approach is that it makes programs easier to
+change. If we want to change the way objects of class <strong>ob</strong> are displayed,
+we just change the display method of the <strong>ob</strong> class. If we want to make a
+new class of objects like <strong>ob</strong>s but different in a few respects, we can
+create a subclass of <strong>ob</strong>; in the subclass, we change the properties we
+want, and all the rest will be inherited by default from the ob class. And if we just want
+to make a single <strong>ob</strong> that behaves differently from the rest, we can create
+a new child of <strong>ob</strong> and modify the child's properties directly. If the
+program was written carefully to begin with, we can make all these types of modifications
+without even looking at the rest of the code.</p>
+
+<h2><a name="cai-3"></a>3. Classes and Instances</h2>
+
+<p>You go through two steps to create structures: you call <strong>defstruct</strong> to
+lay out the form of a structure, and a specific function like <strong>make-point</strong>
+to make them. Creating instances requires two analogous steps. First we define a class,
+using <strong>defclass</strong>:</p>
+
+<blockquote>
+  <pre>(defclass circle ()
+  (radius center))</pre>
+</blockquote>
+
+<p>This definition says that instances of the <strong>circle</strong> class will have two
+slots (like fields in a structure), named <strong>radius</strong> and <strong>center</strong>
+respectively.</p>
+
+<p>To make instances of this class, instead of calling a specific function, we call the
+general <strong>make-instance</strong> with the class name as the first argument:</p>
+
+<blockquote>
+  <pre>&gt; (setf c (make-instance 'circle))
+#&lt;Circle #XC27496&gt;</pre>
+</blockquote>
+
+<p><br>
+To set the slots in this instance, we can use setf with slot-value:</p>
+
+<blockquote>
+  <pre>&gt; (setf (slot-value c 'radius) 1)
+1</pre>
+</blockquote>
+
+<p>Like structure fields, the values of uninitialized slots are undefined.</p>
+
+<h2><a name="sp-4"></a>4. Slot Properties</h2>
+
+<p>The third argument to <strong>defclass</strong> must be a list of slot definitions. The
+simplest slot definition, as in the example above, is a symbol representing its name. In
+the general case, a slot definition can be a list of a name followed by one or more
+properties. Properties are specified like keyword arguments.</p>
+
+<p>By defining an <font face="Courier New">:accessor</font> for a slot, we implicitly
+define a function that refers to the slot, making it unnecessary to call <strong>slot-value</strong>.
+If we update our definition of the <strong>circle</strong> class as follows,</p>
+
+<blockquote>
+  <pre>(defclass circle ()
+  ((radius :accessor circle-radius)
+   (center :accessor circle-center)))</pre>
+</blockquote>
+
+<p>then we will be able to refer to the slots as circle-radius and circle-center
+respectively:</p>
+
+<blockquote>
+  <pre>&gt; (setf c (make-instance 'circle))
+#&lt;Circle #XC5C726&gt;
+&gt; (setf (circle-radius c) 1)
+1
+&gt; (circle-radius c)
+1</pre>
+</blockquote>
+
+<p>By specifying a <font face="Courier New">:writer</font> or a <font face="Courier New">:reader</font>
+instead of an <font face="Courier New">:accessor</font>, we could get just the first half
+of this behavior, or just the second.</p>
+
+<p>To specify a default value for a slot, we have to give an <font face="Courier New">:initform</font>
+argument. If we want to be able to initialize the slot in the call to <strong>make-instance</strong>,
+we define a parameter name as an <font face="Courier New">:initarg</font>. With both
+added, our class definition might become:</p>
+
+<blockquote>
+  <pre>(defclass circle ()
+  ((radius :accessor circle-radius
+           :initarg :radius
+           :initform 1)
+   (center :accessor circle-center
+           :initarg :center
+           :initform (cons 0 0))))</pre>
+</blockquote>
+
+<p>Now when we make an instance of a circle we can either pass a value for a slot using
+the keyword parameter defined as the slot's :initarg, or let the value default to that of
+the slot's <font face="Courier New">:initform</font>.</p>
+
+<blockquote>
+  <pre>&gt; (setf c (make-instance 'circle :radius 3))
+#&lt;Circle #XC2DE0E&gt;
+&gt; (circle-radius c)
+3
+&gt; (circle-center c)
+(0 . 0)</pre>
+</blockquote>
+
+<p>We can specify that some slots are to be shared---that is, their value is the same for
+every instance. We do this by declaring the slot to have :allocation :class. (The
+alternative is for a slot to have :allocation :instance, but since this is the default
+there is no need to say so explicitly.) When we change the value of such a slot in one
+instance, that slot will get the same value in every other instance. So we would want to
+use shared slots to contain properties that all the instances would have in common.</p>
+
+<p>For example, suppose we wanted to simulate the behavior of a flock of tabloids. In our
+simulation we want to be able to represent the fact that when one tabloid takes up a
+subject, they all do. We can do this by making all the instances share a slot. If the <strong>tabloid</strong>
+class is defined as follows,</p>
+
+<blockquote>
+  <pre>(defclass tabloid ()
+  ((top-story :accessor tabloid-story
+              :allocation :class)))</pre>
+</blockquote>
+
+<p>then if we make two instances of <strong>tabloid</strong>s, whatever becomes front-page
+news to one instantly becomes front-page news to the other:</p>
+
+<blockquote>
+  <pre>&gt; (setf daily-blab       (make-instance 'tabloid)
+        unsolicited-mail (make-instance 'tabloid))
+#&lt;Tabloid #XC2AB16&gt;
+&gt; (setf (tabloid-story daily-blab) 'adultery-of-senator)
+ADULTERY-OF-SENATOR
+&gt; (tabloid-story unsolicited-mail)
+ADULTERY-OF-SENATOR</pre>
+</blockquote>
+
+<p>The <font face="Courier New">:documentation</font> property, if given, should be a
+string to serve as the slot's documentation. By specifying a :type, you are promising that
+the slot will only contain elements of that type.</p>
+
+<h2><a name="super-5"></a>5. Superclasses</h2>
+
+<p>The second argument to <strong>defclass</strong> is a list of superclasses. A class
+inherits the union of the slots of its superclasses. So if we define the class <strong>screen-circle</strong>
+to be a subclass of both <strong>circle</strong> and <strong>graphic</strong>,</p>
+
+<blockquote>
+  <pre>(defclass graphic ()
+  ((color   :accessor graphic-color   
+            :initarg :color)
+   (visible :accessor graphic-visible 
+            :initarg :visible
+            :initform t)))
+ 
+(defclass screen-circle (circle graphic)
+  ())</pre>
+</blockquote>
+
+<p>then instances of <strong>screen-circle</strong> will have four slots, two inherited
+from each superclass. A class does not have to create any new slots of its own; <strong>screen-circle</strong>
+exists just to provide something instantiable that inherits from both circle and graphic.</p>
+
+<p>The accessors and initargs work for instances of <strong>screen-circle</strong> just as
+they would for instances of circle or graphic:</p>
+
+<blockquote>
+  <pre>&gt; (graphic-color (make-instance 'screen-circle
+                                :color 'red :radius 3))
+RED</pre>
+</blockquote>
+
+<p>We can cause every <strong>screen-circle</strong> to have some default initial color by
+specifying an initform for this slot in the <strong>defclass</strong>:</p>
+
+<blockquote>
+  <pre>(defclass screen-circle (circle graphic)
+  ((color :initform 'purple)))</pre>
+</blockquote>
+
+<p>Now instances of <strong>screen-circle</strong> will be purple by default:</p>
+
+<blockquote>
+  <pre>&gt; (graphic-color (make-instance 'screen-circle))
+PURPLE</pre>
+</blockquote>
+
+<h2><a name="pre-6"></a>6. Precedence</h2>
+
+<p>We've seen how classes can have multiple superclasses. When there are methods defined
+for several of the classes to which an instance belongs, Lisp needs some way to decide
+which one to use. The point of precedence is to ensure that this happens in an intuitive
+way.</p>
+
+<p>For every class there is a precedence list: an ordering of itself and its superclasses
+from most specific to least specific. In the examples so far, precedence has not been an
+issue, but it can become one in bigger programs. Here's a more complex class hierarchy:</p>
+
+<blockquote>
+  <pre>(defclass sculpture () (height width depth))
+
+(defclass statue (sculpture) (subject))
+
+(defclass metalwork () (metal-type))
+
+(defclass casting (metalwork) ())
+
+(defclass cast-statue (statue casting) ())</pre>
+</blockquote>
+
+<p>Figure 11.3 contains a network representing cast-statue and its superclasses.<br>
+<br>
+To build such a network for a class, start at the bottom with a node representing that
+class. Draw links upward to nodes representing each of its immediate superclasses, laid
+out from left to right as they appeared in the calls to defclass. Repeat the process for
+each of those nodes, and so on, until you reach classes whose only immediate superclass is
+standard-object---that is, classes for which the second argument to <strong>defclass</strong>
+was (). Create links from those classes up to a node representing standard-object, and one
+from that node up to another node representing the class t. The result will be a network
+that comes to a point at both top and bottom, as in Figure 11.3.</p>
+
+<blockquote>
+  <p><img src="clos-1.jpg" width="481" height="298" alt="clos-1.bmp (430366 bytes)"></p>
+</blockquote>
+
+<p>The precedence list for a class can be computed by traversing the corresponding network
+as follows: 
+
+<ol>
+  <li>Start at the bottom of the network.</li>
+  <li>Walk upward, always taking the leftmost unexplored branch.</li>
+</ol>
+
+<blockquote>
+  <ol type="a">
+    <li>If you are about to enter a node and you notice another path entering the same node from
+      the right, then instead of entering the node, retrace your steps until you get to a node
+      with an unexplored path leading upward. Go back to step 2.</li>
+    <li>When you get to the node representing t, you're done. The order in which you first
+      entered each node determines its place in the precedence list.</li>
+  </ol>
+</blockquote>
+
+<p>One of the consequences of this definition (in fact, of rule 3) is that no class
+appears in the precedence list before one of its subclasses.</p>
+
+<p>The arrows in Figure 11.3 show how it would be traversed. The precedence list
+determined by this graph is: <strong>cast-statue</strong>, <strong>statue</strong>, <strong>sculpture</strong>,
+<strong>casting</strong>, <strong>metalwork</strong>, <strong>standard-object</strong>, <strong>t</strong>.
+Sometimes the word specific is used as shorthand to refer to the position of a class in a
+given precedence list. The preceding list runs from most specific to least specific.</p>
+
+<p>The main point of precedence is to decide what method gets used when a generic function
+is invoked. This process is described in the next section. The other time precedence
+matters is when a slot with a given name is inherited from several superclasses.</p>
+
+<h2><a name="gf-7"></a>7. Generic Functions</h2>
+
+<p>A <em>generic function</em> is a function made up of one or more <em>method</em>s.
+Methods are defined with <strong>defmethod</strong>, which is similar in form to <strong>defun</strong>:</p>
+
+<blockquote>
+  <pre>(defmethod combine (x y)
+  (list x y))</pre>
+</blockquote>
+
+<p>Now combine has one method. If we call combine at this point, we will get the two
+arguments in a list:</p>
+
+<blockquote>
+  <pre>&gt; (combine 'a 'b)
+(A B)</pre>
+</blockquote>
+
+<p>So far we haven't done anything we could not have done with a normal function. The
+unusual thing about a generic function is that we can continue to add new methods for it.</p>
+
+<p>First, we define some classes for the new methods to refer to:</p>
+
+<blockquote>
+  <pre>(defclass stuff () ((name :accessor name :initarg :name)))
+(defclass ice-cream (stuff) ())
+(defclass topping (stuff) ())</pre>
+</blockquote>
+
+<p>This defines three classes: <strong>stuff</strong>, which is just something with a
+name, and <strong>ice-cream</strong> and <strong>topping</strong>, which are subclasses of
+<strong>stuff</strong>.</p>
+
+<p>Now here is a second method for combine:</p>
+
+<blockquote>
+  <pre>(defmethod combine ((ic ice-cream) (top topping))
+  (format nil &quot;~A ice-cream with ~A topping.&quot;
+          (name ic)
+          (name top)))</pre>
+</blockquote>
+
+<p>In this call to <strong>defmethod</strong> the parameters are specialized: each one
+appears in a list with the name of a class. The specializations of a method indicate the
+kinds of arguments to which it applies. The method we just defined will only be used if
+the arguments to combine are instances of <strong>ice-cream</strong> and <strong>topping</strong>
+respectively.</p>
+
+<p>How does Lisp decide which method to use when a generic function is called? It will use
+the most specific method for which the classes of the arguments match the specializations
+of the parameters. Which means that if we call combine with an instance of <strong>ice-cream</strong>
+and an instance of <strong>topping</strong>, we'll get the method we just defined:</p>
+
+<blockquote>
+  <pre>&gt; (combine (make-instance 'ice-cream :name 'fig)
+           (make-instance 'topping :name 'treacle))
+&quot;FIG ice-cream with TREACLE topping.&quot;</pre>
+</blockquote>
+
+<p>But with any other arguments, we'll get the first method we defined:</p>
+
+<blockquote>
+  <pre>&gt; (combine 23 'skiddoo)
+(23 SKIDDOO)</pre>
+</blockquote>
+
+<p>Because neither of the parameters of the first method is specialized, it will always
+get last priority, yet will always get called if no other method does. An unspecialized
+method acts as a safety net, like an otherwise clause in a case expression.</p>
+
+<p>Any combination of the parameters in a method can be specialized. In this method only
+the first argument is: </p>
+
+<blockquote>
+  <pre>(defmethod combine ((ic ice-cream) x)
+  (format nil &quot;~A ice-cream with ~A.&quot;
+              (name ic)
+              x))</pre>
+</blockquote>
+
+<p>If we call <strong>combine</strong> with an instance of <strong>ice-cream</strong> and
+an instance of <strong>topping</strong>, we'll still get the method that's looking for
+both, because it's more specific:</p>
+
+<blockquote>
+  <pre>&gt; (combine (make-instance 'ice-cream :name 'grape)
+           (make-instance 'topping :name 'marshmallow))
+&quot;GRAPE ice-cream with MARSHMALLOW topping.&quot;</pre>
+</blockquote>
+
+<p>However, if the first argument is <strong>ice-cream</strong> and the second argument is
+anything but <strong>topping</strong>, we'll get the method we just defined above:</p>
+
+<blockquote>
+  <pre>&gt; (combine (make-instance 'ice-cream :name 'clam)
+           'reluctance)
+&quot;CLAM ice-cream with RELUCTANCE.&quot;</pre>
+</blockquote>
+
+<p>When a generic function is called, the arguments determine a set of one or more
+applicable methods. A method is applicable if the arguments in the call come within the
+specializations of all its parameters.</p>
+
+<p>If there are no applicable methods we get an error. If there is just one, it is called.
+If there is more than one, the most specific gets called. The most specific applicable
+method is determined based on the class precedence for the arguments in the call. The
+arguments are examined left to right. If the first parameter of one of the applicable
+methods is specialized on a more specific class than the first parameters of the other
+methods, then it is the most specific method. Ties are broken by looking at the second
+argument, and so on.</p>
+
+<p>In the preceding examples, it is easy to see what the most specific applicable method
+would be, because all the objects have a single line of descent. An instance of <strong>ice-cream</strong>
+is, in order, itself, <strong>ice-cream</strong>, <strong>stuff</strong>, a
+standard-object, and a member of the class <strong>t</strong>.</p>
+
+<p>Methods don't have to be specialized on classes defined by <strong>defclass</strong>.
+They can also be specialized on types (or more precisely, the classes that mirror types).
+Here is a method for combine that's specialized on numbers:</p>
+
+<blockquote>
+  <pre>(defmethod combine ((x number) (y number))
+  (+ x y))</pre>
+</blockquote>
+
+<p>Methods can even be specialized on individual objects, as determined by <strong>eql</strong>:</p>
+
+<blockquote>
+  <pre>(defmethod combine ((x (eql 'powder)) (y (eql 'spark)))
+  'boom)</pre>
+</blockquote>
+
+<p>Specializations on individual objects take precedence over class specializations.</p>
+
+<p>Methods can have parameter lists as complex as ordinary Common Lisp functions, but the
+parameter lists of all the methods that compose a generic function must be congruent. They
+must have the same number of required parameters, the same number of optional parameters
+(if any), and must either all use &amp;rest or &amp;key, or all not use them. The
+following pairs of parameter lists are all congruent,</p>
+
+<blockquote>
+  <pre>x)             (a)
+(x &amp;optional y) (a &amp;optional b)
+(x y &amp;rest z)   (a b &amp;key c)
+(x y &amp;key z)    (a b &amp;key c d)</pre>
+</blockquote>
+
+<p>and the following pairs are not:</p>
+
+<blockquote>
+  <pre>(x)             (a b)
+(x &amp;optional y) (a &amp;optional b c)
+(x &amp;optional y) (a &amp;rest b)
+(x &amp;key x y)    (a)</pre>
+</blockquote>
+
+<p>Only required parameters can be specialized. Thus each method is uniquely identified by
+its name and the specializations of its required parameters. If we define another method
+with the same qualifiers and specializations, it overwrites the original one. So by saying</p>
+
+<blockquote>
+  <pre>(defmethod combine ((x (eql 'powder)) (y (eql 'spark)))
+  'kaboom)</pre>
+</blockquote>
+
+<p>we redefine what combine does when its arguments are <strong>powder</strong> and <strong>spark</strong>.</p>
+
+<h2><a name="aux-8"></a>8. Auxiliary Methods</h2>
+
+<p>Methods can be augmented by auxiliary methods, including before-, after-, and
+around-methods. Before-methods allow us to say, ``But first, do this.'' They are called,
+most specific first, as a prelude to the rest of the method call. After-methods allow us
+to say, ``P.S. Do this too.'' They are called, most specific last, as an epilogue to the
+method call. Between them, we run what has till now been considered just the method, but
+is more precisely known as the primary method. The value of this call is the one returned,
+even if after-methods are called later.</p>
+
+<p>Before- and after-methods allow us to wrap new behavior around the call to the primary
+method. Around-methods provide a more drastic way of doing the same thing. If an
+around-method exists, it will be called instead of the primary method. Then, at its own
+discretion, the around-method may itself invoke the primary method (via the function <strong>call-next-method</strong>,
+which is provided just for this purpose).</p>
+
+<p>This is called standard method combination. In standard method combination, calling a
+generic function invokes 
+
+<ol>
+  <li>The most specific around-method, if there is one.</li>
+  <li>Otherwise, in order,</li>
+</ol>
+
+<blockquote>
+  <ol type="a">
+    <li>All before-methods, from most specific to least specific.</li>
+    <li>The most specific primary method.</li>
+    <li>All after-methods, from least specific to most specific.</li>
+  </ol>
+</blockquote>
+
+<p>The value returned is the value of the around-method (in case 1) or the value of the
+most specific primary method (in case 2).<br>
+<br>
+Auxiliary methods are defined by putting a qualifying keyword after the method name in the
+call to <strong>defmethod</strong>. If we define a primary <strong>speak</strong> method
+for the <strong>speaker</strong> class as</p>
+
+<blockquote>
+  <pre>(defclass speaker () ())
+ 
+(defmethod speak ((s speaker) string)
+  (format t &quot;~A&quot; string))</pre>
+</blockquote>
+
+<p>then calling <strong>speak</strong> with an instance of <strong>speaker</strong> just
+prints the second argument:</p>
+
+<blockquote>
+  <pre>&gt; (speak (make-instance 'speaker)
+         &quot;I'm hungry&quot;)
+I'm hungry
+NIL</pre>
+</blockquote>
+
+<p>By defining a subclass <strong>intellectual</strong>, which wraps before- and
+after-methods around the primary <strong>speak</strong> method,</p>
+
+<blockquote>
+  <pre>(defclass intellectual (speaker) ())
+ 
+(defmethod speak :before ((i intellectual) string)
+  (princ &quot;Perhaps &quot;))
+ 
+(defmethod speak :after ((i intellectual) string)
+  (princ &quot; in some sense&quot;))</pre>
+</blockquote>
+
+<p>we can create a subclass of <strong>speaker</strong>s that always have the last (and
+the first) word:</p>
+
+<blockquote>
+  <pre>&gt; (speak (make-instance 'intellectual)
+         &quot;I'm hungry&quot;)
+Perhaps I'm hungry in some sense
+NIL</pre>
+</blockquote>
+
+<p>As the preceding outline of standard method combination noted, all before- and
+after-methods get called.</p>
+
+<p>So if we define before- or after-methods for the <strong>speaker</strong> superclass,</p>
+
+<blockquote>
+  <pre>(defmethod speak :before ((s speaker) string)
+  (princ &quot;I think &quot;))</pre>
+</blockquote>
+
+<p>they will get called in the middle of the sandwich:</p>
+
+<blockquote>
+  <pre>&gt; (speak (make-instance 'intellectual)
+         &quot;I'm hungry&quot;)
+Perhaps I think I'm hungry in some sense
+NIL</pre>
+</blockquote>
+
+<p>Regardless of what before- or after-methods get called, the value returned by the
+generic function is the value of the most specific primary method---in this case, the nil
+returned by <strong>format</strong>.</p>
+
+<p>This changes if there are around-methods. If there is an around-method specialized for
+the arguments passed to the generic function, the around-method will get called first, and
+the rest of the methods will only run if the around-method decides to let them. An around-
+or primary method can invoke the next method by calling <strong>call-next-method</strong>.
+Before doing so, it can use <strong>next-method-p</strong> to test whether there is a next
+method to call.<br>
+<br>
+With around-methods we can define another, more cautious, subclass of <strong>speaker</strong>:</p>
+
+<blockquote>
+  <pre>(defclass courtier (speaker) ())
+ 
+(defmethod speak :around ((c courtier) string)
+  (format t &quot;Does the King believe that ~A? &quot; string)
+  (if (eql (read) 'yes)
+      (if (next-method-p) (call-next-method))
+      (format t &quot;Indeed, it is a preposterous ~ 
+ idea.~%&quot;))
+  'bow)</pre>
+</blockquote>
+
+<p>When the first argument to <strong>speak</strong> is an instance of the <strong>courtier</strong>
+class, the <strong>courtier</strong>'s tongue is now guarded by the around-method:</p>
+
+<blockquote>
+  <pre>&gt; (speak (make-instance 'courtier) &quot;kings will last&quot;)
+Does the King believe that kings will last? yes
+I think kings will last
+BOW
+&gt; (speak (make-instance 'courtier) &quot;the world is round&quot;)
+Does the King believe that the world is round? no
+Indeed, it is a preposterous idea.
+BOW</pre>
+</blockquote>
+
+<p>Note that, unlike before- and after-methods, the value returned by the around-method is
+returned as the value of the generic function.</p>
+
+<h2><a name="mc-9"></a>9. Method Combination</h2>
+
+<p>In standard method combination the only primary method that gets called is the most
+specific (though it can call others via <strong>call-next-method</strong>). Instead we
+might like to be able to combine the results of all applicable primary methods.</p>
+
+<p>It's possible to define methods that are combined in other ways---for example, for a
+generic function to return the sum of all the applicable primary methods. Operator method
+combination can be understood as if it resulted in the evaluation of a Lisp expression
+whose first element was some operator, and whose arguments were calls to the applicable
+primary methods, in order of specificity. If we defined the <strong>price</strong> generic
+function to combine values with +, and there were no applicable around-methods, it would
+behave as though it were defined:</p>
+
+<blockquote>
+  <pre>(defun price (\&amp;rest args) 
+  (+ (apply [most specific primary method] args)
+     .
+     .
+     .
+     (apply [least specific primary method] args)))</pre>
+</blockquote>
+
+<p>If there are applicable around-methods, they take precedence, just as in standard
+method combination. Under operator method combination, an around-method can still call the
+next method via <strong>call-next-method</strong>. However, primary methods can no longer
+use <strong>call-next-method</strong>.</p>
+
+<p>We can specify the type of method combination to be used by a generic function with a <font
+face="Courier New">:method-combination</font> clause in a call to <strong>defgeneric</strong>:</p>
+
+<blockquote>
+  <pre>(defgeneric price (x)
+  (:method-combination +))</pre>
+</blockquote>
+
+<p>Now the price method will use + method combination; any <strong>defmethod</strong> for
+price must have + as the second argument. If we define some classes with prices,</p>
+
+<blockquote>
+  <pre>(defclass jacket () ())
+(defclass trousers () ())
+(defclass suit (jacket trousers) ())
+ 
+(defmethod price + ((jk jacket)) 350)
+(defmethod price + ((tr trousers)) 200)</pre>
+</blockquote>
+
+<p>then when we ask for the price of an instance of <strong>suit</strong>, we get the sum
+of the applicable <strong>price</strong> methods:</p>
+
+<blockquote>
+  <pre>&gt; (price (make-instance 'suit))
+550</pre>
+</blockquote>
+
+<p>The following symbols can be used as the second argument to <strong>defmethod</strong>
+or in the <font face="Courier New">:method-combination</font> option to <strong>defgeneric</strong>:</p>
+
+<blockquote>
+  <pre><strong>+   and   append   list   max   min   nconc   or   progn</strong></pre>
+</blockquote>
+
+<p>You can also use <font face="Courier New">standard</font>, which yields standard method
+combination.</p>
+
+<p>Once you specify the method combination a generic function should use, all methods for
+that function must use the same kind. Now it would cause an error if we tried to use
+another operator (or :before or :after) as the second argument in a <strong>defmethod</strong>
+for <strong>price</strong>. If we want to change the method combination of <strong>price</strong>,
+we must remove the whole generic function by calling <strong>fmakunbound</strong>.</p>
+
+<h2><a name="enc-10"></a>10. Encapsulation</h2>
+
+<p>Object-oriented languages often provide some way of distinguishing between the actual
+representation of objects and the interface they present to the world. Hiding
+implementation details brings two advantages: you can change the implementation without
+affecting the object's outward appearance, and you prevent objects from being modified in
+potentially dangerous ways. Hidden details are sometimes said to be encapsulated.</p>
+
+<p>Although encapsulation is often associated with object-oriented programming, the two
+ideas are really separate. You can have either one without the other.</p>
+
+<p>In Common Lisp, packages are the standard way to distinguish between public and private
+information. To restrict access to something, we put it in a separate package, and only
+export the names that are part of the external interface.</p>
+
+<p>We can encapsulate a slot by exporting the names of the methods that can modify it, but
+not the name of the slot itself. For example, we could define a <strong>counter</strong>
+class and associated <strong>increment</strong> and <strong>clear</strong> methods as
+follows:</p>
+
+<blockquote>
+  <pre>(defpackage &quot;CTR&quot;
+            (:use &quot;COMMON-LISP&quot;)
+            (:export &quot;COUNTER&quot; &quot;INCREMENT&quot; &quot;CLEAR&quot;))
+
+(in-package ctr)
+
+(defclass counter () ((state :initform 0)))
+
+(defmethod increment ((c counter))
+  (incf (slot-value c 'state)))
+
+(defmethod clear ((c counter))
+  (setf (slot-value c 'state) 0))</pre>
+</blockquote>
+
+<p>Under this definition, code outside the package would be able to make instances of <strong>counter</strong>
+and call <strong>increment</strong> and <strong>clear</strong>, but would not have
+legitimate access to the name <strong>state</strong>.</p>
+
+<p>If you want to do more than just distinguish between the internal and external
+interface to a class, and actually make it impossible to reach the value stored in a slot,
+you can do that too. Simply <strong>unintern</strong> its name after you've defined the
+code that needs to refer to it:</p>
+
+<blockquote>
+  <pre>(unintern 'state)</pre>
+</blockquote>
+
+<p>Then there is no way, legitimate or otherwise, to refer to the slot from any package.</p>
+
+<h2><a name="two-11"></a>11. Two Models</h2>
+
+<p>Object-oriented programming is a confusing topic partly because there are two models of
+how to do it: the message-passing model and the generic function model. The
+message-passing model came first. Generic functions are a generalization of
+message-passing.</p>
+
+<p>In the message-passing model, methods belong to objects, and are inherited in the same
+sense that slots are. To find the area of an object, we send it an <strong>area</strong>
+message, </p>
+
+<blockquote>
+  <pre>tell obj area</pre>
+</blockquote>
+
+<p>and this invokes whatever <strong>area</strong> method <strong>obj</strong> has or
+inherits.</p>
+
+<p>Sometimes we have to pass additional arguments. For example, a <strong>move</strong>
+method might take an argument specifying how far to move. If we wanted to tell <strong>obj</strong>
+to move 10, we might send it the following message:</p>
+
+<blockquote>
+  <pre>tell obj move 10</pre>
+</blockquote>
+
+<p>If we put this another way, </p>
+
+<blockquote>
+  <pre>(move obj 10)</pre>
+</blockquote>
+
+<p>the limitation of the message-passing model becomes clearer. In message-passing, we
+only specialize the first parameter. There is no provision for methods involving multiple
+objects---indeed, the model of objects responding to messages makes this hard even to
+conceive of.</p>
+
+<p>In the message-passing model, methods are of objects, while in the generic function
+model, they are specialized for objects. If we only specialize the first parameter, they
+amount to exactly the same thing. But in the generic function model, we can go further and
+specialize as many parameters as we need to. This means that, functionally, the
+message-passing model is a subset of the generic function model. If you have generic
+functions, you can simulate message-passing by only specializing the first parameter.</p>
+
+<h2><a name="sum-12"></a>12. Summary</h2>
+
+<ol>
+  <li>In object-oriented programming, the function <em><strong>f</strong></em> is defined
+    implicitly via the <strong><em>f</em></strong> methods of the objects that have them.
+    Objects inherit methods from their parents.</li>
+  <li>Defining a class is like defining a structure, but more verbose. A shared slot belongs
+    to a whole class.</li>
+  <li>A class inherits the slots of its superclasses.</li>
+  <li>The ancestors of a class are ordered into a precedence list. The precedence algorithm is
+    best understood visually.</li>
+  <li>A generic function consists of all the methods with a given name. A method is identified
+    by its name and the specializations of its parameters. Argument precedence determines the
+    method used when a generic function is called.</li>
+  <li>Methods can be augmented by auxiliary methods. Standard method combination means calling
+    the around-method, if there is one; otherwise the before-, most specific primary, and
+    after-methods.</li>
+  <li>In operator method combination, all the primary methods are treated as arguments to some
+    operator.</li>
+  <li>Encapsulation can be done via packages.</li>
+  <li>There are two models of object-oriented programming. The generic function model is a
+    generalization of the message-passing model.</li>
+</ol>
+
+<h2><a name="ex-13"></a>13. Exercises</h2>
+
+<ol>
+  <li>Define accessors, initforms, and initargs for the classes defined in <a href="#fig-11-2">Figure
+    11.2</a>. Rewrite the associated code so that it no longer calls slot-value.</li>
+  <li>Suppose that a number of classes are defined as follows:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass a (c d) ...) (defclass e () ...)
+(defclass b (d c) ...) (defclass f (h) ...)
+(defclass c () ..) (defclass g (h) ...)
+(defclass d (e f g) ...) (defclass h () ...)</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <ol type="a">
+    <li>Draw the network representing the ancestors of a, and list the classes an instance of a
+      belongs to, from most to least specific.</li>
+    <li>Do the same for b.</li>
+  </ol>
+</blockquote>
+
+<ol start="3">
+  <li>Suppose that you already have the following functions:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <ul>
+      <li><strong>precedence</strong>: takes an object and returns its precedence list, a list of
+        classes ordered from most specific to least specific.</li>
+      <li><strong>methods</strong>: takes a generic function and returns a list of all its
+        methods.</li>
+      <li><strong>specializations</strong>: takes a method and returns a list of the
+        specializations of the parameters. Each element of the returned list will be either a
+        class, or a list of the form (eql x), or t (indicating that the parameter is
+        unspecialized).</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Using these functions (and not <strong>compute-applicable-methods</strong> or <strong>find-method</strong>),
+  define a function <strong>most-spec-app-meth</strong> that takes a generic function and a
+  list of the arguments with which it has been called, and returns the most specific
+  applicable method, if any.</p>
+</blockquote>
+
+<ol start="4">
+  <li>Without changing the behavior of the generic function <strong>area</strong> (<a
+    href="#fig-11-2">Figure 11.2</a>) in any other respect, arrange it so that a global
+    counter gets incremented each time <strong>area</strong> is called.</li>
+  <li>Give an example of a problem that would be difficult to solve if only the first argument
+    to a generic function could be specialized.</li>
+</ol>
+
+<p id="2"><small>Copyright © 1996 by Paul Graham, used with permission; modifications
+copyright © 2004, Franz Inc. Oakland, CA., USA. All rights reserved.</small></p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>CLOS Intro</b></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,12 @@
+#!/bin/sh
+# $Header: /repo/cvs.copy/cl/sample-files/runx,v 1.4 1993/05/05 03:47:42 layer Exp $
+#
+# Sample shell command file to start up X11.
+#
+if [ -x /bin/sparc -a /bin/sparc ] ; then
+	xinit $HOME/.xsession -- -ar2 50 -dpi 82 bc
+elif [ -x /bin/sun3 -a /bin/sun3 ] ; then
+	xinit $HOME/.xsession -- -ar2 50 -dpi 82 bc
+else
+	xinit $HOME/.xsession
+fi

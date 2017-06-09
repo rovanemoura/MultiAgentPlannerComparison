@@ -1,0 +1,11 @@
++!parse_solution : .my_name(Name)
+<-
+	jia.solutionParser(Actions,Name);
+//	Actions = "move(X,Y); go(A,B).";
+//	.print(Actions);
+	.concat("+!execute : true <- ",Actions,Plan);
+	.add_plan(Plan);
+	.list_plans({ +!execute });
+	!execute.
+	
+//.add_plan("+b : true <- .print(b)."): adds the plan +b : true <- .print(b). to the agent's plan library with a plan label annotated with source(self).

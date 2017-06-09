@@ -1,0 +1,120 @@
+// Agent agency in project taxi_system
+
+/* Initial beliefs and rules */
+
+{include("bb_25m1.asl")}
+
+
+
+
+
+/* Initial goals */
+
+!start.
+
+/* Plans */
+
++!start : true <- .print("hello world.").
+
++!request_taxi(X1,Y1)[source(S)]: true 
+	<- 	.print("Alocando TAXI para ", S); 
+		!find_taxi(S,X1,Y1).
+			
+
++!find_taxi(S,X1,Y1) : true
+	<- 
+	for(available(T,X,Y)){
+		actions.manhattanDistance(X,Y,X1,Y1,D);
+		.count(closest_taxi(S,T2,D2), N);
+		if(N == 0){
+			+closest_taxi(S,T,D);
+		} else {			
+			?closest_taxi(S,T3,D3);
+			if(D < D3){
+				-closest_taxi(S,_,_);
+				+closest_taxi(S,T,D);
+			}
+		}
+	}
+	!alocate_taxi(S,X1,Y1).
+	
+	
++!alocate_taxi(S,X1,Y1) : closest_taxi(S,T,D)
+	<-  -closest_taxi(S,_,_);
+		-available(T,_,_);
+		+best_option(S,T,D,X1,Y1);
+		actions.all_agencies_names(Ag); 
+		.my_name(MyName);
+		.delete(MyName,Ag,AgList);  
+		.print("Agencies: ", AgList);
+		if(.empty(AgList)){
+			.print("Para cliente: ", S, " Taxi: ", T);
+			-best_option(S,T,_,_,_,_,_);
+			.send(S, tell, taxi_is_coming(T));
+		} else {	
+			+waiting_closest(S,AgList);
+			.wait(200);
+			.send(AgList,tell,my_closest_taxi(S,T,D)); 
+		}
+		.
+
+
+
++my_closest_taxi(S,null,null)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & not .empty(Temp)
+	<- 	-my_closest_taxi(S,null,null)[source(Agency)];
+		-+waiting_closest(S,Temp).
+			
++my_closest_taxi(S,null,null)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & .empty(Temp) & best_option(S,T1,D1,X1,Y1)
+	<- 	-my_closest_taxi(S,null,null)[source(Agency)];
+		-waiting_closest(S,List);
+		-best_option(S,T1,D1,X1,Y1);
+		.send(S, tell, taxi_is_coming(T1));.	
+
++my_closest_taxi(S,T,D)[source(Agency)]: not waiting_closest(S,List)	
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)].	
+	
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & not .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 < D 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-+waiting_closest(S,Temp).
+				
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & not .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 == D & .my_name(Name) & actions.getnumber(Name,N1) & actions.getnumber(Agency,N2) & N1 > N2 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-+waiting_closest(S,Temp).
+
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & not .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 == D & .my_name(Name) & actions.getnumber(Name,N1) & actions.getnumber(Agency,N2) & N1 < N2 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-waiting_closest(S,List);
+		-best_option(S,T1,D1,X1,Y1);
+		+available(T1,_,_).
+		
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & not .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 > D 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-waiting_closest(S,List);
+		-best_option(S,T1,D1,X1,Y1);
+		+available(T1,_,_).
+	
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 < D 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-waiting_closest(S,List);
+		-best_option(S,T1,D1,X1,Y1);
+		.send(S, tell, taxi_is_coming(T1));.		
+	
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 > D 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-waiting_closest(S,List);
+		-best_option(S,T1,D1,X1,Y1);
+		+available(T1,_,_).		
+			
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 == D & .my_name(Name) & actions.getnumber(Name,N1) & actions.getnumber(Agency,N2) & N1 > N2 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-waiting_closest(S,List);
+		-best_option(S,T1,D1,X1,Y1);
+		.send(S, tell, taxi_is_coming(T1));.	
+		
++my_closest_taxi(S,T,D)[source(Agency)]: waiting_closest(S,List) & .delete(Agency,List,Temp) & .empty(Temp) & best_option(S,T1,D1,X1,Y1) & D1 == D & .my_name(Name) & actions.getnumber(Name,N1) & actions.getnumber(Agency,N2) & N1 < N2 
+	<- 	-my_closest_taxi(S,T,D)[source(Agency)];
+		-waiting_closest(S,List);
+		-best_option(S,T1,D1,X1,Y1);
+		+available(T1,_,_).	
+		
++my_closest_taxi(S,T,D)[source(Agency)]: true <- .print("11 - received answer... from: ", Agency).

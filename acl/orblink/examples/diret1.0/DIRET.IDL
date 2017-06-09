@@ -1,0 +1,43 @@
+/*
+================
+File: Diret.idl
+Author: Vladimir Kulyukin
+Description: IDL Interface to DIRET 1.0
+Copyright (c) 1998-99
+
+Comments and bugs to vkulyukin@cs.depaul.edu
+================
+*/
+
+module DIRET
+{
+   struct wtok { float weight; string token; };
+   typedef sequence<wtok> centroid;
+
+   struct wdoc { float simco; string id; string descrip; };
+   typedef sequence<wdoc> retrievals;
+
+   interface Indexing;
+   interface Retrieval;
+
+   interface Indexing
+   {
+     void indexData(in string datatype);
+     void computeCentroid(out centroid c);
+   };
+
+   interface Retrieval
+   {
+     // retrieves data items given query
+     void retrieve(in string query, out retrievals rs);
+     // briefly describes data item given its id
+     void describeDataItem(in string id, out string description);
+     // fully describe data item given its id
+     void describeDataItemFully(in string id, out string description);
+     // fetches data item given its id
+     void fetchDataItem(in string id, out string item);
+     // describes what data information source contains
+     void describeSelf(out string description);
+   };
+};
+

@@ -1,0 +1,90 @@
+<html>
+
+<head>
+<title>Allegro CL FAQ 1.2: ACL-related communication</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<h3>1.2: ACL-related communication</h3>
+
+<blockquote>
+  <p><a href="#121">Q 1.2-1) How should I report bugs?</a><br>
+  <a href="#122">Q 1.2-2) dribble-bug output seems to lag behind Lisp I/O.</a><br>
+  <a href="#123">Q 1.2-3) Sometimes CL output is not logged in the dribble-bug file. What do
+  I do about this?</a><br>
+  <a href="#124">Q 1.2-4) Is there a mailing list for Allegro CL? How do I sign up?</a></p>
+</blockquote>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="121"></a><strong>Q 1.2-1)</strong> How should I report bugs?</p>
+
+<p><strong>A 1.2-1)</strong> Use <strong>dribble-bug</strong>, documented in the section
+on <a href="../introduction.htm#reporting-bugs-1">Reporting Bugs</a> in <a
+href="../introduction.htm"><em>&lt;Allegro directory&gt;/doc/introduction.htm</em></a> and
+in <a href="../operators/excl/dribble-bug.htm"><em>&lt;Allegro
+directory&gt;/doc/operators/excl/dribble-bug.htm</em></a>.</p>
+
+<hr>
+
+<p><a name="122"></a><strong>Q 1.2-2)</strong> dribble-bug output seems to lag behind Lisp
+I/O.</p>
+
+<p><strong>A 1.2-2)</strong> <a href="../operators/excl/dribble-bug.htm">dribble-bug</a><strong>
+</strong>always catches up with the Lisp I/O (which is stored in a buffer before it goes
+into the dribble file). </p>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (force-output excl::*dribble-stream*)</pre>
+
+<p>Will cause all buffered output to be written to the file.</p>
+
+<hr>
+
+<p><a name="123"></a><strong>Q 1.2-3)</strong> Sometimes CL output is not logged in the
+dribble-bug file. What do I do about this?</p>
+
+<p><strong>A 1.2-3)</strong> <a href="../operators/excl/dribble-bug.htm">dribble-bug</a>
+should only miss output produced when using the foreign-function interface or running a
+shell function with <a href="../operators/excl/run-shell-command.htm">run-shell-command</a>
+and friends, or (because it is produced by C code) information printed by the garbage
+collector during a garbage collection. Some messages from foreign code may be written
+directly to Unix stdout or stderr, bypassing Lisp entirely. To circumvent this problem,
+you can either use an Emacs buffer or the Unix utility &quot;script&quot; to save the
+entire transaction record.</p>
+
+<hr>
+
+<p><a name="124"></a><strong>Q 1.2-4)</strong> Is there a mailing list for Allegro CL? How
+do I sign up?</p>
+
+<p><strong>A 1.2-4)</strong> Yes, there is a mailing list for Allegro CL users. It is
+accessed through the address <a href="mailto:allegro-cl@franz.com">allegro-cl@franz.com</a>.
+To be added to or deleted from this list, send mail to <a
+href="mailto:allegro-cl-request@franz.com">allegro-cl-request@franz.com</a>. Franz
+periodically makes announcements on this mailing list, but its main purpose is to allow
+users of Allegro CL (both Unix and Windows) to communicate with each other, sharing ideas,
+complaints and code.</p>
+
+<p>Note that the mailing list address used to be <b>allegro-cl@cs.berkeley.edu</b> (and
+requests went to <b>allegro-cl-request@cs.berkeley.edu</b>). The host has been changed to <strong>franz.com</strong>
+for technical reasons. Please note that except for spam filtering (which was in place even
+when the host was <strong>cs.berkeley.edu</strong>), the list is uncensored and membership
+is open to all. Further note that the accuracy of postings made to the list is not
+guaranteed.</p>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq1-3.htm">1.3. Patches</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq1-1.htm">1.1. ACL current version info</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999-2004, Franz Inc., Berkeley, CA.&nbsp; All rights reserved.</small><br>
+<small>$Revision: 1.1.1.1 $</small></p>
+</body>
+</html>

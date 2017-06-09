@@ -1,0 +1,91 @@
+;; -*- lisp-version: "6.0.pre-final.9 [Windows] (Oct 18, 2000 13:49)"; common-graphics: "1.389.2.34"; form: curve-dialog; -*-
+;;;
+;;; Define :curve-dialog
+ 
+(in-package :common-graphics-user)
+
+;; The finder-function, which returns the window if it already
+;; exists, and otherwise creates and returns it.
+;; Call this function if you need only one copy of this window,
+;; and that window is a non-owned top-level window.
+(defun curve-dialog ()
+  (find-or-make-application-window :curve-dialog 'make-curve-dialog))
+ 
+;; The maker-function, which always creates a new window.
+;; Call this function if you need more than one copy,
+;; or the single copy should have a parent or owner window.
+;; (Pass :owner to this function; :parent is for compatibility.)
+(defun make-curve-dialog
+    (&key parent (owner (or parent (screen *system*)))
+     (exterior (make-box 211 123 548 332)) (name :curve-dialog)
+     (title "Curves") (border :frame) (child-p nil) form-p)
+  (let ((owner
+         (make-window name :owner owner
+           :class 'curve-dialog
+           :exterior exterior
+           :border border
+           :child-p child-p
+           :close-button t
+           :cursor-name :arrow-cursor
+           :font (make-font-ex :swiss "MS Sans Serif / ANSI" 11 nil)
+           :form-state :normal
+           :maximize-button nil
+           :minimize-button nil
+           :name :curve-dialog
+           :package-name :common-graphics-user
+           :pop-up t
+           :resizable nil
+           :scrollbars nil
+           :state :shrunk
+           :status-bar nil
+           :system-menu t
+           :title title
+           :title-bar t
+           :toolbar nil
+           :dialog-items (curve-dialog-widgets)
+           :form-p form-p
+           :help-string nil
+           :package-name :common-graphics-user)))
+    owner))
+
+(defun make-curve-dialog-widgets ()
+  (list (make-instance 'single-item-list :font
+                       (make-font-ex nil "Tahoma / ANSI" 11 nil)
+                       :height 144 :left 16 :name :curve-list :tabs nil
+                       :top 24 :width 208)
+        (make-instance 'default-button :font
+                       (make-font-ex nil "Tahoma / ANSI" 11 nil) :left
+                       232 :name :edit-button :on-change
+                       'curve-dialog-edit-button-on-change :title
+                       "~Edit..." :top 24)
+        (make-instance 'button :font
+                       (make-font-ex nil "Tahoma / ANSI" 11 nil) :left
+                       232 :name :add-button :on-change
+                       'curve-dialog-add-button-on-change :title
+                       "~Add..." :top 63)
+        (make-instance 'button :font
+                       (make-font-ex nil "Tahoma / ANSI" 11 nil) :left
+                       232 :name :draw-all-button :on-change
+                       'curve-dialog-draw-all-button-on-change :title
+                       "~Draw All" :top 142)
+        (make-instance 'button :font
+                       (make-font-ex nil "Tahoma / ANSI" 11 nil) :left
+                       232 :name :delete-button :on-change
+                       'curve-dialog-delete-button-on-change :title
+                       "De~lete" :top 103)
+        (make-instance 'lisp-group-box :contained-widgets
+                       '(:curve-list :edit-button :add-button
+                         :draw-all-button :delete-button)
+                       :font (make-font-ex nil "Tahoma / ANSI" 11 nil)
+                       :height 168 :left 8 :name :group-box :top 8
+                       :width 313)))
+
+(defparameter curve-dialog-widgets (make-curve-dialog-widgets))
+
+(defun curve-dialog-widgets ()
+  (let (window)
+    (if* (dolist (dialog-item curve-dialog-widgets)
+           (and (setq window (window dialog-item)) (windowp window)
+                (return t)))
+       then (make-curve-dialog-widgets)
+       else curve-dialog-widgets)))

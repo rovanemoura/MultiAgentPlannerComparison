@@ -1,0 +1,144 @@
+;; -*- lisp-version: "7.0.pre-beta.8 [Windows] (Feb 19, 2004 17:18)"; cg: "1.41"; form: coefficient-dialog; -*-
+;;;
+;;; Define :coefficient-dialog
+ 
+(in-package :common-graphics-user)
+
+;; The finder-function, which returns the window if it already
+;; exists, and otherwise creates and returns it.
+;; Call this function if you need only one copy of this window,
+;; and that window is a non-owned top-level window.
+(defun coefficient-dialog ()
+  (find-or-make-application-window :coefficient-dialog
+    'make-coefficient-dialog))
+ 
+;; The maker-function, which always creates a new window.
+;; Call this function if you need more than one copy,
+;; or the single copy should have a parent or owner window.
+;; (Pass :owner to this function; :parent is for compatibility.)
+(defun make-coefficient-dialog
+    (&key parent (owner (or parent (screen *system*)))
+     (exterior (make-box 393 169 768 349)) (name :coefficient-dialog)
+     (title "Coefficients") (border :frame) (child-p nil) form-p)
+  (let ((owner
+         (make-window name :owner owner
+           :class 'coefficient-dialog
+           :exterior exterior
+           :border border
+           :child-p child-p
+           :close-button t
+           :cursor-name :arrow-cursor
+           :font (make-font-ex :swiss "MS Sans Serif / ANSI" 13 nil)
+           :form-package-name :cg-user
+           :form-state :normal
+           :maximize-button t
+           :minimize-button nil
+           :name :coefficient-dialog
+           :pop-up nil
+           :resizable nil
+           :scrollbars nil
+           :state :shrunk
+           :system-menu t
+           :title title
+           :title-bar t
+           :dialog-items (make-coefficient-dialog-widgets)
+           :form-p form-p
+           :form-package-name :cg-user)))
+    owner))
+
+(defun make-coefficient-dialog-widgets ()
+  (list (make-instance 'button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 240 :name :color-button :on-change
+                       'coefficient-dialog-color-button-on-change
+                       :title "Other Color..." :top 64)
+        (make-instance 'multi-picture-button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :height 24 :left 24 :name :color-list :top 64
+                       :unavailable-color-mapper
+                       (list (cons black gray) (cons dark-gray gray)
+                             (cons dark-blue gray)
+                             (cons dark-green gray)
+                             (cons dark-red gray) (cons dark-cyan gray)
+                             (cons dark-yellow gray)
+                             (cons dark-magenta gray)
+                             (cons red dark-red)
+                             (cons green dark-green)
+                             (cons blue dark-blue)
+                             (cons yellow dark-yellow)
+                             (cons cyan dark-cyan)
+                             (cons magenta dark-magenta))
+                       :width 176)
+        (make-instance 'button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 232 :name :test-button :on-change
+                       'coefficient-dialog-test-button-on-change :title
+                       "~Test" :top 120)
+        (make-instance 'cancel-button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 138 :name :cancel-button :title "~Cancel"
+                       :top 120)
+        (make-instance 'default-button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 40 :name :ok-button :title "~OK" :top 120)
+        (make-instance 'up-down-control :buddy-widget
+                       :c-coefficient-text :height 22 :left 292 :name
+                       :c-coefficient-control :range '(1 1000) :top 24
+                       :value 1)
+        (make-instance 'editable-text :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 250 :name :c-coefficient-text :top 24
+                       :up-down-control :c-coefficient-control :value
+                       "1" :width 44)
+        (make-instance 'static-text :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :height 16 :left 240 :name :c-text :top 24
+                       :value "~C:" :width 10)
+        (make-instance 'up-down-control :buddy-widget
+                       :b-coefficient-text :height 22 :left 180 :name
+                       :b-coefficient-control :range '(1 1000) :top 24
+                       :value 1)
+        (make-instance 'static-text :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :height 16 :left 128 :name :b-text :top 24
+                       :value "~B:" :width 10)
+        (make-instance 'editable-text :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 138 :name :b-coefficient-text :top 24
+                       :up-down-control :b-coefficient-control :value
+                       "1" :width 44)
+        (make-instance 'up-down-control :buddy-widget
+                       :a-coefficient-text :height 22 :left 68 :name
+                       :a-coefficient-control :range '(1 1000) :top 24
+                       :value 1)
+        (make-instance 'editable-text :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 26 :name :a-coefficient-text :top 24
+                       :up-down-control :a-coefficient-control :value
+                       "1" :width 44)
+        (make-instance 'static-text :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :height 16 :left 16 :name :a-text :top 24 :value
+                       "~A:" :width 10)
+        (make-instance 'lisp-group-box :contained-widgets
+                       '(:button4 :color-list :c-coefficient-control
+                         :c-coefficient-text :c-text
+                         :b-coefficient-control :b-text
+                         :b-coefficient-text :a-coefficient-control
+                         :a-coefficient-text :a-text)
+                       :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :height 103 :left 8 :name :coefficient-box :top
+                       9 :width 336)))

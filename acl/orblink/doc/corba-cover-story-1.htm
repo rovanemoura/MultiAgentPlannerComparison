@@ -1,0 +1,214 @@
+<HTML>
+	<HEAD>
+		<TITLE>CORBA-Enabling Allegro CL Applications</TITLE>
+	</HEAD>
+	<BODY BGCOLOR="#FFFFFF">
+</CENTER>
+<FONT SIZE="+2"><B>CORBA-Enabling Allegro CL Applications</B></FONT><BR>
+<HR>
+
+This document is a slightly edited version of an introductory article on
+Allegro ORBLink that first appeared as a cover story on the <a href="http://www.franz.com/">Franz Inc. Web site</a> in June, 1998.
+
+It is intended as non-technical overview of CORBA and ORBLink. For specific technical information, see the main documentation supplied with
+ORBLink itself.
+
+With Allegro ORBLink, Allegro CL applications can:
+<UL>
+<LI>Invoke methods on objects on remote machines
+<LI>Receive remote invocation requests from other processes
+<LI>Interoperate with objects written in Java, C++, C, COBOL, Smalltalk and other CORBA-compliant languages
+<LI>Access common CORBA services
+<LI>Interoperate with other commercial ORBs such as ORBIX and Visibroker
+</UL>
+<P>
+<B><FONT SIZE="+1">So what is CORBA and How Does it Work?</FONT></B><BR>
+The Common Object Request Broker Architecture (CORBA) is a standards-based 
+distributed computing model for object-oriented applications developed by 
+the Object Management Group (OMG), a group of 700 vendor and user members 
+including HP, Novell, Sun, IBM, and Digital.  Franz Inc. is also a member 
+of the OMG, and, using  Allegro ORBLink, fully supports the CORBA 
+architecture for distributed objects. 
+<P>
+CORBA allows objects executing on one system to call methods on objects 
+executing on another system.  Finding the objects, transmitting the method 
+call and returning any results are mediated using an Object Request Broker 
+(ORB) that the application doesn't have to know about.  The ORB allows 
+objects to interact in a heterogeneous, distributed environment, independent 
+of the computer platforms on which the various objects reside and the 
+languages used to implement them. For example, a C++ object running on one 
+machine can communicate with an object on another machine that is implemented 
+in Lisp. 
+<P>
+CORBA-compliant applications typically comprise a <I>client</I> and a <I>server</I>. The client 
+invokes operations on objects that are managed by the server, and the server 
+receives invocations on the objects it manages and replies to these requests.  
+For example, a Lisp object can either use CORBA services available over the 
+network (as a client), or it can publish services to other components in the 
+application (as a server). The ORB manages the communications between client 
+and server using the Internet Inter-ORB Protocol (IIOP), which is a protocol 
+layer above TCP/IP. 
+<P>
+The objects in a distributed CORBA application, regardless of the language in 
+which they are implemented, can communicate with the ORB through an interface 
+written in the CORBA Interface Definition Language (IDL). The CORBA IDL is a 
+language included in the CORBA 2.0 specification that is designed to describe 
+the interfaces of objects, including the operations that may be performed on 
+the objects and the parameters of those operations.  The behavior of an object 
+is thus captured in the interface independently of the object's implementation. 
+Clients need only know an object's interface in order to make requests. Servers 
+respond to requests made on those interfaces, and clients do not need to know 
+the actual details of the server's implementation. 
+<P>
+To implement an interface, CORBA IDL is compiled into the source code language 
+with which the client or server is implemented. On the client side, this code is 
+called a <I>stub</I>. On the server-side, this IDL code is called a <I>servant</I>.  
+<P>
+In order to request a service from the server, the client application calls the 
+methods in the stub (moving down the protocol stack from the client to the stub 
+to the ORB).  Requests are then handled by the ORB, and enter the server via the 
+servant (moving up the protocol stack: i.e. an <I>upcall</I>). The server object then 
+services the request and returns the result to the client.
+<P>
+<CENTER>
+<IMG SRC="corba-1.jpg" ALT="CORBA Illustration 1" HEIGHT="225" WIDTH="450">
+</CENTER>
+<P>
+Third-party ORBs such as ORBIX from IONA Technologies and Visibroker from 
+Visigenic/Borland provide common CORBA services such as name services and 
+transaction services. A name service allows a client to initiate contact 
+with a remote object. The client asks the name service for a connection to 
+the remote object by name. The name service works with the stub code to 
+return a connection, permitting the client to call methods on the remote 
+object. This work by the name server might include actually starting up the 
+server that implements the remote object.
+<P>
+Writing IDL stubs and servants for Allegro CL applications  enabling them to 
+communicate with other distributed CORBA-compliant objects is made possible 
+by Allegro ORBLink. Users do not need to know low-level details such as the IIOP 
+protocol; Allegro ORBLink handles the mapping for them so that they can write 
+regular CLOS code to make their applications fully CORBA-ready and interoperable 
+with other third-party ORBs. 
+<P>
+<B><FONT SIZE="+1">Allegro ORBLink:  Adding CORBA-Compliance to Allegro CL</FONT></B><BR>
+Allegro ORBLink is an add-on product for Allegro CL that comprises an automatic mapping of the CORBA IDL into Allegro CL. This mapping is fully IIOP-compliant, and it permits Allegro CL users to write CLOS code that takes advantage of CORBA services or that publishes CLOS services to other application components as described above. Fully compatible with other third-party ORBs, Allegro ORBLink enables Allegro CL applications to take advantage of common CORBA services such as name and transaction services.
+<P>
+Features of Allegro ORBLink include:
+<UL>
+<LI>Complete IIOP compliance
+<LI>Automatic exception handling
+<LI>Support for all IDL data types
+<LI>Open support for industry standards on a variety of hardware and operating system platforms 
+<LI>Integration with existing systems written in any other CORBA-compliant programming language
+<LI>Interoperability with other CORBA-compliant objects and services 
+<LI>Full compatibility with common object services defined in CORBA, including naming, events, and transaction services available through third-party ORBs such as Orbix from Iona and Visibroker from Inprise.
+</UL>
+<P>
+<B><FONT SIZE="+1">An Example CORBA-Compliant Distributed Application</FONT></B><BR>
+The following diagram illustrates a simple client-server banking application 
+with a server component written in Common Lisp and a client (say an ATM terminal) 
+written in Java. The file containing the CORBA interface definitions is in this 
+example called "bank.idl". Here is the IDL source code in this file:
+<P>
+<PRE>
+<CODE>
+module Bank(
+interface Account {
+   	float Balance();
+};
+interface AccountManager{
+  	Account open (in string name);
+};
+};
+</CODE>
+</PRE>
+<P>
+The "bank.idl" file is compiled into two pieces: it is compiled by a Java CORBA 
+compiler into a Java stub on the client side, and it is compiled by Allegro ORBLink 
+into a CL servant on the server side.
+<P>
+<CENTER>
+<IMG SRC="corba-2.jpg" ALT="CORBA Illustration 2" HEIGHT="425" WIDTH="525">
+</CENTER>
+<P>
+The classes <I>Bank:Account</I> and <I>Bank:AccountManager</I> constitute the CL servant. 
+The servant also includes methods on these classes which deal with marshalling, 
+events, IIOP, etc. 
+<P>
+The user code for the servant extends the servant classes and implements 
+the methods using <I>define-method</I>.
+<P>
+<PRE>
+<CODE>
+(defclass Account (Bank:Account)
+	(balance :accessor get-balance))
+
+(corba:define-method balance ((account Account))
+	(get-balance account))
+
+(defclass AccountManager (Bank:AccountManager)
+((accounts 	:accessor get-accounts 
+    	:initform (make-hash-table :test #' equal))))
+
+(corba:define-method open ((mgr AccountManager) name)
+	(gethash name (get-accounts mgr)))
+</CODE>
+</PRE>
+<P>
+The <I>AccountManager</I> class has an <I>open</I> method that takes an account holder's name 
+and returns the account for that account holder. The <I>Account</I> class has a <I>balance</I> 
+method that takes an Account object and returns a balance. 
+<P>
+<I>corba:Define-method</I> uses all of the "hidden" servant methods automatically where needed 
+(for marshalling, IIOP, etc.). The programmer does not need to manually invoke 
+them.  As such, Allegro ORBLink makes it easy to write servants and stubs with 
+no requirement to manually handle details of the underlying protocols.
+<P>
+To use an account as a client, one would write code such as:
+<P>
+<PRE>
+<CODE>
+(setq  JS (op:open Manager "John Smith")) => obtains the account in the name of John Smith
+(op:balance JS) => returns the balance in the JS account
+</CODE>
+</PRE>
+<P>
+<a name="references"></a><B><FONT SIZE="+1">CORBA References</FONT></B><BR>
+For more information about CORBA, visit the OMG website at 
+<A HREF="http://www.omg.org" TARGET="_top">http://www.omg.org</A>, which 
+includes all of the official CORBA standards. This site, particularly the page 
+<A HREF="http://www.omg.org/news/begin.htm" TARGET="_top">http://www.omg.org/news/begin.htm</A>, 
+contains a wealth of information on learning about CORBA.
+Another excellent site is <a href="http://www.cetus-links.org/oo_corba.html">Cetus</a>.
+
+There are also a number of
+books on CORBA.
+.
+	If you are interfacing with Java - and to some extent even if
+you are not - we recommend books such as:
+<ul>
+<li>
+Programming with Visibroker. Doug Pedrick, Jonathan Weedon, Jon Goldberg, and Erik Bliefield. Wiley, 1998
+<li>
+	Java Programming with CORBA by Andreas Vogel and Keith Duddy,
+2nd edition, John Wiley & Sons, February 1998.
+<li>
+	Client/Server Programming with Java and CORBA, Robert Orfali
+and Dan Harkey, 2nd edition , John Wiley & Sons, February 1998.
+<li>
+	Programming with Java IDL Geoffrey Lewis, Steven Barber, and
+Ellen Siegel.  John Wiley & Sons, November 1997.
+<ul>
+	There are also a number of books available on CORBA without
+reference to any language. All of these books are easily accessible
+and may be ordered from http://www.amazon.com.
+
+However, the most important CORBA document is always the latest OMG
+core CORBA specification.
+
+<P>
+<HR>
+
+	</BODY>
+</HTML>
+

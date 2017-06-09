@@ -1,0 +1,62 @@
+;; -*- lisp-version: "6.0.pre-final.9 [Windows] (Oct 18, 2000 13:49)"; common-graphics: "1.389.2.34"; form: coefficient-dialog; -*-
+;;;
+;;; Define :coefficient-dialog
+ 
+(in-package :common-graphics-user)
+
+;; The finder-function, which returns the window if it already
+;; exists, and otherwise creates and returns it.
+;; Call this function if you need only one copy of this window,
+;; and that window is a non-owned top-level window.
+(defun coefficient-dialog ()
+  (find-or-make-application-window :coefficient-dialog
+    'make-coefficient-dialog))
+ 
+;; The maker-function, which always creates a new window.
+;; Call this function if you need more than one copy,
+;; or the single copy should have a parent or owner window.
+;; (Pass :owner to this function; :parent is for compatibility.)
+(defun make-coefficient-dialog
+    (&key parent (owner (or parent (screen *system*)))
+     (exterior (make-box 176 100 476 266)) (name :coefficient-dialog)
+     (title "Coefficients") (border :frame) (child-p nil) form-p)
+  (let ((owner
+         (make-window name :owner owner
+           :class 'dialog
+           :exterior exterior
+           :border border
+           :child-p child-p
+           :close-button t
+           :cursor-name :arrow-cursor
+           :font (make-font-ex :swiss "MS Sans Serif / ANSI" 11 nil)
+           :form-state :normal
+           :maximize-button nil
+           :minimize-button nil
+           :name :coefficient-dialog
+           :package-name :common-graphics-user
+           :pop-up nil
+           :resizable nil
+           :scrollbars nil
+           :state :normal
+           :status-bar nil
+           :system-menu t
+           :title title
+           :title-bar t
+           :toolbar nil
+           :form-p form-p
+           :help-string nil
+           :package-name :common-graphics-user)))
+    owner))
+
+(defun make-coefficient-dialog-widgets () nil)
+
+(defparameter coefficient-dialog-widgets
+    (make-coefficient-dialog-widgets))
+
+(defun coefficient-dialog-widgets ()
+  (let (window)
+    (if* (dolist (dialog-item coefficient-dialog-widgets)
+           (and (setq window (window dialog-item)) (windowp window)
+                (return t)))
+       then (make-coefficient-dialog-widgets)
+       else coefficient-dialog-widgets)))

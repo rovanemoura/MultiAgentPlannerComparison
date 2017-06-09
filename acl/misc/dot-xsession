@@ -1,0 +1,54 @@
+#!/bin/sh
+# $Header: /repo/cvs.copy/cl/sample-files/dot-xsession,v 1.4 1993/05/05 03:47:40 layer Exp $
+# .xsession
+#
+# Start up example X11 setup.
+#
+if [ -x /bin/hostname ]; then
+	host=`/bin/hostname`
+elif [ -x /usr/ucb/hostname ]; then
+	host=`/usr/ucb/hostname`
+elif [ -x /bin/uname ]; then
+	host=`/bin/uname -n`
+fi
+cd $HOME
+DISPLAY=unix:0
+export DISPLAY
+
+#
+# Console
+#
+xterm -font 6x10 -geometry 40x8+700+3 -n Console -C &
+sleep 2
+
+#
+# Server defaults
+#
+xrdb -load $HOME/.Xdefaults
+xmodmap -L
+
+#
+# Window manager
+#  (This has to go first, so that a client is always around).
+#
+if [ -x /usr/bin/X11/mwm ]; then
+	mwm &
+else
+	twm &
+fi
+sleep 5
+
+#
+# Remote clients
+#
+
+#
+# Local clients
+#
+xclock &
+epoch &
+
+#
+# Home Base
+#
+exec xterm -display ${host}:0 -geometry 80x32-3-3 -n HomeBase

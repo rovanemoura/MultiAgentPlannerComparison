@@ -1,0 +1,37 @@
+(define (problem pfile20) (:domain satellite)
+  (:objects star24 star23 planet22 phenomenon21 star20 phenomenon19 planet18 planet17 star16 planet15 phenomenon14 planet13 phenomenon12 star11 star10 planet9 phenomenon8 planet7 star6 phenomenon5 groundstation1 groundstation3 star4 star2 star0 - direction
+             spectrograph0 image4 thermograph7 image2 infrared9 image3 infrared5 thermograph8 infrared1 spectrograph6 - mode
+             instrument19 instrument18 instrument17 instrument16 - instrument
+             satellite2 - satellite
+            )
+  (:init
+       (supports instrument16 infrared9)
+       (supports instrument16 image2)
+       (calibration_target instrument16 star4)
+       (supports instrument17 infrared5)
+       (calibration_target instrument17 star0)
+       (supports instrument18 infrared9)
+       (calibration_target instrument18 groundstation1)
+       (supports instrument19 infrared5)
+       (supports instrument19 image2)
+       (calibration_target instrument19 groundstation3)
+       (on_board instrument16 satellite2)
+       (on_board instrument17 satellite2)
+       (on_board instrument18 satellite2)
+       (on_board instrument19 satellite2)
+       (power_avail satellite2)
+       (pointing satellite2 phenomenon14))
+  (:goal (and 
+       (have_image star24 infrared5)
+       (have_image star23 infrared9)
+       (have_image star23 image2)
+       (have_image planet22 image2)
+       (have_image phenomenon21 image2)
+       (have_image phenomenon19 image2)
+       (have_image planet18 infrared5)
+       (have_image planet18 infrared9)
+       (have_image planet13 image2)
+       (have_image planet13 infrared5)
+       (have_image phenomenon8 infrared5)
+       (have_image planet7 image2)
+       (have_image planet7 infrared5))))

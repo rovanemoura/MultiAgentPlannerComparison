@@ -1,0 +1,112 @@
+<html>
+
+<head>
+<title>The ORBLink IDL to Lisp Compiler</title>
+</head>
+
+<body>
+
+<h1>The ORBLink IDL to Lisp Compiler</h1>
+
+<hr>
+
+<p>An IDL file may be compiled by using the <code>corba:idl</code> function with a single
+argument, the pathname of the file to be compiled. By default the preprocessor symbol
+&quot;LISP&quot; is defined. </p>
+
+<h2>Basic usage of <code>corba:idl</code></h2>
+
+<p>The effect of the function </p>
+
+<pre>
+(corba:idl pathname)
+</pre>
+
+<p>is to load into the Lisp image those Lisp values defined by the <a href="mapping.htm">official
+mapping</a> that correspond to the IDL file denoted by <code>pathname</code>. </p>
+
+<p>This includes: 
+
+<ul>
+  <li>constant definitions, </li>
+  <li>type definitions, </li>
+  <li>class definitions, </li>
+  <li>proxy definitions, </li>
+  <li>servant definitions, </li>
+  <li>struct definitions, </li>
+  <li>union definitions, and </li>
+  <li>marshalling and unmarshalling functions for each of the data types and operations
+    defined in the IDL file. </li>
+</ul>
+
+<h2>Include files</h2>
+
+<p>When the parser sees </p>
+
+<blockquote>
+  <pre>#include &quot;...&quot;</pre>
+</blockquote>
+
+<p>where ... is a relative name, it searches for ... in the directory containing the
+source file. </p>
+
+<p>When the parser sees </p>
+
+<blockquote>
+  <pre>#include &lt;...&gt;</pre>
+</blockquote>
+
+<p>where ... is a relative name, it searches for ... in the directories whose names it
+finds in the special variable <code>orblink:*default-system-include-path-list*</code>. </p>
+
+<p>The default value of that variable is <code>nil</code>, which will result in failure to
+find the include file. </p>
+
+<p>The user should setq or bind <code>orblink:*default-system-include-path-list*</code> to
+a list of pathnames to be searched to find &lt;...&gt; include files.</p>
+
+<h2>Generating fasl files from IDL files: Advanced usage of <code>corba:idl</code></h2>
+
+<p>The <code>corba:idl</code> function can also be used to generate a <code>.fasl</code>
+file from an IDL file. This .fasl can later be loaded into a Lisp image into which ORBLink
+has been loaded. When the <code>.fasl</code> file is loaded, the effect on the Lisp world
+is the same as if the original IDL file had been passed as sole argument to the <code>corba:idl</code>
+function. The name of the generated fasl file is determined by keyword arguments passed to
+<code>corba:idl</code>. The allowed keyword arguments to <code>corba:idl</code> are: 
+
+<ul>
+  <li><strong>:compile</strong> <br>
+    Set to <code>T</code> if a <code>fasl</code> is to be generated from the argument IDL
+    file. The default is <code>nil</code>. If set to <code>T</code>, a fasl file is generated
+    from the argument IDL file. The default name of this fasl file is the same as the
+    concatenation of the name of the IDL file without extension concatenated to the string
+    &quot;-tmp&quot; with the file extension replaced by &quot;.fasl&quot;. Note that by
+    default, when the value of <code>:compile</code> is set to <code>T</code>, the fasl file
+    is generated but is not loaded; thus, it is necessary subsequently to load manually the
+    generated fasl file. </li>
+  <li><strong>:compile-and-load</strong> <br>
+    Set to <code>T</code> if a <code>fasl</code> file is to be generated from the argument IDL
+    file and subsequently loaded into the running Lisp image. The name of the generated <code>fasl</code>
+    file follows the conventions of the <code>:compile</code> keyword argument. </li>
+  <li><strong>:lisp-file</strong> <br>
+    The name of the intermediate Lisp file that is generated. The default is the name (without
+    extension) of the given IDL file concatenated to the string &quot;-tmp.cl&quot;. This
+    argument should be set only if either <code>:compile</code> or <code>:compile-and-load</code>
+    were set to <code>T</code>. </li>
+  <li><strong>:retain-lisp-file</strong> <br>
+    Set to <code>T</code> if the intermediate Lisp file is to be retained after compilation;
+    by default it is deleted. This option is included for didactic purposes only; in
+    particular, the operation of recompiling this generated Lisp file by the user is
+    explicitly not supported, as the compilation must be done in a particular environment
+    controlled by the ORB. </li>
+  <li><strong>[all other keyword arguments]</strong> <br>
+    All other keyword arguments are passed through to <code>compile-file</code> without
+    change. </li>
+</ul>
+
+<p>For example, given a file <strong>/a/b/x.idl</strong>, the form <code>(corba:idl
+&quot;/a/b/x.idl&quot; :compile t)</code> will generate a fasl file named <strong>/a/b/x-tmp.fasl</strong>.
+When loaded into another Lisp world, the effect will be the same as if <code>(corba:idl
+&quot;/a/b/x.idl&quot; )</code> were evaluated. </p>
+</body>
+</html>

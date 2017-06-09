@@ -1,0 +1,6 @@
+# Domain file: zeno.pddl
+# Problem file: zeno54_2.pddl
+3
+REFUEL PLANE3 CITY3 FL0 FL1
+FLY PLANE2 CITY1 CITY3 FL3 FL2
+FLY PLANE3 CITY3 CITY1 FL1 FL0

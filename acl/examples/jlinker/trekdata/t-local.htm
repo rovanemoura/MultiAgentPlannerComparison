@@ -1,0 +1,89 @@
+<html>
+
+<!-- $Id: t-local.htm,v 5.0 2004/01/14 18:31:36 layer Exp $ -->
+
+<head>
+<title>Lisp Annotator - Applet Demo</title>
+<body>
+<h1>Lisp Annotator - Applet Demo</h1>
+
+A simple demonstration of Lisp/Java communication.
+<p>
+The applet below is connected to Lisp where all the work is
+done. 
+Lisp calls Java to make the applet GUI components,
+but the database is maintained in Lisp.
+
+<hr>
+<center>
+
+
+<OBJECT
+   classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
+   codebase="http://java.sun.com/products/plugin/1.2/plugin-install.html"
+   WIDTH=600 
+   HEIGHT=530
+   >
+   <PARAM name="CODE"    value="TrekAppletLocal.class">
+   <PARAM name="type"    value="application/x-java-applet;version=1.2">
+   <PARAM name="ARCHIVE" value="jlinker.jar">
+
+   <PARAM name="lisp_host" value="localhost">
+   <PARAM name="lisp_port" value="4321">
+   <PARAM name="java_port" value="-4331">
+   <PARAM name="user_name" value="MSIE"  >
+
+   <COMMENT>
+<EMBED type="application/x-java-applet;version=1.2" 
+       java_CODE = "TrekAppletLocal.class" 
+       width=600 height=530
+       java_ARCHIVE=jlinker.jar
+       pluginspage="http://java.sun.com/products/plugin/1.2/plugin-install.html"
+
+       lisp_host="localhost"
+       lisp_port="4321"
+       java_port="-4331"
+
+       user_name="Netscape"
+       >
+
+       </EMBED>
+</COMMENT>
+</OBJECT>
+</center>
+
+
+<hr>
+<p>
+The applet above is connected to Lisp where all the work is
+done.  
+Lisp calls Java to make the applet GUI components,
+but the database is maintained in Lisp.
+The Lisp code is running in the remote server.  
+The Java applet code is running in the browser plugin.
+
+<h4>Login Screen</h4>
+Enter a user name under which to save annotations made in this
+session.
+
+
+<h4>Main Screen</h4>
+The main screen shows a scrollable and searchable database of trivia about
+the original Star Trek episodes.  The input fields allow you to
+add comments to the database.  The comments may be saved (at the
+server) from one session to the next.
+<p>
+As the mouse moves around the window, the status area at the bottom
+edge is updated by local Java code.  
+Button presses are sent back to Lisp for handling there, hence the 
+greater delay.
+
+
+
+
+<hr>
+
+<a href="mailto:mm@Franz.com">mm@Franz.com</a>
+
+</body>
+</html>

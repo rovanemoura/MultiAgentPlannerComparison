@@ -1,0 +1,371 @@
+#0Y_ #0Y |CHARSET|::|UTF-8|
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "CL-PPCRE"))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|BMH-MATCHER-AUX|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|BMH-MATCHER-AUX|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|BMH-MATCHER-AUX|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Auxiliary macro used by CREATE-BMH-MATCHER."
+    (|COMMON-LISP|::|LET*|
+     ((#1=#:|G34561| (|COMMON-LISP|::|CDR| |SYSTEM|::|<MACRO-FORM>|))
+      (|CL-PPCRE|::|CASE-INSENSITIVE-P|
+       (|COMMON-LISP|::|GETF| #1# ':|CASE-INSENSITIVE-P|
+        |COMMON-LISP|::|NIL|)))
+     (|SYSTEM|::|KEYWORD-TEST| #1# '(:|CASE-INSENSITIVE-P|))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|BMH-MATCHER-AUX|
+      (|COMMON-LISP|::|LET|
+       ((|CL-PPCRE|::|CHAR-COMPARE|
+         (|COMMON-LISP|::|IF| |CL-PPCRE|::|CASE-INSENSITIVE-P|
+          '|COMMON-LISP|::|CHAR-EQUAL| '|COMMON-LISP|::|CHAR=|)))
+       `(|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|START-POS|)
+         (|COMMON-LISP|::|DECLARE|
+          (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+           |CL-PPCRE|::|START-POS|))
+         (|COMMON-LISP|::|IF|
+          (|COMMON-LISP|::|OR|
+           (|COMMON-LISP|::|MINUSP| |CL-PPCRE|::|START-POS|)
+           (|COMMON-LISP|::|>|
+            (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+             (|COMMON-LISP|::|+| |CL-PPCRE|::|START-POS| |CL-PPCRE|::|M|))
+            |CL-PPCRE|::|*END-POS*|))
+          |COMMON-LISP|::|NIL|
+          (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|NAMED| |CL-PPCRE|::|BMH-MATCHER|
+           |CL-PPCRE|::|FOR| |CL-PPCRE|::|K| |CL-PPCRE|::|OF-TYPE|
+           |COMMON-LISP|::|FIXNUM| |COMMON-LISP|::|=|
+           (|COMMON-LISP|::|+| |CL-PPCRE|::|START-POS| |CL-PPCRE|::|M| -1.)
+           |CL-PPCRE|::|THEN|
+           (|COMMON-LISP|::|+| |CL-PPCRE|::|K|
+            (|COMMON-LISP|::|MAX| 1.
+             (|COMMON-LISP|::|AREF| |CL-PPCRE|::|SKIP|
+              (|COMMON-LISP|::|CHAR-CODE|
+               (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*|
+                |CL-PPCRE|::|K|)))))
+           |CL-PPCRE|::|WHILE|
+           (|COMMON-LISP|::|<| |CL-PPCRE|::|K| |CL-PPCRE|::|*END-POS*|)
+           |COMMON-LISP|::|DO|
+           (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|J|
+            |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM|
+            |CL-PPCRE|::|DOWNFROM| (|COMMON-LISP|::|1-| |CL-PPCRE|::|M|)
+            |CL-PPCRE|::|FOR| |CL-PPCRE|::|I| |CL-PPCRE|::|OF-TYPE|
+            |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|DOWNFROM| |CL-PPCRE|::|K|
+            |CL-PPCRE|::|WHILE|
+            (|COMMON-LISP|::|AND| (|COMMON-LISP|::|>=| |CL-PPCRE|::|J| 0.)
+             (,|CL-PPCRE|::|CHAR-COMPARE|
+              (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*| |CL-PPCRE|::|I|)
+              (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|PATTERN| |CL-PPCRE|::|J|)))
+            |CL-PPCRE|::|FINALLY|
+            (|COMMON-LISP|::|IF| (|COMMON-LISP|::|MINUSP| |CL-PPCRE|::|J|)
+             (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|BMH-MATCHER|
+              (|COMMON-LISP|::|1+| |CL-PPCRE|::|I|))))))))))))
+  '(|COMMON-LISP|::|&KEY| |CL-PPCRE|::|CASE-INSENSITIVE-P|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-BMH-MATCHER|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|PATTERN| |CL-PPCRE|::|CASE-INSENSITIVE-P|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|CHAR-SEARCHER-AUX|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|CHAR-SEARCHER-AUX|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|CHAR-SEARCHER-AUX|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Auxiliary macro used by CREATE-CHAR-SEARCHER."
+    (|COMMON-LISP|::|LET*|
+     ((#1=#:|G34666| (|COMMON-LISP|::|CDR| |SYSTEM|::|<MACRO-FORM>|))
+      (|CL-PPCRE|::|CASE-INSENSITIVE-P|
+       (|COMMON-LISP|::|GETF| #1# ':|CASE-INSENSITIVE-P|
+        |COMMON-LISP|::|NIL|)))
+     (|SYSTEM|::|KEYWORD-TEST| #1# '(:|CASE-INSENSITIVE-P|))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|CHAR-SEARCHER-AUX|
+      (|COMMON-LISP|::|LET|
+       ((|CL-PPCRE|::|CHAR-COMPARE|
+         (|COMMON-LISP|::|IF| |CL-PPCRE|::|CASE-INSENSITIVE-P|
+          '|COMMON-LISP|::|CHAR-EQUAL| '|COMMON-LISP|::|CHAR=|)))
+       `(|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|START-POS|)
+         (|COMMON-LISP|::|DECLARE|
+          (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+           |CL-PPCRE|::|START-POS|))
+         (|COMMON-LISP|::|AND|
+          (|COMMON-LISP|::|NOT|
+           (|COMMON-LISP|::|MINUSP| |CL-PPCRE|::|START-POS|))
+          (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|I|
+           |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM|
+           |CL-PPCRE|::|START-POS| |CL-PPCRE|::|BELOW| |CL-PPCRE|::|*END-POS*|
+           |CL-PPCRE|::|THEREIS|
+           (|COMMON-LISP|::|AND|
+            (,|CL-PPCRE|::|CHAR-COMPARE|
+             (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*| |CL-PPCRE|::|I|)
+             |CL-PPCRE|::|CHR|)
+            |CL-PPCRE|::|I|)))))))))
+  '(|COMMON-LISP|::|&KEY| |CL-PPCRE|::|CASE-INSENSITIVE-P|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-CHAR-SEARCHER|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|CHR| |CL-PPCRE|::|CASE-INSENSITIVE-P|)))
+(|SYSTEM|::|C-PROCLAIM|
+ '(|COMMON-LISP|::|INLINE| |CL-PPCRE|::|NEWLINE-SKIPPER|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NEWLINE-SKIPPER|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '#1=(|CL-PPCRE|::|START-POS|))
+ '(#1#
+   "Find the next occurence of a character in *STRING* which is behind\n
+a #Newline."
+   (|COMMON-LISP|::|DECLARE|
+    (|SYSTEM|::|IN-DEFUN| |CL-PPCRE|::|NEWLINE-SKIPPER|)
+    (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED|
+     (|COMMON-LISP|::|SAFETY| 0.) (|COMMON-LISP|::|SPACE| 0.)
+     (|COMMON-LISP|::|DEBUG| 1.) (|COMMON-LISP|::|COMPILATION-SPEED| 0.))
+    (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|START-POS|))
+   (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|NEWLINE-SKIPPER|
+    (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|I|
+     |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM|
+     (|COMMON-LISP|::|1-| |CL-PPCRE|::|START-POS|) |CL-PPCRE|::|BELOW|
+     |CL-PPCRE|::|*END-POS*| |CL-PPCRE|::|THEREIS|
+     (|COMMON-LISP|::|AND|
+      (|COMMON-LISP|::|CHAR=|
+       (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*| |CL-PPCRE|::|I|)
+       #\Newline)
+      (|COMMON-LISP|::|1+| |CL-PPCRE|::|I|))))))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|INSERT-ADVANCE-FN|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|INSERT-ADVANCE-FN|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|INSERT-ADVANCE-FN|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Creates the actual closure returned by CREATE-SCANNER-AUX by\n
+replacing '(ADVANCE-FN-DEFINITION) with a suitable definition for\n
+ADVANCE-FN. This is a utility macro used by CREATE-SCANNER-AUX."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|NIL|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|ADVANCE-FN|
+        (|COMMON-LISP|::|CADR| |SYSTEM|::|<MACRO-FORM>|)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|INSERT-ADVANCE-FN|
+       (|COMMON-LISP|::|SUBST| |CL-PPCRE|::|ADVANCE-FN|
+        '(|CL-PPCRE|::|ADVANCE-FN-DEFINITION|)
+        '(|COMMON-LISP|::|LAMBDA|
+          (|COMMON-LISP|::|STRING| |CL-PPCRE|::|START| |CL-PPCRE|::|END|)
+          (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|SCAN|
+           (|COMMON-LISP|::|LET*|
+            ((|CL-PPCRE|::|*STRING*| |COMMON-LISP|::|STRING|)
+             (|CL-PPCRE|::|*START-POS*| |CL-PPCRE|::|START|)
+             (|CL-PPCRE|::|*END-POS*| |CL-PPCRE|::|END|)
+             (|CL-PPCRE|::|*END-STRING-POS*|
+              (|COMMON-LISP|::|1-| |CL-PPCRE|::|*START-POS*|))
+             (|CL-PPCRE|::|*REPEAT-COUNTERS*| |CL-PPCRE|::|*REPEAT-COUNTERS*|)
+             (|CL-PPCRE|::|*LAST-POS-STORES*| |CL-PPCRE|::|*LAST-POS-STORES*|)
+             (|CL-PPCRE|::|*REG-STARTS*| |CL-PPCRE|::|*REG-STARTS*|)
+             (|CL-PPCRE|::|*REGS-MAYBE-START*|
+              |CL-PPCRE|::|*REGS-MAYBE-START*|)
+             (|CL-PPCRE|::|*REG-ENDS*| |CL-PPCRE|::|*REG-ENDS*|)
+             (|CL-PPCRE|::|SCAN-START-POS| |CL-PPCRE|::|*START-POS*|)
+             (|CL-PPCRE|::|STARTS-WITH-STR|
+              (|COMMON-LISP|::|IF| |CL-PPCRE|::|START-STRING-TEST|
+               (|CL-PPCRE|::|STR| |CL-PPCRE|::|STARTS-WITH|)
+               |COMMON-LISP|::|NIL|))
+             (|CL-PPCRE|::|MAX-END-POS|
+              (|COMMON-LISP|::|-| |CL-PPCRE|::|*END-POS*|
+               |CL-PPCRE|::|MIN-LEN|)))
+            (|COMMON-LISP|::|DECLARE|
+             (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+              |CL-PPCRE|::|SCAN-START-POS|)
+             (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FUNCTION|
+              |CL-PPCRE|::|MATCH-FN|))
+            (|COMMON-LISP|::|LABELS| ((|CL-PPCRE|::|ADVANCE-FN-DEFINITION|))
+             (|COMMON-LISP|::|DECLARE|
+              (|COMMON-LISP|::|INLINE| |CL-PPCRE|::|ADVANCE-FN|))
+             (|COMMON-LISP|::|WHEN|
+              (|COMMON-LISP|::|PLUSP| |CL-PPCRE|::|REP-NUM|)
+              (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|*REPEAT-COUNTERS*|
+               (|COMMON-LISP|::|MAKE-ARRAY| |CL-PPCRE|::|REP-NUM|
+                :|INITIAL-ELEMENT| 0. :|ELEMENT-TYPE|
+                '|COMMON-LISP|::|FIXNUM|)))
+             (|COMMON-LISP|::|WHEN|
+              (|COMMON-LISP|::|PLUSP| |CL-PPCRE|::|ZERO-LENGTH-NUM|)
+              (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|*LAST-POS-STORES*|
+               (|COMMON-LISP|::|MAKE-ARRAY| |CL-PPCRE|::|ZERO-LENGTH-NUM|
+                :|INITIAL-ELEMENT| |COMMON-LISP|::|NIL|)))
+             (|COMMON-LISP|::|WHEN|
+              (|COMMON-LISP|::|PLUSP| |CL-PPCRE|::|REG-NUM|)
+              (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|*REG-STARTS*|
+               (|COMMON-LISP|::|MAKE-ARRAY| |CL-PPCRE|::|REG-NUM|
+                :|INITIAL-ELEMENT| |COMMON-LISP|::|NIL|)
+               |CL-PPCRE|::|*REGS-MAYBE-START*|
+               (|COMMON-LISP|::|MAKE-ARRAY| |CL-PPCRE|::|REG-NUM|
+                :|INITIAL-ELEMENT| |COMMON-LISP|::|NIL|)
+               |CL-PPCRE|::|*REG-ENDS*|
+               (|COMMON-LISP|::|MAKE-ARRAY| |CL-PPCRE|::|REG-NUM|
+                :|INITIAL-ELEMENT| |COMMON-LISP|::|NIL|)))
+             (|COMMON-LISP|::|WHEN| |CL-PPCRE|::|END-ANCHORED-P|
+              (|COMMON-LISP|::|LET|
+               ((|CL-PPCRE|::|END-TEST-POS|
+                 (|COMMON-LISP|::|-| |CL-PPCRE|::|*END-POS*|
+                  (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                   |CL-PPCRE|::|END-STRING-LEN|))))
+               (|COMMON-LISP|::|DECLARE|
+                (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+                 |CL-PPCRE|::|END-TEST-POS|)
+                (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FUNCTION|
+                 |CL-PPCRE|::|END-STRING-TEST|))
+               (|COMMON-LISP|::|UNLESS|
+                (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|*END-STRING-POS*|
+                 (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|END-STRING-TEST|
+                  |CL-PPCRE|::|END-TEST-POS|))
+                (|COMMON-LISP|::|WHEN|
+                 (|COMMON-LISP|::|AND|
+                  (|COMMON-LISP|::|=| 1.
+                   (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                    |CL-PPCRE|::|END-ANCHORED-P|))
+                  (|COMMON-LISP|::|>| |CL-PPCRE|::|*END-POS*|
+                   |CL-PPCRE|::|SCAN-START-POS|)
+                  (|COMMON-LISP|::|CHAR=| #\Newline
+                   (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*|
+                    (|COMMON-LISP|::|1-| |CL-PPCRE|::|*END-POS*|))))
+                 (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|*END-STRING-POS*|
+                  (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|END-STRING-TEST|
+                   (|COMMON-LISP|::|1-| |CL-PPCRE|::|END-TEST-POS|))))))
+              (|COMMON-LISP|::|UNLESS|
+               (|COMMON-LISP|::|AND| |CL-PPCRE|::|*END-STRING-POS*|
+                (|COMMON-LISP|::|<=| |CL-PPCRE|::|*START-POS*|
+                 |CL-PPCRE|::|*END-STRING-POS*|))
+               (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|SCAN|
+                |COMMON-LISP|::|NIL|))
+              (|COMMON-LISP|::|WHEN| |CL-PPCRE|::|END-STRING-OFFSET|
+               (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|SCAN-START-POS|
+                (|COMMON-LISP|::|MAX| |CL-PPCRE|::|SCAN-START-POS|
+                 (|COMMON-LISP|::|-|
+                  (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                   |CL-PPCRE|::|*END-STRING-POS*|)
+                  (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                   |CL-PPCRE|::|END-STRING-OFFSET|))))))
+             (|COMMON-LISP|::|COND|
+              (|CL-PPCRE|::|START-ANCHORED-P|
+               (|COMMON-LISP|::|WHEN|
+                (|COMMON-LISP|::|OR|
+                 (|COMMON-LISP|::|/=| |CL-PPCRE|::|*START-POS*|
+                  |CL-PPCRE|::|SCAN-START-POS|)
+                 (|COMMON-LISP|::|<| |CL-PPCRE|::|MAX-END-POS|
+                  |CL-PPCRE|::|*START-POS*|))
+                (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|SCAN|
+                 |COMMON-LISP|::|NIL|))
+               (|COMMON-LISP|::|WHEN| |CL-PPCRE|::|STARTS-WITH-STR|
+                (|COMMON-LISP|::|LOCALLY|
+                 (|COMMON-LISP|::|DECLARE|
+                  (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+                   |CL-PPCRE|::|STARTS-WITH-LEN|))
+                 (|COMMON-LISP|::|COND|
+                  ((|COMMON-LISP|::|AND|
+                    (|CL-PPCRE|::|CASE-INSENSITIVE-P|
+                     |CL-PPCRE|::|STARTS-WITH|)
+                    (|COMMON-LISP|::|NOT|
+                     (|CL-PPCRE|::|*STRING*-EQUAL|
+                      |CL-PPCRE|::|STARTS-WITH-STR| |CL-PPCRE|::|*START-POS*|
+                      (|COMMON-LISP|::|+| |CL-PPCRE|::|*START-POS*|
+                       |CL-PPCRE|::|STARTS-WITH-LEN|)
+                      0. |CL-PPCRE|::|STARTS-WITH-LEN|)))
+                   (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|SCAN|
+                    |COMMON-LISP|::|NIL|))
+                  ((|COMMON-LISP|::|AND|
+                    (|COMMON-LISP|::|NOT|
+                     (|CL-PPCRE|::|CASE-INSENSITIVE-P|
+                      |CL-PPCRE|::|STARTS-WITH|))
+                    (|COMMON-LISP|::|NOT|
+                     (|CL-PPCRE|::|*STRING*=| |CL-PPCRE|::|STARTS-WITH-STR|
+                      |CL-PPCRE|::|*START-POS*|
+                      (|COMMON-LISP|::|+| |CL-PPCRE|::|*START-POS*|
+                       |CL-PPCRE|::|STARTS-WITH-LEN|)
+                      0. |CL-PPCRE|::|STARTS-WITH-LEN|)))
+                   (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|SCAN|
+                    |COMMON-LISP|::|NIL|))
+                  (|COMMON-LISP|::|T| |COMMON-LISP|::|NIL|))))
+               (|COMMON-LISP|::|WHEN|
+                (|COMMON-LISP|::|AND| |CL-PPCRE|::|END-STRING-TEST|
+                 (|COMMON-LISP|::|NOT| |CL-PPCRE|::|END-ANCHORED-P|))
+                (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|END-STRING-LOOP|
+                 (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|*END-STRING-POS*|
+                  |CL-PPCRE|::|*START-POS*|)
+                 (|COMMON-LISP|::|LOOP|
+                  (|COMMON-LISP|::|UNLESS|
+                   (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|*END-STRING-POS*|
+                    (|COMMON-LISP|::|FUNCALL|
+                     (|COMMON-LISP|::|THE| |COMMON-LISP|::|FUNCTION|
+                      |CL-PPCRE|::|END-STRING-TEST|)
+                     |CL-PPCRE|::|*END-STRING-POS*|))
+                   (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|SCAN|
+                    |COMMON-LISP|::|NIL|))
+                  (|COMMON-LISP|::|UNLESS| |CL-PPCRE|::|END-STRING-OFFSET|
+                   (|COMMON-LISP|::|RETURN-FROM|
+                    |CL-PPCRE|::|END-STRING-LOOP|))
+                  (|COMMON-LISP|::|LET|
+                   ((|CL-PPCRE|::|MAYBE-START-POS|
+                     (|COMMON-LISP|::|-|
+                      (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                       |CL-PPCRE|::|*END-STRING-POS*|)
+                      (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                       |CL-PPCRE|::|END-STRING-OFFSET|))))
+                   (|COMMON-LISP|::|COND|
+                    ((|COMMON-LISP|::|=| |CL-PPCRE|::|MAYBE-START-POS|
+                      |CL-PPCRE|::|*START-POS*|)
+                     (|COMMON-LISP|::|RETURN-FROM|
+                      |CL-PPCRE|::|END-STRING-LOOP|))
+                    ((|COMMON-LISP|::|AND|
+                      (|COMMON-LISP|::|<| |CL-PPCRE|::|MAYBE-START-POS|
+                       |CL-PPCRE|::|*START-POS*|)
+                      (|COMMON-LISP|::|<|
+                       (|COMMON-LISP|::|+| |CL-PPCRE|::|*END-STRING-POS*|
+                        |CL-PPCRE|::|END-STRING-LEN|)
+                       |CL-PPCRE|::|*END-POS*|))
+                     (|COMMON-LISP|::|INCF| |CL-PPCRE|::|*END-STRING-POS*|))
+                    (|COMMON-LISP|::|T|
+                     (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|SCAN|
+                      |COMMON-LISP|::|NIL|)))))))
+               (|COMMON-LISP|::|LET|
+                ((|CL-PPCRE|::|NEXT-POS|
+                  (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|MATCH-FN|
+                   |CL-PPCRE|::|*START-POS*|)))
+                (|COMMON-LISP|::|WHEN| |CL-PPCRE|::|NEXT-POS|
+                 (|COMMON-LISP|::|VALUES|
+                  (|COMMON-LISP|::|IF| |CL-PPCRE|::|NEXT-POS|
+                   |CL-PPCRE|::|*START-POS*| |COMMON-LISP|::|NIL|)
+                  |CL-PPCRE|::|NEXT-POS| |CL-PPCRE|::|*REG-STARTS*|
+                  |CL-PPCRE|::|*REG-ENDS*|))))
+              (|COMMON-LISP|::|T|
+               (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|POS|
+                |COMMON-LISP|::|=|
+                (|COMMON-LISP|::|IF| |CL-PPCRE|::|STARTS-WITH-EVERYTHING|
+                 |CL-PPCRE|::|SCAN-START-POS|
+                 (|CL-PPCRE|::|ADVANCE-FN| |CL-PPCRE|::|SCAN-START-POS|))
+                |CL-PPCRE|::|THEN| (|CL-PPCRE|::|ADVANCE-FN| |CL-PPCRE|::|POS|)
+                |CL-PPCRE|::|WHILE|
+                (|COMMON-LISP|::|AND| |CL-PPCRE|::|POS|
+                 (|COMMON-LISP|::|<=|
+                  (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                   |CL-PPCRE|::|POS|)
+                  |CL-PPCRE|::|MAX-END-POS|))
+                |COMMON-LISP|::|DO|
+                (|COMMON-LISP|::|LET|
+                 ((|CL-PPCRE|::|NEXT-POS|
+                   (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|MATCH-FN|
+                    |CL-PPCRE|::|POS|)))
+                 (|COMMON-LISP|::|WHEN| |CL-PPCRE|::|NEXT-POS|
+                  (|COMMON-LISP|::|RETURN-FROM| |CL-PPCRE|::|SCAN|
+                   (|COMMON-LISP|::|VALUES| |CL-PPCRE|::|POS|
+                    |CL-PPCRE|::|NEXT-POS| |CL-PPCRE|::|*REG-STARTS*|
+                    |CL-PPCRE|::|*REG-ENDS*|)))
+                 (|COMMON-LISP|::|INCF|
+                  (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                   |CL-PPCRE|::|POS|))))))))))
+        :|TEST| #'|COMMON-LISP|::|EQUALP|))))))
+  '(|CL-PPCRE|::|ADVANCE-FN|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-SCANNER-AUX|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|MATCH-FN| |CL-PPCRE|::|MIN-LEN| |CL-PPCRE|::|START-ANCHORED-P|
+    |CL-PPCRE|::|STARTS-WITH| |CL-PPCRE|::|START-STRING-TEST|
+    |CL-PPCRE|::|END-ANCHORED-P| |CL-PPCRE|::|END-STRING-TEST|
+    |CL-PPCRE|::|END-STRING-LEN| |CL-PPCRE|::|END-STRING-OFFSET|
+    |CL-PPCRE|::|REP-NUM| |CL-PPCRE|::|ZERO-LENGTH-NUM|
+    |CL-PPCRE|::|REG-NUM|)))

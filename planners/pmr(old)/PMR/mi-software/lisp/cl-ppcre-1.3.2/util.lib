@@ -1,0 +1,240 @@
+#0Y_ #0Y |CHARSET|::|UTF-8|
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "CL-PPCRE"))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|WITH-UNIQUE-NAMES|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|WITH-UNIQUE-NAMES|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|WITH-UNIQUE-NAMES|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Syntax: WITH-UNIQUE-NAMES ( { var | (var x) }* ) declaration* form*\n\n
+Executes a series of forms with each VAR bound to a fresh,\n
+uninterned symbol. The uninterned symbol is as if returned by a call\n
+to GENSYM with the string denoted by X - or, if X is not supplied, the\n
+string denoted by VAR - as argument.\n\n
+The variable bindings created are lexical unless special declarations\n
+are specified. The scopes of the name bindings and declarations do not\n
+include the Xs.\n\n
+The forms are evaluated in order, and the values of all but the last\n
+are discarded (that is, the body is an implicit PROGN)."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G23175| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G23176| #1#) (|CL-PPCRE|::|BINDINGS| #3#)
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|WITH-UNIQUE-NAMES|
+       `(|COMMON-LISP|::|LET|
+         ,(|COMMON-LISP|::|MAPCAR|
+           #'(|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|BINDING|)
+              (|COMMON-LISP|::|CHECK-TYPE| |CL-PPCRE|::|BINDING|
+               (|COMMON-LISP|::|OR| |COMMON-LISP|::|CONS|
+                |COMMON-LISP|::|SYMBOL|))
+              (|COMMON-LISP|::|IF|
+               (|COMMON-LISP|::|CONSP| |CL-PPCRE|::|BINDING|)
+               (|COMMON-LISP|::|DESTRUCTURING-BIND|
+                (|CL-PPCRE|::|VAR| |CL-PPCRE|::|X|) |CL-PPCRE|::|BINDING|
+                (|COMMON-LISP|::|CHECK-TYPE| |CL-PPCRE|::|VAR|
+                 |COMMON-LISP|::|SYMBOL|)
+                `(,|CL-PPCRE|::|VAR|
+                  (|COMMON-LISP|::|GENSYM|
+                   ,(|COMMON-LISP|::|ETYPECASE| |CL-PPCRE|::|X|
+                     (|COMMON-LISP|::|SYMBOL|
+                      (|COMMON-LISP|::|SYMBOL-NAME| |CL-PPCRE|::|X|))
+                     (|COMMON-LISP|::|CHARACTER|
+                      (|COMMON-LISP|::|STRING| |CL-PPCRE|::|X|))
+                     (|COMMON-LISP|::|STRING| |CL-PPCRE|::|X|)))))
+               `(,|CL-PPCRE|::|BINDING|
+                 (|COMMON-LISP|::|GENSYM|
+                  ,(|COMMON-LISP|::|SYMBOL-NAME| |CL-PPCRE|::|BINDING|)))))
+           |CL-PPCRE|::|BINDINGS|)
+         ,@|CL-PPCRE|::|BODY|))))))
+  '((|COMMON-LISP|::|&REST| |CL-PPCRE|::|BINDINGS|) |COMMON-LISP|::|&BODY|
+    |CL-PPCRE|::|BODY|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|WITH-REBINDING|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|WITH-REBINDING|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|WITH-REBINDING|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "WITH-REBINDING ( { var | (var prefix) }* ) form*\n\n
+Evaluates a series of forms in the lexical environment that is\n
+formed by adding the binding of each VAR to a fresh, uninterned\n
+symbol, and the binding of that fresh, uninterned symbol to VAR's\n
+original value, i.e., its value in the current lexical environment.\n\n
+The uninterned symbol is created as if by a call to GENSYM with the\n
+string denoted by PREFIX - or, if PREFIX is not supplied, the string\n
+denoted by VAR - as argument.\n\n
+The forms are evaluated in order, and the values of all but the last\n
+are discarded (that is, the body is an implicit PROGN)."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|BINDINGS|
+        (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDR| . #1#)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|WITH-REBINDING|
+       (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|BINDING|
+        |CL-PPCRE|::|IN| |CL-PPCRE|::|BINDINGS| |CL-PPCRE|::|FOR|
+        |CL-PPCRE|::|VAR| |COMMON-LISP|::|=|
+        (|COMMON-LISP|::|IF| (|COMMON-LISP|::|CONSP| |CL-PPCRE|::|BINDING|)
+         (|COMMON-LISP|::|CAR| |CL-PPCRE|::|BINDING|) |CL-PPCRE|::|BINDING|)
+        |CL-PPCRE|::|FOR| |CL-PPCRE|::|NAME| |COMMON-LISP|::|=|
+        (|COMMON-LISP|::|GENSYM|) |CL-PPCRE|::|COLLECT|
+        `(,|CL-PPCRE|::|NAME| ,|CL-PPCRE|::|VAR|) |CL-PPCRE|::|INTO|
+        |CL-PPCRE|::|RENAMES| |CL-PPCRE|::|COLLECT|
+        ``(,,|CL-PPCRE|::|VAR| ,,|CL-PPCRE|::|NAME|) |CL-PPCRE|::|INTO|
+        |CL-PPCRE|::|TEMPS| |CL-PPCRE|::|FINALLY|
+        (|COMMON-LISP|::|RETURN|
+         `(|COMMON-LISP|::|LET| ,|CL-PPCRE|::|RENAMES|
+           (|CL-PPCRE|::|WITH-UNIQUE-NAMES| ,|CL-PPCRE|::|BINDINGS|
+            `(|COMMON-LISP|::|LET| (,,@|CL-PPCRE|::|TEMPS|)
+              ,,@|CL-PPCRE|::|BODY|))))))))))
+  '(|CL-PPCRE|::|BINDINGS| |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY|)))
+(|COMMON-LISP|::|DEFVAR| |CL-PPCRE|::|*REGEX-CHAR-CODE-LIMIT*|
+ |COMMON-LISP|::|CHAR-CODE-LIMIT|
+ "The upper exclusive bound on the char-codes of characters\n
+which can occur in character classes.  Change this value BEFORE\n
+creating scanners if you don't need the (full) Unicode support\n
+of implementations like AllegroCL, CLISP, LispWorks, or SBCL.")
+(|COMMON-LISP|::|DECLAIM|
+ (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+  |CL-PPCRE|::|*REGEX-CHAR-CODE-LIMIT*|))
+(|COMMON-LISP|::|DEFUN| |CL-PPCRE|::|MAKE-CHAR-HASH| (|CL-PPCRE|::|TEST|)
+ (|COMMON-LISP|::|DECLARE|
+  (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED| |COMMON-LISP|::|SPACE|))
+ "Returns a hash-table of all characters satisfying test."
+ (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|WITH| |CL-PPCRE|::|HASH|
+  |COMMON-LISP|::|=| (|COMMON-LISP|::|MAKE-HASH-TABLE|) |CL-PPCRE|::|FOR|
+  |CL-PPCRE|::|C| |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM|
+  |CL-PPCRE|::|FROM| 0. |CL-PPCRE|::|BELOW| |COMMON-LISP|::|CHAR-CODE-LIMIT|
+  |CL-PPCRE|::|FOR| |CL-PPCRE|::|CHR| |COMMON-LISP|::|=|
+  (|COMMON-LISP|::|CODE-CHAR| |CL-PPCRE|::|C|) |COMMON-LISP|::|IF|
+  (|COMMON-LISP|::|AND| |CL-PPCRE|::|CHR|
+   (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|TEST| |CL-PPCRE|::|CHR|))
+  |COMMON-LISP|::|DO|
+  (|COMMON-LISP|::|SETF|
+   (|COMMON-LISP|::|GETHASH| |CL-PPCRE|::|CHR| |CL-PPCRE|::|HASH|)
+   |COMMON-LISP|::|T|)
+  |CL-PPCRE|::|FINALLY| (|COMMON-LISP|::|RETURN| |CL-PPCRE|::|HASH|)))
+(|COMMON-LISP|::|DECLAIM| (|COMMON-LISP|::|INLINE| |CL-PPCRE|::|WORD-CHAR-P|))
+(|COMMON-LISP|::|DEFUN| |CL-PPCRE|::|WORD-CHAR-P| (|CL-PPCRE|::|CHR|)
+ (|COMMON-LISP|::|DECLARE|
+  (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED|
+   (|COMMON-LISP|::|SAFETY| 0.) (|COMMON-LISP|::|SPACE| 0.)
+   (|COMMON-LISP|::|DEBUG| 1.) (|COMMON-LISP|::|COMPILATION-SPEED| 0.)))
+ "Tests whether a character is a \"word\" character.\n
+In the ASCII charset this is equivalent to a-z, A-Z, 0-9, or _,\n
+i.e. the same as Perl's [\\w]."
+ (|COMMON-LISP|::|OR| (|COMMON-LISP|::|ALPHANUMERICP| |CL-PPCRE|::|CHR|)
+  (|COMMON-LISP|::|CHAR=| |CL-PPCRE|::|CHR| #\_)))
+(|COMMON-LISP|::|UNLESS|
+ (|COMMON-LISP|::|BOUNDP| '|CL-PPCRE|::|+WHITESPACE-CHAR-STRING+|)
+ (|COMMON-LISP|::|DEFCONSTANT| |CL-PPCRE|::|+WHITESPACE-CHAR-STRING+|
+  (|COMMON-LISP|::|COERCE| '(#\Space #\Tab #\Newline #\Return #\Page)
+   '|COMMON-LISP|::|STRING|)
+  "A string of all characters which are considered to be whitespace.\n
+Same as Perl's [\\s]."))
+(|COMMON-LISP|::|DEFUN| |CL-PPCRE|::|WHITESPACEP| (|CL-PPCRE|::|CHR|)
+ (|COMMON-LISP|::|DECLARE|
+  (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED| |COMMON-LISP|::|SPACE|))
+ "Tests whether a character is whitespace,\n
+i.e. whether it would match [\\s] in Perl."
+ (|COMMON-LISP|::|FIND| |CL-PPCRE|::|CHR|
+  |CL-PPCRE|::|+WHITESPACE-CHAR-STRING+| :|TEST| #'|COMMON-LISP|::|CHAR=|))
+(|SYSTEM|::|C-PROCLAIM|
+ '(|COMMON-LISP|::|SPECIAL| |CL-PPCRE|::|*REGEX-CHAR-CODE-LIMIT*|))
+(|SYSTEM|::|C-PROCLAIM|
+ '(|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+   |CL-PPCRE|::|*REGEX-CHAR-CODE-LIMIT*|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MAKE-CHAR-HASH|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|CL-PPCRE|::|TEST|)))
+(|SYSTEM|::|C-PROCLAIM| '(|COMMON-LISP|::|INLINE| |CL-PPCRE|::|WORD-CHAR-P|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|WORD-CHAR-P|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '#1=(|CL-PPCRE|::|CHR|))
+ '(#1#
+   "Tests whether a character is a \"word\" character.\n
+In the ASCII charset this is equivalent to a-z, A-Z, 0-9, or _,\n
+i.e. the same as Perl's [\\w]."
+   (|COMMON-LISP|::|DECLARE| (|SYSTEM|::|IN-DEFUN| |CL-PPCRE|::|WORD-CHAR-P|)
+    (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED|
+     (|COMMON-LISP|::|SAFETY| 0.) (|COMMON-LISP|::|SPACE| 0.)
+     (|COMMON-LISP|::|DEBUG| 1.) (|COMMON-LISP|::|COMPILATION-SPEED| 0.)))
+   (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|WORD-CHAR-P|
+    (|COMMON-LISP|::|OR| (|COMMON-LISP|::|ALPHANUMERICP| |CL-PPCRE|::|CHR|)
+     (|COMMON-LISP|::|CHAR=| |CL-PPCRE|::|CHR| #\_)))))
+(|SYSTEM|::|C-PROCLAIM-CONSTANT| '|CL-PPCRE|::|+WHITESPACE-CHAR-STRING+|
+ '(|COMMON-LISP|::|COERCE| '(#\Space #\Tab #\Newline #\Return #\Page)
+   '|COMMON-LISP|::|STRING|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|WHITESPACEP|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|CL-PPCRE|::|CHR|)))
+(|SYSTEM|::|C-PROCLAIM-CONSTANT| '|CL-PPCRE|::|+DIGIT-HASH+|
+ '(|CL-PPCRE|::|MAKE-CHAR-HASH|
+   (|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|CHR|)
+    (|COMMON-LISP|::|CHAR<=| #\0 |CL-PPCRE|::|CHR| #\9))))
+(|SYSTEM|::|C-PROCLAIM-CONSTANT| '|CL-PPCRE|::|+WORD-CHAR-HASH+|
+ '(|CL-PPCRE|::|MAKE-CHAR-HASH| #'|CL-PPCRE|::|WORD-CHAR-P|))
+(|SYSTEM|::|C-PROCLAIM-CONSTANT| '|CL-PPCRE|::|+WHITESPACE-CHAR-HASH+|
+ '(|CL-PPCRE|::|MAKE-CHAR-HASH| #'|CL-PPCRE|::|WHITESPACEP|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MERGE-HASH|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|HASH1| |CL-PPCRE|::|HASH2|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MERGE-INVERTED-HASH|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|HASH1| |CL-PPCRE|::|HASH2|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-RANGES-FROM-HASH|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|HASH| |COMMON-LISP|::|&KEY| |CL-PPCRE|::|DOWNCASEP|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+ '|CL-PPCRE|::|MAYBE-COERCE-TO-SIMPLE-STRING|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|MAYBE-COERCE-TO-SIMPLE-STRING|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|MAYBE-COERCE-TO-SIMPLE-STRING|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|NIL|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|COMMON-LISP|::|STRING|
+        (|COMMON-LISP|::|CADR| |SYSTEM|::|<MACRO-FORM>|)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|MAYBE-COERCE-TO-SIMPLE-STRING|
+       (|CL-PPCRE|::|WITH-UNIQUE-NAMES| (|CL-PPCRE|::|=STRING=|)
+        `(|COMMON-LISP|::|LET|
+          ((,|CL-PPCRE|::|=STRING=| ,|COMMON-LISP|::|STRING|))
+          (|COMMON-LISP|::|COND|
+           ((|COMMON-LISP|::|SIMPLE-STRING-P| ,|CL-PPCRE|::|=STRING=|)
+            ,|CL-PPCRE|::|=STRING=|)
+           (|COMMON-LISP|::|T|
+            (|COMMON-LISP|::|COERCE| ,|CL-PPCRE|::|=STRING=|
+             '|COMMON-LISP|::|SIMPLE-STRING|))))))))))
+  '(|COMMON-LISP|::|STRING|)))
+(|SYSTEM|::|C-PROCLAIM| '(|COMMON-LISP|::|INLINE| |CL-PPCRE|::|NSUBSEQ|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NSUBSEQ|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '#1=(|COMMON-LISP|::|SEQUENCE| |CL-PPCRE|::|START| |COMMON-LISP|::|&OPTIONAL|
+       (|CL-PPCRE|::|END|
+        (|COMMON-LISP|::|LENGTH| |COMMON-LISP|::|SEQUENCE|))))
+ '(#1# "Return a subsequence by pointing to location in original sequence."
+   (|COMMON-LISP|::|DECLARE| (|SYSTEM|::|IN-DEFUN| |CL-PPCRE|::|NSUBSEQ|))
+   (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|NSUBSEQ|
+    (|COMMON-LISP|::|MAKE-ARRAY|
+     (|COMMON-LISP|::|-| |CL-PPCRE|::|END| |CL-PPCRE|::|START|) :|ELEMENT-TYPE|
+     (|COMMON-LISP|::|ARRAY-ELEMENT-TYPE| |COMMON-LISP|::|SEQUENCE|)
+     :|DISPLACED-TO| |COMMON-LISP|::|SEQUENCE| :|DISPLACED-INDEX-OFFSET|
+     |CL-PPCRE|::|START|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NORMALIZE-VAR-LIST|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|CL-PPCRE|::|VAR-LIST|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|STRING-LIST-TO-SIMPLE-STRING|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|CL-PPCRE|::|STRING-LIST|)))

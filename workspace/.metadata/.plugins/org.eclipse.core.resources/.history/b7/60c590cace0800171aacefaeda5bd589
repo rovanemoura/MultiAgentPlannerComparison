@@ -1,0 +1,39 @@
+{ include("$jacamoJar/templates/common-cartago.asl") }
+{ include("$jacamoJar/templates/common-moise.asl") }
+{ include("decomp_breadth.asl") }
+{ include("bidder.asl") }
+{ include("parser.asl") }
+
+/* Initial beliefs and rules */
+role(uav).
+
+/* Initial goals */
+
+!start.
+
+/* Plans */
++!navigate(To)
+	: at(From)
+<-
+	!navigate(_,From,To);
+	.
+
++!navigate_uav(_,From,To)
+	: .my_name(Name) & focused(_,Name,Id)
+<-
+	navigate(From,To)[artifact_id(Id)];
+	.
+	
++!take_picture(_,Area,Disaster)
+	: focused(_,Disaster,Id1) & visible_from(Areas)[artifact_id(Id1)] & .my_name(Name) & focused(_,Name,Id2)
+<-
+	take_picture(Area,Disaster,Areas)[artifact_id(Id2)];
+	.
+	
++!communicate_data(_,Cdm,Disaster,At,To)
+	: focused(_,Cdm,Id1) & cdm_at(To2)[artifact_id(Id1)] //& have_picture(Disaster) & in_range(Areas)[artifact_id(Id1)] & .my_name(Name) & focused(_,Name,Id2)
+<-
+	communicate_data(Disaster)[artifact_id(Id2)];
+	.
+	
++!start <- !navigate_uav(uav1,area1,area8); !take_picture(uav1,area8,disaster1); !navigate_uav(uav1,area8,area2); !communicate_data(uav1,cdm1,disaster1,area2,area1).

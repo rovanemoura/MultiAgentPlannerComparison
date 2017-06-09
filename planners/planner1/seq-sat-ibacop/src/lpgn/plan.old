@@ -1,0 +1,10 @@
+#!/bin/bash
+BASEDIR="$(dirname "$0")"
+if [[ $# != 3 ]]; then
+    echo "usage: $(dirname "$0") DOMAIN PROBLEM PLAN_FILE" 1>&2
+    exit 1
+else
+    "$BASEDIR"/lpg -o "$1" -f "$2" -out "$3" -n 100
+fi
+
+

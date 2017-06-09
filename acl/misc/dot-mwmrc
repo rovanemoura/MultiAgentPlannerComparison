@@ -1,0 +1,55 @@
+# Sample .mwmrc
+# $Header: /repo/cvs.copy/cl/sample-files/dot-mwmrc,v 1.4 1993/05/05 03:47:36 layer Exp $
+# (All lines that begin with '#' are comments)
+
+Buttons normal
+{
+	Ctrl<Btn3Down>	window | icon	f.lower
+	Ctrl<Btn2Down>	window | icon	f.raise
+
+	Ctrl Shift<Btn1Down> window	f.focus_key
+	Ctrl Shift<Btn1Down> root	f.focus_key
+
+	Ctrl Meta<Btn1Up> window	f.kill
+
+	Meta<Btn1Down>	window		f.minimize
+	Meta<Btn2Down>	window | icon	f.move
+	Meta<Btn3Down>	window		f.resize
+
+	Meta<Btn1Down>	icon		f.normalize
+
+	<Btn1Down>	root		f.menu Shells
+	<Btn2Down>	root		f.menu Machines
+	<Btn3Down>	root		f.menu Root
+}
+
+
+Menu Root
+{
+	"pack icons"	f.pack_icons
+	"refresh"	f.refresh
+	"restart"	f.restart
+	"EXIT"		f.quit_mwm
+}
+
+menu Shells
+{
+	"Shells"	f.title
+	"cour10"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour11"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour12"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour14"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour17"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour18"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour20"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"9x15"		!"xterm -fn 9x15 &"
+	"8x13"		!"xterm -fn 8x13 &"
+	"6x13"		!"xterm -fn 6x13 &"
+	"6x12"		!"xterm -fn 6x12 &"
+}
+
+menu Machines
+{
+	"Machines"	f.title
+	"localhost"	!"xon localhost xterm -ls -n localhost &"
+}

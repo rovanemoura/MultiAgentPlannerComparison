@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Forwarding</title>
+  </head>
+  <body>
+    <h1>Forwarding requests to another object</h1>
+<hr>
+<p>
+You can use the <code>_forward</code> operation in the <code>Object</code> pseudo interface to
+forward a request to a different object:
+<p>
+<pre>
+  pseudo interface servant (Object) {
+    void _forward (in Object location) raises (ORBLink::Forward);
+  }
+</pre>
+<p>
+Within the body of a 
+<code>corba:define-method</code>
+ definition corresponding to an
+implementation object <code>r</code>, the function invocation
+<p>
+<pre>
+(op:_forward r p)
+</pre>
+<p>
+will forward to the object designated by <code>p</code> the request that was
+received by the object <code>r</code>.  
+<p>
+This functionality only works if the
+original request was received remotely by <code>r</code>. 
+<p>
+It is implemented at the
+IIOP level by returning to the invoker a reply of type
+<code>LOCATION_FORWARD</code> with the IOR of <code>p</code> in the IIOP message body. All
+subsequent requests on that proxy (which can be in the address space
+of a non-Lisp ORB) which forwarded the original request to <code>r</code> will be
+routed directly to <code>p</code>.
+<p>
+<code>op:_forward</code> signals an <code>ORBLink:Forward</code> condition which is handled by
+the ORB when servicing a remote request. This implementation detail is
+normally transparent to the user and should not be relied upon.
+  </body>
+</html>

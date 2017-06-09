@@ -1,0 +1,733 @@
+;; -*- mode: common-lisp; package: user -*-
+;;
+;; copyright (c) 1997 Franz Inc, Berkeley, CA
+;;
+;; The software, data and information contained herein are proprietary
+;; to, and comprise valuable trade secrets of, Franz, Inc.  They are
+;; given in confidence by Franz, Inc. pursuant to a written license
+;; agreement, and may be stored and used only in accordance with the terms
+;; of such license.
+;;
+;; Restricted Rights Legend
+;; ------------------------
+;; Use, duplication, and disclosure jof the software, data and information
+;; contained herein by any agency, department or entity of the U.S.
+;; Government are subject to restrictions of Restricted Rights for
+;; Commercial Software developed at private expense as specified in
+;; DOD FAR Supplement 52.227-7013 (c) (1) (ii), as applicable.
+
+;; $Id: jiltest.jil,v 2.0 2003/12/15 23:28:59 layer Exp $
+
+
+(import jil.tester)
+
+
+(def-java-macro mactest ()
+  `(progn (def-java-class mactest1 () ((x :type int)))
+	  (def-java-class mactest2 () ((x :type int)))))
+
+(mactest)
+
+
+;; superguy and subguy are here to test 'super' access to overloaded
+;; functions and methods
+
+(def-java-class superguy ()
+  :public
+  ((fff :type int :initform 333))
+  )
+
+(def-java-method testfcn () int
+		 123)
+
+(def-java-method testdowncast () int
+		 (let ((y (the subguy this)))
+		   (y.testfcn)))
+
+
+(def-java-class subguy (superguy)
+  :public
+  ((fff :type int :initform 444)
+   (mystat :type int :initform 332 :flags (:static))
+   (mystat2 :type int :initform 444 :flags (:static))
+   (mysuper :type superguy :initform (new superguy))
+   )
+  )
+
+(def-java-method testfcn () int
+		 456)
+
+(def-java-method overloading-2 () void
+		 (tester.check 1302 444 fff)
+		 (tester.check 1303 333 super.fff)
+		 (tester.check 1304 456 (testfcn))
+		 (tester.check 1305 123 (super.testfcn))
+		 )
+
+(def-java-method randomstuff () void
+		 (tester.check 1306 332 mystat) ; verify static setup
+		 (tester.check 1307 555 mystat2) ; verify top level static
+		 ; two ways to access same slot
+		 (tester.check 1308 333 mysuper.fff) ; 
+		 (tester.check 1309 333 this.mysuper.fff) ; 
+		 )
+
+(def-java-method test_widen () superguy
+  :static
+  (let ((x (new subguy)))
+    x ; test that it will auto-widen this to be a superguy
+    ))
+
+
+(static
+ (setq mystat2 555))
+
+;;;;;;;;
+; the test here is whether this can be compiled as it uses
+; inner classes;
+(def-java-class innertestfoo ()
+  ((aone :type innera)
+   (atwo :type innera)
+   (b :type innerb)
+   (fooi :type int))
+  
+  :classes
+  (innera () 
+	  ((i :type int)
+	   )
+	  :classes
+	  (ultraina () ((ii :type int))))
+  (innerb () :static ((j :type int)))
+  (innerc ()
+	  :methods
+	  (innerc () void :public (setq fooi 3)))
+
+  (barintf () :interface
+	    :methods
+	    (sum ((a int) (b int)) int)
+	    (diff ((a int) (b int)) int))
+  
+  :methods
+  (innertestfoo () void
+		;; constructor
+		(setq aone (new innera))
+		(setq atwo (new innera)))
+  
+  (test_inner () void
+	      (setq fooi 12345)
+	      (tester.check 1700 12345 fooi)
+	      (tester.check 1701 12345 aone.fooi)
+	      (tester.check 1702 12345 atwo.fooi)
+	      
+	      (setq aone.fooi 23456)
+	      (tester.check 1703 23456 atwo.fooi)
+	      (let ((x (new (:class barintf ()
+				    :methods
+				    (sum ((a int) (b int)) int
+					 :public
+					 (+ a b))
+				    
+				    (diff ((a int) (b int)) int
+					  :public
+					  (- a b))))))
+		(tester.check 1704 7 (x.sum 3 4))
+		(tester.check 1705 -1 (x.diff 3 4)))))
+
+
+;;;;;;;;
+; again we test to see if we can compile this
+(def-java-method clonetest () void
+  :static
+  
+  (let* ((ara (new (array int 10)))
+	 (arb (ara.clone)))
+    3))
+
+
+;; test if we can support a super class constructor call with an argument
+(def-java-class spr24390-superclass ()
+  :public
+  ()
+  :methods
+  (spr24390-superclass ((name String)) void
+               ()))
+
+(def-java-class spr24390-subclass (spr24390-superclass)
+  :public
+  ()
+  :methods
+  (spr24390-subclass ((name String)) void
+		     (super name)))
+
+
+
+;;;;;
+
+
+
+(def-java-class jiltest (tester)
+  :public 
+  ((ttt :type int :initform 385)))
+
+
+(def-java-method simplemath () void
+		 :static
+		 (check 1 3  (+ 1 2))
+		 (check 2 -1 (- 1 2))
+		 (check 3 2  (* 1 2))
+		 (check 4 0  (/ 1 2))
+		 
+		 (check 5 6  (+ 8 -2))
+		 (check 6 10 (- 8 -2))
+		 (check 7 -16  (* 8 -2))
+		 (check 8 -4  (/ 8 -2))
+		 
+		 (check 9 3006  (+ 8 -2 3000 ))
+		 (check 10 6 (- 8 -2 20 -16))
+		 (check 11 -320  (* 8 -2 20))
+		 (check 12 -2  (/ 8 -2 2)))
+
+(def-java-method promotions () void
+		 :static
+		 (check 100 2.3f0 (+ 2 0.3f0))
+		 (check 101 2.3f0 (+ 1 1 0.3f0))
+		 (check 102 2.3f0 (- 3 0.7f0))
+		 
+		 (check 103 2.3d0 (+ 2 0.3d0))
+		 (check 104 2.3d0 (+ 1 1 0.3d0))
+		 (check 105 2.3d0 (- 3 0.7d0))
+
+		 (check 106 2.3d0 (+ 0.3d0 2))
+		 (check 107 2.3d0 (+ 1 0.3d0 1))
+		 (check 108 -2.3d0 (- 0.7d0 3))
+
+		 )
+		 
+
+(def-java-method relopstarget ((a int) (b int) (c int)) void
+		 :static
+		 (check 200 1 (< a b c))
+		 (check 201 0 (< a b c a))
+		 (check 202 1 (< a b))
+		 (check 203 0 (< b a))
+		 
+		 
+		 (check 204 1 (<= a b c))
+		 (check 205 1 (<= a a b c))
+		 (check 205 0 (<= a b a b c))
+		 
+		 (check 206 1 (> c b))
+		 (check 207 1 (> c b a))
+		 (check 208 0 (> a c b a))
+		 (check 209 0 (> c a b a))
+		 (check 210 0 (> c  b a a))
+		 
+		 (check 211 1 (>= c b))
+		 (check 212 1 (>= c b a))
+		 (check 213 0 (>= a c b a))
+		 (check 214 0 (>= c a b a))
+		 (check 215 1 (>= c  b a a))
+		 
+		 
+		 (check 216 1 (= a a))
+		 (check 217 1 (= a a a a a a))
+		 (check 218 1 (= (= a a) (= a a a a)))
+
+		 (check 219 1 (/= a b))
+		 (check 220 0 (/= a a))
+			   
+		 )
+
+(def-java-method relopscc ((a int) (b int) (c int)) void
+		 :static
+		 (if* (< a b c)
+		    then (check 300 1 1)
+		    else (check 300 1 2))
+		 
+		 (if* (< a b c a)
+		    then (check 301 1 2)
+		    else (check 301 1 1))
+		 
+		 (if* (< a b)
+		    then (check 302 1 1)
+		    else (check 302 1 2))
+		 
+		 (if* (< b a)
+		    then (check 303 1 2)
+		    else (check 303 1 1))
+		 
+		 (if* (< a a)
+		    then (check 303 1 2)
+		    else (check 303 1 1))
+		 
+		 (if* (<= a b c)
+		    then (check 304 1 1)
+		    else (check 30 1 2))
+		 
+		 (if* (<= a b c a)
+		    then (check 305 1 2)
+		    else (check 305 1 1))
+		 
+		 (if* (<= a b)
+		    then (check 306 1 1)
+		    else (check 306 1 2))
+		 
+		 (if* (<= b a)
+		    then (check 307 1 2)
+		    else (check 307 1 1))
+		 
+		 (if* (<= a a)
+		    then (check 308 1 1)
+		    else (check 308 1 2))
+		 
+		 
+		 )
+
+(def-java-method autocasting ((val int)) float
+  :static
+  (let ((b 3 byte)
+	(s 4 short)
+	(ii 5 int)
+        (jfl 3.4 float))
+
+
+    ; here we have 3 return-froms, and jil automatically
+    ; determines that the type to return from all three
+    ; is float and inserts casting in place
+    (block snort
+      (if* (< val 4)
+	 then (return-from snort b)
+       elseif (< val 10)
+	 then (return-from snort jfl)
+	 else (return-from snort s)))))
+
+    
+
+(def-java-method relopstarget ((a float) (b float) (c float)) void
+  :static
+  
+  ;(System.out.print "a " ) (System.out.println a)
+  ;(System.out.print "b " ) (System.out.println b)
+  ;(System.out.print "a < b " ) 
+  ;(System.out.println (< a b))
+  ;(System.out.print "a <= b " ) (System.out.println (<= a b))
+  ;(System.out.print "a > b " ) (System.out.println (> a b))
+  ;(System.out.print "a >= b " ) (System.out.println (>= a b))
+  ;(System.out.print "a - b " ) (System.out.println (- a b))
+  
+  
+		 (check 400 1 (< a b c))
+		 (check 401 0 (< a b c a))
+		 (check 402 1 (< a b))
+		 (check 403 0 (< b a))
+		 
+		 
+		 (check 404 1 (<= a b c))
+		 (check 405 1 (<= a a b c))
+		 (check 405 0 (<= a b a b c))
+		 
+		 (check 406 1 (> c b))
+		 (check 407 1 (> c b a))
+		 (check 408 0 (> a c b a))
+		 (check 409 0 (> c a b a))
+		 (check 410 0 (> c  b a a))
+		 
+		 (check 411 1 (>= c b))
+		 (check 412 1 (>= c b a))
+		 (check 413 0 (>= a c b a))
+		 (check 414 0 (>= c a b a))
+		 (check 415 1 (>= c  b a a))
+		 
+		 
+		 (check 416 1 (= a a))
+		 (check 417 1 (= a a a a a a))
+		 (check 418 1 (= (= a a) (= a a a a)))
+
+		 (check 419 1 (/= a b))
+		 (check 420 0 (/= a a))
+		 
+		 )
+
+(def-java-method relopstarget ((a double) (b float) (c double)) void
+		 :static
+		 (check 500 1 (< a b c))
+		 (check 501 0 (< a b c a))
+		 (check 502 1 (< a b))
+		 (check 503 0 (< b a))
+		 
+		 
+		 (check 504 1 (<= a b c))
+		 (check 505 1 (<= a a b c))
+		 (check 505 0 (<= a b a b c))
+		 
+		 (check 506 1 (> c b))
+		 (check 507 1 (> c b a))
+		 (check 508 0 (> a c b a))
+		 (check 509 0 (> c a b a))
+		 (check 510 0 (> c  b a a))
+		 
+		 (check 511 1 (>= c b))
+		 (check 512 1 (>= c b a))
+		 (check 513 0 (>= a c b a))
+		 (check 514 0 (>= c a b a))
+		 (check 515 1 (>= c  b a a))
+		 
+		 
+		 (check 516 1 (= a a))
+		 (check 517 1 (= a a a a a a))
+		 (check 518 1 (= (= a a) (= a a a a)))
+
+		 (check 519 1 (/= a b))
+		 (check 520 0 (/= a a))
+		 
+		 )
+		 
+
+
+(def-java-method andornot ((a int) (b double)) void :static
+  (if* (and (< a b) (> b a)) 
+     then (check 600 1 1)
+     else (check 600 1 2))
+  
+  (if* (or (< a b) (< b a)) 
+     then (check 601 1 1)
+     else (check 601 1 2))
+
+  (if* (or (< b a) (< a b)) 
+     then (check 602 1 1)
+     else (check 602 1 2))
+  
+  
+  (if* (not (or (< b a) (< a b)))
+     then (check 602 1 2)
+     else (check 602 1 1))
+  
+  (if* (not (and (< a b) (> b a)))   ; variant of 600
+     then (check 603 1 2)
+     else (check 603 1 1))
+
+  (let ((retval (not (and (< a b) (> b a)))))
+    ; retval should be false
+    (if* retval
+       then (check 604 1 2)
+       else (check 604 1 1)))
+  
+  )
+
+(def-java-method setqs () void :static
+		 (let ((inst (new jiltest) jiltest))
+		   (check 700 12345 inst.iii)
+		   (check 701 234 (setq inst.iii 234))
+		   (check 702 234 inst.iii)
+		   
+		   ; can access static slot from class or from instance:
+		   (check 703 3241 tester.sss) 
+		   (check 704 3241 inst.sss)
+		   (check 705 3241 jiltest.sss)
+		   
+		   ; set static slots
+		   (check 706 3851 (setq jiltest.sss 3851))
+		   (check 707 3851 inst.sss)
+		   
+		   
+		   (check 708 4466 (setq inst.sss 4466))
+		   (check 709 4466 tester.sss)
+			  
+		   ))
+
+
+(def-java-method lets () void :static
+		 (let ((byteval 12)
+		       (shortval 1233)
+		       (intval  121231212)
+		       (longval #x123456787654))
+		   (check 800 12 byteval)
+		   (check 801 1233 shortval)
+		   (check 802 121231212 intval)
+		   (check 803 #x123456787654 longval)))
+		   
+
+(def-java-method doexcept () int :static
+		 (handler-case 
+		     (progn (/ 1 0)
+			    20)
+		   (Exception (e)
+		     10)))
+
+(def-java-method doexcept2 () int :static
+		 (handler-case 
+		     (progn (throw (new Exception))
+			    40)
+		   (Exception (e)
+		     20)))
+		     
+(def-java-method excepts () void :static
+		 (check 900 10 (doexcept))
+		 (check 901 20 (doexcept2))
+		 )
+
+
+(def-java-method dofinally () int :static
+		 (handler-case 
+		     (let ((x 3)
+			   (y 2))
+		       (unwind-protect 
+			   (progn (setq x 4)
+				  (/ x 0)
+				  (setq x 5))
+			 (setq y 44)
+			 (check 1000 4 x)
+			 (check 1001 44 y)
+			 111
+			 ))
+		   (Exception (e)
+		     ;; catch the divide by zero
+		     999)))
+
+
+(def-java-method arraystuff () void :static
+		 (let ((x (new (array int 10)))
+		       (y (new (array int 10 9 8 7 6))))
+		   (check 1100 0 (aref x 0))
+		   (check 1101 0 (aref x 1))
+		   (check 1102 12 (setf (aref x 0) 12))
+		   (check 1103 12 (aref x 0)))
+		   
+
+		 (let ((xxbyte (new (array byte 20)))
+		       (xxshort (new (array short 30)))
+		       (xxint  (new (array int 30)))
+		       (xxlong (new (array long 12)))
+		       (xxfloat (new (array float 12)))
+		       (xxdouble (new (array double 5))))
+		   (check 1104 3 (setf (aref xxbyte 4) 3))
+		   (check 1105 33 (setf (aref xxshort 4) 33))
+		   (check 1106 -333 (setf (aref xxint 4) -333))
+		   (check 1107 33333333 (setf (aref xxlong 4) 33333333))
+		   
+		   (check 1108 3 (aref xxbyte 4))
+		   (check 1109 33  (aref xxshort 4))
+		   (check 1110 -333  (aref xxint 4))
+		   (check 1111 33333333  (aref xxlong 4))
+		   
+		   (check 1113 4.0 (setf (aref xxfloat 4) 4.0))
+		   (check 1114 8.0d0 (setf (aref xxdouble 3) 8.0d0))
+		   
+		   (check 1115 4.0  (aref xxfloat 4))
+		   (check 1116 8.0d0  (aref xxdouble 3))
+		   
+		   )
+		 
+		 (let ((yybyte (new (array byte 3 4 5)))
+		       (yyintbyte (new (array byte 4 5)))
+		       (yydouble (new (array double 4 3 3 3))))
+		   ; check initial value
+		   (check 1117 0 (aref yybyte 0 0 0))
+		   ; simple setting of array
+		   (check 1118 32 (setf (aref yybyte 1 2 3) 32))
+		   (check 1119 32 (aref yybyte 1 2 3))
+		   ; now set the slice part
+		   (check 1120 23 (setf (aref yyintbyte 2 3) 23))
+		   (check 1121 23 (aref yyintbyte 2 3))
+		   ; now set the array to point the new slice
+		   (setf (aref yybyte 1) yyintbyte)
+		   
+		   ; and check that the slice has the new value
+		   (check 1122 23 (aref yybyte 1 2 3))
+		   
+		   ; now the double array
+		   (check 1123 0.0d0 (aref yydouble 1 2 1 2))
+		   (check 1124 4.0d0 (setf (aref yydouble 1 2 1 2) 4.0d0))
+		   (check 1125 4.0d0 (aref yydouble 1 2 1 2))
+		   
+		   ; length
+		   (check 1126 3 yybyte.length)
+		   (check 1127 4 (ref (aref yybyte 0) length))
+		   )
+		 
+		 
+		 )
+
+(def-java-method methodfun ((i int)) void
+		 (check 1200 399 i)	; this is how it is called
+		 (jiltest.check 1201 385 ttt) 	; local var
+		 
+		 )
+
+
+(def-java-method overloading () void
+		 :static
+		 (let ((xsub (new subguy))
+		       (xsuper (new superguy)))
+		   (check 1300 444 xsub.fff)  ; access directly
+		   (check 1301 333 xsuper.fff)
+		   (xsub.overloading-2) ; 1302-1303
+		   (xsub.randomstuff) 
+		   ))
+
+
+(def-java-method thetests () void
+		 :static
+		 (check 1400 2.0 (the float 2))
+		 (let ((x (new subguy)))
+		   (check 1401 456 (x.testdowncast))))
+		 
+
+(def-java-method shifttests () void
+  :static
+  (let ((val1 1)
+	(val2 2)
+	(val4 4)
+	(valn1 -1)
+	(valbig #x100000000) ; a long
+	)
+		   
+    (check 1500 1 (<< val1 0))
+    (check 1501 2 (<< val1 1))
+    (check 1502 4 (<< val1 2))
+    (check 1504 16 (<< val1 val4))
+    (check 1505 -2 (<< valn1 val1))
+    (check 1506 0 (<< val2 valn1)) ; neg numbers anded with #x
+    
+    (check 1507 1 (>> val1  0))
+    (check 1508 0 (>> val1  1))
+    (check 1509 2 (>> val4  val1))
+    (check 1510 -1 (>> valn1 1))
+    (check 1511 -1 (>> valn1 2))
+    (check 1512 -1 (>> valn1 3))
+    
+    (check 1513 #x200000000 (<< valbig 1))
+    (check 1514  #x80000000 (>> valbig 1))
+    
+    ; unsigned
+    (check 1515 0 (>>> val1 1))
+    (check 1515 1 (>>> val2 1))
+    (check 1516 #x7fffffff (>>> valn1 1))
+    (check 1517 #x3fffffff (>>> valn1 2))
+    
+    ))
+		   
+
+(def-java-method logtests () void
+  :static
+  (let ((val1 #x137f))
+    (check 1600 val1 (logand val1 -1))
+    (check 1601 val1 (logand -1 val1))
+    
+    (check 1602 -1 (logior val1 -1))
+    (check 1603 #x0fffec80 (logxor val1 #x0fffffff))
+    
+    ; longs
+    (check 1604 #x101a        (logand #x123456789a val1))
+    (check 1604 #x1234567bff  (logior #x123456789a val1))
+    (check 1605 #x1234566be5  (logxor #x123456789a val1))))
+    
+    
+
+(def-java-method emptytests () void
+  :static
+  ;; test if*'s  ability to check for emptyness
+  (let ((intzero 0)
+	(intone  1)
+	(pointernull null jiltest)
+	(pointer-non-null (new jiltest))
+	
+	(booleanfalse nil boolean)
+	(booleantrue  t   boolean)
+	
+	(longzero 0 long)
+	(longone  1 long)
+	
+	(floatzero 0.0 float)
+	(floatone  1.0 float)
+	
+	(doublezero 0.0 double)
+	(doubleone  1.0 double)	
+	)
+    (check 1801 1 (if* intzero then 3 else 1))
+    (check 1802 3 (if* intone then 3 else 1))
+    
+    (check 1803 1 (if* pointernull then 3 else 1))
+    (check 1804 3 (if* pointer-non-null then 3 else 1))
+    
+    (check 1805 1 (if* booleanfalse then 3 else 1))
+    (check 1806 3 (if* booleantrue then 3 else 1))
+    
+    (check 1807 1 (if* longzero then 3 else 1))
+    (check 1808 3 (if* longone then 3 else 1))
+    
+    (check 1809 1 (if* floatzero then 3 else 1))
+    (check 1810 3 (if* floatone then 3 else 1))
+    
+    (check 1811 1 (if* doublezero then 3 else 1))
+    (check 1812 3 (if* doubleone then 3 else 1))
+    
+    ))
+	
+(def-java-method miscstuff ((x String)) void
+  :static
+  ;; check string compares
+  (check 1900 10 (if* (x.equals "foo") then 10 else 20))
+  (check 1901 20 (if* (x.equals "bar") then 10 else 20))
+  
+  (check 1902 10 (if* (instanceof x String) then 10 else 20))
+  (check 1903 20 (if* (instanceof x jiltest) then 10 else 20))
+  
+  (check 1904 10 (let ((ans (s+ 9 x x 23)))
+		   (if*(ans.equals "9foofoo23") then 10 else 20)))
+  
+  (check 1905 20 (let ((ans (s+ 9 x x 23)))
+		   (if* (ans.equals "99foofoo23") then 10 else 20)))
+
+  (check 1906 3.0 (jiltest.autocasting 3))
+  (check 1907 3.4 (jiltest.autocasting 7))
+  (check 1908 4.0 (jiltest.autocasting 12))
+  )
+
+  
+
+(def-java-method main ((argv (array String))) void
+		 :public :static
+		 (simplemath)
+		 (promotions)
+		 (relopstarget 2 4 6)
+		 (relopscc     5 7 999)
+		 (relopstarget 2.0f0 4.0f0 6.0f0)
+		 (relopstarget 2.0d0 4.0f0 6.0d0)
+		 (andornot 22 33.4d0)
+		 (setqs)
+		 (lets)
+		 (excepts)
+		 (dofinally)
+		 (arraystuff)
+		 (overloading)
+		 
+		 ;; should be supported:
+		 ; ((ref (new jiltest) methodfun) 1)
+		 ;; instead we have to do 
+		 (let ((xx (new jiltest)))
+		   (with-lock (xx)  ; test synchronization
+		     (xx.methodfun 399)))
+		 
+		 (thetests)
+		 (shifttests)
+		 (logtests)
+		 
+		 ((ref (new innertestfoo) test_inner))
+		 
+		 (emptytests)
+		 
+		 (miscstuff "foo")
+		 )
+
+
+(def-java-class blartly ()
+  :public
+  ((xx :type int)))
+
+(def-java-method snort ((i int)) void
+		 (+ i i))
+
+
+
+

@@ -1,0 +1,71 @@
+;;; So that it does not write so much. In case of debugging, it might be useful to unmuffle those
+(declaim (sb-ext:muffle-conditions sb-ext:compiler-note))
+(declaim (sb-ext:muffle-conditions warning))
+(declaim (sb-ext:muffle-conditions style-warning))
+
+;; SBCL fasl-format is at current stage of development undergoing
+;; non-backwards compatible changes fairly often. The following snippet
+;; handles recompilation automatically for ASDF-based systems.
+(require :asdf)
+     
+;;; If a fasl was stale, try to recompile and load (once).
+;; (defmethod asdf:perform :around ((o asdf:load-op)
+;;  				 (c asdf:cl-source-file))
+;;   (handler-case (call-next-method o c)
+;;  		;; If a fasl was stale, try to recompile and load (once).
+;;  		(sb-ext:invalid-fasl ()
+;;  				     (asdf:perform (make-instance 'asdf:compile-op) c)
+;;  				     (call-next-method))))
+
+;; I load all the common Lisp functions
+;;SFA #+linux (load "/home/dborrajo/.init.lisp")
+;;#+linux (load "/home/sfernandez/sayphi-multiagent/.init.lisp")
+#+linux (load ".init.lisp")
+#+darwin (load "/Users/dborrajo/.init.lisp")
+#+win32 (load "c:/lisp/.init.lisp")
+
+;; Standard Unix tools that are interpreters follow a common command line
+;; protocol that is necessary to work with 'shebang scripts'. SBCL doesn't do
+;; this by default, but adding the following snippet to an initialization file
+;; does the trick:
+
+;; This fails with my generated script for ERRTPLAN
+(defun do-the-script-thing nil
+;; If the first user-processable command-line argument is a filename,
+;; disable the debugger, load the file handling shebang-line and quit.
+(let ((script (and (second *posix-argv*)
+		   (probe-file (second *posix-argv*)))))
+  (when script
+      ;; Handle shebang-line
+      (set-dispatch-macro-character #\# #\!
+				    (lambda (stream char arg)
+				      (declare (ignore char arg))
+				      (read-line stream)))
+    ;; Disable debugger
+    (setf *invoke-debugger-hook*
+	  (lambda (condition hook)
+	    (declare (ignore hook))
+	    ;; Uncomment to get backtraces on errors
+	    ;; (sb-debug:backtrace 20)
+	    (format *error-output* "Error: ~A~%" condition)
+	    (quit)))
+    (load script)
+    (quit))))
+
+;; (do-the-script-thing)
+
+;; (load (concatenate 'string *my-path* "mi-software/lisp/experiments.lisp"))
+;; (defun try-heuristics-ssa-dcii nil
+;;   (load "planning/new-sayphi/loader")
+;;   (setf *say-memorybound* (expt 2 32))
+;;   (setf *domains-dir* (concatenate 'string *my-planning-path* "sayphi/domains/"))
+;;   (say-domain "ssa-dcii" "domain6.pddl")
+;;   (prob "very-small.pddl")
+;;   (load (concatenate 'string *domains-dir* "ssa-dcii/heuristics.lisp"))
+;;   (compile-file (concatenate 'string *domains-dir* "ssa-dcii//heuristics.lisp"))
+;;   (load (concatenate 'string *domains-dir* "ssa-dcii/heuristics"))
+;;   (plan :heuristic 'h-domain-dependent :algorithm 'enforced-hill-climbing :timeout 300))
+
+;; (load (concatenate 'string *my-path* "mi-software/lisp/ma-experiments.lisp"))
+
+(load-ma-sayphi)

@@ -1,0 +1,365 @@
+<html>
+
+<head>
+<title>Allegro CL FAQ 2.6 Architecture-specific: Windows</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<h3>2.6 Architecture-specific: Windows</h3>
+
+<blockquote>
+  <p><a href="#261">Q 2.6-1) How do I get the functionality of the ~/time/ and ~/date/
+  format directives available in 3.0.2?</a><br>
+  <a href="#262">Q 2.6-2) Why can't I use `dir' with run-shell-command?</a><br>
+  <a href="#263">Q 2.6-3) How do I get the functionality of the 3.0.2 function
+  allegro:read-lisp-line?</a><br>
+  <a href="#264">Q 2.6-4) How do I control the stack size on Windows?</a><br>
+  <a href="#265">Q 2.6-5) How do I get ANSI ACL (rather than Modern ACL) to start when I
+  double-click on an lpr file?</a></p>
+</blockquote>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="261"></a><strong>Q 2.6-1)</strong> How do I get the functionality of the
+~/time/ and ~/date/ format directives available in 3.0.2? </p>
+
+<p><strong>A 2.6-1)</strong> What follows below is a quick port, with all its features, of
+these features for ACL 7.0.&nbsp;To prevent symbol clashes, the code is called as
+~/aclwin:format-date/ and ~/aclwin:format-time/.</p>
+
+<p>Examples: (Note that where it reports timezone, it erroneously uses &quot;PST&quot;
+instead of &quot;PDT&quot; -- this bug also occurs with the same code in aclwin.)</p>
+
+<pre>CG-USER(93): (format t &quot;~/aclwin:format-date/&quot; (get-universal-time))
+7/17/99
+NIL
+CG-USER(94): (format t &quot;~:/aclwin:format-date/&quot; (get-universal-time))
+July 17, 1999
+NIL
+CG-USER(95): (format t &quot;~@/aclwin:format-date/&quot; (get-universal-time))
+17/Jul/1999
+NIL
+CG-USER(96): (format t &quot;~@:/aclwin:format-date/&quot; (get-universal-time))
+Friday, July 17, 1999
+NIL
+CG-USER(97): (format t &quot;~/aclwin:format-time/&quot; (get-universal-time))
+14:19:15
+NIL
+CG-USER(98): (format t &quot;~:/aclwin:format-time/&quot; (get-universal-time))
+14:19:41 PST
+NIL
+CG-USER(99): (format t &quot;~@/aclwin:format-time/&quot; (get-universal-time))
+2:19:57 pm
+NIL
+CG-USER(100): (format t &quot;~@:/aclwin:format-time/&quot; (get-universal-time))
+2:20:48 pm PST
+NIL
+CG-USER(101): </pre>
+
+<pre>;;
+;; beginning of code file
+;; 
+(defpackage :aclwin
+  (:export
+   *format-date-style*
+   format-date
+   format-time))</pre>
+
+<pre>(in-package :aclwin)</pre>
+
+<pre>(defvar *format-date-style* :us
+  &quot;The style for printing dates with ~/format-date/ directive. 
+Possible values are: :european, :us&quot;)</pre>
+
+<pre>(defun format-date (stream object &amp;optional colon at-sign &amp;rest args)
+  (let ((mode 'short-numeric)
+	(separator #\/))
+    (when args
+      (setq separator (car args)))
+    (if* (and at-sign colon)
+       then (setq mode 'long-alphabetic)
+     elseif at-sign
+       then (setq mode 'long-numeric)
+     elseif colon
+       then (setq mode 'short-alphabetic))
+    (print-date stream mode separator object)))</pre>
+
+<pre>(defun format-time (stream object &amp;optional colon at-sign &amp;rest args)
+  (let ((mode 'twenty-four-hour)
+	(separator #\:))
+    (when args
+      (setq separator (car args)))
+    (if* (and at-sign colon)
+       then (setq mode 'twelve-hour-with-time-zone)
+     elseif at-sign
+       then (setq mode 'twelve-hour)
+     elseif colon
+       then (setq mode 'twenty-four-hour-with-time-zone))
+    (print-time stream mode separator object)))</pre>
+
+<pre>(defun print-date (stream mode separator time)
+  (multiple-value-bind (second minute hour date month year day-of-week 
+			daylight-saving time-zone)
+      (decode-universal-time time)
+    (declare (ignore time-zone daylight-saving hour minute second))
+    (let ((day-string 
+	   (case day-of-week
+	     (0 &quot;Monday&quot;)
+	     (1 &quot;Tuesday&quot;)
+	     (2 &quot;Wednesday&quot;)
+	     (3 &quot;Thursday&quot;)
+	     (4 &quot;Friday&quot;)
+	     (5 &quot;Saturday&quot;)
+	     (6 &quot;Sunday&quot;)))
+	  (month-string 
+	   (case month
+	     (1 &quot;January&quot;)
+	     (2 &quot;February&quot;)
+	     (3 &quot;March&quot;)
+	     (4 &quot;April&quot;)
+	     (5 &quot;May&quot;)
+	     (6 &quot;June&quot;)
+	     (7 &quot;July&quot;)
+	     (8 &quot;August&quot;)
+	     (9 &quot;September&quot;)
+	     (10 &quot;October&quot;)
+	     (11 &quot;November&quot;)
+	     (12 &quot;December&quot;))))
+      (case mode
+	(short-numeric 
+	 (format stream &quot;~d~c~2,'0d~c~2,'0d&quot;
+		 (case *format-date-style*
+		   (:us month)
+		   (t date))
+		 separator
+		 (case *format-date-style*
+		   (:us date)
+		   (t month))
+		 separator
+		 (irem year 100)))
+	(long-numeric 
+	 (format stream &quot;~d~c~a~c~3,' d&quot;
+		 date
+		 separator
+		 (subseq month-string 0 3)
+		 separator
+		 year))
+	(short-alphabetic
+	 (format stream &quot;~a ~d, ~3,' d&quot;
+		 month-string
+		 date
+		 year))
+	(long-alphabetic
+	 (format stream &quot;~a, ~a ~d, ~3,' d&quot;
+		 day-string
+		 month-string
+		 date
+		 year))))))</pre>
+
+<pre>(defun print-time (stream mode separator time)
+  (multiple-value-bind (second minute hour date month year day-of-week 
+			daylight-saving time-zone)
+      (decode-universal-time time)
+    (declare (ignore day-of-week year month date))
+    (case mode
+      (twenty-four-hour (output-time stream hour minute second separator t))
+      (twelve-hour (output-time stream hour minute second separator nil))
+      (twenty-four-hour-with-time-zone 
+       (output-time stream hour minute second separator t) 
+       (format stream &quot;~c&quot; #\Space)
+       (output-time-zone stream time-zone daylight-saving))
+      (twelve-hour-with-time-zone 
+       (output-time stream hour minute second separator nil) 
+       (format stream &quot;~c&quot; #\Space)
+       (output-time-zone stream time-zone daylight-saving)))))</pre>
+
+<pre>(defun output-time (stream hour minute second separator |24HOURP|)
+  (format stream &quot;~:[~d~;~2,'0d~]~c~2,'0d~c~2,'0d&quot;
+	  |24HOURP|
+	  (if |24HOURP| hour
+	    (let ((hours (irem hour 12)))
+	      (if (zerop hours) 12 hours)))
+	  separator
+	  minute
+	  separator
+	  second)
+  (unless |24HOURP|
+    (format stream &quot;~c&quot; #\Space) 
+    (format stream &quot;~a&quot; (if (i&gt;= hour 12) &quot;pm&quot; &quot;am&quot;))))</pre>
+
+<pre>(defun output-time-zone (stream time-zone daylight-saving)
+  (let ((time-zone-string 
+	 (case time-zone
+	   (0 (if daylight-saving &quot;BST&quot; &quot;GMT&quot;))
+	   (1 &quot;WET&quot;)
+	   (5 &quot;EST&quot;)
+	   (6 &quot;CST&quot;)
+	   (7 &quot;MST&quot;)
+	   (8 &quot;PST&quot;)
+	   ;; there could be lots more time zone stuff here 
+	   (otherwise nil))))
+    (if time-zone-string (format stream &quot;~a&quot; time-zone-string) 
+      (progn
+	(format stream &quot;~d&quot; (i- time-zone))
+	(format stream &quot;hr&quot;)))))
+;;
+;; end of code file
+;;</pre>
+
+<hr>
+
+<p><a name="262"></a><strong>Q 2.6-2)</strong> Why can't I use `dir' with
+run-shell-command?</p>
+
+<p><strong>A 2.6-2)</strong> On Windows, <a
+href="../operators/excl/run-shell-command.htm">excl:run-shell-command</a> executes
+programs but does not invoke shell commands. The function is therefore misnamed for
+Windows. It is called <strong>run-shell-command</strong> to provide cross-platform
+compatibility between Windows and Unix and back compatibility for ACL4.3.x users. It does
+behave differently on Windows and Unix. The difference is related to differences between
+UNIX and Windows. See the documentation page for <a
+href="../operators/excl/run-shell-command.htm">excl:run-shell-command</a> for details on
+this point.</p>
+
+<hr>
+
+<p><a name="263"></a><strong>Q 2.6-3)</strong> How do I get the functionality of the 3.0.2
+function <strong>allegro:read-lisp-line</strong>? </p>
+
+<p><strong>A 2.6-3)</strong> Use the following function. which mostly replicates the
+action of that function. The <em>stream</em> argument is required (rather than optional)
+and it returns <font face="Courier New">:eof</font> when the end of the file is reached
+(rather than <font face="Courier New">nil</font>). If an actual line is read, <font
+face="Courier New">nil</font> or a non-empty list is returned so testing whether the
+result is <strong>listp</strong> distinguishes between reading a line and reading an
+end-of-file. </p>
+
+<p>The function here is named <strong>my-read-lisp-line</strong>. </p>
+
+<pre>(defun my-read-lisp-line (st)
+  (let ((str (read-line st  nil :eof)))
+    (if (eq str :eof) :eof ;; instead of nil
+      (with-input-from-string (s str)
+	(loop as x = (read s nil s)
+	    until (eq x s)
+	    collect x)))))</pre>
+
+<hr>
+
+<p><a name="264"></a><strong>Q 2.6-4)</strong> How do I control the stack size on Windows?</p>
+
+<p><strong>A 2.6-4)</strong> The stack-size process attribute was supposed to control the
+stack allocation for the process. What the Windows documentation did not make clear,
+unfortunately, was that the running process can control the amount of swap space <em>initially
+committed</em> to the stack, but cannot select the amount of address space <em>reserved</em>
+for the stack. </p>
+
+<p>The address space to be reserved for each thread's stack is a property of the
+executable image being used. The property is specified at link time, but it can be altered
+without relinking, through the <strong>EDITBIN</strong> program that is part of the VC+
+development package. </p>
+
+<p>To make each thread allocate a 4Meg stack, the command would be (for the executable <em>allergo.exe</em>,
+repeat the command for other executables):</p>
+
+<blockquote>
+  <pre>editbin /stack:4000000 allegro.exe </pre>
+</blockquote>
+
+<p>Unfortunately, MS Windows offers no way to have different reserve sizes for different
+threads in the same process, so all the threads have to be big enough to support the
+deepest computation on any thread. </p>
+
+<hr>
+
+<p><a name="265"></a><strong>Q 2.6-5)</strong> How do I get ANSI ACL (rather than Modern
+ACL) to start when I double-click on an lpr file?</p>
+
+<p><strong>A 2.6-5)</strong> The Windows registry associates file types with programs, so
+that double clicking on a file of a particular type initiates a program in a clearly
+defined way. (Thus, typically double clicking on a file with type <em>txt</em> typically
+initiates the Notepad utility in Windows, opening the file clicked on.) As defined by the
+installation procedure, <em>lpr</em> files (the files defining projects) are associated
+with <em>allegro.exe</em>/<em>allegro.dxl</em>, the Modern version of Allegro CL with the
+IDE. Double-clicking on an <em>lpr</em> file thus starts the Modern image with the IDE,
+and opens the project associated with the <em>lpr</em> file.</p>
+
+<p>If you want the ANSI Allegro CL with the IDE (<em>allegro-ansi.exe</em>/<em>allegro-ansi.dxl</em>)
+to start instead, you must modify the registry. </p>
+
+<p>The simplest way to do this is with a Windows tool. While Windows
+menu choices move about, try opening the <strong>View</strong> menu on
+the Windows Explorer and click on the <strong>Options...</strong> item
+or try the <strong>Tools</strong> men and the Folder Options
+choice. This will display an <strong>Options</strong> dialog. Click on
+the <strong>File Types</strong> tab, and find <em>Lisp project
+file</em> in the displayed list of types.  Select it and click on the
+<strong>Edit..</strong>. button. Select open in the
+<strong>Actions</strong> pane and click on the
+<strong>Edit...</strong> button. Modify the text in the
+<strong>Application used to perform action</strong> field, changing
+<em>allegro.exe</em> to <em>allegro-ansi.exe</em> and
+<em>allegro.dxl</em> to <em>allegro-ansi.dxl</em>. Click on the
+<strong>OK</strong> buttons on the open dialogs to complete the
+change. On <strong>Windows 2000</strong>, open the
+<strong>Tools</strong> menu and click on the <strong>Folder
+Options</strong> item, and choose the LPR extension, click on the
+<strong>Advanced</strong> button, click on the <strong>open</strong>
+action, click on the <strong>Edit...</strong> button, find the
+associated command line, and modify it.</p>
+
+<p>You can also make the change using a file, as we now describe. Create in any convenient
+location a file named <em>foo.reg</em> (filename is <em>foo</em>, type is <em>reg</em>)
+with the following contents (modified as necessary by the <strong>Notes</strong> following
+the contents):</p>
+
+<pre>REGEDIT4
+
+[HKEY_CLASSES_ROOT\ACL.ProjectFile]
+@=&quot;Lisp project file&quot;
+
+[HKEY_CLASSES_ROOT\ACL.ProjectFile\DefaultIcon]
+@=&quot;C:\\PROGRAM FILES\\ACL60\\allegro-ansi.exe,0&quot;
+
+[HKEY_CLASSES_ROOT\ACL.ProjectFile\shell]
+
+[HKEY_CLASSES_ROOT\ACL.ProjectFile\shell\open]
+
+[HKEY_CLASSES_ROOT\ACL.ProjectFile\shell\open\command]
+@=&quot;C:\\PROGRAM FILES\\ACL60\\allegro-ansi.exe -I allegro-ansi.dxl -project \&quot;%1\&quot;&quot;</pre>
+
+<h3>Notes:</h3>
+
+<ul>
+  <li>The contents assume Allegro CL is installed in <em>C:\\Program Files\ACL62\</em>. If it
+    is installed in a different location, correct the third (with <strong>DefaultIcon</strong>)
+    and the sixth entries (with <strong>open\command</strong>) appropriately.</li>
+  <li>The contents assume you want <em>allegro-ansi.exe</em>/<em>allegro-ansi.dxl</em> to be
+    started. If you want another <em>exe</em> file and/or another <em>dxl</em> file, specify
+    the <em>exe</em> file in the third and sixth entries and the <em>dxl</em> file in the
+    sixth entry.</li>
+  <li>Additional command-line arguments can be included in the sixth entry.</li>
+</ul>
+
+<p>Once the file is ready, open the Windows Explorer to the directory containing the file,
+and double-click on the file. The registry will be updated.</p>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq2-7.htm">Architecture-specific problems:
+2.7. Linux</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq2-5.htm">Architecture-specific
+problems: 2.5. Compaq ALPHA</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999, 2000, 2001, 2002, 2004 Franz Inc., Berkeley, CA.&nbsp; All
+rights reserved.</small><br>
+<small>$Revision: 1.3 $</small></p>
+</body>
+</html>

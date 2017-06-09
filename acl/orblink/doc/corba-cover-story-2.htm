@@ -1,0 +1,171 @@
+<HTML>
+	<HEAD>
+		<TITLE>Java - an example</TITLE>
+	</HEAD>
+	<BODY BGCOLOR="#FFFFFF">
+</CENTER>
+<FONT SIZE="+2"><B>Bridging Allegro CL Applications to Java with ORBLink</B></FONT><BR>
+<HR>
+This example illustrates how to connect a simple Java GUI to  Lisp server using CORBA.
+
+We will use ORBLink as the Lisp ORB and Visibroker for Java as the Java ORB.
+
+<P>
+In order to run the example, you'll need Java, which you can get from <A HREF="http://www.javasoft.com" TARGET="_top">JavaSoft</A>, 
+or elsewhere. The example we give today uses the JavaSoft version of the Java VM 
+version 1.1. To 
+use Java CORBA requires a third party ORB, and we use Visibroker. (Of course, CORBA support will be bundled into the JDK 1.2, although
+the Visibroker ORB is nonetheless more industrial strength than JavaSoft's bundled ORB).
+
+You can get trial 
+copies of Visibroker for free from <A HREF="http://www.inprise.com" TARGET="_top">Inprise</A>. 
+<P>
+The example application is borrowed from February/March Java Pro 
+<A HREF="javapro/ld0298.htm">article</A> written 
+by Luke Andrew Cassidy-Dorion (the article and the Java code are used with permission). All 
+code can be found <A HREF="../examples/chatdemo/readme.htm">here</A>. 
+There is a Makefile for making the 
+Java side, but we'll actually go through the steps here.
+<P>
+This example is a distributed Chat application. The Chat application consists of 
+an arbitrary number of Java based Listeners, each of which permits you to type 
+in comments, and an Allegro CL server, which broadcasts comments to all the other
+Listeners.
+<P>
+<B>Designing the Application</B><BR>
+CORBA IDL (Interface Definition Language) is a specification language that describes behavior, not implementation. We give as an example a simple Chat Room server and 
+Chat Room listeners application. ChatListenerI is implemented by the Java code and 
+ChatServerI is implemented in Lisp. When the server calls messageReceived the actual 
+code runs remote in the Java client. ChatServerI is implemented in the Lisp server. 
+When a new Java client listener starts up, it calls addListener to register itself 
+with the server. When input gets typed into a Java client listener, the client calls 
+sendMessage to send its input to the server which, in its turn, calls messageReceived 
+(with the text it just got from the listener that called sendMessage) on each of the 
+registered listeners. The code for messageReceived in each listener displays the text 
+of the message.
+<P>
+The interface definitions are below
+<P>
+<CODE>
+<PRE>
+module chat{
+   interface ChatListenerI{
+     void messageReceived (in string message);
+   };
+   interface ChatServerI{
+     void addListener (in ChatListenerI listener);
+     void sendMessage(in string message);
+   };
+};
+</PRE>
+</CODE>
+<P>
+<I>The Server Implementation</I><BR>
+Here is the server implementation (it's all in the file 
+<A HREF="../examples/chatdemo/ChatServer.cl"><I>ChatServer.cl</I></A> 
+which is in the files you have downloaded). We define a
+class my-server, which will inherit from a class automatically generated 
+by the Allegro OrbLink IDL compiler. By convention,
+this generated class chat:ChatServerI-servant is in a package with the same 
+name as the IDL module and is named for the interface with -servant attached.
+<P>
+<CODE>
+<PRE>
+          (defclass my-server (chat:ChatServerI-servant)
+             ((listeners :initform nil :accessor get-listeners)))
+</PRE>
+</CODE>
+<P>
+The class my-server has a slot, listeners that will contain all the 
+registered listeners. To complete the implementation, we need
+to define the methods addListener and sendMessage. Adding a listener 
+just pushes the new listener onto the slot (remember,
+when a Java listener instantiates itself, the first thing it does is 
+call addListener). The method sendMessage takes the
+message sent by a listener and broadcasts it to all the listeners by 
+successively calling messageReceived on each listener in
+turn. The code for displaying the message in each listener is the 
+implementation code for messageReceived, which, of course,
+is written in Java. 
+<P>
+<CODE>
+<PRE>
+          (corba:define-method addListener ((this my-server) listener)
+             (push listener (get-listeners this)))
+          (corba:define-method sendMessage ((this my-server) message)
+             (dolist (listener (get-listeners this))
+                (op:messageReceived listener message)))
+</PRE>
+</CODE>
+<P>
+<I>The Client Implementation</I><BR>
+On the Java side, things are a bit more complex and we won't show the 
+full implementation, just a portion of the initialization
+method that shows how each listener finds and registers itself with the server.
+<P>
+<CODE>
+<PRE>
+          private void doConnect(){
+                 orb = ORB.init();
+                 boa = orb.BOA_init();
+                 org.omg.CORBA.Object obj = IorIo.resolve(orb, filename);  // filename is the location of the IOR
+                 server = ChatServerIHelper.narrow(obj);
+                 ChatListenerI listener = new Listener();
+                 boa.obj_is_ready(listener);
+                 server.addListener(listener);
+                // ... more stuff ... //
+          }
+</PRE>
+</CODE>
+<P>
+The way the Java code finds the proxy for the server is to use an <I>IOR</I>
+or <I>Interoperable Object Reference</I>, which has the
+information about where the server is and how to connect to it. An 
+<I>IOR</I> is an encoded string of digits containing things like
+the IP address, the port number, and any other information needed to 
+connect to a server. In this example, as you will see a
+little later, each Java client is launched with the filename containing 
+the <I>IOR</I> as an argument. The Lisp server is responsible
+for writing the <I>IOR</I> into the file when it starts up.
+<P>
+A diagram of the architecture illustrates how it will all work:
+<P>
+<CENTER>
+<IMG SRC="chat-architecture.gif" HEIGHT="200" WIDTH="350" ALT="Chat Architecture Graphic">
+</CENTER>
+<P>
+<I>Starting up the Lisp Chat server</I><BR>
+So here's how we would start up the server (assuming you have changed 
+into the directory where you have the code) and
+started up an Allegro CL with Allegro OrbLink loaded in: 
+<P>
+<CODE>
+<PRE>
+          (corba:idl "chat.idl")    ;; load in the IDL and define the  interfaces
+          (load "ChatServer.cl")  ;; load in the chat-server implementation
+
+          ;; start the server
+          (setq server (make-instance 'my-server))
+          ;; and write out the IOR
+          (orblink:write-ior-to-file server "chat.ior")
+</PRE>
+</CODE>
+<P>
+<B>Starting up the Java Chat clients</B><BR>
+In the directory where you have put the sample code, there is a 
+Makefile which will automatically compile the Java code, but
+here are the steps spelled out.
+<P>
+<OL>
+<LI>Generate the Java code from chat.idl by using the command:<BR>
+<I>idl2java chat.idl</I>
+<LI>Generate the application using the Visibroker wrapping for the java CORBA compiler:<BR>
+<I>vbjc ChatClient.java IorIo.java</I>
+</OL>
+<P>
+You are now ready to launch clients using: <I>vbj ChatClient chat.ior</I>
+<P>
+Your CORBA based client/server chat application is up and running!
+
+</body>
+</html>

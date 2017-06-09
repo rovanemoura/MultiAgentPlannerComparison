@@ -1,0 +1,858 @@
+#0Y_ #0Y |CHARSET|::|UTF-8|
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "CL-PPCRE"))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-SCANNER|
+ '#(1. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+    (:|CASE-INSENSITIVE-MODE| :|MULTI-LINE-MODE| :|SINGLE-LINE-MODE|
+     :|EXTENDED-MODE| :|DESTRUCTIVE|)
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-SCANNER|
+ #(1. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+   (:|CASE-INSENSITIVE-MODE| :|MULTI-LINE-MODE| :|SINGLE-LINE-MODE|
+    :|EXTENDED-MODE| :|DESTRUCTIVE|)
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-SCANNER|
+ #(1. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+   (:|CASE-INSENSITIVE-MODE| :|MULTI-LINE-MODE| :|SINGLE-LINE-MODE|
+    :|EXTENDED-MODE| :|DESTRUCTIVE|)
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-SCANNER|
+ #(1. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+   (:|CASE-INSENSITIVE-MODE| :|MULTI-LINE-MODE| :|SINGLE-LINE-MODE|
+    :|EXTENDED-MODE| :|DESTRUCTIVE|)
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SCAN|
+ '#(2. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+    (:|START| :|END| :|REAL-START-POS|) |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SCAN|
+ #(2. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+   (:|START| :|END| :|REAL-START-POS|) |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SCAN|
+ #(2. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+   (:|START| :|END| :|REAL-START-POS|) |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SCAN|
+ #(2. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|T|
+   (:|START| :|END| :|REAL-START-POS|) |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|%SET-DOCUMENTATION| '|CL-PPCRE|::|SCAN|
+ '|COMMON-LISP|::|COMPILER-MACRO|
+ "Make sure that constant forms are compiled into scanners at compile time.")
+(|COMMON-LISP|::|SETF|
+ (|COMMON-LISP|::|COMPILER-MACRO-FUNCTION| '|CL-PPCRE|::|SCAN|)
+ (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|SCAN|
+  (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+   (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+   "Make sure that constant forms are compiled into scanners at compile time."
+   (|COMMON-LISP|::|SETQ| |SYSTEM|::|<MACRO-FORM>|
+    (|SYSTEM|::|STRIP-FUNCALL-FORM| |SYSTEM|::|<MACRO-FORM>|))
+   (|COMMON-LISP|::|IF|
+    (|COMMON-LISP|::|NOT|
+     (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 3. 3.
+      |COMMON-LISP|::|T|))
+    (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+    (|COMMON-LISP|::|LET*|
+     ((|CL-PPCRE|::|FORM| |SYSTEM|::|<MACRO-FORM>|)
+      (|CL-PPCRE|::|REGEX|
+       (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+      (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADDR| . #1#))
+      (|COMMON-LISP|::|REST| (|COMMON-LISP|::|CDDDR| . #1#)))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|SCAN|
+      (|COMMON-LISP|::|COND|
+       ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX| |CL-PPCRE|::|ENV|)
+        `(|CL-PPCRE|::|SCAN|
+          (|COMMON-LISP|::|LOAD-TIME-VALUE|
+           (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|))
+          ,|CL-PPCRE|::|TARGET-STRING| ,@|COMMON-LISP|::|REST|))
+       (|COMMON-LISP|::|T| |CL-PPCRE|::|FORM|))))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SCAN-TO-STRINGS|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING| |COMMON-LISP|::|&KEY|
+    (|CL-PPCRE|::|START| 0.)
+    (|CL-PPCRE|::|END| (|COMMON-LISP|::|LENGTH| |CL-PPCRE|::|TARGET-STRING|))
+    |CL-PPCRE|::|SHAREDP|)))
+(|SYSTEM|::|%SET-DOCUMENTATION| '|CL-PPCRE|::|SCAN-TO-STRINGS|
+ '|COMMON-LISP|::|COMPILER-MACRO|
+ "Make sure that constant forms are compiled into scanners at compile time.")
+(|COMMON-LISP|::|SETF|
+ (|COMMON-LISP|::|COMPILER-MACRO-FUNCTION| '|CL-PPCRE|::|SCAN-TO-STRINGS|)
+ (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|SCAN-TO-STRINGS|
+  (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+   (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+   "Make sure that constant forms are compiled into scanners at compile time."
+   (|COMMON-LISP|::|SETQ| |SYSTEM|::|<MACRO-FORM>|
+    (|SYSTEM|::|STRIP-FUNCALL-FORM| |SYSTEM|::|<MACRO-FORM>|))
+   (|COMMON-LISP|::|IF|
+    (|COMMON-LISP|::|NOT|
+     (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 3. 3.
+      |COMMON-LISP|::|T|))
+    (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+    (|COMMON-LISP|::|LET*|
+     ((|CL-PPCRE|::|FORM| |SYSTEM|::|<MACRO-FORM>|)
+      (|CL-PPCRE|::|REGEX|
+       (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+      (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADDR| . #1#))
+      (|COMMON-LISP|::|REST| (|COMMON-LISP|::|CDDDR| . #1#)))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|SCAN-TO-STRINGS|
+      (|COMMON-LISP|::|COND|
+       ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX| |CL-PPCRE|::|ENV|)
+        `(|CL-PPCRE|::|SCAN-TO-STRINGS|
+          (|COMMON-LISP|::|LOAD-TIME-VALUE|
+           (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|))
+          ,|CL-PPCRE|::|TARGET-STRING| ,@|COMMON-LISP|::|REST|))
+       (|COMMON-LISP|::|T| |CL-PPCRE|::|FORM|))))))))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|REGISTER-GROUPS-BIND|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|REGISTER-GROUPS-BIND|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|REGISTER-GROUPS-BIND|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Executes BODY with the variables in VAR-LIST bound to the\n
+corresponding register groups after TARGET-STRING has been matched\n
+against REGEX, i.e. each variable is either bound to a string or to\n
+NIL. If there is no match, BODY is _not_ executed. For each element of\n
+VAR-LIST which is NIL there's no binding to the corresponding register\n
+group. The number of variables in VAR-LIST must not be greater than\n
+the number of register groups. If SHAREDP is true, the substrings may\n
+share structure with TARGET-STRING."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 3. 3.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|VAR-LIST|
+        (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#2=#:|G36380| (|COMMON-LISP|::|CADDR| . #1#))
+       (#3=#:|G36381|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|NOT|
+          (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| #2# 2. 2. |COMMON-LISP|::|T|))
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #2#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|CL-PPCRE|::|REGISTER-GROUPS-BIND| #2#
+          '#4=(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING|
+               |COMMON-LISP|::|&KEY| |CL-PPCRE|::|START| |CL-PPCRE|::|END|
+               |CL-PPCRE|::|SHAREDP|))
+         #2#))
+       (|CL-PPCRE|::|REGEX| (|COMMON-LISP|::|CAR| #3#))
+       (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADR| . #5=(#3#)))
+       (#6=#:|G36382| (|COMMON-LISP|::|CDDR| . #5#))
+       (|CL-PPCRE|::|START|
+        (|COMMON-LISP|::|GETF| #6# ':|START| . #7=(|COMMON-LISP|::|NIL|)))
+       (|CL-PPCRE|::|END| (|COMMON-LISP|::|GETF| #6# ':|END| . #7#))
+       (|CL-PPCRE|::|SHAREDP| (|COMMON-LISP|::|GETF| #6# ':|SHAREDP| . #7#))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDDR| . #1#)))
+      (|SYSTEM|::|KEYWORD-TEST| #6# '(:|SHAREDP| :|END| :|START|))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|REGISTER-GROUPS-BIND|
+       (|CL-PPCRE|::|WITH-REBINDING| (|CL-PPCRE|::|TARGET-STRING|)
+        (|CL-PPCRE|::|WITH-UNIQUE-NAMES|
+         (|CL-PPCRE|::|MATCH-START| |CL-PPCRE|::|MATCH-END|
+          |CL-PPCRE|::|REG-STARTS| |CL-PPCRE|::|REG-ENDS|
+          |CL-PPCRE|::|START-INDEX| |CL-PPCRE|::|SUBSTR-FN|)
+         `(|COMMON-LISP|::|MULTIPLE-VALUE-BIND|
+           (,|CL-PPCRE|::|MATCH-START| ,|CL-PPCRE|::|MATCH-END|
+            ,|CL-PPCRE|::|REG-STARTS| ,|CL-PPCRE|::|REG-ENDS|)
+           (|CL-PPCRE|::|SCAN| ,|CL-PPCRE|::|REGEX|
+            ,|CL-PPCRE|::|TARGET-STRING| :|START|
+            (|COMMON-LISP|::|OR| ,|CL-PPCRE|::|START| 0.) :|END|
+            (|COMMON-LISP|::|OR| ,|CL-PPCRE|::|END|
+             (|COMMON-LISP|::|LENGTH| ,|CL-PPCRE|::|TARGET-STRING|)))
+           (|COMMON-LISP|::|DECLARE|
+            (|COMMON-LISP|::|IGNORE| ,|CL-PPCRE|::|MATCH-END|))
+           (|COMMON-LISP|::|WHEN| ,|CL-PPCRE|::|MATCH-START|
+            (|COMMON-LISP|::|LET*|
+             ,(|COMMON-LISP|::|CONS|
+               `(,|CL-PPCRE|::|SUBSTR-FN|
+                 (|COMMON-LISP|::|IF| ,|CL-PPCRE|::|SHAREDP|
+                  #'|CL-PPCRE|::|NSUBSEQ| #'|COMMON-LISP|::|SUBSEQ|))
+               (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| #'|CL-PPCRE|::|VAR|
+                |CL-PPCRE|::|IN|
+                (|CL-PPCRE|::|NORMALIZE-VAR-LIST| |CL-PPCRE|::|VAR-LIST|)
+                |CL-PPCRE|::|FOR| |CL-PPCRE|::|COUNTER| |CL-PPCRE|::|FROM| 0.
+                |COMMON-LISP|::|WHEN| |CL-PPCRE|::|VAR| |CL-PPCRE|::|COLLECT|
+                `(,|CL-PPCRE|::|VAR|
+                  (|COMMON-LISP|::|LET|
+                   ((,|CL-PPCRE|::|START-INDEX|
+                     (|COMMON-LISP|::|AREF| ,|CL-PPCRE|::|REG-STARTS|
+                      ,|CL-PPCRE|::|COUNTER|)))
+                   (|COMMON-LISP|::|IF| ,|CL-PPCRE|::|START-INDEX|
+                    (|COMMON-LISP|::|FUNCALL| ,|COMMON-LISP|::|FUNCTION|
+                     (|COMMON-LISP|::|FUNCALL| ,|CL-PPCRE|::|SUBSTR-FN|
+                      ,|CL-PPCRE|::|TARGET-STRING| ,|CL-PPCRE|::|START-INDEX|
+                      (|COMMON-LISP|::|AREF| ,|CL-PPCRE|::|REG-ENDS|
+                       ,|CL-PPCRE|::|COUNTER|)))
+                    |COMMON-LISP|::|NIL|)))))
+             ,@|CL-PPCRE|::|BODY|))))))))))
+  '(|CL-PPCRE|::|VAR-LIST| #4# |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|DO-SCANS|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|DO-SCANS|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|DO-SCANS|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    "Iterates over TARGET-STRING and tries to match REGEX as often as\n
+possible evaluating BODY with MATCH-START, MATCH-END, REG-STARTS, and\n
+REG-ENDS bound to the four return values of each match in turn. After\n
+the last match, returns RESULT-FORM if provided or NIL otherwise. An\n
+implicit block named NIL surrounds DO-SCANS; RETURN may be used to\n
+terminate the loop immediately. If REGEX matches an empty string the\n
+scan is continued one position behind this match. BODY may start with\n
+declarations."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G36414| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G36415|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|NOT|
+          (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| #1# 6. 7. |COMMON-LISP|::|T|))
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #1#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|CL-PPCRE|::|DO-SCANS| #1#
+          '#4=(|CL-PPCRE|::|MATCH-START| |CL-PPCRE|::|MATCH-END|
+               |CL-PPCRE|::|REG-STARTS| |CL-PPCRE|::|REG-ENDS|
+               |CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING|
+               |COMMON-LISP|::|&OPTIONAL| |CL-PPCRE|::|RESULT-FORM|
+               |COMMON-LISP|::|&KEY| |CL-PPCRE|::|START| |CL-PPCRE|::|END|))
+         #1#))
+       (|CL-PPCRE|::|MATCH-START| (|COMMON-LISP|::|CAR| #3#))
+       (|CL-PPCRE|::|MATCH-END| (|COMMON-LISP|::|CADR| . #5=(#3#)))
+       (|CL-PPCRE|::|REG-STARTS| (|COMMON-LISP|::|CADDR| . #5#))
+       (|CL-PPCRE|::|REG-ENDS| (|COMMON-LISP|::|CADDDR| . #5#))
+       (|CL-PPCRE|::|REGEX| (|COMMON-LISP|::|FIFTH| . #5#))
+       (|CL-PPCRE|::|TARGET-STRING|
+        (|COMMON-LISP|::|CADR| . #6=((|COMMON-LISP|::|CDDDDR| . #5#))))
+       (|CL-PPCRE|::|RESULT-FORM| (|COMMON-LISP|::|CADDR| . #6#))
+       (#7=#:|G36416| (|COMMON-LISP|::|CDDDR| . #6#))
+       (|CL-PPCRE|::|START|
+        (|COMMON-LISP|::|GETF| #7# ':|START| . #8=(|COMMON-LISP|::|NIL|)))
+       (|CL-PPCRE|::|END| (|COMMON-LISP|::|GETF| #7# ':|END| . #8#))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|SYSTEM|::|KEYWORD-TEST| #7# '(:|END| :|START|))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|DO-SCANS|
+       (|CL-PPCRE|::|WITH-REBINDING| (|CL-PPCRE|::|TARGET-STRING|)
+        (|CL-PPCRE|::|WITH-UNIQUE-NAMES|
+         (|CL-PPCRE|::|%START| |CL-PPCRE|::|%END| |CL-PPCRE|::|%REGEX|
+          |CL-PPCRE|::|SCANNER| |CL-PPCRE|::|LOOP-TAG|
+          |CL-PPCRE|::|BLOCK-NAME|)
+         (|COMMON-LISP|::|DECLARE|
+          (|COMMON-LISP|::|IGNORABLE| |CL-PPCRE|::|%REGEX|
+           |CL-PPCRE|::|SCANNER|))
+         `(|COMMON-LISP|::|BLOCK| |COMMON-LISP|::|NIL|
+           (|COMMON-LISP|::|LET*|
+            ((,|CL-PPCRE|::|%START|
+              (|COMMON-LISP|::|OR| ,|CL-PPCRE|::|START| 0.))
+             (,|CL-PPCRE|::|%END|
+              (|COMMON-LISP|::|OR| ,|CL-PPCRE|::|END|
+               (|COMMON-LISP|::|LENGTH| ,|CL-PPCRE|::|TARGET-STRING|)))
+             ,@(|COMMON-LISP|::|UNLESS|
+                (|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX|
+                 |CL-PPCRE|::|ENV|)
+                `((,|CL-PPCRE|::|%REGEX| ,|CL-PPCRE|::|REGEX|)
+                  (,|CL-PPCRE|::|SCANNER|
+                   (|COMMON-LISP|::|TYPECASE| ,|CL-PPCRE|::|%REGEX|
+                    #',|CL-PPCRE|::|%REGEX|
+                    (|COMMON-LISP|::|T|
+                     (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|%REGEX|)))))))
+            (|COMMON-LISP|::|SETQ| ,|CL-PPCRE|::|TARGET-STRING|
+             (|CL-PPCRE|::|MAYBE-COERCE-TO-SIMPLE-STRING|
+              ,|CL-PPCRE|::|TARGET-STRING|))
+            (|COMMON-LISP|::|BLOCK| ,|CL-PPCRE|::|BLOCK-NAME|
+             (|COMMON-LISP|::|TAGBODY| ,|CL-PPCRE|::|LOOP-TAG|
+              (|COMMON-LISP|::|MULTIPLE-VALUE-BIND|
+               (,|CL-PPCRE|::|MATCH-START| ,|CL-PPCRE|::|MATCH-END|
+                ,|CL-PPCRE|::|REG-STARTS| ,|CL-PPCRE|::|REG-ENDS|)
+               (|CL-PPCRE|::|SCAN|
+                ,(|COMMON-LISP|::|COND|
+                  ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX|
+                    |CL-PPCRE|::|ENV|)
+                   |CL-PPCRE|::|REGEX|)
+                  (|COMMON-LISP|::|T| |CL-PPCRE|::|SCANNER|))
+                ,|CL-PPCRE|::|TARGET-STRING| :|START| ,|CL-PPCRE|::|%START|
+                :|END| ,|CL-PPCRE|::|%END| :|REAL-START-POS|
+                (|COMMON-LISP|::|OR| ,|CL-PPCRE|::|START| 0.))
+               (|COMMON-LISP|::|DECLARE|
+                (|COMMON-LISP|::|IGNORABLE| ,|CL-PPCRE|::|MATCH-START|
+                 ,|CL-PPCRE|::|MATCH-END| ,|CL-PPCRE|::|REG-STARTS|
+                 ,|CL-PPCRE|::|REG-ENDS|))
+               (|COMMON-LISP|::|UNLESS| ,|CL-PPCRE|::|MATCH-START|
+                (|COMMON-LISP|::|RETURN-FROM| ,|CL-PPCRE|::|BLOCK-NAME|
+                 ,|CL-PPCRE|::|RESULT-FORM|))
+               (|COMMON-LISP|::|LOCALLY| ,@|CL-PPCRE|::|BODY|)
+               (|COMMON-LISP|::|SETQ| ,|CL-PPCRE|::|%START|
+                (|COMMON-LISP|::|IF|
+                 (|COMMON-LISP|::|=| ,|CL-PPCRE|::|MATCH-START|
+                  ,|CL-PPCRE|::|MATCH-END|)
+                 (|COMMON-LISP|::|1+| ,|CL-PPCRE|::|MATCH-END|)
+                 ,|CL-PPCRE|::|MATCH-END|)))
+              (|COMMON-LISP|::|GO| ,|CL-PPCRE|::|LOOP-TAG|))))))))))))
+  '(#4# |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY| |COMMON-LISP|::|&ENVIRONMENT|
+    |CL-PPCRE|::|ENV|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|DO-MATCHES|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|DO-MATCHES|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|DO-MATCHES|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Iterates over TARGET-STRING and tries to match REGEX as often as\n
+possible evaluating BODY with MATCH-START and MATCH-END bound to the\n
+start/end positions of each match in turn. After the last match,\n
+returns RESULT-FORM if provided or NIL otherwise. An implicit block\n
+named NIL surrounds DO-MATCHES; RETURN may be used to terminate the\n
+loop immediately. If REGEX matches an empty string the scan is\n
+continued one position behind this match. BODY may start with\n
+declarations."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G36437| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G36438|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|NOT|
+          (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| #1# 4. 5. |COMMON-LISP|::|T|))
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #1#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|CL-PPCRE|::|DO-MATCHES| #1#
+          '#4=(|CL-PPCRE|::|MATCH-START| |CL-PPCRE|::|MATCH-END|
+               |CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING|
+               |COMMON-LISP|::|&OPTIONAL| |CL-PPCRE|::|RESULT-FORM|
+               |COMMON-LISP|::|&KEY| |CL-PPCRE|::|START| |CL-PPCRE|::|END|))
+         #1#))
+       (|CL-PPCRE|::|MATCH-START| (|COMMON-LISP|::|CAR| #3#))
+       (|CL-PPCRE|::|MATCH-END| (|COMMON-LISP|::|CADR| . #5=(#3#)))
+       (|CL-PPCRE|::|REGEX| (|COMMON-LISP|::|CADDR| . #5#))
+       (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADDDR| . #5#))
+       (|CL-PPCRE|::|RESULT-FORM| (|COMMON-LISP|::|FIFTH| . #5#))
+       (#6=#:|G36439| (|COMMON-LISP|::|CDR| (|COMMON-LISP|::|CDDDDR| . #5#)))
+       (|CL-PPCRE|::|START|
+        (|COMMON-LISP|::|GETF| #6# ':|START| . #7=(|COMMON-LISP|::|NIL|)))
+       (|CL-PPCRE|::|END| (|COMMON-LISP|::|GETF| #6# ':|END| . #7#))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|SYSTEM|::|KEYWORD-TEST| #6# '(:|END| :|START|))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|DO-MATCHES|
+       (|CL-PPCRE|::|WITH-UNIQUE-NAMES|
+        (|CL-PPCRE|::|REG-STARTS| |CL-PPCRE|::|REG-ENDS|)
+        `(|CL-PPCRE|::|DO-SCANS|
+          (,|CL-PPCRE|::|MATCH-START| ,|CL-PPCRE|::|MATCH-END|
+           ,|CL-PPCRE|::|REG-STARTS| ,|CL-PPCRE|::|REG-ENDS|
+           ,|CL-PPCRE|::|REGEX| ,|CL-PPCRE|::|TARGET-STRING|
+           ,|CL-PPCRE|::|RESULT-FORM| :|START| ,|CL-PPCRE|::|START| :|END|
+           ,|CL-PPCRE|::|END|)
+          ,@|CL-PPCRE|::|BODY|)))))))
+  '(#4# |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|DO-MATCHES-AS-STRINGS|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|DO-MATCHES-AS-STRINGS|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|DO-MATCHES-AS-STRINGS|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Iterates over TARGET-STRING and tries to match REGEX as often as\n
+possible evaluating BODY with MATCH-VAR bound to the substring of\n
+TARGET-STRING corresponding to each match in turn. After the last\n
+match, returns RESULT-FORM if provided or NIL otherwise. An implicit\n
+block named NIL surrounds DO-MATCHES-AS-STRINGS; RETURN may be used to\n
+terminate the loop immediately. If REGEX matches an empty string the\n
+scan is continued one position behind this match. If SHAREDP is true,\n
+the substrings may share structure with TARGET-STRING. BODY may start\n
+with declarations."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G36452| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G36453|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|NOT|
+          (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| #1# 3. 4. |COMMON-LISP|::|T|))
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #1#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|CL-PPCRE|::|DO-MATCHES-AS-STRINGS| #1#
+          '#4=(|CL-PPCRE|::|MATCH-VAR| |CL-PPCRE|::|REGEX|
+               |CL-PPCRE|::|TARGET-STRING| |COMMON-LISP|::|&OPTIONAL|
+               |CL-PPCRE|::|RESULT-FORM| |COMMON-LISP|::|&KEY|
+               |CL-PPCRE|::|START| |CL-PPCRE|::|END| |CL-PPCRE|::|SHAREDP|))
+         #1#))
+       (|CL-PPCRE|::|MATCH-VAR| (|COMMON-LISP|::|CAR| #3#))
+       (|CL-PPCRE|::|REGEX| (|COMMON-LISP|::|CADR| . #5=(#3#)))
+       (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADDR| . #5#))
+       (|CL-PPCRE|::|RESULT-FORM| (|COMMON-LISP|::|CADDDR| . #5#))
+       (#6=#:|G36454| (|COMMON-LISP|::|CDDDDR| . #5#))
+       (|CL-PPCRE|::|START|
+        (|COMMON-LISP|::|GETF| #6# ':|START| . #7=(|COMMON-LISP|::|NIL|)))
+       (|CL-PPCRE|::|END| (|COMMON-LISP|::|GETF| #6# ':|END| . #7#))
+       (|CL-PPCRE|::|SHAREDP| (|COMMON-LISP|::|GETF| #6# ':|SHAREDP| . #7#))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|SYSTEM|::|KEYWORD-TEST| #6# '(:|SHAREDP| :|END| :|START|))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|DO-MATCHES-AS-STRINGS|
+       (|CL-PPCRE|::|WITH-REBINDING| (|CL-PPCRE|::|TARGET-STRING|)
+        (|CL-PPCRE|::|WITH-UNIQUE-NAMES|
+         (|CL-PPCRE|::|MATCH-START| |CL-PPCRE|::|MATCH-END|
+          |CL-PPCRE|::|SUBSTR-FN|)
+         `(|COMMON-LISP|::|LET|
+           ((,|CL-PPCRE|::|SUBSTR-FN|
+             (|COMMON-LISP|::|IF| ,|CL-PPCRE|::|SHAREDP|
+              #'|CL-PPCRE|::|NSUBSEQ| #'|COMMON-LISP|::|SUBSEQ|)))
+           (|CL-PPCRE|::|DO-MATCHES|
+            (,|CL-PPCRE|::|MATCH-START| ,|CL-PPCRE|::|MATCH-END|
+             ,|CL-PPCRE|::|REGEX| ,|CL-PPCRE|::|TARGET-STRING|
+             ,|CL-PPCRE|::|RESULT-FORM| :|START| ,|CL-PPCRE|::|START| :|END|
+             ,|CL-PPCRE|::|END|)
+            (|COMMON-LISP|::|LET|
+             ((,|CL-PPCRE|::|MATCH-VAR|
+               (|COMMON-LISP|::|FUNCALL| ,|CL-PPCRE|::|SUBSTR-FN|
+                ,|CL-PPCRE|::|TARGET-STRING| ,|CL-PPCRE|::|MATCH-START|
+                ,|CL-PPCRE|::|MATCH-END|)))
+             ,@|CL-PPCRE|::|BODY|))))))))))
+  '(#4# |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|DO-REGISTER-GROUPS|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|DO-REGISTER-GROUPS|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|DO-REGISTER-GROUPS|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Iterates over TARGET-STRING and tries to match REGEX as often as\n
+possible evaluating BODY with the variables in VAR-LIST bound to the\n
+corresponding register groups for each match in turn, i.e. each\n
+variable is either bound to a string or to NIL. For each element of\n
+VAR-LIST which is NIL there's no binding to the corresponding register\n
+group. The number of variables in VAR-LIST must not be greater than\n
+the number of register groups. After the last match, returns\n
+RESULT-FORM if provided or NIL otherwise. An implicit block named NIL\n
+surrounds DO-REGISTER-GROUPS; RETURN may be used to terminate the loop\n
+immediately. If REGEX matches an empty string the scan is continued\n
+one position behind this match. If SHAREDP is true, the substrings may\n
+share structure with TARGET-STRING. BODY may start with declarations."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 3. 3.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|VAR-LIST|
+        (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#2=#:|G36469| (|COMMON-LISP|::|CADDR| . #1#))
+       (#3=#:|G36470|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|NOT|
+          (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| #2# 2. 3. |COMMON-LISP|::|T|))
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #2#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|CL-PPCRE|::|DO-REGISTER-GROUPS| #2#
+          '#4=(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING|
+               |COMMON-LISP|::|&OPTIONAL| |CL-PPCRE|::|RESULT-FORM|
+               |COMMON-LISP|::|&KEY| |CL-PPCRE|::|START| |CL-PPCRE|::|END|
+               |CL-PPCRE|::|SHAREDP|))
+         #2#))
+       (|CL-PPCRE|::|REGEX| (|COMMON-LISP|::|CAR| #3#))
+       (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADR| . #5=(#3#)))
+       (|CL-PPCRE|::|RESULT-FORM| (|COMMON-LISP|::|CADDR| . #5#))
+       (#6=#:|G36471| (|COMMON-LISP|::|CDDDR| . #5#))
+       (|CL-PPCRE|::|START|
+        (|COMMON-LISP|::|GETF| #6# ':|START| . #7=(|COMMON-LISP|::|NIL|)))
+       (|CL-PPCRE|::|END| (|COMMON-LISP|::|GETF| #6# ':|END| . #7#))
+       (|CL-PPCRE|::|SHAREDP| (|COMMON-LISP|::|GETF| #6# ':|SHAREDP| . #7#))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDDR| . #1#)))
+      (|SYSTEM|::|KEYWORD-TEST| #6# '(:|SHAREDP| :|END| :|START|))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|DO-REGISTER-GROUPS|
+       (|CL-PPCRE|::|WITH-REBINDING| (|CL-PPCRE|::|TARGET-STRING|)
+        (|CL-PPCRE|::|WITH-UNIQUE-NAMES|
+         (|CL-PPCRE|::|SUBSTR-FN| |CL-PPCRE|::|MATCH-START|
+          |CL-PPCRE|::|MATCH-END| |CL-PPCRE|::|REG-STARTS|
+          |CL-PPCRE|::|REG-ENDS| |CL-PPCRE|::|START-INDEX|)
+         `(|COMMON-LISP|::|LET|
+           ((,|CL-PPCRE|::|SUBSTR-FN|
+             (|COMMON-LISP|::|IF| ,|CL-PPCRE|::|SHAREDP|
+              #'|CL-PPCRE|::|NSUBSEQ| #'|COMMON-LISP|::|SUBSEQ|)))
+           (|CL-PPCRE|::|DO-SCANS|
+            (,|CL-PPCRE|::|MATCH-START| ,|CL-PPCRE|::|MATCH-END|
+             ,|CL-PPCRE|::|REG-STARTS| ,|CL-PPCRE|::|REG-ENDS|
+             ,|CL-PPCRE|::|REGEX| ,|CL-PPCRE|::|TARGET-STRING|
+             ,|CL-PPCRE|::|RESULT-FORM| :|START| ,|CL-PPCRE|::|START| :|END|
+             ,|CL-PPCRE|::|END|)
+            (|COMMON-LISP|::|LET|
+             ,(|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| #'|CL-PPCRE|::|VAR|
+               |CL-PPCRE|::|IN|
+               (|CL-PPCRE|::|NORMALIZE-VAR-LIST| |CL-PPCRE|::|VAR-LIST|)
+               |CL-PPCRE|::|FOR| |CL-PPCRE|::|COUNTER| |CL-PPCRE|::|FROM| 0.
+               |COMMON-LISP|::|WHEN| |CL-PPCRE|::|VAR| |CL-PPCRE|::|COLLECT|
+               `(,|CL-PPCRE|::|VAR|
+                 (|COMMON-LISP|::|LET|
+                  ((,|CL-PPCRE|::|START-INDEX|
+                    (|COMMON-LISP|::|AREF| ,|CL-PPCRE|::|REG-STARTS|
+                     ,|CL-PPCRE|::|COUNTER|)))
+                  (|COMMON-LISP|::|IF| ,|CL-PPCRE|::|START-INDEX|
+                   (|COMMON-LISP|::|FUNCALL| ,|COMMON-LISP|::|FUNCTION|
+                    (|COMMON-LISP|::|FUNCALL| ,|CL-PPCRE|::|SUBSTR-FN|
+                     ,|CL-PPCRE|::|TARGET-STRING| ,|CL-PPCRE|::|START-INDEX|
+                     (|COMMON-LISP|::|AREF| ,|CL-PPCRE|::|REG-ENDS|
+                      ,|CL-PPCRE|::|COUNTER|)))
+                   |COMMON-LISP|::|NIL|))))
+             ,@|CL-PPCRE|::|BODY|))))))))))
+  '(|CL-PPCRE|::|VAR-LIST| #4# |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|ALL-MATCHES|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING| |COMMON-LISP|::|&KEY|
+    (|CL-PPCRE|::|START| 0.)
+    (|CL-PPCRE|::|END|
+     (|COMMON-LISP|::|LENGTH| |CL-PPCRE|::|TARGET-STRING|)))))
+(|SYSTEM|::|%SET-DOCUMENTATION| '|CL-PPCRE|::|ALL-MATCHES|
+ '|COMMON-LISP|::|COMPILER-MACRO|
+ "Make sure that constant forms are compiled into scanners at\n
+compile time.")
+(|COMMON-LISP|::|SETF|
+ (|COMMON-LISP|::|COMPILER-MACRO-FUNCTION| '|CL-PPCRE|::|ALL-MATCHES|)
+ (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|ALL-MATCHES|
+  (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+   (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+   "Make sure that constant forms are compiled into scanners at\n
+compile time."
+   (|COMMON-LISP|::|SETQ| |SYSTEM|::|<MACRO-FORM>|
+    (|SYSTEM|::|STRIP-FUNCALL-FORM| |SYSTEM|::|<MACRO-FORM>|))
+   (|COMMON-LISP|::|IF|
+    (|COMMON-LISP|::|NOT|
+     (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+      |COMMON-LISP|::|T|))
+    (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+    (|COMMON-LISP|::|LET*|
+     ((|CL-PPCRE|::|FORM| |SYSTEM|::|<MACRO-FORM>|)
+      (|CL-PPCRE|::|REGEX|
+       (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+      (|COMMON-LISP|::|REST| (|COMMON-LISP|::|CDDR| . #1#)))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|ALL-MATCHES|
+      (|COMMON-LISP|::|COND|
+       ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX| |CL-PPCRE|::|ENV|)
+        `(|CL-PPCRE|::|ALL-MATCHES|
+          (|COMMON-LISP|::|LOAD-TIME-VALUE|
+           (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|))
+          ,@|COMMON-LISP|::|REST|))
+       (|COMMON-LISP|::|T| |CL-PPCRE|::|FORM|))))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|ALL-MATCHES-AS-STRINGS|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING| |COMMON-LISP|::|&KEY|
+    (|CL-PPCRE|::|START| 0.)
+    (|CL-PPCRE|::|END| (|COMMON-LISP|::|LENGTH| |CL-PPCRE|::|TARGET-STRING|))
+    |CL-PPCRE|::|SHAREDP|)))
+(|SYSTEM|::|%SET-DOCUMENTATION| '|CL-PPCRE|::|ALL-MATCHES-AS-STRINGS|
+ '|COMMON-LISP|::|COMPILER-MACRO|
+ "Make sure that constant forms are compiled into scanners at\n
+compile time.")
+(|COMMON-LISP|::|SETF|
+ (|COMMON-LISP|::|COMPILER-MACRO-FUNCTION|
+  '|CL-PPCRE|::|ALL-MATCHES-AS-STRINGS|)
+ (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|ALL-MATCHES-AS-STRINGS|
+  (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+   (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+   "Make sure that constant forms are compiled into scanners at\n
+compile time."
+   (|COMMON-LISP|::|SETQ| |SYSTEM|::|<MACRO-FORM>|
+    (|SYSTEM|::|STRIP-FUNCALL-FORM| |SYSTEM|::|<MACRO-FORM>|))
+   (|COMMON-LISP|::|IF|
+    (|COMMON-LISP|::|NOT|
+     (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+      |COMMON-LISP|::|T|))
+    (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+    (|COMMON-LISP|::|LET*|
+     ((|CL-PPCRE|::|FORM| |SYSTEM|::|<MACRO-FORM>|)
+      (|CL-PPCRE|::|REGEX|
+       (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+      (|COMMON-LISP|::|REST| (|COMMON-LISP|::|CDDR| . #1#)))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|ALL-MATCHES-AS-STRINGS|
+      (|COMMON-LISP|::|COND|
+       ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX| |CL-PPCRE|::|ENV|)
+        `(|CL-PPCRE|::|ALL-MATCHES-AS-STRINGS|
+          (|COMMON-LISP|::|LOAD-TIME-VALUE|
+           (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|))
+          ,@|COMMON-LISP|::|REST|))
+       (|COMMON-LISP|::|T| |CL-PPCRE|::|FORM|))))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SPLIT|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING| |COMMON-LISP|::|&KEY|
+    (|CL-PPCRE|::|START| 0.)
+    (|CL-PPCRE|::|END| (|COMMON-LISP|::|LENGTH| |CL-PPCRE|::|TARGET-STRING|))
+    |CL-PPCRE|::|LIMIT| |CL-PPCRE|::|WITH-REGISTERS-P|
+    |CL-PPCRE|::|OMIT-UNMATCHED-P| |CL-PPCRE|::|SHAREDP|)))
+(|SYSTEM|::|%SET-DOCUMENTATION| '|CL-PPCRE|::|SPLIT|
+ '|COMMON-LISP|::|COMPILER-MACRO|
+ "Make sure that constant forms are compiled into scanners at compile time.")
+(|COMMON-LISP|::|SETF|
+ (|COMMON-LISP|::|COMPILER-MACRO-FUNCTION| '|CL-PPCRE|::|SPLIT|)
+ (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|SPLIT|
+  (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+   (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+   "Make sure that constant forms are compiled into scanners at compile time."
+   (|COMMON-LISP|::|SETQ| |SYSTEM|::|<MACRO-FORM>|
+    (|SYSTEM|::|STRIP-FUNCALL-FORM| |SYSTEM|::|<MACRO-FORM>|))
+   (|COMMON-LISP|::|IF|
+    (|COMMON-LISP|::|NOT|
+     (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 3. 3.
+      |COMMON-LISP|::|T|))
+    (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+    (|COMMON-LISP|::|LET*|
+     ((|CL-PPCRE|::|FORM| |SYSTEM|::|<MACRO-FORM>|)
+      (|CL-PPCRE|::|REGEX|
+       (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+      (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADDR| . #1#))
+      (|COMMON-LISP|::|REST| (|COMMON-LISP|::|CDDDR| . #1#)))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|SPLIT|
+      (|COMMON-LISP|::|COND|
+       ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX| |CL-PPCRE|::|ENV|)
+        `(|CL-PPCRE|::|SPLIT|
+          (|COMMON-LISP|::|LOAD-TIME-VALUE|
+           (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|))
+          ,|CL-PPCRE|::|TARGET-STRING| ,@|COMMON-LISP|::|REST|))
+       (|COMMON-LISP|::|T| |CL-PPCRE|::|FORM|))))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|STRING-CASE-MODIFIER|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|STR| |CL-PPCRE|::|FROM| |CL-PPCRE|::|TO| |CL-PPCRE|::|START|
+    |CL-PPCRE|::|END|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|BUILD-REPLACEMENT-TEMPLATE|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|BUILD-REPLACEMENT-TEMPLATE|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|BUILD-REPLACEMENT-TEMPLATE|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|BUILD-REPLACEMENT-TEMPLATE|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|BUILD-REPLACEMENT-TEMPLATE|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|BUILD-REPLACEMENT|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REPLACEMENT-TEMPLATE| |CL-PPCRE|::|TARGET-STRING|
+    |CL-PPCRE|::|START| |CL-PPCRE|::|END| |CL-PPCRE|::|MATCH-START|
+    |CL-PPCRE|::|MATCH-END| |CL-PPCRE|::|REG-STARTS| |CL-PPCRE|::|REG-ENDS|
+    |CL-PPCRE|::|SIMPLE-CALLS| |CL-PPCRE|::|ELEMENT-TYPE|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REPLACE-AUX|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|TARGET-STRING| |CL-PPCRE|::|REPLACEMENT|
+    |CL-PPCRE|::|POS-LIST| |CL-PPCRE|::|REG-LIST| |CL-PPCRE|::|START|
+    |CL-PPCRE|::|END| |CL-PPCRE|::|PRESERVE-CASE| |CL-PPCRE|::|SIMPLE-CALLS|
+    |CL-PPCRE|::|ELEMENT-TYPE|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-REPLACE|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING| |CL-PPCRE|::|REPLACEMENT|
+    |COMMON-LISP|::|&KEY| (|CL-PPCRE|::|START| 0.)
+    (|CL-PPCRE|::|END| (|COMMON-LISP|::|LENGTH| |CL-PPCRE|::|TARGET-STRING|))
+    |CL-PPCRE|::|PRESERVE-CASE| |CL-PPCRE|::|SIMPLE-CALLS|
+    (|CL-PPCRE|::|ELEMENT-TYPE| '|COMMON-LISP|::|CHARACTER|))))
+(|SYSTEM|::|%SET-DOCUMENTATION| '|CL-PPCRE|::|REGEX-REPLACE|
+ '|COMMON-LISP|::|COMPILER-MACRO|
+ "Make sure that constant forms are compiled into scanners at compile time.")
+(|COMMON-LISP|::|SETF|
+ (|COMMON-LISP|::|COMPILER-MACRO-FUNCTION| '|CL-PPCRE|::|REGEX-REPLACE|)
+ (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|REGEX-REPLACE|
+  (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+   (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+   "Make sure that constant forms are compiled into scanners at compile time."
+   (|COMMON-LISP|::|SETQ| |SYSTEM|::|<MACRO-FORM>|
+    (|SYSTEM|::|STRIP-FUNCALL-FORM| |SYSTEM|::|<MACRO-FORM>|))
+   (|COMMON-LISP|::|IF|
+    (|COMMON-LISP|::|NOT|
+     (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 4. 4.
+      |COMMON-LISP|::|T|))
+    (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+    (|COMMON-LISP|::|LET*|
+     ((|CL-PPCRE|::|FORM| |SYSTEM|::|<MACRO-FORM>|)
+      (|CL-PPCRE|::|REGEX|
+       (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+      (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADDR| . #1#))
+      (|CL-PPCRE|::|REPLACEMENT| (|COMMON-LISP|::|CADDDR| . #1#))
+      (|COMMON-LISP|::|REST| (|COMMON-LISP|::|CDDDDR| . #1#)))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|REGEX-REPLACE|
+      (|COMMON-LISP|::|COND|
+       ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX| |CL-PPCRE|::|ENV|)
+        `(|CL-PPCRE|::|REGEX-REPLACE|
+          (|COMMON-LISP|::|LOAD-TIME-VALUE|
+           (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|))
+          ,|CL-PPCRE|::|TARGET-STRING| ,|CL-PPCRE|::|REPLACEMENT|
+          ,@|COMMON-LISP|::|REST|))
+       (|COMMON-LISP|::|T| |CL-PPCRE|::|FORM|))))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-REPLACE-ALL|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|TARGET-STRING| |CL-PPCRE|::|REPLACEMENT|
+    |COMMON-LISP|::|&KEY| (|CL-PPCRE|::|START| 0.)
+    (|CL-PPCRE|::|END| (|COMMON-LISP|::|LENGTH| |CL-PPCRE|::|TARGET-STRING|))
+    |CL-PPCRE|::|PRESERVE-CASE| |CL-PPCRE|::|SIMPLE-CALLS|
+    (|CL-PPCRE|::|ELEMENT-TYPE| '|COMMON-LISP|::|CHARACTER|))))
+(|SYSTEM|::|%SET-DOCUMENTATION| '|CL-PPCRE|::|REGEX-REPLACE-ALL|
+ '|COMMON-LISP|::|COMPILER-MACRO|
+ "Make sure that constant forms are compiled into scanners at compile time.")
+(|COMMON-LISP|::|SETF|
+ (|COMMON-LISP|::|COMPILER-MACRO-FUNCTION| '|CL-PPCRE|::|REGEX-REPLACE-ALL|)
+ (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|REGEX-REPLACE-ALL|
+  (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+   (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+   "Make sure that constant forms are compiled into scanners at compile time."
+   (|COMMON-LISP|::|SETQ| |SYSTEM|::|<MACRO-FORM>|
+    (|SYSTEM|::|STRIP-FUNCALL-FORM| |SYSTEM|::|<MACRO-FORM>|))
+   (|COMMON-LISP|::|IF|
+    (|COMMON-LISP|::|NOT|
+     (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 4. 4.
+      |COMMON-LISP|::|T|))
+    (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+    (|COMMON-LISP|::|LET*|
+     ((|CL-PPCRE|::|FORM| |SYSTEM|::|<MACRO-FORM>|)
+      (|CL-PPCRE|::|REGEX|
+       (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+      (|CL-PPCRE|::|TARGET-STRING| (|COMMON-LISP|::|CADDR| . #1#))
+      (|CL-PPCRE|::|REPLACEMENT| (|COMMON-LISP|::|CADDDR| . #1#))
+      (|COMMON-LISP|::|REST| (|COMMON-LISP|::|CDDDDR| . #1#)))
+     (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|REGEX-REPLACE-ALL|
+      (|COMMON-LISP|::|COND|
+       ((|COMMON-LISP|::|CONSTANTP| |CL-PPCRE|::|REGEX| |CL-PPCRE|::|ENV|)
+        `(|CL-PPCRE|::|REGEX-REPLACE-ALL|
+          (|COMMON-LISP|::|LOAD-TIME-VALUE|
+           (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|))
+          ,|CL-PPCRE|::|TARGET-STRING| ,|CL-PPCRE|::|REPLACEMENT|
+          ,@|COMMON-LISP|::|REST|))
+       (|COMMON-LISP|::|T| |CL-PPCRE|::|FORM|))))))))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|REGEX-APROPOS-AUX|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|REGEX-APROPOS-AUX|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|REGEX-APROPOS-AUX|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Auxiliary macro used by REGEX-APROPOS and REGEX-APROPOS-LIST. Loops\n
+through PACKAGES and executes BODY with SYMBOL bound to each symbol\n
+which matches REGEX. Optionally evaluates and returns RETURN-FORM at\n
+the end. If CASE-INSENSITIVE is true and REGEX isn't already a\n
+scanner, a case-insensitive scanner is used."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G37310| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G37311|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|NOT|
+          (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| #1# 3. 4. |COMMON-LISP|::|NIL|))
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #1#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|CL-PPCRE|::|REGEX-APROPOS-AUX| #1#
+          '#4=(|CL-PPCRE|::|REGEX| |CL-PPCRE|::|PACKAGES|
+               |CL-PPCRE|::|CASE-INSENSITIVE| |COMMON-LISP|::|&OPTIONAL|
+               |CL-PPCRE|::|RETURN-FORM|))
+         #1#))
+       (|CL-PPCRE|::|REGEX| (|COMMON-LISP|::|CAR| #3#))
+       (|CL-PPCRE|::|PACKAGES| (|COMMON-LISP|::|CADR| . #5=(#3#)))
+       (|CL-PPCRE|::|CASE-INSENSITIVE| (|COMMON-LISP|::|CADDR| . #5#))
+       (|CL-PPCRE|::|RETURN-FORM| (|COMMON-LISP|::|CADDDR| . #5#))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|REGEX-APROPOS-AUX|
+       (|CL-PPCRE|::|WITH-REBINDING| (|CL-PPCRE|::|REGEX|)
+        (|CL-PPCRE|::|WITH-UNIQUE-NAMES|
+         (|CL-PPCRE|::|SCANNER| |CL-PPCRE|::|%PACKAGES| |CL-PPCRE|::|NEXT|
+          |CL-PPCRE|::|MOREP|)
+         `(|COMMON-LISP|::|LET*|
+           ((,|CL-PPCRE|::|SCANNER|
+             (|CL-PPCRE|::|CREATE-SCANNER| ,|CL-PPCRE|::|REGEX|
+              :|CASE-INSENSITIVE-MODE|
+              (|COMMON-LISP|::|AND| ,|CL-PPCRE|::|CASE-INSENSITIVE|
+               (|COMMON-LISP|::|NOT|
+                (|COMMON-LISP|::|FUNCTIONP| ,|CL-PPCRE|::|REGEX|)))))
+            (,|CL-PPCRE|::|%PACKAGES|
+             (|COMMON-LISP|::|OR| ,|CL-PPCRE|::|PACKAGES|
+              (|COMMON-LISP|::|LIST-ALL-PACKAGES|))))
+           (|COMMON-LISP|::|WITH-PACKAGE-ITERATOR|
+            (,|CL-PPCRE|::|NEXT| ,|CL-PPCRE|::|%PACKAGES| :|EXTERNAL|
+             :|INTERNAL| :|INHERITED|)
+            (|COMMON-LISP|::|LOOP|
+             (|COMMON-LISP|::|MULTIPLE-VALUE-BIND|
+              (,|CL-PPCRE|::|MOREP| |COMMON-LISP|::|SYMBOL|)
+              (,|CL-PPCRE|::|NEXT|)
+              (|COMMON-LISP|::|UNLESS| ,|CL-PPCRE|::|MOREP|
+               (|COMMON-LISP|::|RETURN| ,|CL-PPCRE|::|RETURN-FORM|))
+              (|COMMON-LISP|::|WHEN|
+               (|CL-PPCRE|::|SCAN| ,|CL-PPCRE|::|SCANNER|
+                (|COMMON-LISP|::|SYMBOL-NAME| |COMMON-LISP|::|SYMBOL|))
+               ,@|CL-PPCRE|::|BODY|))))))))))))
+  '(#4# |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-APROPOS-LIST|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |COMMON-LISP|::|&OPTIONAL| |CL-PPCRE|::|PACKAGES|
+    |COMMON-LISP|::|&KEY|
+    (|CL-PPCRE|::|CASE-INSENSITIVE| |COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|PRINT-SYMBOL-INFO|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|COMMON-LISP|::|SYMBOL|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-APROPOS|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|REGEX| |COMMON-LISP|::|&OPTIONAL| |CL-PPCRE|::|PACKAGES|
+    |COMMON-LISP|::|&KEY|
+    (|CL-PPCRE|::|CASE-INSENSITIVE| |COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|QUOTE-META-CHARS|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|COMMON-LISP|::|STRING| |COMMON-LISP|::|&KEY| (|CL-PPCRE|::|START| 0.)
+    (|CL-PPCRE|::|END| (|COMMON-LISP|::|LENGTH| |COMMON-LISP|::|STRING|)))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|QUOTE-SECTIONS|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|COMMON-LISP|::|STRING|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CLEAN-COMMENTS|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|COMMON-LISP|::|STRING| |COMMON-LISP|::|&OPTIONAL|
+    |CL-PPCRE|::|EXTENDED-MODE|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|PARSE-TREE-SYNONYM|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '(|COMMON-LISP|::|SYMBOL|)))
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|PARSE-TREE-SYNONYM|)
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|NEW-PARSE-TREE| |COMMON-LISP|::|SYMBOL|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|DEFINE-PARSE-TREE-SYNONYM|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|DEFINE-PARSE-TREE-SYNONYM|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|DEFINE-PARSE-TREE-SYNONYM|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Defines the symbol NAME to be a synonym for the parse tree\n
+PARSE-TREE. Both arguments are quoted."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 3. 3.
+       |COMMON-LISP|::|NIL|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|NAME|
+        (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+       (|CL-PPCRE|::|PARSE-TREE| (|COMMON-LISP|::|CADDR| . #1#)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|DEFINE-PARSE-TREE-SYNONYM|
+       `(|COMMON-LISP|::|EVAL-WHEN|
+         (:|COMPILE-TOPLEVEL| :|LOAD-TOPLEVEL| :|EXECUTE|)
+         (|COMMON-LISP|::|SETF|
+          (|CL-PPCRE|::|PARSE-TREE-SYNONYM| ',|CL-PPCRE|::|NAME|)
+          ',|CL-PPCRE|::|PARSE-TREE|)))))))
+  '(|CL-PPCRE|::|NAME| |CL-PPCRE|::|PARSE-TREE|)))

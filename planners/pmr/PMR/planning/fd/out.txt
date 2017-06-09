@@ -1,0 +1,87 @@
+INFO     Running translator.
+INFO     translator inputs: ['../../temp/merged-obfuscated-domain.pddl', '../../temp/merged-obfuscated-problem.pddl']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.000s CPU, 0.001s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.000s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.001s wall-clock]
+Preparing model... [0.000s CPU, 0.000s wall-clock]
+Generated 13 rules.
+Computing model... [0.000s CPU, 0.000s wall-clock]
+50 relevant atoms
+14 auxiliary atoms
+64 final queue length
+67 total queue pushes
+Completing instantiation... [0.000s CPU, 0.000s wall-clock]
+Instantiating: [0.000s CPU, 0.002s wall-clock]
+No relaxed solution! Generating unsolvable task...
+Translator variables: 1
+Translator derived variables: 0
+Translator facts: 2
+Translator goal facts: 1
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 0
+Translator axioms: 0
+Translator task size: 4
+Translator peak memory: 36260 KB
+Writing output... [0.000s CPU, 0.000s wall-clock]
+Done! [0.000s CPU, 0.004s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is acyclic.
+1 variables of 1 necessary
+0 of 0 mutex groups necessary.
+0 of 0 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 2
+Preprocessor derived variables: 0
+Preprocessor task size: 4
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/nluis/pmr-competition/PMR/planning/fd/src/search/downward-release
+INFO     search arguments: ['--heuristic', 'hlm,hff=lm_ff_syn(lm_rhw(reasonable_orders=true,lm_cost_type=2,cost_type=2))', '--search', 'lazy_greedy(hff,hlm,preferred=[hff,hlm])', '--internal-plan-file', 'plan_lf']
+reading input... [t=0s]
+Simplifying transitions... done!
+done reading input! [t=0s]
+building causal graph...done! [t=0s]
+packing state variables...done! [t=0s]
+Variables: 1
+Facts: 2
+Bytes per state: 4
+done initalizing global data [t=0s]
+Initializing Exploration...
+Generating landmarks using the RPG/SAS+ approach
+approx. reasonable orders
+approx. obedient reasonable orders
+Removed 0 reasonable or obedient reasonable orders
+Landmarks generation time: 0.000119465s
+Discovered 2 landmarks, of which 0 are disjunctive and 0 are conjunctive 
+1 edges
+Initializing LAMA-FF Synergy Object
+Initializing landmarks count heuristic...
+1 initial landmarks, 1 goal landmarks
+Conducting lazy best first search, (real) bound = 2147483647
+Completely explored state space -- no solution!
+Actual search time: 0s [t=0s]
+Expanded 0 state(s).
+Reopened 0 state(s).
+Evaluated 1 state(s).
+Evaluations: 2
+Generated 0 state(s).
+Dead ends: 1 state(s).
+Search time: 0s
+Total time: 0s
+Search stopped without finding a solution.
+Peak memory: 3392 KB
+Command '['/home/nluis/pmr-competition/PMR/planning/fd/src/search/downward-release', '--heuristic', 'hlm,hff=lm_ff_syn(lm_rhw(reasonable_orders=true,lm_cost_type=2,cost_type=2))', '--search', 'lazy_greedy(hff,hlm,preferred=[hff,hlm])', '--internal-plan-file', 'plan_lf']' returned non-zero exit status 5

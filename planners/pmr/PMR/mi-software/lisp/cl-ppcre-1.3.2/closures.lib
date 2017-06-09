@@ -1,0 +1,328 @@
+#0Y_ #0Y |CHARSET|::|UTF-8|
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "CL-PPCRE"))
+(|SYSTEM|::|C-PROCLAIM|
+ '(|COMMON-LISP|::|INLINE| |CL-PPCRE|::|*STRING*=|
+   |CL-PPCRE|::|*STRING*-EQUAL|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|*STRING*=|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '#1=(|CL-PPCRE|::|STRING2| |CL-PPCRE|::|START1| |CL-PPCRE|::|END1|
+       |CL-PPCRE|::|START2| |CL-PPCRE|::|END2|))
+ '(#1#
+   "Like STRING=, i.e. compares the special string *STRING* from START1\n
+to END1 with STRING2 from START2 to END2. Note that there's no\n
+boundary check - this has to be implemented by the caller."
+   (|COMMON-LISP|::|DECLARE| (|SYSTEM|::|IN-DEFUN| |CL-PPCRE|::|*STRING*=|)
+    (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED|
+     (|COMMON-LISP|::|SAFETY| 0.) (|COMMON-LISP|::|SPACE| 0.)
+     (|COMMON-LISP|::|DEBUG| 1.) (|COMMON-LISP|::|COMPILATION-SPEED| 0.))
+    (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|START1|
+     |CL-PPCRE|::|END1| |CL-PPCRE|::|START2| |CL-PPCRE|::|END2|))
+   (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|*STRING*=|
+    (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|STRING1-IDX|
+     |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM|
+     |CL-PPCRE|::|START1| |CL-PPCRE|::|BELOW| |CL-PPCRE|::|END1|
+     |CL-PPCRE|::|FOR| |CL-PPCRE|::|STRING2-IDX| |CL-PPCRE|::|OF-TYPE|
+     |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM| |CL-PPCRE|::|START2|
+     |CL-PPCRE|::|BELOW| |CL-PPCRE|::|END2| |CL-PPCRE|::|ALWAYS|
+     (|COMMON-LISP|::|CHAR=|
+      (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*| |CL-PPCRE|::|STRING1-IDX|)
+      (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|STRING2|
+       |CL-PPCRE|::|STRING2-IDX|))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|*STRING*-EQUAL|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '#1=(|CL-PPCRE|::|STRING2| |CL-PPCRE|::|START1| |CL-PPCRE|::|END1|
+       |CL-PPCRE|::|START2| |CL-PPCRE|::|END2|))
+ '(#1#
+   "Like STRING-EQUAL, i.e. compares the special string *STRING* from\n
+START1 to END1 with STRING2 from START2 to END2. Note that there's no\n
+boundary check - this has to be implemented by the caller."
+   (|COMMON-LISP|::|DECLARE|
+    (|SYSTEM|::|IN-DEFUN| |CL-PPCRE|::|*STRING*-EQUAL|)
+    (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED|
+     (|COMMON-LISP|::|SAFETY| 0.) (|COMMON-LISP|::|SPACE| 0.)
+     (|COMMON-LISP|::|DEBUG| 1.) (|COMMON-LISP|::|COMPILATION-SPEED| 0.))
+    (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|START1|
+     |CL-PPCRE|::|END1| |CL-PPCRE|::|START2| |CL-PPCRE|::|END2|))
+   (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|*STRING*-EQUAL|
+    (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|STRING1-IDX|
+     |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM|
+     |CL-PPCRE|::|START1| |CL-PPCRE|::|BELOW| |CL-PPCRE|::|END1|
+     |CL-PPCRE|::|FOR| |CL-PPCRE|::|STRING2-IDX| |CL-PPCRE|::|OF-TYPE|
+     |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM| |CL-PPCRE|::|START2|
+     |CL-PPCRE|::|BELOW| |CL-PPCRE|::|END2| |CL-PPCRE|::|ALWAYS|
+     (|COMMON-LISP|::|CHAR-EQUAL|
+      (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*| |CL-PPCRE|::|STRING1-IDX|)
+      (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|STRING2|
+       |CL-PPCRE|::|STRING2-IDX|))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|INSERT-CHAR-CLASS-TESTER|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|INSERT-CHAR-CLASS-TESTER|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|INSERT-CHAR-CLASS-TESTER|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "Utility macro to replace each occurence of '(CHAR-CLASS-TEST)\n
+within BODY with the correct test (corresponding to CHAR-CLASS)\n
+against CHR-EXPR."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|T|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((#1=#:|G29439| (|COMMON-LISP|::|CADR| . #2=(|SYSTEM|::|<MACRO-FORM>|)))
+       (#3=#:|G29440|
+        (|COMMON-LISP|::|IF|
+         (|COMMON-LISP|::|NOT|
+          (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| #1# 2. 2. |COMMON-LISP|::|NIL|))
+         (|SYSTEM|::|ERROR-OF-TYPE| '|EXT|::|SOURCE-PROGRAM-ERROR| :|FORM|
+          |SYSTEM|::|<MACRO-FORM>| :|DETAIL| #1#
+          (|SYSTEM|::|TEXT| "~S: ~S does not match lambda list element ~:S")
+          '|CL-PPCRE|::|INSERT-CHAR-CLASS-TESTER| #1#
+          '#4=(|CL-PPCRE|::|CHAR-CLASS| |CL-PPCRE|::|CHR-EXPR|))
+         #1#))
+       (|CL-PPCRE|::|CHAR-CLASS| (|COMMON-LISP|::|CAR| #3#))
+       (|CL-PPCRE|::|CHR-EXPR| (|COMMON-LISP|::|CADR| #3#))
+       (|CL-PPCRE|::|BODY| (|COMMON-LISP|::|CDDR| . #2#)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|INSERT-CHAR-CLASS-TESTER|
+       (|CL-PPCRE|::|WITH-UNIQUE-NAMES| (|CL-PPCRE|::|%CHAR-CLASS|)
+        (|COMMON-LISP|::|FLET|
+         ((|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER| (|CL-PPCRE|::|NEW|)
+           (|COMMON-LISP|::|SUBST| |CL-PPCRE|::|NEW|
+            '(|CL-PPCRE|::|CHAR-CLASS-TEST|) |CL-PPCRE|::|BODY| :|TEST|
+            #'|COMMON-LISP|::|EQUALP|)))
+         `(|COMMON-LISP|::|LET*|
+           ((,|CL-PPCRE|::|%CHAR-CLASS| ,|CL-PPCRE|::|CHAR-CLASS|)
+            (|CL-PPCRE|::|HASH|
+             (|CL-PPCRE|::|HASH| ,|CL-PPCRE|::|%CHAR-CLASS|))
+            (|COMMON-LISP|::|COUNT|
+             (|COMMON-LISP|::|IF| |CL-PPCRE|::|HASH|
+              (|COMMON-LISP|::|HASH-TABLE-COUNT| |CL-PPCRE|::|HASH|)
+              |COMMON-LISP|::|MOST-POSITIVE-FIXNUM|))
+            (|CL-PPCRE|::|KEY-LIST|
+             (|COMMON-LISP|::|IF|
+              (|COMMON-LISP|::|<=| |COMMON-LISP|::|COUNT| 2.)
+              (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|CHR|
+               |CL-PPCRE|::|BEING| |COMMON-LISP|::|THE| |CL-PPCRE|::|HASH-KEYS|
+               |CL-PPCRE|::|OF| |CL-PPCRE|::|HASH| |CL-PPCRE|::|COLLECT|
+               |CL-PPCRE|::|CHR|)
+              |COMMON-LISP|::|NIL|))
+            |CL-PPCRE|::|DOWNCASEDP|)
+           (|COMMON-LISP|::|DECLARE|
+            (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+             |COMMON-LISP|::|COUNT|))
+           (|COMMON-LISP|::|MULTIPLE-VALUE-BIND|
+            (|CL-PPCRE|::|MIN1| |CL-PPCRE|::|MAX1| |CL-PPCRE|::|MIN2|
+             |CL-PPCRE|::|MAX2| |CL-PPCRE|::|MIN3| |CL-PPCRE|::|MAX3|)
+            (|CL-PPCRE|::|CREATE-RANGES-FROM-HASH| |CL-PPCRE|::|HASH|)
+            (|COMMON-LISP|::|WHEN|
+             (|COMMON-LISP|::|AND| (|COMMON-LISP|::|NOT| |CL-PPCRE|::|MIN1|)
+              (|CL-PPCRE|::|CASE-INSENSITIVE-P| ,|CL-PPCRE|::|%CHAR-CLASS|))
+             (|COMMON-LISP|::|MULTIPLE-VALUE-SETQ|
+              (|CL-PPCRE|::|MIN1| |CL-PPCRE|::|MAX1| |CL-PPCRE|::|MIN2|
+               |CL-PPCRE|::|MAX2| |CL-PPCRE|::|MIN3| |CL-PPCRE|::|MAX3|)
+              (|CL-PPCRE|::|CREATE-RANGES-FROM-HASH| |CL-PPCRE|::|HASH|
+               :|DOWNCASEP| |COMMON-LISP|::|T|))
+             (|COMMON-LISP|::|SETQ| |CL-PPCRE|::|DOWNCASEDP|
+              |COMMON-LISP|::|T|))
+            (|COMMON-LISP|::|COND|
+             ((|COMMON-LISP|::|=| |COMMON-LISP|::|COUNT| 1.)
+              (|COMMON-LISP|::|LET|
+               ((|CL-PPCRE|::|CHR1|
+                 (|COMMON-LISP|::|FIRST| |CL-PPCRE|::|KEY-LIST|)))
+               ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                  `(|COMMON-LISP|::|CHAR=| ,|CL-PPCRE|::|CHR-EXPR|
+                    |CL-PPCRE|::|CHR1|))))
+             ((|COMMON-LISP|::|=| |COMMON-LISP|::|COUNT| 2.)
+              (|COMMON-LISP|::|LET|
+               ((|CL-PPCRE|::|CHR1|
+                 (|COMMON-LISP|::|FIRST| |CL-PPCRE|::|KEY-LIST|))
+                (|CL-PPCRE|::|CHR2|
+                 (|COMMON-LISP|::|SECOND| |CL-PPCRE|::|KEY-LIST|)))
+               ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                  `(|COMMON-LISP|::|LET|
+                    ((|CL-PPCRE|::|CHR| ,|CL-PPCRE|::|CHR-EXPR|))
+                    (|COMMON-LISP|::|OR|
+                     (|COMMON-LISP|::|CHAR=| |CL-PPCRE|::|CHR|
+                      |CL-PPCRE|::|CHR1|)
+                     (|COMMON-LISP|::|CHAR=| |CL-PPCRE|::|CHR|
+                      |CL-PPCRE|::|CHR2|))))))
+             ((|CL-PPCRE|::|WORD-CHAR-CLASS-P| ,|CL-PPCRE|::|%CHAR-CLASS|)
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|CL-PPCRE|::|WORD-CHAR-P| ,|CL-PPCRE|::|CHR-EXPR|)))
+             ((|COMMON-LISP|::|=| |COMMON-LISP|::|COUNT|
+               |CL-PPCRE|::|*REGEX-CHAR-CODE-LIMIT*|)
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 |COMMON-LISP|::|T|))
+             ((|COMMON-LISP|::|AND| |CL-PPCRE|::|DOWNCASEDP| |CL-PPCRE|::|MIN1|
+               |CL-PPCRE|::|MIN2| |CL-PPCRE|::|MIN3|)
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|COMMON-LISP|::|LET|
+                   ((|CL-PPCRE|::|CHR| ,|CL-PPCRE|::|CHR-EXPR|))
+                   (|COMMON-LISP|::|OR|
+                    (|COMMON-LISP|::|CHAR-NOT-GREATERP| |CL-PPCRE|::|MIN1|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX1|)
+                    (|COMMON-LISP|::|CHAR-NOT-GREATERP| |CL-PPCRE|::|MIN2|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX2|)
+                    (|COMMON-LISP|::|CHAR-NOT-GREATERP| |CL-PPCRE|::|MIN3|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX3|)))))
+             ((|COMMON-LISP|::|AND| |CL-PPCRE|::|DOWNCASEDP| |CL-PPCRE|::|MIN1|
+               |CL-PPCRE|::|MIN2|)
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|COMMON-LISP|::|LET|
+                   ((|CL-PPCRE|::|CHR| ,|CL-PPCRE|::|CHR-EXPR|))
+                   (|COMMON-LISP|::|OR|
+                    (|COMMON-LISP|::|CHAR-NOT-GREATERP| |CL-PPCRE|::|MIN1|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX1|)
+                    (|COMMON-LISP|::|CHAR-NOT-GREATERP| |CL-PPCRE|::|MIN2|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX2|)))))
+             ((|COMMON-LISP|::|AND| |CL-PPCRE|::|DOWNCASEDP|
+               |CL-PPCRE|::|MIN1|)
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|COMMON-LISP|::|CHAR-NOT-GREATERP| |CL-PPCRE|::|MIN1|
+                   ,|CL-PPCRE|::|CHR-EXPR| |CL-PPCRE|::|MAX1|)))
+             ((|COMMON-LISP|::|AND| |CL-PPCRE|::|MIN1| |CL-PPCRE|::|MIN2|
+               |CL-PPCRE|::|MIN3|)
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|COMMON-LISP|::|LET|
+                   ((|CL-PPCRE|::|CHR| ,|CL-PPCRE|::|CHR-EXPR|))
+                   (|COMMON-LISP|::|OR|
+                    (|COMMON-LISP|::|CHAR<=| |CL-PPCRE|::|MIN1|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX1|)
+                    (|COMMON-LISP|::|CHAR<=| |CL-PPCRE|::|MIN2|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX2|)
+                    (|COMMON-LISP|::|CHAR<=| |CL-PPCRE|::|MIN3|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX3|)))))
+             ((|COMMON-LISP|::|AND| |CL-PPCRE|::|MIN1| |CL-PPCRE|::|MIN2|)
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|COMMON-LISP|::|LET|
+                   ((|CL-PPCRE|::|CHR| ,|CL-PPCRE|::|CHR-EXPR|))
+                   (|COMMON-LISP|::|OR|
+                    (|COMMON-LISP|::|CHAR<=| |CL-PPCRE|::|MIN1|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX1|)
+                    (|COMMON-LISP|::|CHAR<=| |CL-PPCRE|::|MIN2|
+                     |CL-PPCRE|::|CHR| |CL-PPCRE|::|MAX2|)))))
+             (|CL-PPCRE|::|MIN1|
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|COMMON-LISP|::|CHAR<=| |CL-PPCRE|::|MIN1|
+                   ,|CL-PPCRE|::|CHR-EXPR| |CL-PPCRE|::|MAX1|)))
+             (|COMMON-LISP|::|T|
+              ,@(|CL-PPCRE|::|SUBSTITUTE-CHAR-CLASS-TESTER|
+                 `(|COMMON-LISP|::|GETHASH| ,|CL-PPCRE|::|CHR-EXPR|
+                   |CL-PPCRE|::|HASH|)))))))))))))
+  '(#4# |COMMON-LISP|::|&BODY| |CL-PPCRE|::|BODY|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-PROCLAIM|
+ '(|COMMON-LISP|::|INLINE| |CL-PPCRE|::|WORD-BOUNDARY-P|))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|WORD-BOUNDARY-P|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE| '#1=(|CL-PPCRE|::|START-POS|))
+ '(#1# "Check whether START-POS is a word-boundary within *STRING*."
+   (|COMMON-LISP|::|DECLARE|
+    (|SYSTEM|::|IN-DEFUN| |CL-PPCRE|::|WORD-BOUNDARY-P|)
+    (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED|
+     (|COMMON-LISP|::|SAFETY| 0.) (|COMMON-LISP|::|SPACE| 0.)
+     (|COMMON-LISP|::|DEBUG| 1.) (|COMMON-LISP|::|COMPILATION-SPEED| 0.))
+    (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|START-POS|))
+   (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|WORD-BOUNDARY-P|
+    (|COMMON-LISP|::|LET|
+     ((|CL-PPCRE|::|1-START-POS| (|COMMON-LISP|::|1-| |CL-PPCRE|::|START-POS|))
+      (|CL-PPCRE|::|*START-POS*|
+       (|COMMON-LISP|::|OR| |CL-PPCRE|::|*REAL-START-POS*|
+        |CL-PPCRE|::|*START-POS*|)))
+     (|COMMON-LISP|::|OR|
+      (|COMMON-LISP|::|AND|
+       (|COMMON-LISP|::|OR|
+        (|COMMON-LISP|::|=| |CL-PPCRE|::|START-POS| |CL-PPCRE|::|*END-POS*|)
+        (|COMMON-LISP|::|AND|
+         (|COMMON-LISP|::|<| |CL-PPCRE|::|START-POS| |CL-PPCRE|::|*END-POS*|)
+         (|COMMON-LISP|::|NOT|
+          (|CL-PPCRE|::|WORD-CHAR-P|
+           (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*|
+            |CL-PPCRE|::|START-POS|)))))
+       (|COMMON-LISP|::|AND|
+        (|COMMON-LISP|::|<| |CL-PPCRE|::|1-START-POS| |CL-PPCRE|::|*END-POS*|)
+        (|COMMON-LISP|::|<=| |CL-PPCRE|::|*START-POS*|
+         |CL-PPCRE|::|1-START-POS|)
+        (|CL-PPCRE|::|WORD-CHAR-P|
+         (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*|
+          |CL-PPCRE|::|1-START-POS|))))
+      (|COMMON-LISP|::|AND|
+       (|COMMON-LISP|::|OR|
+        (|COMMON-LISP|::|=| |CL-PPCRE|::|START-POS| |CL-PPCRE|::|*START-POS*|)
+        (|COMMON-LISP|::|AND|
+         (|COMMON-LISP|::|<| |CL-PPCRE|::|1-START-POS| |CL-PPCRE|::|*END-POS*|)
+         (|COMMON-LISP|::|<=| |CL-PPCRE|::|*START-POS*|
+          |CL-PPCRE|::|1-START-POS|)
+         (|COMMON-LISP|::|NOT|
+          (|CL-PPCRE|::|WORD-CHAR-P|
+           (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*|
+            |CL-PPCRE|::|1-START-POS|)))))
+       (|COMMON-LISP|::|AND|
+        (|COMMON-LISP|::|<| |CL-PPCRE|::|START-POS| |CL-PPCRE|::|*END-POS*|)
+        (|CL-PPCRE|::|WORD-CHAR-P|
+         (|COMMON-LISP|::|SCHAR| |CL-PPCRE|::|*STRING*|
+          |CL-PPCRE|::|START-POS|)))))))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)

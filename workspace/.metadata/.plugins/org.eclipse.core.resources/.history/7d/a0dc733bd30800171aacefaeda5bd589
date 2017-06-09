@@ -1,0 +1,63 @@
+{ include("$jacamoJar/templates/common-cartago.asl") }
+{ include("$jacamoJar/templates/common-moise.asl") }
+{ include("decomp_breadth.asl") }
+{ include("bidder.asl") }
+{ include("parser.asl") }
+
+/* Initial beliefs and rules */
+role(ugv).
+
+/* Initial goals */
+!start.
+
+
+/* Plans */
++!navigate(To)
+	: at(From)
+<-
+	!navigate(_,From,To);
+	.
+	
++!navigate_ugv(_,From,To)
+	: focused(_,From,Id1) & ground_path(Areas)[artifact_id(Id1)] & .my_name(Name) & focused(_,Name,Id2)
+<-
+	navigate(From,To,Areas)[artifact_id(Id)];
+	.
+	
+//+!navigate(From,To)
+//	: ground_path(From,Mid) & (not visited(Mid)) & .my_name(Name) & jcm__art(_,Name,Id)
+//<-
+//	!navigate(From,Mid);
+//	!navigate(Mid,To);
+//	.
+	
++!take_picture(_,Area,Disaster)
+	: focused(_,Disaster,Id1) & visible_from(Areas)[artifact_id(Id1)] & .my_name(Name) & focused(_,Name,Id2)
+<-
+	take_picture(Area,Disaster,Areas)[artifact_id(Id2)];
+	.
+	
++!communicate_data(_,Cdm,Disaster,At,To)
+	: focused(_,Cdm,Id1) & cdm_at(CdmAt)[artifact_id(Id1)] & in_range(Areas)[artifact_id(Id1)] & .my_name(Name) & focused(_,Name,Id2)
+<-
+	communicate_data(At,To,CdmAt,Disaster,Areas)[artifact_id(Id2)];
+	.
+	
++!pickup_box(_,_,Cdm,Area,Box)
+	: focused(_,Box,Id1) & focused(_,Cdm,Id2) & cdm_at(CdmAt)[artifact_id(Id2)] & .my_name(Name) & focused(_,Name,Id3)
+<-
+	pickup_box(CdmAt,Area,Id1)[artifact_id(Id3)];
+//	!navigate(Area);
+//	drop_box[artifact_id(Id)];
+	.
+	
++!drop_box(_,_,Area,Box)
+	: focused(_,Box,Id1) & .my_name(Name) & focused(_,Name,Id3)
+<-
+	drop_box(CdmAt,Area,Id1)[artifact_id(Id3)];
+//	!navigate(Area);
+//	drop_box[artifact_id(Id)];
+	.
+	
++!start <- !navigate_ugv(ugv2,area1,area3); !navigate_ugv(ugv2,area3,area4); !navigate_ugv(ugv2,area4,area10); !navigate_ugv(ugv2,area10,area13); !pickup_box(ugv2,ugv2store,cdm2,area13,box2); !navigate_ugv(ugv2,area13,area10); !navigate_ugv(ugv2,area10,area4); !navigate_ugv(ugv2,area4,area3); !navigate_ugv(ugv2,area3,area5); !navigate_ugv(ugv2,area5,area11); !drop_box(ugv2,ugv2store,area11,box2).
+

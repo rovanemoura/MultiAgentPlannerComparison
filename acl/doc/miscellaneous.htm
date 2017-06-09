@@ -1,0 +1,1995 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"> <title>Miscellaneous Functionality</title></head><link rel="stylesheet" href="acldoc-styles.css" type="text/css"><body><table border="0" width="100%" cellpadding="1" cellspacing="0"><tr><td colspan="2" bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3"><tr><td align="left" bgcolor="#00FFFF"><a href="contents.htm"><b>ToC</b></a></td><td align="left" bgcolor="#00FFFF"><a href="introduction.htm"><b>DocOverview</b></a></td><td align="left" bgcolor="#00FFFF"><a href="cgide.htm"><b>CGDoc</b></a></td><td align="left" bgcolor="#00FFFF"><a href="release-notes.htm"><b>RelNotes</b></a></td><td align="left" bgcolor="#00FFFF"><a href="http://www.franz.com/support/faq/"><b>FAQ</b></a></td><td align="left" bgcolor="#00FFFF"><a href="index.htm"><b>Index</b></a></td><td align="left" bgcolor="#00FFFF"><a href="permuted-index.htm"><b>PermutedIndex</b></a></td></tr></table></td><td align="right"><b>Allegro CL version 10.0</b><br><small><a href="introduction.htm#updates-s">Unrevised from 9.0 to 10.0.</a></small><br><a href="http://www.franz.com/support/documentation/9.0/doc/miscellaneous.htm">9.0 version</a></td></tr></table><h1 id="2">Miscellaneous Functionality</h1><p id="3">This document contains the following sections:</p><a href="#misc-intro-1">1.0 Introduction</a><br><a href="#fasl-read-write-1">2.0 The fasl reader/writer</a><br><a href="#extensions-1">3.0 Miscellaneous extensions</a><br><a href="#pll-file-1">4.0 Creating and using pll files</a><br><a href="#md5-1">5.0 MD5, SHA*, HMAC, RC4, and other message digest support</a><br><a href="#base64-1">6.0 Base64 support</a><br><a href="#encrypt-1">7.0 Support for encryption</a><br>&nbsp;&nbsp;&nbsp;<a href="#blowfish-2">7.1 Support for Blowfish encryption</a><br>&nbsp;&nbsp;&nbsp;<a href="#rsa-2">7.2 Support for rsa encryption</a><br><a href="#gzip-1">8.0 Support for gzip compression and decompression</a><br><a href="#pam-1">9.0 PAM support in Allegro Common Lisp</a><br>&nbsp;&nbsp;&nbsp;<a href="#pam-conversations-2">9.1 PAM conversation functions</a><br><a href="#asdf-1">10.0 asdf support in Allegro CL</a><br><a href="#tar-1">11.0 tar support in Allegro CL</a><br><a href="#coverage-1">12.0 Coverage analysis in Allegro CL</a><br><a href="#format-checking-1">13.0 Checking format forms during compilation</a><br><a href="#heap-walking-1">14.0 Heap walkers in Allegro CL</a><br><hr><hr><h2 id="4"><a name="misc-intro-1">1.0 Introduction</a></h2>
+
+<p id="5">This document describes functionality that does not naturally fit
+in any of the other overview documents.</p>
+
+<hr><hr><h2 id="6"><a name="fasl-read-write-1">2.0 The fasl reader/writer</a></h2>
+
+<p id="7">The functions <a href="operators/excl/fasl-write.htm"><b>fasl-write</b></a>
+and <a href="operators/excl/fasl-read.htm"><b>fasl-read</b></a> provide a
+mechanism for writing Lisp data and subsequently reading it back into
+a Lisp image. It can handle many of the common Lisp data types. It can
+optionally detect circularity and structure sharing in the data and
+recreate the same topology up to <b>eql</b>-ness of components. The
+data is written in a binary file format similar to that used for
+compiled Lisp files, not in ASCII.</p>
+
+<p id="8">Among the advantages of <a href="operators/excl/fasl-read.htm"><b>fasl-read</b></a> and <a href="operators/excl/fasl-write.htm"><b>fasl-write</b></a> over standard Common Lisp read and
+print functions is that data does not have to be converted to its
+printed representation prior to being written (that conversion takes a
+significant amount of time for complex objects). The main disadvantage
+is that the files (unlike ASCII files with printed representations of
+Lisp objects) are not at all portable between versions of Lisp (or
+even between versions of Allegro CL on different platforms or between
+major releases of Allegro CL). </p>
+
+<p id="9">Not all Lisp objects may be written with <a href="operators/excl/fasl-write.htm"><b>fasl-write</b></a> (and thus are not available to be
+read by <a href="operators/excl/fasl-read.htm"><b>fasl-read</b></a>).  The
+objects that cannot be written are CLOS objects, streams, stacks, or
+c-allocated data (cstructs). You can use <a href="operators/excl/fasl-open.htm"><b>fasl-open</b></a> to open a file suitable for numerous
+<a href="operators/excl/fasl-write.htm"><b>fasl-write</b></a>'s.  (<a href="operators/excl/fasl-read.htm"><b>fasl-read</b></a> reads all of whatever file
+is specified to it.)</p>
+
+<p id="10"><a href="operators/excl/fasl-read.htm"><b>fasl-read</b></a> reads the
+entire contents of its argument file. However, <a href="operators/excl/fasl-write.htm"><b>fasl-write</b></a>, if its argument is a stream rather
+than a filename, writes data to the stream but does not close it. Thus
+you can open a stream and do multiple <a href="operators/excl/fasl-write.htm"><b>fasl-write</b></a>'s to it. The stream must have
+<code>:element-type</code> <code>(unsigned-byte 8)</code>. <a href="operators/excl/fasl-open.htm"><b>fasl-open</b></a> opens an appropriate
+stream, as shown in the example.</p>
+
+<p id="11">Here is a simple-minded example to show the correct syntax and give
+an idea of the effect:</p>
+
+<pre id="12">
+(excl:fasl-write '(a b #1=#:c (#1#) #*1011 #(1 2 3) 
+                  
+1 1.1 1.1d0 1/2
+                  
+#c(1 1) #c(1.5 1.5) "abc")
+     "test.fw")
+(excl:fasl-read "test.fw")
+
+(setq f (fasl-open "test2.fw")) 
+(excl:fasl-write '(a b c) f) 
+(excl:fasl-write '#1=(a b . #1#) f t) 
+(excl:fasl-write '#(1 2 3 4.5) f)
+(close f)
+
+(excl:fasl-read "test2.fw")
+</pre>
+
+<h3 id="13">
+Application note
+</h3>
+<p id="14">
+<a href="operators/excl/fasl-read.htm"><b>fasl-read</b></a> and <a href="operators/excl/fasl-write.htm"><b>fasl-write</b></a> require the compiler so
+they are not available in application images without the compiler.
+</p>
+
+<hr><hr><h2 id="15"><a name="extensions-1">3.0 Miscellaneous extensions</a></h2> 
+
+<p id="16">The table describes those extensions to Common Lisp that do not
+naturally fit elsewhere in the documentation. We only provide brief
+information in the table. Please follow the link to the documentation
+page for a full description.</p>
+
+<table BORDER="1" CELLSPACING="1" CELLPADDING="7" WIDTH="638">
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><b>Name</b></td>
+    <td WIDTH="33%" VALIGN="TOP"><b>Arguments</b></td>
+    <td WIDTH="33%" VALIGN="TOP"><b>Notes</b></td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/dribble-bug.htm"><b>excl:dribble-bug</b></a></td>
+    <td WIDTH="33%" VALIGN="TOP">&optional<em> file</em></td>
+    <td WIDTH="33%" VALIGN="TOP">This function is an extension of the Common Lisp function <b>dribble</b>.
+    <a href="operators/excl/dribble-bug.htm"><b>dribble-bug</b></a> called with the optional <i>file</i>
+    calls several information functions whose output is then placed at the beginning of the
+    dribble file. See also <a href="variables/excl/s_dribble-bug-hooks_s.htm"><code>excl:*dribble-bug-hooks*</code></a>.</td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/uncompile.htm"><b>excl:uncompile</b></a></td>
+    <td WIDTH="33%" VALIGN="TOP"><em>function-name</em></td>
+    <td WIDTH="33%" VALIGN="TOP"><p id="17">If the function <em>function-name</em> was compiled with the <a href="../ansicl/dictentr/compile.htm"><b>compile</b></a>
+    function (as opposed to having been in a file that was compiled with <a href="../ansicl/dictentr/compile-.htm"><b>compile-file</b></a>
+    and subsequently loaded), then the function is `uncompiled,' i.e. its function definition
+    is replaced by the original interpreted definition. </p>
+    <p id="18">This function will only work when
+    definitions are saved. See the description page for <a href="operators/excl/uncompile.htm"><b>excl:uncompile</b></a> and the page for <a href="variables/excl/s_save-function-lambda-expression_s.htm"><code>excl:*save-function-lambda-expression*</code></a>
+    for details.</p></td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/bignump.htm"><b>excl:bignump</b></a></td>
+    <td WIDTH="33%" VALIGN="TOP" ROWSPAN="4"><em>object</em></td>
+    <td WIDTH="33%" VALIGN="TOP" ROWSPAN="4">These functions, like similar ones in standard
+    Common Lisp return t if object is of the type specified, and nil otherwise.</td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/fixnump.htm"><b>excl:fixnump</b></a></td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/ratiop.htm"><b>excl:ratiop</b></a></td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/single-float-p.htm"><b>excl:single-float-p</b></a></td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/file-older-p.htm"><b>excl:file-older-p</b></a></td>
+    <td WIDTH="33%" VALIGN="TOP"><em>file-1 file-2 </em></td>
+    <td WIDTH="33%" VALIGN="TOP">If <em>file-1</em> and <em>file-2</em> both exist, and if <em>file-1</em>
+    is older than <em>file-2</em>, this function returns t. Otherwise, it returns nil.</td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/if_s.htm"><b>excl:if*</b></a></td>
+    <td WIDTH="33%" VALIGN="TOP"><i>test-form {then then-form+ | thenret} 
+    {elseif else-test-form 
+    {then else-then-form+ | thenret}}* 
+    [else else-form+]</i></td>
+    <td WIDTH="33%" VALIGN="TOP">This extension to <b>cl:if</b> allows symbols like <em>then</em>,
+    <em>else</em>, <em>elseif</em>, and <em>thenret</em> in the body allowing a complex number
+    of cases and outcomes to be specified.</td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/named-readtable.htm"><b>excl:named-readtable</b></a></td>
+    <td WIDTH="33%" VALIGN="TOP"><i>name </i>&optional <i>errorp</i></td>
+    <td WIDTH="33%" VALIGN="TOP">This function looks up a readtable by <em>name</em>. <em>name</em>
+    must be a symbol, but it is coerced to a keyword (so readtables are named by keywords). <a href="../ansicl/dictentr/setfpset.htm"><b>setf</b></a>
+    may be used to associate a name to a readtable. The association can be broken by setting
+    to nil. See also <a href="operators/excl/with-named-readtable.htm"><b>with-named-readtable</b></a>.</td>
+  </tr>
+<tr>
+<td WIDTH="33%" VALIGN="TOP">
+<a href="operators/excl/prefixp.htm"><b>excl:prefixp</b></a>
+</td>
+<td WIDTH="33%" VALIGN="TOP">
+<i>prefix sequence</i>
+</td> 
+<td WIDTH="33%" VALIGN="TOP">
+This function returns non-<code>nil</code> if
+<i>sequence</i> starts with <i>prefix</i>,
+returning the index in sequence where prefix ends (so
+<code>(prefixp "foo" "foobar")</code> returns 3). While this can
+be done using regular-expression matching (see
+<a href="regexp.htm">regexp.htm</a>), this function is easier to use for very
+simple cases.
+</td>
+</tr>
+
+<tr>
+<td WIDTH="33%" VALIGN="TOP">
+<a href="operators/excl/gen-sym.htm"><b>excl:gen-sym</b></a>
+</td>
+<td WIDTH="33%" VALIGN="TOP">
+<i>x</i>
+</td> 
+<td WIDTH="33%" VALIGN="TOP">
+Similar to <a href="../ansicl/dictentr/gensym.htm"><b>cl:gensym</b></a> except
+that a symbol is accepted as the optional argument (as well as the
+standard string or integer), in which case the <a href="../ansicl/dictentr/symbol-n.htm"><b>symbol-name</b></a> is used.  This is useful for
+programs that are intended for use in either ANSI or modern Lisps,
+where it is desired to print any gensyms without requiring escapes
+(see <a href="case.htm">case.htm</a>).
+</td>
+</tr>
+
+</table>
+
+<hr><hr><h2 id="19"><a name="pll-file-1">4.0 Creating and using pll files</a></h2>
+
+<p id="20">A <i>pll</i> file can be used in association with a Lisp image. It
+contains constant code vectors and strings that can be shared among
+many Lisp objects. When an image uses a <i>pll</i> file and a function
+is compiled, the new codevector is compared to codevectors in the
+<i>pll</i> file. If a match is found, the match is used and no new
+codevector is allocated.  Similarly, if a constant string is specified
+(with <a href="operators/excl/pure-string.htm"><b>excl:pure-string</b></a>) and
+a matching string appears in the <em>pll</em> file, no new string is
+allocated and the match is used.  Strings in a <i>pll</i> file cannot
+be modified. Attempting to do so causes an error.  (Neither can
+codevectors be modified but there is no user-visible way to modify
+codevectors as there is with strings.)</p>
+
+<p id="21">
+Strings and codevectors in a <em>pll</em> file are not also (after
+being garbage collected) in the Lisp heap. Thus if a string has been
+successfully purified, it will not be in the heap after a global gc. A
+total count of strings and codevectors is shown in the output of
+<code>(room t)</code>.
+</p>
+
+<p id="22">
+Constant strings in <i>pll</i> files cannot be overwritten (constant strings
+stored in the heap can be overwitten although doing so is actually
+illegal). Strings naming Common Lisp symbols are usually stored in <i>pll</i>
+files, for example. This example shows in that case, the strings
+cannot be modified:
+</p>
+
+<pre id="23">
+cl-user(1): (pll-file)
+#P"/usr/fi/dcl.pll"
+cl-user(2): (nstring-upcase (symbol-name 'car))
+Error: Attempt to store into purespace address #x2d7865e8.
+  [condition type: purespace-write-error]
+</pre>
+
+<p id="24">
+Here we tried to upcase the string naming the
+symbol <code>car</code> (this is a modern Lisp where symbol
+names are lowercase -- see <a href="case.htm">case.htm</a>). The change
+failed and signaled purespace-write-error, which is the condition
+specific to this issue. The next example shows that modifying a
+constant strings not in the <i>pll</i> file does not signal an error:
+</p>
+
+<pre id="25">
+cl-user(88): (setq teststring "this-string-is-likely-not-in-the-pll-file")
+"this-string-is-likely-not-in-the-pll-file"
+cl-user(89): (dotimes (i 4) (gc))
+nil
+cl-user(90): (nstring-upcase teststring)
+"THIS-STRING-IS-LIKELY-NOT-IN-THE-PLL-FILE"
+cl-user(91): teststring
+"THIS-STRING-IS-LIKELY-NOT-IN-THE-PLL-FILE"
+cl-user(92): 
+</pre>
+
+<p id="26">
+The call to <a href="../ansicl/dictentr/string-u.htm"><b>nstring-upcase</b></a> is in fact illegal: you
+may not modify a constant, but it is an error that does not signal an
+error unless the string is located in the <i>pll</i> file.
+</p>
+
+
+<p id="27"><em>pll</em> files are created with the <b>cvdcvt</b> program
+described next.</p>
+
+<blockquote>
+  <blockquote>
+    <p id="28"><b>cvdcvt</b></p> <p id="29"><b>Arguments:</b> [<code>-o
+    <i>outfilename</i></code>] [<code>-u</code>] [<code><i>file1 file2
+    </i></code>]</p> <p id="30">A <i>.pll</i> file,
+    <code>outfilename</code>, is created holding all the unique code
+    vectors and strings. If <code>outfilename</code> is omitted it
+    defaults to <i>code.blob</i>.</p>
+    <p id="31">If <code>-u</code> is
+    specified, then no duplications of strings are done, otherwise for
+    every string that has no lowercase characters in it and at least
+    one uppercase character, a lowercase copy is added to the output
+    file. This is the default and is useful for
+    <code>set-case-mode</code>. If no files are specified,
+    <i>stdin</i> is used.</p> 
+    <p id="32"><i>.str</i> (string) files and
+    <i>.cvs</i> (code vector) files are combined without redundancies;
+    if two files of the same extension have identical objects, the
+    object from the file specified first to <b>cvdcvt</b> is retained,
+    and the latter object is removed from the output. This allows for
+    files (<i>.cvs</i> files especially) to be arranged by code
+    vectors in order of execution, to provide for locality of
+    reference. Those <i>.cv</i>s files that were produced by training
+    techniques should be placed first in order to have the desired
+    effect.</p>
+  </blockquote>
+</blockquote>
+
+<p id="33">
+As said in the description, <em>pll</em> files are built out of
+<em>cvs</em> files and <em>str</em> files. <em>cvs</em> files are
+created with <a href="operators/system/write-codevectors.htm"><b>sys:write-codevectors</b></a> and can be created by
+<a href="operators/system/flush-codevectors.htm"><b>sys:flush-codevectors</b></a>.
+<em>str</em> files are created with <a href="operators/system/record-strings.htm"><b>record-strings</b></a>.  See also <a href="operators/system/record-code-vectors.htm"><b>record-code-vectors</b></a>.
+</p>
+
+<p id="34">
+The following functions can be used to associate a <em>pll</em>
+file with an image, to find out which <em>pll</em> file is used with
+an image, and to use strings in the <em>pll</em> file.
+</p>
+
+<table BORDER="1" CELLSPACING="1" CELLPADDING="7" WIDTH="638">
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><b>Name</b></td>
+    <td WIDTH="33%" VALIGN="TOP"><b>Arguments</b></td>
+    <td WIDTH="33%" VALIGN="TOP"><b>Notes</b></td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/pll-file.htm"><b>excl:pll-file</b></a>
+    </td>
+    <td WIDTH="33%" VALIGN="TOP">[none]</td>
+    <td WIDTH="33%" VALIGN="TOP">Return the location of the current <i>.pll</i> file, or nil
+    if there is no <i>.pll</i> file associated with this Lisp.</td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/use-pll-file.htm"><b>excl:use-pll-file</b></a>
+    </td>
+    <td WIDTH="33%" VALIGN="TOP"><em>name</em> &key (<em>global-gc</em> t)</td>
+    <td WIDTH="33%" VALIGN="TOP">Associates the current Lisp with the <em>pll</em> file
+    specified by <em>name</em>. It is an error to associate an image already using a pll file
+    with another pll file.</td>
+  </tr>
+  <tr>
+    <td WIDTH="33%" VALIGN="TOP"><a href="operators/excl/pure-string.htm"><b>excl:pure-string</b></a></td>
+    <td WIDTH="33%" VALIGN="TOP"><em>x</em></td>
+    <td WIDTH="33%" VALIGN="TOP">When not in the body of <a href="operators/system/record-strings.htm"><b>sys:record-strings</b></a>, returns a
+    pure-string if there is one identical to the argument and a heap-allocated string if there
+    isn't. When in the body of <a href="operators/system/record-strings.htm"><b>sys:record-strings</b></a>,
+    also write the string to the str file being created.</td>
+  </tr>
+</table>
+
+
+<hr><hr><h2 id="35"><a name="md5-1">5.0 MD5, SHA*, HMAC, RC4, and other message digest support</a></h2>
+
+
+<p id="36">
+Allegro CL provides various message digest algorithms. Various
+algorithms are supported, including MD2, MD4, MD5, SHA1, SHA224,
+SHA256, SHA384, SHA512, and RMD160. Rather than have functions for
+each of these types, there are general functions for them,
+named <b>digest-*</b> and listed first. HMAC support is available for
+:md5, :sha1, :sha224, :sha256, :sha384, and :sha512. The
+functions <a href="operators/excl/hmac-init.htm"><b>hmac-init</b></a>,
+<a href="operators/excl/hmac-update.htm"><b>hmac-update</b></a>, <a href="operators/excl/hmac-string.htm"><b>hmac-string</b></a>, and <a href="operators/excl/hmac-final.htm"><b>hmac-final</b></a> implement these algorithms.
+</p>
+<p id="37">
+The MD*, SHA* and RMD160 functions are all are cryptographic hash
+functions.  A hash function takes a long string (or message) of any
+length as input and produces a fixed-size output.  This output is
+sometimes termed a
+<i>message digest</i>. 
+</p>
+
+
+<p id="38">
+The keyed-hash algorithm HMAC is designed to work with algorithms MD5
+and SHA* (for *=1, 224, 256, 384, and 512, to list what Allegro CL
+currently supports). Keyed hash algorithms work by utilizing an
+existing hash function (such as MD5 or SHA1) and using a secret "key"
+as part of the information to hash.  If one party sends a message to
+another party and also includes an HMAC with the message, the receiver
+(if he/she shares the same secret key) can verify that the message
+hasn't been altered by running the message through the HMAC functions
+using the same key.  If the two HMACs match, then the message is
+considered, with high probability, to be unaltered
+</p>
+<p id="39">
+RC4 is a stream cipher algorithm.  It is used to encrypt streams of
+data.
+</p>
+<p id="40">
+Many of these function require SSL support
+(see <a href="socket.htm#ssl-1">Secuere Socket Layer
+(SSL)</a> in <a href="socket.htm">socket.htm</a>).
+</p>
+<p id="41">
+The functions available are:
+</p>
+
+<h3 id="42">
+General digest functions
+</h3>
+
+<ul>
+<li id="43"><a href="operators/excl/digest-init.htm"><b>digest-init</b></a></li>
+<li id="44"><a href="operators/excl/digest-update.htm"><b>digest-update</b></a></li>
+<li id="45"><a href="operators/excl/digest-final.htm"><b>digest-final</b></a></li>
+<li id="46"><a href="operators/excl/digest-file.htm"><b>digest-file</b></a></li>
+<li id="47"><a href="operators/excl/digest-string.htm"><b>digest-string</b></a></li>
+</ul>
+
+<p id="48">
+These functions are in the :digest module loaded
+with <code>(require :digest)</code>.
+</p>
+
+<h3 id="49">
+MD5 functions
+</h3>
+<ul>
+<li id="50"><a href="operators/excl/md5-init.htm"><b>md5-init</b></a></li>
+<li id="51"><a href="operators/excl/md5-update.htm"><b>md5-update</b></a></li>
+<li id="52"><a href="operators/excl/md5-final.htm"><b>md5-final</b></a></li>
+<li id="53"><a href="operators/excl/md5-file.htm"><b>md5-file</b></a></li>
+<li id="54"><a href="operators/excl/md5-string.htm"><b>md5-string</b></a></li>
+</ul>
+
+
+<h3 id="55">
+SHA1 functions
+</h3>
+<ul>
+<li id="56"><a href="operators/excl/sha1-init.htm"><b>sha1-init</b></a></li>
+<li id="57"><a href="operators/excl/sha1-update.htm"><b>sha1-update</b></a></li>
+<li id="58"><a href="operators/excl/sha1-final.htm"><b>sha1-final</b></a></li>
+<li id="59"><a href="operators/excl/sha1-file.htm"><b>sha1-file</b></a></li>
+<li id="60"><a href="operators/excl/sha1-string.htm"><b>sha1-string</b></a></li>
+</ul>
+
+<p id="61">
+These functions are in the :sha1 module loaded
+with <code>(require :sha1)</code>.
+</p>
+
+
+<h3 id="62">
+Related utility functions
+</h3>
+
+<ul>
+<li id="63"><a href="operators/excl/hex-string-to-integer.htm"><b>hex-string-to-integer</b></a></li>
+<li id="64"><a href="operators/excl/integer-to-hex-string.htm"><b>integer-to-hex-string</b></a></li>
+<li id="65">
+<a href="operators/excl/hex-string-to-usb8-array.htm"><b>hex-string-to-usb8-array</b></a>:
+converts a hex string to an (unsigned-byte 8) array. 
+</li>
+<li id="66">
+<a href="operators/excl/usb8-array-to-hex-string.htm"><b>usb8-array-to-hex-string</b></a>:
+converts an (unsigned-byte 8) array to a hex string.  
+</li>
+
+</ul>
+
+<h3 id="67">
+HMAC functions for MD5 and SHA*
+</h3>
+<ul>
+<li id="68">
+<a href="operators/excl/hmac-init.htm"><b>hmac-init</b></a>
+</li>
+<li id="69">
+<a href="operators/excl/hmac-update.htm"><b>hmac-update</b></a>
+</li>
+<li id="70">
+<a href="operators/excl/hmac-final.htm"><b>hmac-final</b></a>
+</li>
+<li id="71">
+<a href="operators/excl/hmac-string.htm"><b>hmac-string</b></a>
+</li>
+</ul>
+
+<p id="72">
+These functions are in the :hmac module loaded
+with <code>(require :hmac)</code>.
+</p>
+
+
+
+<h3 id="73">
+RC4 functions
+</h3>
+
+<ul>
+<li id="74">
+<a href="operators/excl/rc4-set-key.htm"><b>rc4-set-key</b></a>
+</li>
+<li id="75">
+<a href="operators/excl/rc4.htm"><b>rc4</b></a>
+</li>
+</ul>
+
+<p id="76">
+These functions are in the :rc4 module loaded
+with <code>(require :rc4)</code>.
+</p>
+
+
+
+<hr><hr><h2 id="77"><a name="base64-1">6.0 Base64 support</a></h2>
+
+<p id="78">
+Allegro CL provides support for Base64 encoding within Lisp. Base64
+encoding is a 64-bit representation scheme that uses the ASCII
+characters A-Z, a-z, 0-9, + and /. Since padding could be needed in
+converting multiples of 8-bits into base64, = characters are used,
+when necessary, as padding at the end of a converted string. Base64
+encoding is described in the RFC2045 document (<a href="http://www.ietf.org/rfc/rfc2045.txt">www.ietf.org/rfc/rfc2045.txt</a>).
+</p>
+<p id="79">
+These functions provide the Base64 support in Allegro CL:
+</p>
+<ul>
+<li id="80">
+<a href="operators/excl/integer-to-base64-string.htm"><b>integer-to-base64-string</b></a>,
+which takes an integer argument and an optional
+<i>column</i> argument and returns the associated string
+(with newlines at the <i>column</i> location, if any).
+</li>
+<li id="81">
+<a href="operators/excl/base64-string-to-integer.htm"><b>base64-string-to-integer</b></a>,
+which takes a string and returns the associated integer.
+</li>
+
+
+<li id="82">
+
+<a href="operators/excl/usb8-array-to-base64-string.htm"><b>usb8-array-to-base64-string</b></a>,
+which takes an (unsigned-byte 8) array argument and a
+<i>wrap-at-column</i> keyword argument and returns the
+associated string (with newlines at the
+<i>wrap-at-column</i> location, if any).
+
+</li>
+
+<li id="83">
+<a href="operators/excl/base64-string-to-usb8-array.htm"><b>base64-string-to-usb8-array</b></a>,
+which takes a string and returns the associated (unsigned-byte 8)
+array.
+</li>
+
+
+<li id="84">
+
+<a href="operators/excl/string-to-base64-string.htm"><b>string-to-base64-string</b></a>,
+which takes a string argument and a
+<i>wrap-at-column</i> keyword argument and returns the
+associated string (with newlines at the
+<i>wrap-at-column</i> location, if any).
+
+</li>
+
+<li id="85">
+<a href="operators/excl/base64-string-to-string.htm"><b>base64-string-to-string</b></a>,
+which takes a string and returns the associated string.
+</li>
+<li id="86">
+<a href="operators/excl/base64-encode-stream.htm"><b>base64-encode-stream</b></a>,
+which reads bytes from a stream and writes the base64
+encoding of those bytes to another stream.
+</li>
+<li id="87">
+<a href="operators/excl/base64-decode-stream.htm"><b>base64-decode-stream</b></a>,
+which reads base64 bytes from a stream and writes the decoded bytes
+to another stream.
+</li>
+</ul>
+<p id="88">
+Here are some examples, first using <a href="operators/excl/integer-to-base64-string.htm"><b>integer-to-base64-string</b></a> and <a href="operators/excl/base64-string-to-integer.htm"><b>base64-string-to-integer</b></a>:
+</p>
+<pre id="89">
+cl-user(2): (integer-to-base64-string #xfeedfacefeedface)
+"/u36zv7t+s4="
+cl-user(3): (base64-string-to-integer "/u36zv7t+s4=")
+18369614222061337294
+cl-user(4): (format t "~x" *)
+feedfacefeedface
+nil
+cl-user(5): 
+</pre>
+<p id="90">
+And now using <a href="operators/excl/usb8-array-to-base64-string.htm"><b>usb8-array-to-base64-string</b></a> and <a href="operators/excl/base64-string-to-usb8-array.htm"><b>base64-string-to-usb8-array</b></a>:
+</p>
+<pre id="91">
+;;  The encoding results may differ between Windows and 
+;;  UNIX/Linux/Mac OS X (the transcript is from a
+;;  UNIX machine).
+
+cl-user(5): (setq a (string-to-octets
+                     (setq s
+                       "
+(defun deep-thought ()
+  (sleep (years2secs 7500000))
+  42)
+")
+                     :external-format (crlf-base-ef :latin1)))
+#(10 40 100 101 102 117 110 32 100 101 ...)
+cl-user(6): (usb8-array-to-base64-string a)
+"CihkZWZ1biBkZWVwLXRob3VnaHQgKCkKICAoc2xlZXAgKHllYXJz
+MnNlY3MgNzUwMDAwMCkpCiAgNDIpCgA="
+cl-user(7): (base64-string-to-usb8-array *)
+#(10 40 100 101 102 117 110 32 100 101 ...)
+cl-user(8): (setq a2 *)
+#(10 40 100 101 102 117 110 32 100 101 ...)
+cl-user(9): (equalp a a2)
+t
+cl-user(10): (octets-to-string a2 :external-format (crlf-base-ef :latin1))
+"
+(defun deep-thought ()
+  (sleep (years2secs 7500000))
+  42)
+"
+61
+61
+cl-user(11): 
+</pre>
+
+<hr><hr><h2 id="92"><a name="encrypt-1">7.0 Support for encryption</a></h2>
+
+<p id="93">
+Allegro CL provides implementations of some publicly available
+encryption algorithms: blowfish (see
+<a href="#blowfish-2">Section 7.1 Support for Blowfish encryption</a>) and rsa (see
+<a href="#rsa-2">Section 7.2 Support for rsa encryption</a>). Please note that we make no
+claims about the actual security provided by these encryption schemes.
+</p>
+
+<hr><h2 id="94"><a name="blowfish-2">7.1 Support for Blowfish encryption</a></h2>
+
+<p id="95">
+The Blowfish algorithm, described on <a href="http://www.counterpane.com/blowfish.html">this page</a> (and
+links from it), is a high speed symmetric cryptographic algorithm (or
+cipher). The same key is used to encrypt and decrypt the data.
+Blowfish encrypts blocks of 64 bits (8 octets) at a time. The
+functions below can automatically pad out the data to encrypt to be a
+multiple of 8 octets. Blowfish was designed by Bruce Schneier, a
+leading authority on cryptography and author of the book <i>Applied
+Cryptography</i>. Schneier writes in his book published in 1996: "I
+know of no successful cryptanalysis against Blowfish."
+</p>
+
+
+
+
+<ul>
+<li id="96">
+<a href="operators/excl/blowfish-encrypt.htm"><b>blowfish-encrypt</b></a>: encrypts
+an (unsigned-byte 8) array or a Lisp string using a specified key.
+</li>
+<li id="97">
+<a href="operators/excl/blowfish-decrypt.htm"><b>blowfish-decrypt</b></a>: decrypts a
+value encrypted with <a href="operators/excl/blowfish-encrypt.htm"><b>blowfish-encrypt</b></a>.
+</li>
+<li id="98">
+<a href="operators/excl/blowfish-init.htm"><b>blowfish-init</b></a>: returns an
+object that holds the key already processed for doing encryption or
+decryption, saving time when doing multiple calls to <a href="operators/excl/blowfish-encrypt.htm"><b>blowfish-encrypt</b></a> or <a href="operators/excl/blowfish-decrypt.htm"><b>blowfish-decrypt</b></a> using the same key. (The
+object rather than the key is passed to those functions, saving the
+time needed to calculate the object from the key multiple times.)
+</li>
+</ul>
+
+<p id="99">
+Here are some examples of Blowfish encryption and decryption:
+</p>
+
+<pre id="100">
+;; Example 1. string encrypting
+
+cl-user(12): (blowfish-encrypt "my secret message" 
+                        :key "my key")
+#(57 27 110 242 191 19 182 150 1 5 ...)
+24
+cl-user(13): (blowfish-decrypt * :key "my key" :string t)
+"my secret message"
+cl-user(14): 
+
+;; Example 2. (unsigned-byte 8) encrypting:
+
+;; Here we allocate an (unsigned-byte 8) array with a size 
+;; that is a multiple of 8 and fill it with data.  
+;; We can do in-place encryption and decryption.
+;; We specify no padding (since otherwise 8 bytes of padding would
+;; have to be added and there's no room in this array for that):
+
+;; Create our array:
+
+cl-user(12): (setq aa (make-array 8 :element-type '(unsigned-byte 8) 
+                        :initial-contents '(2 4 6 8 10 12 14 16)))
+#(2 4 6 8 10 12 14 16)
+
+;; Encrypt it in place
+
+cl-user(13): (blowfish-encrypt aa :key "my key" 
+               :in-place t :pad nil)
+#(129 144 108 210 20 227 10 58)
+8
+
+;; Verify that it has been modified:
+
+cl-user(14): aa
+#(129 144 108 210 20 227 10 58)
+
+;; Now decrypt in place. Notice how the arguments to 
+;; blowfish-decrypt match those to blowfish-encrypt:
+
+cl-user(15): (blowfish-decrypt aa :key "my key" 
+                 :in-place t :pad nil)
+#(2 4 6 8 10 12 14 16)
+cl-user(16): 
+
+;; And verify that the array is now back to normal:
+
+cl-user(16): aa
+#(2 4 6 8 10 12 14 16)
+cl-user(17): 
+
+;; Example 3. use of contexts
+
+;; Create context which holds the key processed by 
+;; blowfish to prepare it for encryption/decryption:
+
+cl-user(21): (setq cc (blowfish-init "my key"))
+#(141 90 172 196 250 88 140 57 179 211 ...)
+
+;; Encrypt something using the context:
+
+cl-user(22): (blowfish-encrypt "my message" :context cc)
+#(75 202 37 143 4 243 181 205 211 126 ...)
+16
+
+;; And now decrypt it using the same context
+;; to show the original string
+
+cl-user(23): (blowfish-decrypt * :context cc :string t)
+"my message"
+cl-user(24): 
+</pre>
+
+<p id="101">
+It is a common practice to send Blowfish keys to intended recipients
+using their RSA public keys. See <a href="#rsa-2">Section 7.2 Support for rsa encryption</a>
+for information on RSA encryption.
+</p>
+
+
+
+<hr><h2 id="102"><a name="rsa-2">7.2 Support for rsa encryption</a></h2>
+
+<p id="103">
+RSA is a public key cipher named after its inventors: Rivest, Shamir
+and Adleman. A public key cipher differs from a symmetric cipher like
+Blowfish (see <a href="#blowfish-2">Section 7.1 Support for Blowfish encryption</a>) in two
+important ways:
+</p>
+
+<ol>
+<li id="104">
+There exist two keys: the Public key and the Private key.
+</li>
+<li id="105">
+Different keys are used for encryption and decryption.
+</li>
+<li id="106">
+One of the keys (the Public key) can be made public without
+making it possible to compute the other key (the Private key).
+</li>
+</ol>
+
+<p id="107">
+With RSA you can encrypt with the Public key and decrypt
+with the Private key or encrypt with the Private key
+and decrypt with the Public key. Typically one encrypts
+with the Public key to send a message to the person with the Private key.
+</p>
+<p id="108">
+RSA has never been proven to be secure.  However the
+obvious way to crack the encryption involves factoring 
+a very large number. There is no published way of factoring
+a large number that's better than a brute force attempt
+of trying all possible factors. Thus by making the key
+big enough you can be sure that it won't be possible
+to compute the factors by brute force search in a very long time.
+There may be other ways to crack RSA encryption that are simply
+not published yet.  
+</p>
+<p id="109">
+One major downside to RSA is that it is roughly 1000 times slower
+to encrypt and decrypt than a symmetric cipher like Blowfish.
+As a result people usually use RSA as means of transmitting
+a key for a symmetric cipher.  For example if Alice wants
+to send Bob a large document securely she'll first go to 
+Bob's web site and copy down his Public RSA key.  Then
+she'll use a random number generator to create a 64 bit 
+blowfish key. She'll encrypt the blowfish key with Bob's Public
+key and send the result to Bob.  Then she'll encrypt her
+document using Blowfish and the key she generated.
+Bob will decrypt the first message from Alice using his Private
+RSA key. That will give him the Blowfish key he'll need to 
+decrypt the second message from Alice.
+</p>
+<p id="110">
+Because the public key is known to all you have to be careful
+to not encrypt small values with an RSA public key since
+that gives you very little security.  For example, suppose you
+decide to encrypt a 4 digit security code using an RSA public
+key.  A person willing to steal your code need only encrypt
+the values 0000 through 9999 and compare them to your encrypted
+value to determine what the value encrypted was.  If you want
+to encrypt a 4 digit security code XXXX then it's best to
+encrypt instead YYYYYYYYXXXX where the Y's are digits chosen
+randomly.  
+</p>
+
+<p id="111">
+An RSA key pair consists of three integers: a  modulus, a
+private exponent and a public exponent. The only number that
+must be kept secret is the private exponent. The public
+exponent is usually one of a set of common small numbers.
+The Allegro RSA key generator always chooses 17 as
+the public exponent.
+</p>
+
+<p id="112">
+An RSA key is represented in Allegro as a vector of three
+values:
+</p>
+<ol>
+<li id="113">
+<code>t</code> if this is the public key, <code>nil</code> if this is the private key. This value is to help
+you distinguish one key from the other and is not used in the
+encryption/decryption code.
+</li>
+<li id="114">
+the modulus value (approximately 1024 bits long). 
+</li>
+<li id="115">
+the exponent value.
+</li>
+</ol>
+
+
+<p id="116">
+RSA is a block cipher: a sequence of octets is encrypted at once.
+The block size isn't fixed but is usually determined by the size of
+the modulus.  In order to encrypt data whose length is not a multiple
+of the block size padding is done at the end of the value and
+information about the padding is added to the value.  The format of
+this padding information is not standard among rsa encryption
+functions, thus you can't expect any function except <a href="operators/excl/rsa-decrypt.htm"><b>rsa-decrypt</b></a> to be able to decrypt a value
+encrypted with <a href="operators/excl/rsa-encrypt.htm"><b>rsa-encrypt</b></a>.
+</p>
+
+<p id="117">
+The functions associated with RSA encryption and decryption are:
+</p>
+
+<ul>
+<li id="118">
+<a href="operators/excl/rsa-encrypt.htm"><b>rsa-encrypt</b></a>:
+given a value to encrypt and a key, returns the encrypted value.
+</li>
+<li id="119">
+<a href="operators/excl/rsa-decrypt.htm"><b>rsa-decrypt</b></a>: given a value
+returned by <a href="operators/excl/rsa-encrypt.htm"><b>rsa-encrypt</b></a> and a key,
+return the decrypted value.
+</li>
+<li id="120">
+<a href="operators/excl/generate-rsa-keys.htm"><b>generate-rsa-keys</b></a>: generates
+candidate public and private keys. This function takes a long time to
+complete and is not guaranteed to produce valid keys. Please see the
+description for details.
+</li>
+</ul>
+
+<p id="121">
+Because RSA encryption is resource intensive compared to symetric
+encoders like Blowfish, it is a common practice to encode using
+Blowfish and send Blowfish keys to intended recipients using their RSA
+public keys. See <a href="#blowfish-2">Section 7.1 Support for Blowfish encryption</a> for
+information on Blowfish encryption.
+</p>
+
+<p id="122">
+Here are some examples of Blowfish encryption and decryption:
+</p>
+
+<pre id="123">
+;; A call to generate-rsa-keys, such as the following, can take 
+;; on the order of 10 minutes to complete. The example call
+;; could have been made with ':verbose t' to get progress
+;; information as it runs. 
+;;
+;; The return value is a list of the public and
+;; private keys, both of which are vectors.  This list
+;; is made the value of the variable 'keys'.
+
+
+cl-user(12): (setq keys (generate-rsa-keys :verbose nil))
+(#(t
+   4696616306992156162791359909817969438301590857320651704912\
+5099728659553054438846018512904176959283177314807123575693727\
+9515543419344057970899365859403176313951068268266882944649562\
+1008090347981854919956845970556254842289211552574616675107428\
+9213609596618613446079618857135830766959762009927055865884710\
+796501
+   17)
+ #(nil
+   46966163069921561627913599098179694383015908573206517049125\
+09972865955305443884601851290417695928317731480712357569372795\
+15543419344057970899365859403176313951068268266882944649562100\
+80903479818549199568459705562548422892115525746166751074289213\
+609596618613446079618857135830766959762009927055865884710796501
+
+   38678016645817756634752375727912689491895454119111249334573\
+61154124904369189081436818709755749588026367101763117998307007\
+77506345342165387799477766567321557421166007590816670669406236\
+43773618649101682703783799537062586749082756929026484684965113\
+373035085734095558864183533679809881862774879514342408924287321))
+
+
+
+;; Here we encrypt with the public key and decrypt with the private key
+;; we could have encrypted with the private key and decrypted with the
+;; public key as well.
+
+cl-user(13): (rsa-encrypt "my secret message" (car keys))
+#(102 136 69 180 180 27 185 63 132 137 ...)
+
+
+cl-user(14): (rsa-decrypt * (cadr keys) :string t)
+"my secret message"
+cl-user(15): 
+</pre>
+
+
+
+
+<hr><hr><h2 id="124"><a name="gzip-1">8.0 Support for gzip compression and decompression</a></h2>
+
+
+
+<p id="125">
+The <b>inflate</b> and <b>deflate</b> modules allows you to compress
+data as it is written to files, and to open streams to files containing gzip
+compressed data and to uncompress the data while reading the file. To
+load the modules, evaluate <code>(require
+:inflate)</code> and <code>(require
+:deflate)</code>. Symbols in the modules are in the
+<b>util.zip</b> package. (There are two modules because they were
+added at different times.)
+</p>
+<p id="126">
+The <code>:deflate</code> module requires that the <b>libz</b>
+library be available on your computer (and in the correct version). If
+you do not have that library or do not have the correct version,
+deflation will not work. Allegro CL functionality that uses deflation
+(such as AllegroServe, see <a href="aserve/aserve.html">aserve/aserve.html</a>)
+will warn that they cannot compress data but will continue to work
+without data compression.
+</p>
+<p id="127">
+The inflation function <a href="miscellaneous.htm#inflate-op-bookmarkxx"><b>util.zip:inflate</b></a> can be applied
+to instances of the class <a href="miscellaneous.htm#inflate-stream-class-bookmarkxx"><code>util.zip:inflate-stream</code></a>.  The
+function <a href="miscellaneous.htm#skip-gzip-header-op-bookmarkxx"><b>util.zip:skip-gzip-header</b></a> is a
+utility function which can be applied to an input stream to position
+the file position to the correct location for uncompressing.
+</p>
+<p id="128">
+The deflation functions <a href="miscellaneous.htm#deflate-target-stream-op-bookmarkxx"><b>util.zip:deflate-target-stream</b></a>, <a href="miscellaneous.htm#deflate-stream-vector-op-bookmarkxx"><b>util.zip:deflate-stream-vector</b></a>, and <a href="miscellaneous.htm#deflate-stream-vector-combined-op-bookmarkxx"><b>util.zip:deflate-stream-vector-combined</b></a> can
+be applied to instances of the class <a href="miscellaneous.htm#deflate-stream-class-bookmarkxx"><code>util.zip:deflate-stream</code></a>.
+</p>
+
+<p id="129">
+The value of the variable <a href="variables/system/s_zlib-system-library_s.htm"><code>sys:*zlib-system-library*</code></a> is the name of the
+gzip library used by the deflate module.
+</p>
+
+
+<h3 id="130">
+inflate-stream
+</h3>
+<hr><h3 id="131"><a name="inflate-op-bookmarkxx"></a>inflate</h3><h3 id="132">Function</h3><h4 id="133">Package: util.zip</h4>
+
+<p id="134"><b>Arguments: </b><i>
+input-stream output-stream
+</i></p>
+
+<p id="135">
+The compressed information from the input-stream is read and the
+uncompressed information is written to the output-stream.
+</p>
+<p id="136">
+Both streams must support (unsigned-byte 8) element reading and
+writing.
+</p>
+
+<hr>
+
+<hr><h3 id="137"><a name="skip-gzip-header-op-bookmarkxx"></a>skip-gzip-header</h3><h3 id="138">Function</h3><h4 id="139">Package: util.zip</h4>
+
+<p id="140"><b>Arguments: </b><i>
+input-stream
+</i></p>
+
+<p id="141">
+If the input stream is positioned on the header of a gzip'ed file then
+skip that header. <i>input-stream</i> is not an instance
+of the class <a href="miscellaneous.htm#inflate-stream-class-bookmarkxx"><code>util.zip:inflate-stream</code></a>. It is
+simply an input stream (opened, for example, with <a href="../ansicl/dictentr/open.htm"><b>open</b></a>). The file position must be moved to the
+beginning of the compressed data before unziping, and only at that
+point should an instance of <a href="miscellaneous.htm#inflate-stream-class-bookmarkxx"><code>util.zip:inflate-stream</code></a> be
+created (see <a href="miscellaneous.htm#inflate-stream-class-bookmarkxx"><code>util.zip:inflate-stream</code></a>).
+</p>
+<p id="142">
+If the input stream is not positioned on a gzip header then nothing is done.
+</p>
+
+<hr>
+
+<hr><h3 id="143"><a name="inflate-stream-class-bookmarkxx"></a>inflate-stream</h3><h3 id="144">Class</h3><h4 id="145">Package: util.zip</h4>
+
+<p id="146">
+The stream class for instances of files containing comressed gzip'ed
+data. Instances of this class are suitable as arguments to <a href="miscellaneous.htm#inflate-op-bookmarkxx"><b>util.zip:inflate</b></a>.
+</p>
+<p id="147">
+To create an instance of this class, do the following:
+</p>
+<ol>
+<li id="148">
+Make a stream (using, e.g. <a href="../ansicl/dictentr/open.htm"><b>open</b></a>) with a data source which contains
+compressed data.
+</li>
+<li id="149">
+If the this file may have a gzip header on it, apply <a href="miscellaneous.htm#skip-gzip-header-op-bookmarkxx"><b>util.zip:skip-gzip-header</b></a> to
+the stream.
+</li>
+<li id="150">
+Create an instance of util.zip:inflate-stream by evaluating:
+<pre id="151">
+(make-instance 'inflate-stream :input-handle &lt;stream created in 1&gt;)
+</pre>
+<p id="152">
+The call to <a href="../ansicl/dictentr/make-ins.htm"><b>make-instance</b></a> will
+return a stream which can be read to recover the uncompressed data.
+</p>
+</li>
+</ol>
+
+<p id="153">
+Closing the inflate-stream will also close the stream created in step
+1.
+</p>
+
+<hr>
+
+<h3 id="154">
+deflate-stream
+</h3>
+
+<p id="155">
+To write compressed data, you create a deflate-stream and at that time
+specify an ultimate taget, which is either a regular stream (perhaps
+open to a file) or a octet vector (of element
+type <code>(unsigned-byte 8)</code>). You then write data to the
+deflate-stream and that data is compressed and eventually written to
+the target. We say <i>eventually</i> because there is a lot of
+buffering so you do not see data in the target immediately. When you
+are done, you close the deflate-stream and that causes any remaining
+data to be written to the target.
+</p>
+<p id="156">
+Closing the deflate-stream does not close the target if it is a
+stream. <b>You must close the target stream yourself</b>.
+</p>
+<p id="157">
+You create deflate-streams with <a href="../ansicl/dictentr/make-ins.htm"><b>make-instance</b></a>, as described next.
+</p>
+
+<hr><h3 id="158"><a name="deflate-stream-class-bookmarkxx"></a>deflate-stream</h3><h3 id="159">Class</h3><h4 id="160">Package: util.zip</h4>
+
+<p id="161">
+The stream class for instances of deflation streams which accepts
+characters and bytes and causes them to be compressed and sent to a
+target.
+</p>
+<p id="162">
+You created a <code>deflate-stream</code> with <a href="../ansicl/dictentr/make-ins.htm"><b>make-instance</b></a>. You must specify a
+target when you create a deflate-stream.
+</p>
+<p id="163">
+Here is a sample <a href="../ansicl/dictentr/make-ins.htm"><b>make-instance</b></a> call:
+</p>
+
+<pre id="164">
+(make-instance 'deflate-stream :target <i>target-spec</i> 
+                               [:compression <i>compress-spec</i>])
+</pre>
+
+<p id="165">
+<i>target-spec</i> can either another stream, or it can be a vector
+(that is an actual stream or an actual vector). The stream must be
+writable. The vector must have element-type (unsigned-byte
+8). 
+</p>
+<p id="166">
+<i>compress-spec</i> can be <code>:gzip</code> (the default) or
+<code>:deflate</code>. <code>:gzip</code> is the preferred
+format as the result can be uncompressed with the <a href="miscellaneous.htm#inflate-stream-class-bookmarkxx"><code>util.zip:inflate-stream</code></a> (be sure
+to specify <code>:skip-gzip-header t</code> to
+the <b>make-instance</b> creating the inflate-stream or to
+call <a href="miscellaneous.htm#skip-gzip-header-op-bookmarkxx"><b>util.zip:skip-gzip-header</b></a> after
+the input stream is opened). The <code>:gzip</code> format
+output can also be uncompressed with the <b>gunzip</b> program found
+on Unix.
+</p>
+
+<h3 id="167">
+A stream as the target-spec
+</h3>
+<p id="168">
+If you pass a stream as the <i>target-spec</i> then as
+you write characters and bytes to the deflate-stream, the bytes
+resulting from deflation will be written to the given stream. There
+is a lot of buffering going on in this stream and the compression
+library. Therefore you may not see the results in your target-spec
+stream immediately.
+</p>
+<p id="169">
+When you close the deflate-stream the last bytes in all the buffers
+will be sent through deflation and the end of deflation record will
+be written to the target-spec stream.
+</p>
+<p id="170">
+Again, the target-spec stream <b>will not be closed</b> when the
+deflate-stream is closed. It is the callers responsibility to close
+the stream passed in as the target-spec.
+</p>
+<p id="171">
+The function <a href="miscellaneous.htm#deflate-target-stream-op-bookmarkxx"><b>deflate-target-stream</b></a> will
+return that target-spec stream used by the deflate-stream.
+</p>
+<h3 id="172">
+A vector as the target-spec
+</h3>
+<p id="173">
+Passing a simple vector of type (unsigned-byte 8) as
+the <i>target-spec</i> is telling the deflate-stream
+that you wish to collect the deflation result in vectors in the lisp
+heap. The size of the vector passed is not important. Additional
+vectors will be created as necessary to hold data as it is written.
+</p>
+<p id="174">
+Once you have closed the deflate-stream after all data has been
+written to it, you can retrieve the result with <a href="miscellaneous.htm#deflate-stream-vector-op-bookmarkxx"><b>util.zip:deflate-stream-vector</b></a>
+or <a href="miscellaneous.htm#deflate-stream-vector-combined-op-bookmarkxx"><b>util.zip:deflate-stream-vector-combined</b></a>,
+as described in the descriptions of those
+functions. The <b>deflate-stream-vector-combined</b> combines all
+results into a new vector if the target vector is not large
+enough. <b>deflate-stream-vector</b> returns the vectors created by
+writing to the deflate-stream, along with additional information.
+</p>
+
+<hr>
+
+<hr><h3 id="175"><a name="deflate-target-stream-op-bookmarkxx"></a>deflate-target-stream</h3><h3 id="176">Function</h3><h4 id="177">Package: util.zip</h4>
+
+<p id="178"><b>Arguments: </b><i>
+deflate-stream
+</i></p>
+
+<p id="179">
+Returns the stream which is the target
+of <b><i>deflate-stream</i></b> which must be
+a <a href="miscellaneous.htm#deflate-stream-class-bookmarkxx"><code>deflate-stream</code></a>. Returns 
+<code>nil</code> if <i>deflate-stream</i>
+has a vector as its target.
+</p>
+
+<hr>
+
+<hr><h3 id="180"><a name="deflate-stream-vector-op-bookmarkxx"></a>deflate-stream-vector</h3><h3 id="181">Function</h3><h4 id="182">Package: util.zip</h4>
+
+<p id="183"><b>Arguments: </b><i>
+deflate-stream
+</i></p>
+
+<p id="184">
+<b><i>deflate-stream</i></b> must be
+a <a href="miscellaneous.htm#deflate-stream-class-bookmarkxx"><code>deflate-stream</code></a> whose target is a
+vector. In that case, this function returns three values:
+</p>
+<ol>
+<li id="185">
+The newest vector created so far by writing
+to <i>deflate-stream</i> (or the last such vector if
+<i>deflate-stream</i> is closed).
+</li>
+<li id="186">
+The number of bytes of actual data in the newest vector.
+</li>
+<li id="187">
+A list of previous vectors holding data in reverse order.
+</li>
+</ol>
+<p id="188">
+For example, if the three returns values are:
+</p>
+
+<pre id="189">
+    v
+    100
+    (c b a)
+</pre>
+
+<p id="190">
+then the deflated result is found by combining in this order:
+</p>
+
+<pre id="191">
+    all of a
+    all of b
+    all of c
+    the first 100 bytes of v
+</pre>
+
+<p id="192">
+This function signals an error if <i>deflate-stream</i>
+has a stream as its target.
+</p>
+
+<hr>
+
+
+<hr><h3 id="193"><a name="deflate-stream-vector-combined-op-bookmarkxx"></a>deflate-stream-vector-combined</h3><h3 id="194">Function</h3><h4 id="195">Package: util.zip</h4>
+
+<p id="196"><b>Arguments: </b><i>
+deflate-stream
+</i></p>
+
+<p id="197">
+<b><i>deflate-stream</i></b> must be
+a <a href="miscellaneous.htm#deflate-stream-class-bookmarkxx"><code>deflate-stream</code></a> whose target is a
+vector. In that case, this function returns two values:
+</p>
+<ol>
+<li id="198">
+An octet vector.
+</li>
+<li id="199">
+The number of bytes of actual data.
+</li>
+</ol>
+<p id="200">
+The octet vector is newly created if necessary (if the target vector
+specified when the <a href="miscellaneous.htm#deflate-stream-class-bookmarkxx"><code>deflate-stream</code></a> was created is
+not large enough to hold the compressed data).
+</p>
+<p id="201">
+This function signals an error if <i>deflate-stream</i>
+has a stream as its target.
+</p>
+
+<hr>
+
+
+<h3 id="202">
+Example
+</h3>
+
+<p id="203">
+Suppose we wish to create a compressed file foo.cl.gz from the following text:
+</p>
+<pre id="204">
+;; file foo.cl begin
+(in-package :user)
+
+(defpackage :foo (:use :cl :excl))
+(defun foo (y) (bar y))
+
+;; file foo.cl end
+</pre>
+<p id="205">
+In the following transcript, we use a deflate stream to create
+foo.cl.gz and then we inflate foo.cl.gz by opening the file, stripping
+the gzip header, creating an inflate-stream instance, reading the file
+line by line, closing the inflate-stream, and closing the file. We
+could also inflate the while file by calling <a href="miscellaneous.htm#inflate-op-bookmarkxx"><b>inflate</b></a>.
+</p>
+<pre id="206">
+;; We load the modules and then write a compressed file.
+;; Once it is written, we read it back uncompressing it.
+
+cl-user(61) (require :deflate)
+; [loading messages]
+tcl-user(62) (require :inflate)
+; [loading messages]
+t
+cl-user(63): (setq myfile (open &quot;foo.cl.gz&quot; :direction :output :if-exists :supersede))
+#&lt;file-simple-stream #P&quot;foo.cl.gz&quot; for output pos 0 @ #x100439f9f2&gt;
+cl-user(64): (setq *df* (make-instance 'deflate-stream :target myfile))
+#&lt;deflate-stream in 0 / out 0 @ #x10043ad922&gt;
+cl-user(65): (format *df* &quot;;; file foo.cl begin~%~%&quot;)
+nil
+cl-user(66): (format *df* &quot;(in-package :user)~%~%&quot;)
+nil
+cl-user(67): (format *df* &quot;(defpackage :foo (:use :cl :excl))~%&quot;)
+nil
+cl-user(68): (format *df* &quot;(defun foo (y) (bar y))~%~%&quot;)
+nil
+cl-user(69): (format *df* &quot;;; file foo.cl end&quot;)
+nil
+cl-user(70): (close *df*)
+#&lt;deflate-stream in 120 / out 106 @ #x10043ad922&gt;
+cl-user(71): (close myfile)
+t
+cl-user(72): (setq s (open &quot;foo.cl.gz&quot; :direction :input))
+#&lt;file-simple-stream #P&quot;foo.cl.gz&quot; for input pos 0 @ #x1004400732&gt;
+cl-user(73): (util.zip:skip-gzip-header s)
+10
+cl-user(74): (setq is
+              (make-instance 'util.zip:inflate-stream :input-handle s))
+#&lt;inflate-stream
+  inflating #&lt;file-simple-stream #P&quot;foo.cl.gz&quot; for input pos 10 @
+              #x1004400732&gt;ef :latin1-base, in: 0, inflated 0, used: 0 of
+  @ #x1004417412&gt;
+cl-user(75): (read-line is nil s)
+&quot;;; file foo.cl begin&quot;
+nil
+cl-user(76): (read-line is nil s)
+&quot;&quot;
+nil
+cl-user(77): (read-line is nil s)
+&quot;(in-package :user)&quot;
+nil
+cl-user(78): (read-line is nil s)
+&quot;&quot;
+nil
+cl-user(79): (read-line is nil s)
+&quot;(defpackage :foo (:use :cl :excl))&quot;
+nil
+cl-user(80): (read-line is nil s)
+&quot;(defun foo (y) (bar y))&quot;
+nil
+cl-user(81): (read-line is nil s)
+&quot;&quot;
+nil
+cl-user(82): (read-line is nil s)
+&quot;;; file foo.cl end&quot;
+t
+cl-user(83): (read-line is nil s)
+#&lt;file-simple-stream #P&quot;foo.cl.gz&quot; for input pos 98 @ #x1004400732&gt;
+t
+cl-user(84): (close is) ;; this also closes s.
+
+t
+cl-user(85): 
+</pre>
+
+<p id="207">
+The source code to the gzip utility is included with the Allegro CL
+distribution, in <i>[Allegro
+directory]/src/inflate.cl</i>.
+</p>
+
+
+
+<hr><hr><h2 id="208"><a name="pam-1">9.0 PAM support in Allegro Common Lisp</a></h2>
+
+<p id="209">
+PAM stands for <i>Pluggable Authentication Modules</i>. It is a
+flexible mechanism for authenticating users. 
+An Allegro CL module provides a Lisp wrapper
+around the PAM API on Linux, Solaris, and some other unixlike
+operating systems.
+We do not discuss PAM in detail here. See <a href="http://www.kernel.org/pub/linux/libs/pam/FAQ">www.kernel.org/pub/linux/libs/pam/FAQ</a>.
+</p>
+<p id="210">
+PAM is supported on the following platforms:
+</p>
+<ul>
+<li id="211">
+<b>FreeBSD</b>
+</li>
+<li id="212">
+<b>Linux</b>
+</li>
+<li id="213">
+<b>HP/UX (32-bit)</b>
+</li>
+<li id="214">
+<b>Mac OS X (32-bit)</b>
+</li>
+<li id="215">
+<b>Solaris</b>
+</li>
+</ul>
+<p id="216">
+PAM is not supported in Allegro CL on the following platforms:
+</p>
+<ul>
+<li id="217">
+<b>Windows</b>
+</li>
+<li id="218">
+<b>Tru64</b>
+</li>
+<li id="219">
+<b>AIX</b>
+</li>
+<li id="220">
+<b>HP/UX 64-bit</b> (32-bit is supported)
+</li>
+<li id="221">
+<b>Mac OS X 64-bit</b> (32-bit is supported)
+</li>
+</ul>
+
+<p id="222">
+The PAM API is is loaded by evaluating <code>(require
+:pam)</code>. Symbols naming functionality are in the
+<b>util.pam</b> package.  Depending on your system configuration, your
+program may be required to run with 'root' privileges to successfully
+make use of PAM.
+</p>
+
+<p id="223">
+There is one class and several operators defined in the pam
+module. They are:
+</p>
+<ul>
+<li id="224">
+<a href="miscellaneous.htm#pam-class-bookmarkxx"><code>pam</code></a> (class)
+</li>
+<li id="225">
+<a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a> (function)
+</li>
+<li id="226">
+<a href="miscellaneous.htm#pam-end-op-bookmarkxx"><b>pam-end</b></a> (generic
+function)
+</li>
+<li id="227">
+<a href="miscellaneous.htm#set-pam-fail-delay-op-bookmarkxx"><b>set-pam-fail-delay</b></a> (generic
+function)
+</li>
+<li id="228">
+<a href="miscellaneous.htm#pam-authenticate-op-bookmarkxx"><b>pam-authenticate</b></a> (generic
+function)
+</li>
+<li id="229">
+<a href="miscellaneous.htm#with-pam-op-bookmarkxx"><b>with-pam</b></a> (macro)
+</li>
+</ul>
+
+<hr><h3 id="230"><a name="pam-class-bookmarkxx"></a>pam</h3><h3 id="231">Class</h3><h4 id="232">Package: util.pam</h4>
+
+<p id="233">
+The class of <a href="miscellaneous.htm#pam-class-bookmarkxx"><code>pam</code></a> objects. A pam object is
+created by <a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a>.
+</p>
+
+<hr>
+
+<hr><h3 id="234"><a name="pam-start-op-bookmarkxx"></a>pam-start</h3><h3 id="235">Function</h3><h4 id="236">Package: util.pam</h4>
+
+<p id="237"><b>Arguments: </b><i>
+service-name user </i>&amp;key <i>conversation data</i><i>
+</i></p>
+
+<p id="238">
+This function provides a wrapper around the <b>pam_start(3)</b> PAM
+library function.  <b><i>service-name</i></b> should be
+a string naming the desired PAM service.
+<b><i>user</i></b> may be <code>nil</code>
+or a string.
+</p>
+<p id="239">
+If <b><i>conversation</i></b> is specified, it should be
+a function (or a symbol naming a function) which will perform the PAM
+"conversation", when necessary.  <b><i>data</i></b> is
+optional user-defined data that will be passed to the conversation
+function.  If <i>conversation</i> is <code>nil</code> (the default), a default conversation function
+will be used.  For more information on conversation functions, see
+<a href="#pam-conversations-2">Section 9.1 PAM conversation functions</a>.
+</p>
+<p id="240">
+This function returns a <a href="miscellaneous.htm#pam-class-bookmarkxx"><code>pam</code></a> object on success.  You will
+pass this object to other functions and methods.  If <a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a>
+fails, an error is signalled.
+</p>
+
+<hr>
+
+<hr><h3 id="241"><a name="pam-end-op-bookmarkxx"></a>pam-end</h3><h3 id="242">Generic Function</h3><h4 id="243">Package: util.pam</h4>
+
+<p id="244"><b>Arguments: </b><i>
+pam </i> &amp;optional <i>status</i><i>
+</i></p>
+
+<p id="245">
+The default method is analogous to the <b>pam_end(3)</b> PAM library
+function. <b><i>pam</i></b> must be a <a href="miscellaneous.htm#pam-class-bookmarkxx"><code>pam</code></a> object returned by <a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a>.  If
+<b><i>status</i></b> is specified, it should be an
+integer. See the <b>pam_end(3)</b> description (in PAM documentation
+not supplied here) for details on the use of
+<i>status</i>. If <i>status</i> is <code>nil</code>, <a href="osi-constants.htm#s_pam-success_s-var-bookmarkxx"><code>excl.osi:*pam-success*</code></a> will
+be used.
+</p>
+<p id="246">
+This method returns <code>t</code> on success, otherwise
+it signals an error.
+</p>
+
+<hr>
+
+<hr><h3 id="247"><a name="with-pam-op-bookmarkxx"></a>with-pam</h3><h3 id="248">Macro</h3><h4 id="249">Package: util.pam</h4>
+
+
+<p id="250"><b>Arguments: </b><i>
+(var </i> &amp;rest <i>rest</i><i>) </i> &amp;body <i>body</i><i>
+</i></p>
+
+<p id="251">
+<a href="miscellaneous.htm#with-pam-op-bookmarkxx"><b>with-pam</b></a> is a convenience macro
+which evaluates <i>body</i> with
+<i>var</i> bound to the result of calling <a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a> with the arguments
+specified in <i>rest</i>.  <a href="miscellaneous.htm#pam-end-op-bookmarkxx"><b>pam-end</b></a> will
+be called when <i>body</i> terminates, either normally
+or abnormally.
+</p>
+<h4 id="252">
+Sample use
+</h4>
+
+<pre id="253">
+(util.pam:with-pam (pam "login" "jimmy")
+  (format t "This is the body~%"))
+</pre>
+
+<hr>
+
+<hr><h3 id="254"><a name="pam-authenticate-op-bookmarkxx"></a>pam-authenticate</h3><h3 id="255">Generic Function</h3><h4 id="256">Package: util.pam</h4>
+
+<p id="257"><b>Arguments: </b><i>
+pam </i>&amp;key <i>flags password</i><i>
+</i></p>
+
+<p id="258">
+This default method is analogous to the <b>pam_authenticate(3)</b> PAM
+library function.  <i>pam</i> must be a pam object
+returned by <a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a>.  If
+<i>password</i> is specified, it should be a string.  It
+will be used when needed if the default conversation (see <a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a>) is used.  If
+<i>flags</i> is specified, it should be an integer.
+</p>
+<p id="259">
+On success, this function returns <code>t</code>.
+</p>
+<p id="260">
+If the call is not successful, the function returns two values,
+<code>nil</code> and a status value.  The status value
+will be a keyword or an integer.  Possible status value keywords are:
+</p>
+<ul>
+<li id="261">
+<code>:auth-err</code>
+</li>
+<li id="262">
+<code>:cred-insufficient</code>
+</li>
+<li id="263">
+<code>:authinfo-unavail</code>
+</li>
+<li id="264">
+<code>:user-unknown</code>
+</li>
+<li id="265">
+<code>:max-tries</code>
+</li>
+</ul>
+
+<p id="266">
+If <b>pam_authenticate(3)</b> returns an unrecognized status code, it
+will be returned without being converted to a keyword.
+</p>
+
+
+<hr>
+
+<hr><h3 id="267"><a name="set-pam-fail-delay-op-bookmarkxx"></a>set-pam-fail-delay</h3><h3 id="268">Generic Function</h3><h4 id="269">Package: util.pam</h4>
+
+
+<p id="270"><b>Arguments: </b><i>
+pam microseconds
+</i></p>
+
+<p id="271">
+This method is used to request a delay of at least the specified
+number of microseconds (which must be an integer) before returning
+from an unsuccessful <a href="miscellaneous.htm#pam-authenticate-op-bookmarkxx"><b>pam-authenticate</b></a> call.  Setting
+a delay slows down attempts to rapidly try different passwords for an
+account.
+</p>
+<p id="272">
+If multiple calls to <a href="miscellaneous.htm#set-pam-fail-delay-op-bookmarkxx"><b>set-pam-fail-delay</b></a> are made, the
+largest requested delay will be used.  On some systems, it is possible
+that the PAM modules themselves may request delays, so you might
+notice a delay longer than one you requested (and in particular, you
+might notice a delay even though you hadn't called <a href="miscellaneous.htm#set-pam-fail-delay-op-bookmarkxx"><b>set-pam-fail-delay</b></a>).
+</p>
+<p id="273">
+The actual delay will is computed pseudorandomly and may differ by as
+much as 25% above or below the maximum requested value.
+</p>
+<p id="274">
+Regardless of the success or failure of a pam-authenticate call, the
+delay is set back to 0 before returning from <a href="miscellaneous.htm#pam-authenticate-op-bookmarkxx"><b>pam-authenticate</b></a>.  This means
+that you should generally call <a href="miscellaneous.htm#set-pam-fail-delay-op-bookmarkxx"><b>set-pam-fail-delay</b></a> before each
+call to <a href="miscellaneous.htm#pam-authenticate-op-bookmarkxx"><b>pam-authenticate</b></a>.
+</p>
+
+<hr>
+
+
+<hr><h2 id="275"><a name="pam-conversations-2">9.1 PAM conversation functions</a></h2>
+
+<p id="276">
+The default conversation function will display prompts and request
+input from <a href="../ansicl/dictentr/terminal.htm"><code>*terminal-io*</code></a>.
+If the <i>password</i> argument is supplied to <a href="miscellaneous.htm#pam-authenticate-op-bookmarkxx"><b>pam-authenticate</b></a>, it is probable
+that no interaction with <code>*terminal-io*</code> will occur
+at all.  However, if your system configuration or application has
+different requirements, you can provide your own conversation
+function.
+</p>
+<p id="277">
+The conversation function will be called by the PAM API when it needs
+to collect information to move the authentication process along.  
+</p>
+<p id="278">
+If you supply your own conversation function, it should accept two
+required arguments, and one keyword argument: 
+</p>
+<p id="279"><b>Arguments: </b><i>
+messages data </i>&amp;key <i>password</i><i>
+</i></p>
+
+<p id="280">
+<b><i>messages</i></b> will be a list of pam-message
+structures. <b><i>data</i></b> will be the same value
+that was supplied to <a href="miscellaneous.htm#pam-start-op-bookmarkxx"><b>pam-start</b></a>.
+<b><i>password</i></b> will be the password that was
+passed to <a href="miscellaneous.htm#pam-authenticate-op-bookmarkxx"><b>pam-authenticate</b></a> (and may
+possibly be <code>nil</code>).
+</p>
+<p id="281">
+The conversation function should return a list of pam-response
+structures.  The list must have the same length as the
+<i>messages</i> list.  The first entry in the list
+should be the response that corresponds to the first message.  The
+second entry should correspond to the second message, and so forth.
+See <b>pam_conv(3)</b> for details.
+</p>
+<p id="282">
+The pam-message structure has two slots, <b>style</b> and
+<b>message</b>.  The <code>style</code> slot will be one of the
+following keywords <code>(:prompt-echo-off, :prompt-echo-on,
+:error, :text)</code> or an integer (indicating an unrecognized
+style). <code>message</code> will be a string which may be used
+to prompt the user.
+</p>
+<p id="283">
+The pam-response structure has two slots, <b>response</b> and
+<b>code</b>.  <code>response</code> should be a string with the
+data requested by the corresponding message.  <code>code</code>
+should be an integer (the default is 0).  Again, see
+<b>pam_conv(3)</b> for details.
+</p>
+
+
+
+
+<hr><hr><h2 id="284"><a name="asdf-1">10.0 asdf support in Allegro CL</a></h2>
+
+<p id="285">
+The popular system definition facility, <b>asdf</b>, is included with
+Allegro CL. Evaluate <code>(require :asdf)</code> to load it
+into a running Lisp. See <b><i>[Allegro
+directory]/code/asdf.readme</i></b> for more information,
+<code>[Allegro directory]/code/asdf.license</code> for the
+license, and <code>[Allegro directory]/src/asdf.lisp</code> for
+the source code. asdf documentation can be found on the web
+at 
+<a href="http://constantly.at/lisp/asdf/">http://constantly.at/lisp/asdf/</a>.
+</p>
+
+
+<hr><hr><h2 id="286"><a name="tar-1">11.0 tar support in Allegro CL</a></h2>
+
+<p id="287">
+Allegro CL provides support for extracting contents from tar files. To
+use this facility, evaluate</p>
+
+<pre id="288">
+(require :tar)
+</pre>
+
+<p id="289">
+The tar functions are named by symbols exported from
+the <b>util.tar</b> package. 
+</p>
+<p id="290">
+The tar functions take streams (rather than pathnames) as
+arguments. <a href="miscellaneous.htm#list-tar-op-bookmarkxx"><b>util.tar:list-tar</b></a> lists the
+contents of the tar file. <a href="miscellaneous.htm#extract-tar-op-bookmarkxx"><b>util.tar:extract-tar</b></a> extracts
+the contents into a specified directory.
+</p>
+<p id="291">
+Here are example forms using the tar functions:
+</p>
+
+<pre id="292">
+(with-open-file (s "foo.tgz")
+  (util.tar:list-tar s :gzip t))
+(with-open-file (s "foo.tgz")
+  (util.tar:extract-tar s :gzip t :directory "tmp/"))
+</pre>
+
+<hr><h3 id="293"><a name="list-tar-op-bookmarkxx"></a>list-tar</h3><h3 id="294">Function</h3><h4 id="295">Package: unknown</h4>
+
+<p id="296"><b>Arguments: </b><i>
+stream </i>&amp;key <i>gzip</i><i>
+</i></p>
+
+<p id="297">
+List, to <a href="../ansicl/dictentr/terminal.htm"><code>*terminal-io*</code></a>,
+the contents of <b><i>stream</i></b>, which should be a
+stream opened to a tar file. If <i>stream</i> is
+compressed with gzip compression, specify a
+non-<code>nil</code> value
+for <b><i>gzip</i></b>. bzip2 compression is not
+supported.
+</p>
+
+<hr>
+
+<hr><h3 id="298"><a name="extract-tar-op-bookmarkxx"></a>extract-tar</h3><h3 id="299">Function</h3><h4 id="300">Package: unknown</h4>
+
+<p id="301"><b>Arguments: </b><i>
+stream </i>&amp;key <i>gzip directory verbose</i><i>
+</i></p>
+
+<p id="302">
+Extract, to <b><i>directory</i></b>, the contents
+of <b><i>stream</i></b>, which should be a stream opened
+to a tar file. If <i>stream</i> is compressed with gzip
+compression, specify a non-<code>nil</code> value
+for <b><i>gzip</i></b>. bzip2 compression is not
+supported. 
+</p>
+<p id="303">
+<b><i>directory</i></b> defaults
+to <code>nil</code>, which means extract to the current
+directory (as returned by <a href="operators/excl/current-directory.htm"><b>current-directory</b></a>).
+</p>
+<p id="304">
+If <b><i>verbose</i></b> is specified
+non-<code>nil</code>, information about what is being done
+will be printed.
+</p>
+
+<hr>
+
+
+
+<hr><hr><h2 id="305"><a name="coverage-1">12.0 Coverage analysis in Allegro CL</a></h2>
+
+<p id="306">
+When testing a program, the coverage is a measure of how much of the
+source code has actually been tested: have all branches of a
+conditional been taken, have all defined functions been called, have
+all error handlers been triggered, and so on (coverage is described in
+Wikipedia <a href="http://en.wikipedia.org/wiki/Code_coverage">here</a>).
+</p>
+<p id="307">
+Allegro CL has a macro, <a href="operators/excl/with-coverage.htm"><b>with-coverage</b></a>, which executes code and
+when done, prints information about how well a specified list of
+functions are excercised. The type of coverage, following the
+description in the Wikipedia article linked to above, is statement
+coverage, where "lines of code" is understood to mean Lisp
+S-expressions.
+</p>
+<p id="308">
+See the <a href="operators/excl/with-coverage.htm"><b>with-coverage</b></a> page
+for further details and an example. Note that source file recording
+must be on for the coverage tool to work.
+</p>
+
+
+
+
+<hr><hr><h2 id="309"><a name="format-checking-1">13.0 Checking format forms during compilation</a></h2>
+
+<p id="310">
+Allegro CL has a facility for checking <a href="../ansicl/dictentr/format.htm"><b>format</b></a> forms during compilation. What
+is checked is whether there seem to be sufficient arguments in the
+form for the format control string to be processed without error when
+the form is evaluated at run time. If enabled, the facility will warn
+when it detects that there are two few arguments, note when there are
+too many arguments, and note when the control string is too complex
+for analysis. (Having too many argument is not an error and is indeed
+explicitly permitted by the ANS. However, if it is not what is
+intended, it is useful to know that it has happened.)
+</p>
+<p id="311">
+The analysis will occur when the
+<a href="variables/compiler/verify-format-argument-count-switch.htm"><code>comp:verify-format-argument-count-switch</code></a>
+is non-<code>nil</code> and not 0. This switch differs
+from most compiler switches in that its value can be 0, 1, 2, 3, or 4
+as well as <code>nil</code> (equivalent to 0)
+and <code>t</code> (equivalent to 2). 
+</p>
+<p id="312">
+Here is the behavior for the various values of the switch:
+</p>
+<ul>
+<li id="313">
+0 or <code>nil</code>: Collect no statistics, signal no
+warning or compiler notes.
+</li>
+<li id="314">
+<code>t</code>, 1, 2, 3, or 4: Collect statistics about
+format argument counts compared to what is called for in format
+strings; about format strings too complex to analyze; and about
+syntactic errors in format forms.
+</li>
+<li id="315">
+1: Gather statistics only. Signal no
+warnings or compiler notes.
+</li>
+<li id="316">
+<code>t</code> or 2: Gather statistics, signal
+style-warning if not enough arguments.
+</li>
+<li id="317">
+3: Like 2, but signal a compiler-note when too many arguments are
+detected. (It is not an error to supply too many arguments, but a
+compiler-note can be useful if that is not what is intended.)
+</li>
+<li id="318">
+4: Like 3, but also signal a compiler-note when a format string is too
+complex to analyse.
+</li>
+</ul>
+<p id="319">
+Statistics are only kept if the value of the
+variable <a href="variables/excl/s_format-arg-count-stats_s.htm"><code>*format-arg-count-stats*</code></a> is a list of six
+fixnums (representing all, missing args, args equal in number to
+needed, args more than needed, too complex, and syntax error). These
+numbers are incremented appropriately as format forms are
+analysed. Warnings and compiler-notes are printed if the switch value
+calls for them. The function <a href="operators/excl/format-arg-count-stats.htm"><b>format-arg-count-stats</b></a> prints the
+collected statistics.
+</p>
+
+
+
+<hr><hr><h2 id="320"><a name="heap-walking-1">14.0 Heap walkers in Allegro CL</a></h2>
+
+<p id="321">
+A <i>heap walker</i> is a tool which examines the Lisp heap and
+gathers information about it. The Lisp heap is where most Lisp objects
+are stored. It comprises the old space and new spaces described in the
+garbage collection document <a href="gc.htm">gc.htm</a>.
+</p>
+<p id="322">
+The two built-in tools which walk the heap are <a href="operators/excl/get-objects.htm"><b>get-objects</b></a> and <a href="operators/excl/get-references.htm"><b>get-references</b></a>. Each returns a <i>heapwalk
+vector</i>. This is a simple vector with element
+type <code>t</code>, whose size depends on the number of
+objects found. The first element of a heapwalk vector is the integer
+number of objects of interest found). These objects are stored in the
+vector elements after the first. The actual size of the vector is a
+little bit bigger than strictly necessary to allow for including
+objects created while the heap is being examined. Note that the
+heapwalk vector itself is an object in the heap. It is persumably not
+an object of interest (it did not even exist when <a href="operators/excl/get-objects.htm"><b>get-objects</b></a> or <a href="operators/excl/get-references.htm"><b>get-references</b></a> was called) so its existence
+can skew the results slightly but unavoidably.
+</p>
+<p id="323">
+The function get-objects takes a <i>code</i> as its
+required argument and has keyword agguments <i>old</i>
+and <i>new</i>. The keyword arguments default
+to <code>t</code>. If
+specified <code>nil</code>, that particular space will not
+be searched. The <i>code</i> is the type code of a lisp
+object.
+</p>
+<p id="324">
+Type codes are shown in room output and also by the
+function <a href="operators/excl/print-type-counts.htm"><b>print-type-counts</b></a>. (Neither lists all possible
+type counts, just those for which at least one object of the
+particular type exists.) Here is a (slightly truncated) output
+of <code>(room t)</code>:
+</p>
+
+<pre id="325">
+cl-user(2): (room t)
+area area  address(bytes)        cons         other bytes
+  #  type                   8 bytes each
+                             (free:used)      (free:used)
+     Top #x20d7a000
+     New #x20994000(4087808)   916:15225     843936:3035024
+     New #x205ae000(4087808)    -----            -----
+   0 Old #x20000aa0(5952864)   711:78771    2098888:3209704
+Root pages: 126
+  Lisp heap:    #x20000000  pos: #x20d7a000 resrve: #x20fa0000
+Aclmalloc heap: #xa0000000  pos: #xa0048000 resrve: #xa00fa000
+ Pure space:    #x1f8ec000  end: #x1ffff888
+
+code   type                                 items     bytes 
+126: (simple-array (unsigned-byte 16))       10767   2153400 31.4%
+112: (simple-array t)                         8891   1445976 21.1%
+  1: cons                                    93996    751968 11.0%
+  7: symbol                                  20360    651520  9.5%
+  8: function                                 9681    602864  8.8%
+133: sv-vector                               20549    340840  5.0%
+120: (simple-array fixnum)                     259    270272  3.9%
+119: (simple-array code)                       367    192064  2.8%
+117: (simple-array character)                 2396    148960  2.2%
+125: (simple-array (unsigned-byte 8))           19     98720  1.4%
+ 12: standard-instance                        3900     62400  0.9%
+  9: closure                                  2897     50432  0.7%
+ 15: structure                                1159     47856  0.7%
+127: (simple-array (unsigned-byte 32))          11     12744  0.2%
+[...]
+
+ total bytes = 6856032
+aclmalloc arena:
+[...]
+</pre>
+
+<p id="326">
+Now we call <a href="operators/excl/get-objects.htm"><b>get-objects</b></a> on
+type code 127, which is <code>(simple-array (unsigned-byte
+32))</code>. There are eleven such objects, according to the list
+printed by <a href="../ansicl/dictentr/room.htm"><b>room</b></a> (code 127 is
+the last item before the list is truncated).
+</p>
+
+<pre id="327">
+cl-user(3): (get-objects 127)
+#(11 #(255 65535 16777215 4294967295) #(32 8224 2105376 538976288)
+  #(3960924350 2165561044 562617442 2270225120 1264129478 758582028 172407450
+    2782512936 595962478 1609675396 ...)
+  #(0 2567483615)
+  #(546914304 4087808 916 15225 529448960 536869000 553254912 536870912 843936
+    3035024 ...)
+  #(3960924350 2165561044 562617442 2270225120 1264129478 758582028 172407450
+    2782512936 595962478 1609675396 ...)
+  #(3960924350 2165561044 562617442 2270225120 1264129478 758582028 172407450
+    2782512936 595962478 1609675396 ...)
+  #(200235464 1375865383 2472949741 3729159793 443451277 421802134 4188904507
+    2175392005 408067652 1254986169 ...)
+  #(3960924350 2165561044 562617442 2270225120 1264129478 758582028 172407450
+    2782512936 595962478 1609675396 ...)
+  ...)
+cl-user(4): (length *)
+31
+cl-user(5):
+</pre>
+<p id="328">
+The result is a heapwalk vector. The first element is 11, the number
+of objects of the type of interest. Then those eleven objects. Then
+some extra elements (19 extra in this case, for a total vector size of
+31).
+</p>
+<p id="329">
+Once you have objects of a particular type, you can find references to
+that object with
+<a href="operators/excl/get-references.htm"><b>get-references</b></a>, which
+returns a heapwalk vector filled with objects in the Lisp heap or in
+lispstatic space which point directly to the object of interest. Note
+that compound structures might not point to the object directly; for
+example, if a list has an element within it, the first call to
+get-references will return only the cons cell whose car is that
+object; you would have to repeat the <a href="operators/excl/get-references.htm"><b>get-references</b></a> on that cons cell to find the
+cons whose cdr points to it, and so on backward through the list until
+you find a recognizable structure, symbol, or function that points to
+the head of the list. The stack can be included in the search if
+the <i>include-stacks</i> keyword argument to <a href="operators/excl/get-references.htm"><b>get-references</b></a> is specified true.
+</p>
+<p id="330">
+Heapwalker vectors themselves point to lots of objects but are not
+what you are looking for when you search for references. Therefore,
+heapwalk vectors are marked and are not included in <a href="operators/excl/get-references.htm"><b>get-references</b></a> output.
+</p>
+<p id="331">
+When using <a href="operators/excl/get-references.htm"><b>get-references</b></a>, note the following:
+</p>
+<ul>
+  <li id="332">
+    You should do a <code>(gc t)</code> (global gc) before you
+start using this tool. Heapwalkers don't care if an object is dead or
+not, so it may be that you are grabbing objects from the heap which
+    would have otherwise been collected because it was dead.
+  </li>
+  <li id="333">
+    <a href="../ansicl/dictentr/unnamed2.htm"><code>*</code></a>, <a href="../ansicl/dictentr/unnamed2.htm"><code>**</code></a>, and <a href="../ansicl/dictentr/unnamed2.htm"><code>***</code></a> are assigned results from previous
+invocations of <a href="operators/excl/get-references.htm"><b>get-references</b></a>, so it is likely that one of
+    them will be in the next result-vector.
+      </li>
+</ul>
+
+
+</body><hr><p id="2"><small>Copyright (c) 1998-2015, Franz Inc. Oakland, CA., USA. All rights reserved.</small><br>
+<small>Documentation for Allegro CL version 10.0. This page was not revised from the 9.0 page.</small><br><small>Created 2015.5.21.</small><br>
+</p><table border="0" width="100%" cellpadding="1" cellspacing="0"><tr><td colspan="2" bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3"><tr><td align="left" bgcolor="#00FFFF"><a href="contents.htm"><b>ToC</b></a></td><td align="left" bgcolor="#00FFFF"><a href="introduction.htm"><b>DocOverview</b></a></td><td align="left" bgcolor="#00FFFF"><a href="cgide.htm"><b>CGDoc</b></a></td><td align="left" bgcolor="#00FFFF"><a href="release-notes.htm"><b>RelNotes</b></a></td><td align="left" bgcolor="#00FFFF"><a href="http://www.franz.com/support/faq/"><b>FAQ</b></a></td><td align="left" bgcolor="#00FFFF"><a href="index.htm"><b>Index</b></a></td><td align="left" bgcolor="#00FFFF"><a href="permuted-index.htm"><b>PermutedIndex</b></a></td></tr></table></td><td align="right"><b>Allegro CL version 10.0</b><br><small><a href="introduction.htm#updates-s">Unrevised from 9.0 to 10.0.</a></small><br><a href="http://www.franz.com/support/documentation/9.0/doc/miscellaneous.htm">9.0 version</a></td></tr></table></html>

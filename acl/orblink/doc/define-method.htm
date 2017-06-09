@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Implementing operations</title>
+  </head>
+
+  <body>
+    <h1>Implementing operations: smart proxies and synchronization</h1>
+<hr>
+<p>
+The main tool for defining implementation methods is the corba:define-method macro.
+
+The syntax is very similar to that of the usual Lisp defmethod, except that the first argument, and only the
+first argument, may be specialized.
+
+The formal syntax of corba:define method is described in the <a href="mapping.htm">mapping document</a>.
+
+There are numerous examples in the <a href="../examples/readme.htm">examples</a> subdirectory. A typical 
+define-method form might look like the following, taken from <a href="../examples/test/test-implementation.cl">examples/test/test-implementation.cl</a>.
+<pre>
+(corba:define-method testexception ((this test-implementation) a)
+  (cond
+   ((plusp a) a)
+   ((zerop a) (/ 1 0))
+   (t
+    (error 'idltest:exceptionexample :member1 a))))
+</pre>
+
+This defines a new implementation of <code>op:testexception</code>, which should
+have been defined as an operation in an IDL interface implemented by the
+test-implementation class.
+
+Incoming requests to invoke the operation testexception on a test-implementation instance will
+result in evaluation of the corba:define-method body.
+
+<h2>Signalling exceptions in corba:define-method</h2>
+You can signal a condition within the body of corba:define-method form as normal.
+
+When the implementation body is invoked remotely, the ORB will catch any signalled exceptions and behave
+as described by the <a href="exceptions.htm">ORB exception API</a>.
+
+<h2>Synchronization</h2>
+You can interlock method invocations on a particular invocation by using the <code>:synchronized</code>
+keyword after the method name.
+
+<h2>Smart proxies</h2>
+You can use the usual Common Lisp :before, :after, and :around methods.
+
+One common usage is to create a smart proxy.
+
+For example, consider the IDL:
+
+<pre>
+module M {
+ interface test{
+   long remoteoperation (in long fum);};
+         };
+</pre>
+
+Suppose we want to print a message every time the remoteoperation operation on any proxy of class test was invoked.
+We could do this via:
+
+<pre>
+(corba:define-method remoteoperation :before ((this M:test-proxy) fum)
+ (format t "Proxy: ~s received message remoteoperation with parameter: ~a~%" fum)
+ (force-output)) ; always a good idea to call this after formats which may occur in background
+</pre>
+
+Now suppose there is a global variable named *call-remotely*. We can forward remote requests
+remotely only when this is T, otherwise we return 0:
+
+<pre>
+(corba:define-method remoteoperation :around ((this M:test-proxy) fum)
+ (if *call-remotely* (call-next-method)
+      0))
+</pre>
+
+You can use this, for example, to cache remote state and avoid remote invocations.
+
+<h2>Forwarding requests</h2>
+You can <a href="forwarding.htm">forward the request to another object</a> within the body of a define-method form.
+The forwarding API is described separately.
+<h2>Message access</h2>
+Within the body of a define-method form the <code>orblink:*message*</code> special
+variable is bound to the IIOP Request message that caused the invocation.
+This functionality is described <a href="message.htm">separately</a>.
+
+</body>
+</html>

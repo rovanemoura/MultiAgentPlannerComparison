@@ -1,0 +1,1741 @@
+package jia;
+
+import jason.asSemantics.*;
+import jason.asSyntax.*;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class parserProblem7Siw extends DefaultInternalAction {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
+    public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r1/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r1/siw/p08/ugv10.out", "UTF-8");
+
+
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r2/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r2/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r3/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r3/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r4/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r4/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r5/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r5/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r6/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r6/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r7/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r7/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r8/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r8/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r9/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r9/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/rovane/planners/results/r10/siw/p08/p08.out"))) {
+			PrintWriter uav1 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav1.out", "UTF-8");
+			PrintWriter uav2 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav2.out", "UTF-8");
+			PrintWriter uav3 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav3.out", "UTF-8");
+			PrintWriter uav4 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav4.out", "UTF-8");
+			PrintWriter uav5 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav5.out", "UTF-8");
+			PrintWriter uav6 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav6.out", "UTF-8");
+			PrintWriter uav7 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav7.out", "UTF-8");
+			PrintWriter uav8 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav8.out", "UTF-8");
+			PrintWriter uav9 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav9.out", "UTF-8");
+			PrintWriter uav10 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/uav10.out", "UTF-8");
+
+
+			PrintWriter usv1 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv1.out", "UTF-8");
+			PrintWriter usv2 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv2.out", "UTF-8");
+			PrintWriter usv3 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv3.out", "UTF-8");
+			PrintWriter usv4 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv4.out", "UTF-8");
+			PrintWriter usv5 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv5.out", "UTF-8");
+			PrintWriter usv6 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv6.out", "UTF-8");
+			PrintWriter usv7 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv7.out", "UTF-8");
+			PrintWriter usv8 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv8.out", "UTF-8");
+			PrintWriter usv9 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv9.out", "UTF-8");
+			PrintWriter usv10 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/usv10.out", "UTF-8");
+
+
+			PrintWriter ugv1 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv1.out", "UTF-8");
+			PrintWriter ugv2 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv2.out", "UTF-8");
+			PrintWriter ugv3 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv3.out", "UTF-8");
+			PrintWriter ugv4 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv4.out", "UTF-8");
+			PrintWriter ugv5 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv5.out", "UTF-8");
+			PrintWriter ugv6 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv6.out", "UTF-8");
+			PrintWriter ugv7 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv7.out", "UTF-8");
+			PrintWriter ugv8 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv8.out", "UTF-8");
+			PrintWriter ugv9 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv9.out", "UTF-8");
+			PrintWriter ugv10 = new PrintWriter("/home/rovane/planners/results/r10/siw/p08/ugv10.out", "UTF-8");
+
+			
+		    for(String line; (line = br.readLine()) != null; ) {
+		    	if (!line.contains("problem") && !line.contains("Problem"))
+		    	{
+		    	if (line.contains("uav1 ")) {
+		    		uav1.println(line);
+		    	}
+		    	else if (line.contains("uav2")) {
+		    		uav2.println(line);
+		    	}
+		    	else if (line.contains("uav3")) {
+		    		uav3.println(line);
+		    	}
+		    	else if (line.contains("uav4")) {
+		    		uav4.println(line);
+		    	}		
+		    	else if (line.contains("uav5")) {
+		    		uav5.println(line);
+		    	}	
+		    	else if (line.contains("uav6")) {
+		    		uav6.println(line);
+		    	}	
+		    	else if (line.contains("uav7")) {
+		    		uav7.println(line);
+		    	}	
+		    	else if (line.contains("uav8")) {
+		    		uav8.println(line);
+		    	}	
+		    	else if (line.contains("uav9")) {
+		    		uav9.println(line);
+		    	}			    	
+		    	else if (line.contains("uav10")) {
+		    		uav10.println(line);
+		    	}		
+		    	if (line.contains("ugv1 ")) {
+		    		ugv1.println(line);
+		    	}
+		    	else if (line.contains("ugv2")) {
+		    		ugv2.println(line);
+		    	}
+		    	else if (line.contains("ugv3")) {
+		    		ugv3.println(line);
+		    	}
+		    	else if (line.contains("ugv4")) {
+		    		ugv4.println(line);
+		    	}		 
+		    	else if (line.contains("ugv5")) {
+		    		ugv5.println(line);
+		    	}	
+		    	else if (line.contains("ugv6")) {
+		    		ugv6.println(line);
+		    	}	
+		    	else if (line.contains("ugv7")) {
+		    		ugv7.println(line);
+		    	}			
+		    	else if (line.contains("ugv8")) {
+		    		ugv8.println(line);
+		    	}		
+		    	else if (line.contains("ugv9")) {
+		    		ugv9.println(line);
+		    	}
+		    	else if (line.contains("ugv10")) {
+		    		ugv10.println(line);
+		    	}
+		    	if (line.contains("usv1 ")) {
+		    		usv1.println(line);
+		    	}
+		    	else if (line.contains("usv2")) {
+		    		usv2.println(line);
+		    	}
+		    	else if (line.contains("usv3")) {
+		    		usv3.println(line);
+		    	}
+		    	else if (line.contains("usv4")) {
+		    		usv4.println(line);
+		    	}		    
+		    	else if (line.contains("usv5")) {
+		    		usv5.println(line);
+		    	}	
+		    	else if (line.contains("usv6")) {
+		    		usv6.println(line);
+		    	}		
+		    	else if (line.contains("usv7")) {
+		    		usv7.println(line);
+		    	}	
+		    	else if (line.contains("usv8")) {
+		    		usv8.println(line);
+		    	}	
+		    	else if (line.contains("usv9")) {
+		    		usv9.println(line);
+		    	}	
+		    	else if (line.contains("usv10")) {
+		    		usv10.println(line);
+		    	}	
+		    	}
+		    }
+		    br.close();
+		    uav1.close();
+		    uav2.close();
+		    uav3.close();
+		    uav4.close();
+		    uav5.close();
+		    uav6.close();
+		    uav7.close();
+		    uav8.close();
+		    uav9.close();
+		    uav10.close();
+		    
+
+		    ugv1.close();
+		    ugv2.close();
+		    ugv3.close();
+		    ugv4.close();
+		    ugv5.close();
+		    ugv6.close();
+		    ugv7.close();
+		    ugv8.close();
+		    ugv9.close();
+		    ugv10.close();
+		    
+
+		    usv1.close();
+		    usv2.close();
+		    usv3.close();
+		    usv4.close();
+		    usv5.close();
+		    usv6.close();
+		    usv7.close();
+		    usv8.close();
+		    usv9.close();
+		    usv10.close();
+		    
+
+		    
+		}
+		
+        return true;
+    }
+}

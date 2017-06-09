@@ -1,0 +1,289 @@
+Segmentation fault (core dumped)
+rm: cannot remove 'downward.tmp.*': No such file or directory
+rm: cannot remove 'output': No such file or directory
+rm: cannot remove 'output.sas': No such file or directory
+rm: cannot remove 'plan_numbers_and_cost': No such file or directory
+rm: cannot remove 'elapsed.time': No such file or directory
+rm: cannot remove 'lama-output*': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/out.txt': No such file or directory
+./run-lama-first.sh: line 10: ././src/fast-downward.py: Permission denied
+cp: cannot stat '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+./plan.sh: line 110: 22630 Segmentation fault      (core dumped) ./map-core --eval "(progn (sb-ext:disable-debugger)
+			(let* (
+				(init-time (get-internal-real-time))
+				(solution (case '$FORMAT (sol \"$INP\")
+			        (ipc-num (solution-from-file \"$INP\"))
+			        (ipc (read-plan-from-file \"$INP\"))))
+			
+			)
+
+			(read-pddl-domain \"$DOM\")
+       			(read-pddl-problem \"$PROB\")
+			
+			(setf *agents* (get-init-agents \"$AG\"))
+			(setq parallel-plan
+ 	     			(mapcar #'(lambda(x) (cons (car x) (des-obfuscate (cdr x))))
+ 	             	(build-parallel-plan solution))
+			)
+			
+
+				 (setq *ma-pddl-alist*
+		   (with-open-file (infile \"filename.txt\" :direction :input :if-does-not-exist :ERROR)
+				       (read infile nil 'eof))
+				    )
+				
+				
+				  (write-solution-in-output-file \"$OUTP\" parallel-plan nil nil nil nil nil nil
+				     (elapsed-time init-time 'real-time) :ma-pddl-p t)
+			
+				)
+
+
+		    (quit))"
+
+real	0m0.376s
+user	0m0.004s
+sys	0m0.000s
+
+Segmentation fault (core dumped)
+rm: cannot remove 'downward.tmp.*': No such file or directory
+rm: cannot remove 'output': No such file or directory
+rm: cannot remove 'output.sas': No such file or directory
+rm: cannot remove 'plan_numbers_and_cost': No such file or directory
+rm: cannot remove 'elapsed.time': No such file or directory
+rm: cannot remove 'lama-output*': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/out.txt': No such file or directory
+./run-lama-first.sh: line 10: ././src/fast-downward.py: Permission denied
+cp: cannot stat '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+./plan.sh: line 110:  8766 Segmentation fault      (core dumped) ./map-core --eval "(progn (sb-ext:disable-debugger)
+			(let* (
+				(init-time (get-internal-real-time))
+				(solution (case '$FORMAT (sol \"$INP\")
+			        (ipc-num (solution-from-file \"$INP\"))
+			        (ipc (read-plan-from-file \"$INP\"))))
+			
+			)
+
+			(read-pddl-domain \"$DOM\")
+       			(read-pddl-problem \"$PROB\")
+			
+			(setf *agents* (get-init-agents \"$AG\"))
+			(setq parallel-plan
+ 	     			(mapcar #'(lambda(x) (cons (car x) (des-obfuscate (cdr x))))
+ 	             	(build-parallel-plan solution))
+			)
+			
+
+				 (setq *ma-pddl-alist*
+		   (with-open-file (infile \"filename.txt\" :direction :input :if-does-not-exist :ERROR)
+				       (read infile nil 'eof))
+				    )
+				
+				
+				  (write-solution-in-output-file \"$OUTP\" parallel-plan nil nil nil nil nil nil
+				     (elapsed-time init-time 'real-time) :ma-pddl-p t)
+			
+				)
+
+
+		    (quit))"
+
+real	0m0.249s
+user	0m0.004s
+sys	0m0.000s
+
+ SOLUTION FOUND!. See file /home/rovane/planners/pmr/PMR/temp/plan.out.pp
+
+Parallel-plan save in /home/rovane/planners/pmr/PMR/temp/plan.out.pp
+Parsing...
+Parsing: [0.010s CPU, 0.014s wall-clock]
+Normalizing task... [0.000s CPU, 0.001s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.003s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.020s CPU, 0.016s wall-clock]
+Preparing model... [0.010s CPU, 0.012s wall-clock]
+Generated 359 rules.
+Computing model... [0.280s CPU, 0.292s wall-clock]
+13277 relevant atoms
+5362 auxiliary atoms
+18639 final queue length
+32337 total queue pushes
+Completing instantiation... [0.560s CPU, 0.556s wall-clock]
+Instantiating: [0.880s CPU, 0.887s wall-clock]
+Computing fact groups...
+Finding invariants...
+85 initial candidates
+Finding invariants: [0.090s CPU, 0.093s wall-clock]
+Checking invariant weight... [0.010s CPU, 0.001s wall-clock]
+Instantiating groups... [0.020s CPU, 0.021s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.001s wall-clock]
+Choosing groups...
+703 uncovered facts
+Choosing groups: [0.010s CPU, 0.004s wall-clock]
+Building translation key... [0.000s CPU, 0.005s wall-clock]
+Computing fact groups: [0.140s CPU, 0.144s wall-clock]
+Building STRIPS to SAS dictionary... [0.010s CPU, 0.002s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.002s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.002s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.020s CPU, 0.022s wall-clock]
+Translating task: [0.550s CPU, 0.554s wall-clock]
+0 implied effects removed
+8034 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+44 propositions removed
+Detecting unreachable propositions: [0.100s CPU, 0.099s wall-clock]
+Translator variables: 714
+Translator derived variables: 0
+Translator facts: 2517
+Translator mutex groups: 82
+Translator total mutex groups size: 1253
+Translator operators: 10815
+Translator task size: 56270
+Translator peak memory: 80696 KB
+Writing output... [0.120s CPU, 0.111s wall-clock]
+Done! [1.840s CPU, 1.845s wall-clock]
+Building causal graph...
+The causal graph is not acyclic.
+425 variables of 714 necessary
+0 of 82 mutex groups necessary.
+10815 of 10815 operators necessary.
+0 of 0 axiom rules necessary.
+Initializing mutex computation...
+Mutex computation initialized with 1939 fluents.
+iteration for mutex detection and operator pruning
+Initialize m_index fw
+Initialized mvalues forward: reached=180625, notReached=3520804, spurious=58292
+Initialize m_ops fw
+Computing mutexes...
+Mutex computation finished with reached=3689009, notReached=12420, spurious=58292
+0 operators are spurious because were not triggered
+H^2 mutexes added fw: 12420, unreachable: 0
+0 of 10815 operators detected as spurious
+iteration for mutex detection and operator pruning
+Initialize m_index bw
+Init values regression
+Initialized mvalues backward: reached=1853070, notReached=1835939, spurious=70712
+Initialize m_ops bw
+Computing mutexes...
+Mutex computation finished with reached=2116389, notReached=1572620, spurious=70712
+2820 operators are spurious because were not triggered
+H^2 mutexes added bw: 0, unreachable: 470
+0 of 7995 operators detected as spurious
+iteration for mutex detection and operator pruning
+Initialize m_index fw
+Initialized mvalues forward: reached=180625, notReached=1935764, spurious=1643332
+Initialize m_ops fw
+Computing mutexes...
+Mutex computation finished with reached=2116389, notReached=0, spurious=1643332
+0 operators are spurious because were not triggered
+H^2 mutexes added fw: 0, unreachable: 0
+0 of 7995 operators detected as spurious
+Total mutex and disambiguation time: 9.03
+6210 of 6210 mutex groups necessary.
+7995 of 10815 operators necessary.
+0 of 0 axiom rules necessary.
+Change id of operators: 7995
+Change id of axioms: 0
+Change id of mutexes
+Change id of goals
+Change id of initial state
+Remove unreachable facts from variables: 425
+6210 of 6210 mutex groups necessary.
+7995 of 7995 operators necessary.
+0 of 0 axiom rules necessary.
+Updating causal graph and pruning unnecessary facts
+425 variables of 425 of 714 necessary
+The causal graph is not acyclic.
+6210 of 6210 mutex groups necessary.
+7995 of 7995 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 1469
+Preprocessor derived variables: 0
+Preprocessor task size: 45990
+Writing output...
+Number of vars: 425
+weighted 425
+done
+
+././search/dispatch: 4: ././search/dispatch: gawk: not found
+././search/unitcost: 4: ././search/unitcost: gawk: not found
+././search/downward: line 195: ././search/downward-: No such file or directory
+cp: cannot stat '/home/rovane/planners/pmr/PMR/temp/rpt_plan.out': No such file or directory
+Unhandled SB-INT:SIMPLE-FILE-ERROR in thread #<SB-THREAD:THREAD
+                                               "main thread" RUNNING
+                                                {1003CED593}>:
+  error opening #P"/home/rovane/planners/pmr/PMR/../plan.out":
+    No such file or directory
+
+Backtrace for: #<SB-THREAD:THREAD "main thread" RUNNING {1003CED593}>
+0: ((LAMBDA NIL :IN SB-DEBUG::FUNCALL-WITH-DEBUG-IO-SYNTAX))
+1: (SB-IMPL::CALL-WITH-SANE-IO-SYNTAX #<CLOSURE (LAMBDA NIL :IN SB-DEBUG::FUNCALL-WITH-DEBUG-IO-SYNTAX) {1003DBBC6B}>)
+2: (SB-IMPL::%WITH-STANDARD-IO-SYNTAX #<CLOSURE (LAMBDA NIL :IN SB-DEBUG::FUNCALL-WITH-DEBUG-IO-SYNTAX) {1003DBBC3B}>)
+3: (PRINT-BACKTRACE :STREAM #<SYNONYM-STREAM :SYMBOL SB-SYS:*STDERR* {10001E7833}> :START 0 :FROM :INTERRUPTED-FRAME :COUNT NIL :PRINT-THREAD T :PRINT-FRAME-SOURCE NIL :METHOD-FRAME-STYLE NIL)
+4: (SB-DEBUG::DEBUGGER-DISABLED-HOOK #<SB-INT:SIMPLE-FILE-ERROR "~@<~?: ~2I~_~A~:>" {1003DB7793}> #<unavailable argument>)
+5: (SB-DEBUG::RUN-HOOK *INVOKE-DEBUGGER-HOOK* #<SB-INT:SIMPLE-FILE-ERROR "~@<~?: ~2I~_~A~:>" {1003DB7793}>)
+6: (INVOKE-DEBUGGER #<SB-INT:SIMPLE-FILE-ERROR "~@<~?: ~2I~_~A~:>" {1003DB7793}>)
+7: (ERROR SB-INT:SIMPLE-FILE-ERROR :PATHNAME #P"/home/rovane/planners/pmr/PMR/../plan.out" :FORMAT-CONTROL "~@<~?: ~2I~_~A~:>" :FORMAT-ARGUMENTS ("error opening ~S" (#P"/home/rovane/planners/pmr/PMR/../plan.out") "No such file or directory"))
+8: (SB-IMPL::SIMPLE-FILE-PERROR "error opening ~S" #P"/home/rovane/planners/pmr/PMR/../plan.out" 2)
+9: ((FLET SB-IMPL::VANILLA-OPEN-ERROR :IN OPEN))
+10: (OPEN "../plan.out" :DIRECTION :INPUT :ELEMENT-TYPE BASE-CHAR :IF-EXISTS NIL :IF-DOES-NOT-EXIST NIL :EXTERNAL-FORMAT :DEFAULT)
+11: (READ-PLAN-FROM-FILE "../plan.out")
+12: ((LAMBDA ()))
+13: (SB-INT:SIMPLE-EVAL-IN-LEXENV (LET* ((INIT-TIME (GET-INTERNAL-REAL-TIME)) (SOLUTION (CASE (QUOTE IPC) (SOL "../plan.out") (IPC-NUM (SOLUTION-FROM-FILE "../plan.out")) (IPC (READ-PLAN-FROM-FILE "../plan.out"))))) (READ-PDDL-DOMAIN "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-domain.pddl") (READ-PDDL-PROBLEM "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-problem.pddl") (SETF *AGENTS* (GET-INIT-AGENTS "/home/rovane/planners/pmr/PMR/agents.lisp")) (SETQ PARALLEL-PLAN (MAPCAR (FUNCTION (LAMBDA (X) (CONS (CAR X) (DES-OBFUSCATE (CDR X))))) (BUILD-PARALLEL-PLAN SOLUTION))) (SETQ *MA-PDDL-ALIST* (WITH-OPEN-FILE (INFILE "filename.txt" :DIRECTION :INPUT :IF-DOES-NOT-EXIST :ERROR) (READ INFILE NIL (QUOTE EOF)))) (WRITE-SOLUTION-IN-OUTPUT-FILE "../plan.out" PARALLEL-PLAN NIL NIL NIL NIL NIL NIL (ELAPSED-TIME INIT-TIME (QUOTE REAL-TIME)) :MA-PDDL-P T)) #<NULL-LEXENV>)
+14: (SB-IMPL::SIMPLE-EVAL-PROGN-BODY ((DISABLE-DEBUGGER) (LET* ((INIT-TIME (GET-INTERNAL-REAL-TIME)) (SOLUTION (CASE (QUOTE IPC) (SOL "../plan.out") (IPC-NUM (SOLUTION-FROM-FILE "../plan.out")) (IPC (READ-PLAN-FROM-FILE "../plan.out"))))) (READ-PDDL-DOMAIN "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-domain.pddl") (READ-PDDL-PROBLEM "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-problem.pddl") (SETF *AGENTS* (GET-INIT-AGENTS "/home/rovane/planners/pmr/PMR/agents.lisp")) (SETQ PARALLEL-PLAN (MAPCAR (FUNCTION (LAMBDA (X) (CONS (CAR X) (DES-OBFUSCATE (CDR X))))) (BUILD-PARALLEL-PLAN SOLUTION))) (SETQ *MA-PDDL-ALIST* (WITH-OPEN-FILE (INFILE "filename.txt" :DIRECTION :INPUT :IF-DOES-NOT-EXIST :ERROR) (READ INFILE NIL (QUOTE EOF)))) (WRITE-SOLUTION-IN-OUTPUT-FILE "../plan.out" PARALLEL-PLAN NIL NIL NIL NIL NIL NIL (ELAPSED-TIME INIT-TIME (QUOTE REAL-TIME)) :MA-PDDL-P T)) (QUIT)) #<NULL-LEXENV>)
+15: (SB-INT:SIMPLE-EVAL-IN-LEXENV (PROGN (DISABLE-DEBUGGER) (LET* ((INIT-TIME (GET-INTERNAL-REAL-TIME)) (SOLUTION (CASE (QUOTE IPC) (SOL "../plan.out") (IPC-NUM (SOLUTION-FROM-FILE "../plan.out")) (IPC (READ-PLAN-FROM-FILE "../plan.out"))))) (READ-PDDL-DOMAIN "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-domain.pddl") (READ-PDDL-PROBLEM "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-problem.pddl") (SETF *AGENTS* (GET-INIT-AGENTS "/home/rovane/planners/pmr/PMR/agents.lisp")) (SETQ PARALLEL-PLAN (MAPCAR (FUNCTION (LAMBDA (X) (CONS (CAR X) (DES-OBFUSCATE (CDR X))))) (BUILD-PARALLEL-PLAN SOLUTION))) (SETQ *MA-PDDL-ALIST* (WITH-OPEN-FILE (INFILE "filename.txt" :DIRECTION :INPUT :IF-DOES-NOT-EXIST :ERROR) (READ INFILE NIL (QUOTE EOF)))) (WRITE-SOLUTION-IN-OUTPUT-FILE "../plan.out" PARALLEL-PLAN NIL NIL NIL NIL NIL NIL (ELAPSED-TIME INIT-TIME (QUOTE REAL-TIME)) :MA-PDDL-P T)) (QUIT)) #<NULL-LEXENV>)
+16: (EVAL (PROGN (DISABLE-DEBUGGER) (LET* ((INIT-TIME (GET-INTERNAL-REAL-TIME)) (SOLUTION (CASE (QUOTE IPC) (SOL "../plan.out") (IPC-NUM (SOLUTION-FROM-FILE "../plan.out")) (IPC (READ-PLAN-FROM-FILE "../plan.out"))))) (READ-PDDL-DOMAIN "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-domain.pddl") (READ-PDDL-PROBLEM "/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-problem.pddl") (SETF *AGENTS* (GET-INIT-AGENTS "/home/rovane/planners/pmr/PMR/agents.lisp")) (SETQ PARALLEL-PLAN (MAPCAR (FUNCTION (LAMBDA (X) (CONS (CAR X) (DES-OBFUSCATE (CDR X))))) (BUILD-PARALLEL-PLAN SOLUTION))) (SETQ *MA-PDDL-ALIST* (WITH-OPEN-FILE (INFILE "filename.txt" :DIRECTION :INPUT :IF-DOES-NOT-EXIST :ERROR) (READ INFILE NIL (QUOTE EOF)))) (WRITE-SOLUTION-IN-OUTPUT-FILE "../plan.out" PARALLEL-PLAN NIL NIL NIL NIL NIL NIL (ELAPSED-TIME INIT-TIME (QUOTE REAL-TIME)) :MA-PDDL-P T)) (QUIT)))
+17: (SB-IMPL::PROCESS-EVAL/LOAD-OPTIONS ((:EVAL . "(progn (sb-ext:disable-debugger)
+			(let* (
+				(init-time (get-internal-real-time))
+				(solution (case 'ipc (sol \"../plan.out\")
+			        (ipc-num (solution-from-file \"../plan.out\"))
+			        (ipc (read-plan-from-file \"../plan.out\"))))
+			
+			)
+
+			(read-pddl-domain \"/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-domain.pddl\")
+       			(read-pddl-problem \"/home/rovane/planners/pmr/PMR/temp/merged-obfuscated-problem.pddl\")
+			
+			(setf *agents* (get-init-agents \"/home/rovane/planners/pmr/PMR/agents.lisp\"))
+			(setq parallel-plan
+ 	     			(mapcar #'(lambda(x) (cons (car x) (des-obfuscate (cdr x))))
+ 	             	(build-parallel-plan solution))
+			)
+			
+
+				 (setq *ma-pddl-alist*
+		   (with-open-file (infile \"filename.txt\" :direction :input :if-does-not-exist :ERROR)
+				       (read infile nil 'eof))
+				    )
+				
+				
+				  (write-solution-in-output-file \"../plan.out\" parallel-plan nil nil nil nil nil nil
+				     (elapsed-time init-time 'real-time) :ma-pddl-p t)
+			
+				)
+
+
+		    (quit))")))
+18: (SB-IMPL::TOPLEVEL-INIT)
+19: ((FLET #:WITHOUT-INTERRUPTS-BODY-54 :IN SAVE-LISP-AND-DIE))
+20: ((LABELS SB-IMPL::RESTART-LISP :IN SAVE-LISP-AND-DIE))
+
+unhandled condition in --disable-debugger mode, quitting
+
+real	0m20.677s
+user	0m21.712s
+sys	0m1.836s
+

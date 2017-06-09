@@ -1,0 +1,132 @@
+INFO     Running translator.
+INFO     translator inputs: ['../../../../pmr/ma-sat/satellite/domain/satellite.pddl', '../../../../pmr/ma-sat/satellite/problems/satellite-1']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.000s CPU, 0.003s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.010s CPU, 0.004s wall-clock]
+Preparing model... [0.000s CPU, 0.002s wall-clock]
+Generated 30 rules.
+Computing model... [0.000s CPU, 0.004s wall-clock]
+116 relevant atoms
+43 auxiliary atoms
+159 final queue length
+203 total queue pushes
+Completing instantiation... [0.010s CPU, 0.004s wall-clock]
+Instantiating: [0.020s CPU, 0.015s wall-clock]
+Computing fact groups...
+Finding invariants...
+12 initial candidates
+Finding invariants: [0.000s CPU, 0.004s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+8 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.000s CPU, 0.005s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.010s CPU, 0.004s wall-clock]
+1 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+2 propositions removed
+Detecting unreachable propositions: [0.000s CPU, 0.001s wall-clock]
+Translator variables: 10
+Translator derived variables: 0
+Translator facts: 25
+Translator goal facts: 3
+Translator mutex groups: 2
+Translator total mutex groups size: 9
+Translator operators: 52
+Translator axioms: 0
+Translator task size: 219
+Translator peak memory: 40836 KB
+Writing output... [0.000s CPU, 0.001s wall-clock]
+Done! [0.030s CPU, 0.030s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is acyclic.
+6 variables of 10 necessary
+0 of 2 mutex groups necessary.
+48 of 52 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 17
+Preprocessor derived variables: 0
+Preprocessor task size: 178
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/nluis/pmr-competition/ma-sat-mcodmap-mk/planning/fd/src/search/downward-release
+INFO     search arguments: ['--heuristic', 'hlm,hff=lm_ff_syn(lm_rhw(reasonable_orders=true,lm_cost_type=1,cost_type=1))', '--search', 'lazy_greedy(hff,hlm,preferred=[hff,hlm])', '--internal-plan-file', 'output2']
+reading input... [t=0s]
+Simplifying transitions... done!
+done reading input! [t=0s]
+building causal graph...done! [t=0s]
+packing state variables...done! [t=0s]
+Variables: 6
+Facts: 17
+Bytes per state: 4
+done initalizing global data [t=0s]
+Initializing Exploration...
+Generating landmarks using the RPG/SAS+ approach
+approx. reasonable orders
+approx. obedient reasonable orders
+Removed 0 reasonable or obedient reasonable orders
+Landmarks generation time: 0.000898992s
+Discovered 14 landmarks, of which 0 are disjunctive and 0 are conjunctive 
+23 edges
+Initializing LAMA-FF Synergy Object
+Initializing landmarks count heuristic...
+6 initial landmarks, 3 goal landmarks
+Conducting lazy best first search, (real) bound = 2147483647
+Best heuristic value: 8 [g=0, 1 evaluated, 0 expanded, t=0s, 3532 KB]
+Best heuristic value: 7 [g=1, 4 evaluated, 3 expanded, t=0s, 3532 KB]
+Best heuristic value: 6 [g=3, 8 evaluated, 7 expanded, t=0s, 3532 KB]
+Best heuristic value: 5 [g=4, 9 evaluated, 8 expanded, t=0s, 3532 KB]
+Best heuristic value: 4 [g=5, 10 evaluated, 9 expanded, t=0s, 3532 KB]
+Best heuristic value: 3 [g=6, 11 evaluated, 10 expanded, t=0s, 3532 KB]
+Best heuristic value: 2 [g=7, 12 evaluated, 11 expanded, t=0s, 3532 KB]
+Best heuristic value: 1 [g=8, 13 evaluated, 12 expanded, t=0s, 3532 KB]
+Solution found!
+Actual search time: 0s [t=0s]
+switch_on instrument0 satellite0 (1)
+turn_to satellite0 groundstation2 phenomenon6 (1)
+calibrate satellite0 instrument0 groundstation2 (1)
+turn_to satellite0 phenomenon4 groundstation2 (1)
+take_image satellite0 phenomenon4 instrument0 thermograph0 (1)
+turn_to satellite0 star5 phenomenon4 (1)
+take_image satellite0 star5 instrument0 thermograph0 (1)
+turn_to satellite0 phenomenon6 star5 (1)
+take_image satellite0 phenomenon6 instrument0 thermograph0 (1)
+Plan length: 9 step(s).
+Plan cost: 9
+Initial state h value: 8.
+Expanded 13 state(s).
+Reopened 0 state(s).
+Evaluated 14 state(s).
+Evaluations: 28
+Generated 98 state(s).
+Dead ends: 0 state(s).
+Search time: 0s
+Total time: 0s
+Solution found.
+Peak memory: 3532 KB

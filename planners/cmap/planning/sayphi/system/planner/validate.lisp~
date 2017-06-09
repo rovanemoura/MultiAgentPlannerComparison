@@ -1,0 +1,70 @@
+;; =========================================================================    
+;;  (C) Copyright 2006, 2008 
+;;      Universidad Carlos III de Madrid
+;;      Planning & Learning Group (PLG)
+;; 
+;; =========================================================================
+;; 
+;; This file is part of SAYPHI
+;; 
+;; 
+;; SAYPHI is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;; 
+;; SAYPHI is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with SAYPHI.  If not, see <http://www.gnu.org/licenses/>.
+;; ========================================================================
+
+;; Author: Tomas de la Rosa & Sergio Jimenez
+;; Description: Validating plans with IPC Validator
+;; Date: 2006.09.08
+;; 
+;; ========================================================================
+
+
+;; loading the reg-expression library                   
+(defparameter *my-cl-ppcre-pathname* (namestring (truename "./system/cl-ppcre-1.3.2/")))
+(load (format nil "~a~a"*my-cl-ppcre-pathname* "load.lisp"))
+
+(defun valid-plan-p (domain problem solution &key (domain-file "domain.pddl"))
+  (say-domain domain domain-file)
+  (let* ((domfilefull (format nil "~a~a" *domain-dir* domain-file))
+	(probdir (format nil "~aprobsets/" *domain-dir*))
+	(probfilefull (format nil "~a~a" probdir problem))
+	(pla2val-file "external/plan2val.txt")
+	(logval-file "external/logval.txt")
+	(planaction-counter 1)
+        (validp nil))
+    (when (probe-file pla2val-file) (delete-file pla2val-file))
+    (when (probe-file logval-file) (delete-file logval-file))
+    (with-open-file (stream pla2val-file :direction :output)
+      (if (solution-found solution)
+	  (dolist (i-node (solution-path solution) solution)
+	    (cond ((lhnode-p i-node)
+		   (dolist (i-lhaction (lhnode-lookahead-plan i-node))
+		     (format stream "~%     ~d: ~a" planaction-counter (gaction-planaction i-lhaction))
+		     (incf planaction-counter)))
+		  (t
+		   (format stream "~%     ~d: ~a [~a]" planaction-counter (snode-plan-action i-node)
+			   (snode-cost i-node))
+		   (incf planaction-counter))))))
+
+    (run-program "external/validate"
+		 (list domfilefull probfilefull pla2val-file)
+		 :output logval-file)
+
+    (with-open-file (stream logval-file :direction :input)
+      (if stream
+	  (do ((leido (read-line stream nil 'eof)
+		      (read-line stream nil 'eof)))
+	      ((eq leido 'eof))
+	    (when (cl-ppcre::scan "Plan valid" leido)
+	      (setf validp t)))))
+  validp))

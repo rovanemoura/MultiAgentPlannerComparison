@@ -1,0 +1,340 @@
+#0Y_ #0Y |CHARSET|::|UTF-8|
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "CL-PPCRE"))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS| '|CL-PPCRE|::|INCF-AFTER|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|INCF-AFTER|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|INCF-AFTER|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |CL-PPCRE|::|ENV|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    "Utility macro inspired by C's \"place++\", i.e. first return the\n
+value of PLACE and afterwards increment it by DELTA."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 3.
+       |COMMON-LISP|::|NIL|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|PLACE|
+        (|COMMON-LISP|::|CADR| . #1=(|SYSTEM|::|<MACRO-FORM>|)))
+       (|CL-PPCRE|::|DELTA|
+        (|COMMON-LISP|::|IF| (|COMMON-LISP|::|CDDR| . #1#)
+         (|COMMON-LISP|::|CADDR| . #1#) 1.)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|INCF-AFTER|
+       (|CL-PPCRE|::|WITH-UNIQUE-NAMES| (|CL-PPCRE|::|%TEMP|)
+        (|COMMON-LISP|::|MULTIPLE-VALUE-BIND|
+         (|CL-PPCRE|::|VARS| |CL-PPCRE|::|VALS| |CL-PPCRE|::|STORE-VARS|
+          |CL-PPCRE|::|WRITER-FORM| |CL-PPCRE|::|READER-FORM|)
+         (|COMMON-LISP|::|GET-SETF-EXPANSION| |CL-PPCRE|::|PLACE|
+          |CL-PPCRE|::|ENV|)
+         `(|COMMON-LISP|::|LET*|
+           (,@(|COMMON-LISP|::|MAPCAR| #'|COMMON-LISP|::|LIST|
+               |CL-PPCRE|::|VARS| |CL-PPCRE|::|VALS|)
+            (,|CL-PPCRE|::|%TEMP| ,|CL-PPCRE|::|READER-FORM|)
+            (,(|COMMON-LISP|::|CAR| |CL-PPCRE|::|STORE-VARS|)
+             (|COMMON-LISP|::|+| ,|CL-PPCRE|::|%TEMP| ,|CL-PPCRE|::|DELTA|)))
+           ,|CL-PPCRE|::|WRITER-FORM| ,|CL-PPCRE|::|%TEMP|))))))))
+  '(|CL-PPCRE|::|PLACE| |COMMON-LISP|::|&OPTIONAL| (|CL-PPCRE|::|DELTA| 1.)
+    |COMMON-LISP|::|&ENVIRONMENT| |CL-PPCRE|::|ENV|)))
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+ '|CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-CLOSURE|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-CLOSURE|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-CLOSURE|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "This is the template for simple greedy repetitions (where simple\n
+means that the minimum number of repetitions is zero, that the inner\n
+regex to be checked is of fixed length LEN, and that it doesn't\n
+contain registers, i.e. there's no need for backtracking).\n
+CHECK-CURR-POS is a form which checks whether the inner regex of the\n
+repetition matches at CURR-POS."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|NIL|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|CHECK-CURR-POS|
+        (|COMMON-LISP|::|CADR| |SYSTEM|::|<MACRO-FORM>|)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-CLOSURE|
+       `(|COMMON-LISP|::|IF| |CL-PPCRE|::|MAXIMUM|
+         (|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|START-POS|)
+          (|COMMON-LISP|::|DECLARE|
+           (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+            |CL-PPCRE|::|START-POS| |CL-PPCRE|::|MAXIMUM|))
+          (|COMMON-LISP|::|LET|
+           ((|CL-PPCRE|::|TARGET-END-POS|
+             (|COMMON-LISP|::|MIN|
+              (|COMMON-LISP|::|1+|
+               (|COMMON-LISP|::|-| |CL-PPCRE|::|*END-POS*| |CL-PPCRE|::|LEN|
+                |CL-PPCRE|::|MIN-REST|))
+              (|COMMON-LISP|::|+| |CL-PPCRE|::|START-POS|
+               (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                (|COMMON-LISP|::|*| |CL-PPCRE|::|LEN|
+                 |CL-PPCRE|::|MAXIMUM|)))))
+            (|CL-PPCRE|::|CURR-POS| |CL-PPCRE|::|START-POS|))
+           (|COMMON-LISP|::|DECLARE|
+            (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+             |CL-PPCRE|::|TARGET-END-POS| |CL-PPCRE|::|CURR-POS|))
+           (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-MATCHER|
+            (|COMMON-LISP|::|TAGBODY| |CL-PPCRE|::|FORWARD-LOOP|
+             (|COMMON-LISP|::|WHEN|
+              (|COMMON-LISP|::|>=| |CL-PPCRE|::|CURR-POS|
+               |CL-PPCRE|::|TARGET-END-POS|)
+              (|COMMON-LISP|::|GO| |CL-PPCRE|::|BACKWARD-LOOP|))
+             (|COMMON-LISP|::|WHEN| ,|CL-PPCRE|::|CHECK-CURR-POS|
+              (|COMMON-LISP|::|INCF| |CL-PPCRE|::|CURR-POS| |CL-PPCRE|::|LEN|)
+              (|COMMON-LISP|::|GO| |CL-PPCRE|::|FORWARD-LOOP|))
+             |CL-PPCRE|::|BACKWARD-LOOP|
+             (|COMMON-LISP|::|WHEN|
+              (|COMMON-LISP|::|<| |CL-PPCRE|::|CURR-POS|
+               |CL-PPCRE|::|START-POS|)
+              (|COMMON-LISP|::|RETURN-FROM|
+               |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-MATCHER|
+               |COMMON-LISP|::|NIL|))
+             (|COMMON-LISP|::|LET|
+              ((|CL-PPCRE|::|RESULT|
+                (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|NEXT-FN|
+                 |CL-PPCRE|::|CURR-POS|)))
+              (|COMMON-LISP|::|WHEN| |CL-PPCRE|::|RESULT|
+               (|COMMON-LISP|::|RETURN-FROM|
+                |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-MATCHER|
+                |CL-PPCRE|::|RESULT|)))
+             (|COMMON-LISP|::|DECF| |CL-PPCRE|::|CURR-POS| |CL-PPCRE|::|LEN|)
+             (|COMMON-LISP|::|GO| |CL-PPCRE|::|BACKWARD-LOOP|)))))
+         (|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|START-POS|)
+          (|COMMON-LISP|::|DECLARE|
+           (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+            |CL-PPCRE|::|START-POS|))
+          (|COMMON-LISP|::|LET|
+           ((|CL-PPCRE|::|TARGET-END-POS|
+             (|COMMON-LISP|::|1+|
+              (|COMMON-LISP|::|-| |CL-PPCRE|::|*END-POS*| |CL-PPCRE|::|LEN|
+               |CL-PPCRE|::|MIN-REST|)))
+            (|CL-PPCRE|::|CURR-POS| |CL-PPCRE|::|START-POS|))
+           (|COMMON-LISP|::|DECLARE|
+            (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+             |CL-PPCRE|::|TARGET-END-POS| |CL-PPCRE|::|CURR-POS|))
+           (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-MATCHER|
+            (|COMMON-LISP|::|TAGBODY| |CL-PPCRE|::|FORWARD-LOOP|
+             (|COMMON-LISP|::|WHEN|
+              (|COMMON-LISP|::|>=| |CL-PPCRE|::|CURR-POS|
+               |CL-PPCRE|::|TARGET-END-POS|)
+              (|COMMON-LISP|::|GO| |CL-PPCRE|::|BACKWARD-LOOP|))
+             (|COMMON-LISP|::|WHEN| ,|CL-PPCRE|::|CHECK-CURR-POS|
+              (|COMMON-LISP|::|INCF| |CL-PPCRE|::|CURR-POS| |CL-PPCRE|::|LEN|)
+              (|COMMON-LISP|::|GO| |CL-PPCRE|::|FORWARD-LOOP|))
+             |CL-PPCRE|::|BACKWARD-LOOP|
+             (|COMMON-LISP|::|WHEN|
+              (|COMMON-LISP|::|<| |CL-PPCRE|::|CURR-POS|
+               |CL-PPCRE|::|START-POS|)
+              (|COMMON-LISP|::|RETURN-FROM|
+               |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-MATCHER|
+               |COMMON-LISP|::|NIL|))
+             (|COMMON-LISP|::|LET|
+              ((|CL-PPCRE|::|RESULT|
+                (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|NEXT-FN|
+                 |CL-PPCRE|::|CURR-POS|)))
+              (|COMMON-LISP|::|WHEN| |CL-PPCRE|::|RESULT|
+               (|COMMON-LISP|::|RETURN-FROM|
+                |CL-PPCRE|::|GREEDY-CONSTANT-LENGTH-MATCHER|
+                |CL-PPCRE|::|RESULT|)))
+             (|COMMON-LISP|::|DECF| |CL-PPCRE|::|CURR-POS| |CL-PPCRE|::|LEN|)
+             (|COMMON-LISP|::|GO| |CL-PPCRE|::|BACKWARD-LOOP|)))))))))))
+  '(|CL-PPCRE|::|CHECK-CURR-POS|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-GREEDY-EVERYTHING-MATCHER|
+ (|SYSTEM|::|LAMBDA-LIST-TO-SIGNATURE|
+  '(|CL-PPCRE|::|MAXIMUM| |CL-PPCRE|::|MIN-REST| |CL-PPCRE|::|NEXT-FN|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-GREEDY-CONSTANT-LENGTH-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-GREEDY-CONSTANT-LENGTH-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-GREEDY-NO-ZERO-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-GREEDY-NO-ZERO-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-GREEDY-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-GREEDY-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+ '|CL-PPCRE|::|NON-GREEDY-CONSTANT-LENGTH-CLOSURE|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|NON-GREEDY-CONSTANT-LENGTH-CLOSURE|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|NON-GREEDY-CONSTANT-LENGTH-CLOSURE|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "This is the template for simple non-greedy repetitions (where\n
+simple means that the minimum number of repetitions is zero, that the\n
+inner regex to be checked is of fixed length LEN, and that it doesn't\n
+contain registers, i.e. there's no need for backtracking).\n
+CHECK-CURR-POS is a form which checks whether the inner regex of the\n
+repetition matches at CURR-POS."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|NIL|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|CHECK-CURR-POS|
+        (|COMMON-LISP|::|CADR| |SYSTEM|::|<MACRO-FORM>|)))
+      (|COMMON-LISP|::|BLOCK| |CL-PPCRE|::|NON-GREEDY-CONSTANT-LENGTH-CLOSURE|
+       `(|COMMON-LISP|::|IF| |CL-PPCRE|::|MAXIMUM|
+         (|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|START-POS|)
+          (|COMMON-LISP|::|DECLARE|
+           (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+            |CL-PPCRE|::|START-POS| |CL-PPCRE|::|MAXIMUM|))
+          (|COMMON-LISP|::|LET|
+           ((|CL-PPCRE|::|TARGET-END-POS|
+             (|COMMON-LISP|::|MIN|
+              (|COMMON-LISP|::|1+|
+               (|COMMON-LISP|::|-| |CL-PPCRE|::|*END-POS*| |CL-PPCRE|::|LEN|
+                |CL-PPCRE|::|MIN-REST|))
+              (|COMMON-LISP|::|+| |CL-PPCRE|::|START-POS|
+               (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+                (|COMMON-LISP|::|*| |CL-PPCRE|::|LEN|
+                 |CL-PPCRE|::|MAXIMUM|))))))
+           (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|CURR-POS|
+            |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM|
+            |CL-PPCRE|::|START-POS| |CL-PPCRE|::|BELOW|
+            |CL-PPCRE|::|TARGET-END-POS| |CL-PPCRE|::|BY| |CL-PPCRE|::|LEN|
+            |CL-PPCRE|::|THEREIS|
+            (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|NEXT-FN|
+             |CL-PPCRE|::|CURR-POS|)
+            |CL-PPCRE|::|WHILE| ,|CL-PPCRE|::|CHECK-CURR-POS|
+            |CL-PPCRE|::|FINALLY|
+            (|COMMON-LISP|::|RETURN|
+             (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|NEXT-FN|
+              |CL-PPCRE|::|CURR-POS|)))))
+         (|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|START-POS|)
+          (|COMMON-LISP|::|DECLARE|
+           (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+            |CL-PPCRE|::|START-POS|))
+          (|COMMON-LISP|::|LET|
+           ((|CL-PPCRE|::|TARGET-END-POS|
+             (|COMMON-LISP|::|1+|
+              (|COMMON-LISP|::|-| |CL-PPCRE|::|*END-POS*| |CL-PPCRE|::|LEN|
+               |CL-PPCRE|::|MIN-REST|))))
+           (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|CURR-POS|
+            |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM|
+            |CL-PPCRE|::|START-POS| |CL-PPCRE|::|BELOW|
+            |CL-PPCRE|::|TARGET-END-POS| |CL-PPCRE|::|BY| |CL-PPCRE|::|LEN|
+            |CL-PPCRE|::|THEREIS|
+            (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|NEXT-FN|
+             |CL-PPCRE|::|CURR-POS|)
+            |CL-PPCRE|::|WHILE| ,|CL-PPCRE|::|CHECK-CURR-POS|
+            |CL-PPCRE|::|FINALLY|
+            (|COMMON-LISP|::|RETURN|
+             (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|NEXT-FN|
+              |CL-PPCRE|::|CURR-POS|)))))))))))
+  '(|CL-PPCRE|::|CHECK-CURR-POS|)))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-NON-GREEDY-CONSTANT-LENGTH-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-NON-GREEDY-CONSTANT-LENGTH-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-NON-GREEDY-NO-ZERO-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-NON-GREEDY-NO-ZERO-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-NON-GREEDY-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-NON-GREEDY-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|REMOVE-OLD-DEFINITIONS|
+ '|CL-PPCRE|::|CONSTANT-REPETITION-CONSTANT-LENGTH-CLOSURE|)
+(|SYSTEM|::|%PUTD| '|CL-PPCRE|::|CONSTANT-REPETITION-CONSTANT-LENGTH-CLOSURE|
+ (|SYSTEM|::|MAKE-MACRO|
+  (|COMMON-LISP|::|FUNCTION|
+   |CL-PPCRE|::|CONSTANT-REPETITION-CONSTANT-LENGTH-CLOSURE|
+   (|COMMON-LISP|::|LAMBDA| (|SYSTEM|::|<MACRO-FORM>| |SYSTEM|::|<ENV-ARG>|)
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|CONS| |SYSTEM|::|<MACRO-FORM>|))
+    (|COMMON-LISP|::|DECLARE| (|COMMON-LISP|::|IGNORE| |SYSTEM|::|<ENV-ARG>|))
+    "This is the template for simple constant repetitions (where simple\n
+means that the inner regex to be checked is of fixed length LEN, and\n
+that it doesn't contain registers, i.e. there's no need for\n
+backtracking) and where constant means that MINIMUM is equal to\n
+MAXIMUM. CHECK-CURR-POS is a form which checks whether the inner regex\n
+of the repetition matches at CURR-POS."
+    (|COMMON-LISP|::|IF|
+     (|COMMON-LISP|::|NOT|
+      (|SYSTEM|::|LIST-LENGTH-IN-BOUNDS-P| |SYSTEM|::|<MACRO-FORM>| 2. 2.
+       |COMMON-LISP|::|NIL|))
+     (|SYSTEM|::|MACRO-CALL-ERROR| |SYSTEM|::|<MACRO-FORM>|)
+     (|COMMON-LISP|::|LET*|
+      ((|CL-PPCRE|::|CHECK-CURR-POS|
+        (|COMMON-LISP|::|CADR| |SYSTEM|::|<MACRO-FORM>|)))
+      (|COMMON-LISP|::|BLOCK|
+       |CL-PPCRE|::|CONSTANT-REPETITION-CONSTANT-LENGTH-CLOSURE|
+       `(|COMMON-LISP|::|LAMBDA| (|CL-PPCRE|::|START-POS|)
+         (|COMMON-LISP|::|DECLARE|
+          (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+           |CL-PPCRE|::|START-POS|))
+         (|COMMON-LISP|::|LET|
+          ((|CL-PPCRE|::|TARGET-END-POS|
+            (|COMMON-LISP|::|+| |CL-PPCRE|::|START-POS|
+             (|COMMON-LISP|::|THE| |COMMON-LISP|::|FIXNUM|
+              (|COMMON-LISP|::|*| |CL-PPCRE|::|LEN|
+               |CL-PPCRE|::|REPETITIONS|)))))
+          (|COMMON-LISP|::|DECLARE|
+           (|COMMON-LISP|::|TYPE| |COMMON-LISP|::|FIXNUM|
+            |CL-PPCRE|::|TARGET-END-POS|))
+          (|COMMON-LISP|::|AND|
+           (|COMMON-LISP|::|>=| |CL-PPCRE|::|*END-POS*|
+            |CL-PPCRE|::|TARGET-END-POS|)
+           (|COMMON-LISP|::|LOOP| |CL-PPCRE|::|FOR| |CL-PPCRE|::|CURR-POS|
+            |CL-PPCRE|::|OF-TYPE| |COMMON-LISP|::|FIXNUM| |CL-PPCRE|::|FROM|
+            |CL-PPCRE|::|START-POS| |CL-PPCRE|::|BELOW|
+            |CL-PPCRE|::|TARGET-END-POS| |CL-PPCRE|::|BY| |CL-PPCRE|::|LEN|
+            |CL-PPCRE|::|ALWAYS| ,|CL-PPCRE|::|CHECK-CURR-POS|)
+           (|COMMON-LISP|::|FUNCALL| |CL-PPCRE|::|NEXT-FN|
+            |CL-PPCRE|::|TARGET-END-POS|)))))))))
+  '(|CL-PPCRE|::|CHECK-CURR-POS|)))
+(|SYSTEM|::|C-DEFUN|
+ '|CL-PPCRE|::|CREATE-CONSTANT-REPETITION-CONSTANT-LENGTH-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN|
+ '|CL-PPCRE|::|CREATE-CONSTANT-REPETITION-CONSTANT-LENGTH-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-CONSTANT-REPETITION-MATCHER|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-CONSTANT-REPETITION-MATCHER|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CREATE-MATCHER-AUX|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)

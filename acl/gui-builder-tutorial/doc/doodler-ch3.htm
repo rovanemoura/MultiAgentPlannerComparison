@@ -1,0 +1,637 @@
+<html>
+
+<head>
+<title>Chapter 3: Create the Curves Dialog</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 3</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h2>Chapter 3: Create the Curves Dialog</h2>
+
+<ol>
+  <li>Start Allegro CL if you exited in <a href="doodler-ch2.htm">Chapter 2</a>. Open the <strong>gui-builder-tutorial</strong>
+    project we left in <a href="doodler-ch2.htm">Chapter 2</a>. If you have restarted Allegro
+    CL, a dialog may appear asking if you want to open that project, along with any other
+    projects recently worked on. If not, use <strong>File | Open Project</strong> and choose
+    the file <strong>gui-builder-tutorial.lpr</strong> in your tutorial project directory,
+which is <strong>C:\Program
+Files\allegro-projects\gui-builder-tutorial\</strong> or
+<strong>allegro-projects/gui-builder-tutorial/</strong> on Linux if
+you used the defaults. The <strong>Recent</strong> menu may also provide a way to open the
+    project. You should now be where you stopped at the end of <a href="doodler-ch2.htm">Chapter
+    2</a>. </li>
+  <li>In this chapter, you will create a Curves dialog that looks like the following picture
+    (the contents may be different but the dialog will be similar).</li>
+</ol>
+
+<blockquote>
+  <p>&nbsp;&nbsp;&nbsp; <img src="ch4-1-curv.jpg" width="402" height="243"
+  alt="ch4-1-curv.bmp (293598 bytes)"></p>
+</blockquote>
+
+<ol start="3">
+  <li>Click on the <strong>New-Form</strong> button (or click <strong>File | New Form</strong>)
+    and make sure that <strong>dialog</strong> is selected in the <strong>New Form</strong>
+    dialog that appears. Click on OK to create the new form. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p><img src="ch4-2-nf.jpg" width="129" height="32" alt="ch4-2-nf.bmp (12470 bytes)"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>Selecting a Form: why more choices now?</h3>
+    <p>You may notice that there is now a form of type <strong>doodler</strong> in the list of
+    choices of forms to create. This is because you created a new subclass of <strong>dialog</strong>
+    of type <strong>doodler</strong>.</p>
+    <p>Lisp keeps track of all your subclasses in what is most easily described as a giant
+    table. You will begin to see the classes you create appearing in this list whenever you
+    create a new Form. They will all appear regardless of what project you are working in.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="4">
+  <li>Resize the new form roughly to match the proportions of the final Curves dialog shown in
+    Step 2. </li>
+  <li>Inspect the new form and change its <strong>name</strong> to :curve-dialog, its <strong>title</strong>
+    to Curves, <strong>resizable</strong> to nil, <strong>pop-up</strong> to t, <strong>maximize-button</strong>
+    to nil (if it is not already), and <strong>miminize-button</strong> to nil (if it is not
+    already). Make sure the <strong>child-p</strong> property is nil and change it to nil if
+    it is not.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>Naming conventions</h3>
+  </blockquote>
+  <blockquote>
+    <p>We recommend that names of windows and controls be mnemonic, begin with a colon, and
+    with the words in each name separated by hyphens. Thus, the name of the curve-dialog
+    window is <font face="Courier New">:curve-dialog</font>, not <font face="Courier New">curvedialog</font>
+    or <font face="Courier New">curve_dialog</font>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>Changes Made in the Inspector: when do they appear on the application?</h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>You will see most of these changes as soon as you move the focus in the inspector,
+    i.e., when you click away from the value you've just changed. </p>
+    <p>But certain changes are not visible on the form while it is in design mode. For
+    example, you&#146;ll have to run this form to see that it is no longer <strong>resizable</strong>.
+    All forms are resizable in design mode no matter what their <strong>resizable</strong>
+    property is set to; we want you to be able to resize your application while you are
+    designing it. </p>
+    <p>It is likely to be confusing at first that most changes to the GUI Builder do instantly
+    display in a design-stage form, but some do not. All changes will be evident in the
+    running forms. If you are in doubt about the effect of a change, try evaluating the
+    changed expression, saving your code and running the form.</p>
+    <p>CLOS permits these sorts of dynamic changes. Whether or not a property change will be
+    visible instantly in the design stage will gradually become obvious to you.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="6">
+  <li>View the Project Manager dialog (by clicking <strong>View | Project Manager</strong>).
+    The General Tab should be visible. If not, click on it to bring it forward.</li>
+  <li>Select the <font face="Courier New">curve-dialog</font> and click on the <strong>View
+    Selected Code</strong> button. You will be placed in the curve-dialog.cl buffer of the
+    Editor Workbook.</li>
+</ol>
+
+<blockquote>
+  <p><img src="ch1-2-vsc.jpg" width="169" height="32" alt="ch1-2-vsc.bmp (16310 bytes)"></p>
+</blockquote>
+
+<ol start="8">
+  <li>In the editor, enter:</li>
+</ol>
+
+<blockquote>
+  <pre>(defclass curve-dialog (dialog)
+  ())</pre>
+</blockquote>
+
+<ol start="9">
+  <li>Evaluate the <strong>defclass</strong> form by placing the cursor inside the parentheses
+    or just after the final parenthesis, and clicking <strong>Tools | Incremental Evaluation</strong>.</li>
+  <li>In the inspector for the curve-dialog, change the <strong>class</strong> to <font
+    face="Courier New">curve-dialog</font>. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p>Since you are going to make changes to <font face="Courier New">curve-dialog</font> via
+    events and methods, you need to protect <font face="Courier New">dialog</font> from any
+    changes by changing the <strong>class</strong> property.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="11">
+  <li>Sketch a <strong>single-item-list</strong> control onto the <font face="Courier New">curve-dialog</font>,
+    roughly following the proportions shown in the illustration. (The <strong>single-item-list</strong>
+    icon shows a rectangle with several lines, one of which is selected. To the right is the
+    multi-item-list, with several lines selected; and to the left the combo-box, with the top
+    line wider than the rest.)</li>
+</ol>
+
+<blockquote>
+  <p><img src="ch4-3-curv2.jpg" width="444" height="274"
+  alt="ch4-3-curv2.bmp (365022 bytes)"></p>
+</blockquote>
+
+<blockquote>
+  <ol type="a">
+    <li>Click on the <strong>single-item-list</strong> button on the Components toolbar.</li>
+    <li>Click on the <font face="Courier New">curve-dialog</font> form where you want the list
+      control placed.</li>
+    <li>Resize it once you've placed it where it should be on the form.</li>
+  </ol>
+</blockquote>
+
+<ol start="12">
+  <li>Inspect the single-item-list control and change the <strong>name</strong> to
+    :curve-list, the <strong>range</strong> to nil, and the <strong>value</strong> to nil.</li>
+  <li>In the upper-right corner of the <font face="Courier New">curve-dialog</font>, sketch in
+    a <strong>default-button</strong>. Refer to the diagram in Step 2 for placement of the
+    button. (The <strong>default-button</strong> icon is third from the left, after button and
+    picture-button.)</li>
+  <li>Inspect the default-button and change its <strong>name</strong> to :edit-button, its <strong>title</strong>
+    to &quot;~Edit...&quot;.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>Visual Cues and Quick Key Functionality: the ellipsis points &amp; tilde character</h3>
+    <p>The tilde character (~) and the ellipsis points (&#133;) are important on this and many
+    other following steps for creating buttons. This is standard application design style; you
+    may choose to implement some other visual flag for these options in making your own
+    applications. Microsoft Word uses an underlined character to indicate a quick key
+    shortcut, for example. Some other applications use a bold or brightly colored character to
+    indicate a shortcut.<ul>
+      <li>You'll need the tilde for special quick key functionality. Inserting a tilde character
+        (~) into the title of a widget (or the value of a static-text) causes the character that
+        follows the tilde to act as a keyboard shortcut to the widget. That character will be
+        underlined when the label is drawn (the tilde itself will not appear). The user may press
+        the key for that character while holding down the Alt key to move the keyboard focus to
+        that widget, and sometimes to simulate a mouse click on the widget, as with buttons and
+        check-boxes. Tildes may be used in menu-item titles in a similar way.</li>
+      <li>The ellipsis points in a button label (or a menu command) indicate more choices will be
+        required of your users to complete that button&#146;s command once they click it.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<ol start="15">
+  <li>Click on the icon for a plain <strong>button</strong> (the first icon from the left, not
+    cancel-button or default-button) and position it below the edit button. Refer to the
+    illustration at step 2 if you need a reminder of what the completed dialog should look
+    like.</li>
+  <li>Inspect the new <font face="Courier New">button</font> and changes its <strong>name</strong>
+    to :add-button and <strong>title</strong> to &quot;~Add...&quot;. </li>
+  <li>Select the <font face="Courier New">add-button</font> on the form and copy it using the <strong>Edit
+    | Copy</strong> command. Select the <font face="Courier New">curve-dialog</font> form and
+    paste the copied button onto it using the <strong>Edit | Paste</strong> command. Position
+    the new button below the Add button. </li>
+  <li>Change the <strong>name</strong> of the new button to :delete-button and its <strong>title</strong>
+    to &quot;De~lete&quot;. </li>
+  <li>Select the <font face="Courier New">delete-button</font> and copy it using the <strong>Edit
+    | Copy</strong> command. Then, select the <font face="Courier New">curve-dialog</font>
+    form and paste the button below the Delete button. See the illustration in Step 2 for
+    reference. </li>
+  <li>Change the <strong>name</strong> of the new button to :draw-all-button and its <strong>title</strong>
+    to &quot;~Draw All&quot;. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>Evenly Spacing Controls on a Form</h3>
+    <p>You can Drag-select several widgets on a form by selecting the form. Place the mouse
+    cursor just above the top-most widget of interest and to the left of all widgets of
+    interest. Depress the left mouse key and drag the mouse down and to the right until all
+    desired widgets are included in the region formed by the rubber-band outline that appears.
+    Release the mouse button. All selected widgets should have small white boxes in their
+    corners.</p>
+    <p>Drag-select all the button controls and use the <strong>Form | Space Equally</strong>
+    command to evenly distribute them over the height of the single-item-list box.</p>
+    <p>Space Equally distributes the buttons in the distance between the two end buttons. Set
+    each of the end buttons where you&#146;d like them to be (at the top and bottom edges of
+    the list) first, then issue the command.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="21">
+  <li>Sketch a <strong>group-box</strong> around the buttons and the single-item-list. Change
+    its <strong>name</strong> to :group-box and its <strong>title</strong> to be empty (delete
+    all text from the <strong>title</strong> property's value). </li>
+</ol>
+
+<blockquote>
+  <p><img src="gb-icon.jpg" width="135" height="63" alt="gb-icon.bmp (25758 bytes)"></p>
+</blockquote>
+
+<ol start="22">
+  <li>Click on the <strong>Save All</strong> button on the standard toolbar or click <strong>File
+    | Save All</strong>, and save your new work to a file called <em>curve-dialog.cl</em> in
+    the tutorial project directory. </li>
+</ol>
+
+<h2>Displaying the Curves Dialog from the Doodler's Window: writing an event handler</h2>
+
+<ol start="23">
+  <li>In the Project Manager dialog, click on <font face="Courier New">doodler</font> and
+    click on the <strong>View Selected Code</strong> button. </li>
+  <li>Change the <strong>defclass</strong> for doodler to match the following. This change
+    adds a single slot-specifier to the <font face="Courier New">doodler</font> class.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass doodler (non-refreshing-window)
+    ((doodler-curve-dialog
+      :accessor doodler-curve-dialog
+      :initform nil)))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <h3>Naming Slots and Accessor Functions</h3>
+      <p>Slot names and their accessor functions should have the same names. This is a
+      convention we use and endorse; it keeps things much simpler.</p>
+      <h3>Style Hint</h3>
+      <p>It is better programming style to add a slot than a global variable in this step,
+      because you could have multiple Doodlers running, each with its own curve dialog. Adding a
+      global variable would create a conflict there.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<ol start="25">
+  <li>Evaluate the new doodler <strong>defclass</strong> (put the cursor in or at the end of
+    the form and click <strong>Tools | Incremental Evaluation</strong>). </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <h3>The Status Bar</h3>
+      <p>Evaluating the <strong>defclass</strong> awakens Lisp to the new class relationships.
+      You can also see the results of your evaluations and other actions in the Status Bar (the
+      gray band at the bottom of the Project Window directly underneath the Standard Toolbar on
+      the left side).</p>
+      <p><img src="ch3-pw-sb.jpg" width="395" height="122" alt="ch3-pw-sb.bmp (144990 bytes)"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<ol start="26">
+  <li>Inspect the <font face="Courier New">multi-picture-button</font> on the doodler's
+    toolbar. </li>
+  <li>In the inspector change to the <strong>Events</strong> tab, select <strong>on-change</strong>
+    value by clicking the right-hand field. Enter <strong>doodler-toolbar-click</strong>. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p>This is (or will be) the name of the <strong>on-change</strong> event-handler function
+    for the <font face="Courier New">multi-picture-button</font> (which you placed in the
+    doodler form&#146;s toolbar). You are about to write this event handler.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="28">
+  <li>Click on the button with three dots just to the right of <strong>doodler-toolbar-click</strong>.
+    This displays the doodler buffer of the Editor Workbook. You'll see some skeleton code for
+    the <strong>on-change</strong> handler. Because you just gave it a name in the inspector,
+    the handler is already named <strong>doodler-toolbar-click</strong>. </li>
+  <li>Edit the <strong>on-change</strong> function definition to match the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun doodler-toolbar-click 
+       (widget new-value old-value)
+   (declare 
+     (ignore-if-unused widget new-value old-value))
+   ;; Do the action only when a button is 
+   ;; being pressed (not unpressed)
+ (when new-value
+  (let ((doodler (parent (parent widget))))
+        (case (first new-value)
+          (:curve 
+            (show-curve-dialog doodler))
+          (t nil)))
+     )
+   (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>You do this by replacing the whole definition with the above or adding this part where
+    the cursor is placed:</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <pre>(let ((doodler (parent (parent widget))))
+      (case (first new-value)
+        (:curve 
+          (show-curve-dialog doodler))
+      (t nil)))</pre>
+    <p>and replacing the <font face="Courier New">t</font> in the last line with</p>
+    <pre>(not new-value)</pre>
+    <p>Do not evaluate the new definition yet. (If you do, you will get a warning that the
+    function show-curve-dialog is undefined. We are about to define it.)</p>
+  </blockquote>
+</blockquote>
+
+<ol start="30">
+  <li>Now add the <strong>show-curve-dialog</strong> method and the <strong>close</strong>
+    :before method to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod show-curve-dialog ((window doodler))
+   (let* ((dialog (doodler-curve-dialog window)))
+      (when (or (not dialog) 
+                (not (windowp dialog))) 
+         (setq dialog 
+               (make-curve-dialog :owner window))
+         (setf (doodler-curve-dialog window) dialog)) 
+      (select-window dialog)))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod close :before ((window doodler) &amp;key)
+   (let ((curve-dialog (doodler-curve-dialog window)))
+      (when (and (windowp curve-dialog) curve-dialog)
+         (close curve-dialog))
+      (setf (doodler-curve-dialog window) nil)))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <h3>What&#146;s going on here?</h3>
+      <p>The <strong>show-curve-dialog</strong> method is responsible for creating displaying,
+      and initializing the curve-dialog. It first checks to see if there is a valid
+      curve-dialog, and if needed will create one and save it in the <strong>doodler-curve-dialog</strong>
+      slot. Then it <strong>select</strong>s the curve-dialog; selecting the dialog un-hides it
+      and brings it to the front of the display.</p>
+      <p>Since the doodler creates the curve-dialog, it must also close it. Closing the doodler
+      automatically closes all of its child windows, but curve-dialog is a pop-up window, not a
+      child window. </p>
+      <p>The owner window of the curve-dialog is the doodler, therefore the doodler must
+      explicitly close the curve-dialog. Use a :before method on <strong>close</strong> so that
+      the curve-dialog is closed before the doodler.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<ol start="31">
+  <li>Save the <em>doodler.cl</em> editor (click <strong>File | Save All</strong> or clicking
+    the <strong>Save All</strong> button).</li>
+  <li>Select all contents of the buffer using the <strong>Edit | Select All</strong> command. </li>
+  <li>Evaluate using the <strong>Compile Definition</strong> button (or click <strong>Tools |
+    Incremental Evaluation</strong>).</li>
+</ol>
+
+<blockquote>
+  <p><img src="ch4-4-cdb.jpg" width="208" height="41" alt="ch4-4-cdb.bmp (25638 bytes)"></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>You may see a warning about <strong>show-curve-dialog</strong> being undefined in a
+    message box. If so, click OK and ignore the warning. </p>
+  </blockquote>
+</blockquote>
+
+<ol start="34">
+  <li>Focus on the Doodler window and run the doodler project (with the <strong>Run</strong>
+    button or <strong>Run | Run Project</strong>). Try displaying the curve-dialog by clicking
+    on the <strong>Curve</strong> button in the Doodler. The Curves dialog should float in
+    front of the Doodler window, but none of the buttons will work yet. (You may be prompted
+    to save the project files. Do so.)</li>
+  <li>Leave the Doodler form running and the Curves dialog open. Continue to the next step. </li>
+  <li>In the doodler buffer, change the <strong>show-curve-dialog</strong> method to match the
+    following:</li>
+</ol>
+
+<blockquote>
+  <pre>(defmethod show-curve-dialog ((window doodler))
+   (let* ((dialog (doodler-curve-dialog window)))
+      (when (or (not dialog) 
+                (not (windowp dialog))) 
+         (setq dialog 
+               (make-curve-dialog :owner window))
+         (setf (doodler-curve-dialog window) dialog)
+      ;; Position the dialog to the 
+      ;; left of the main window.
+     (let* ((pos (window-to-screen-units 
+                   window
+                  (make-position 
+                    (- (+ (exterior-width dialog) 10))
+                       40))))
+       ;; But don't let it go off the left 
+       ;; edge of the screen.
+       (setf (position-x pos)
+             (max 0 (position-x pos)))
+       (move-window dialog pos)))
+     (select-window dialog)))</pre>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>What&#146;s going on?</h3>
+    <p>This revised method makes the dialog float in a position downward and to the left of
+    the running Doodler. You&#146;ll verify this change in a few steps. </p>
+    <p>Because CLOS is dynamic, you can incrementally change code, evaluate it, and try it
+    without leaving run mode. Make incremental changes in your code to verify that it works
+    before adding further capabilities. This is good programming practice.</p>
+    <p>With the change you&#146;ve just made to <strong>show-curve-dialog</strong>, the Curves
+    dialog will be positioned in a new place. Before you verify that, you&#146;ll test a
+    feature called Complete Symbol that may speed up your future programming work. </p>
+    <p>The second change to <strong>show-curve-dialog</strong> places the coordinates for a
+    single cycloidal curve in the Curves dialog. You&#146;ll make that change after you verify
+    the first change.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="37">
+  <li>Evaluate the new method. Move the running Doodler upward toward the top edge of the
+    screen to insure that you can see at least a portion of the title bar before continuing to
+    the next step (move the ACL Project window down if necessary). </li>
+  <li>Choose <strong>Tools | Get Component</strong>. The cursor should change to a cross. </li>
+  <li>Click on the title bar of the running doodler window (the cursor will be an arrow when
+    over the Doodler window). </li>
+  <li>Move focus to the Debug window. The cursor should have changed back to normal now. The
+    running Doodler will now have disappeared behind other windows and forms. </li>
+  <li>Type in * and hit enter. Notice that * is bound to the running doodler window. The value
+    will be something like</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>#&lt;doodler :doodler in Run Project :gui-builder-tutorial @ #x20f4190a&gt;</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="42">
+  <li>Type in <font face="Courier New">(setf doodler *)</font> and hit the ENTER key. </li>
+  <li>At the prompt, type in <font face="Courier New">(close (do</font> and use the <strong>Search
+    | Complete Symbol</strong> command. </li>
+</ol>
+
+<blockquote>
+  <p>The system will display all symbols starting with do. There are a lot of them. You will
+  have to type more text in for Complete Symbol to be useful. You will do this in the next
+  steps. Use the ESC key to get rid of the pop-up list of symbol completions for now. </p>
+</blockquote>
+
+<ol start="44">
+  <li>Type in <font face="Courier New">odler-c</font> so that the prompt now shows <font
+    face="Courier New">(close (doodler-c</font>. Use the <strong>Search | Complete Symbol</strong>
+    command again. This time the symbol should complete to <strong>doodler-curve-dialog</strong>.
+  </li>
+  <li>Finish the expression so that you have </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(close (doodler-curve-dialog doodler))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>at the prompt. Then evaluate it by pressing ENTER. The result should be t. Note that
+  the curve-dialog has disappeared.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>What happened?</h3>
+    <p>You just used <strong>Get Component</strong>, <strong>Complete Symbol</strong>, and a
+    small amount of Lisp to find and close the curve-dialog while the application was still
+    running.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="46">
+  <li>Save your work using the <strong>Save All</strong> button.</li>
+  <li>Close the running Doodler and run the project again using the <strong>Run Project</strong>
+    button.</li>
+  <li>Click on the <strong>Curve</strong> button on the toolbar in the running Doodler window.
+    Notice that the Curves dialog is displayed downward and toward the left with respect to
+    the running Doodler window now. The single-item-list should still be empty. </li>
+  <li>When you are finished reviewing the progress, stop running the Doodler with the <strong>Stop</strong>
+    button. </li>
+  <li>In the doodler.cl editor, change <strong>show-curve-dialog</strong> to match the
+    following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod show-curve-dialog ((window doodler)) 
+   (let ((dialog (doodler-curve-dialog window))
+         (curve-list nil)) ; step 50
+     (when (or (not dialog) 
+               (not (windowp dialog))) 
+        (setq dialog 
+              (make-curve-dialog :owner window)) 
+        (setf (doodler-curve-dialog window) dialog)
+        (setq curve-list ; step 50
+        (find-component :curve-list dialog))
+        (setf (range curve-list) ; step 50
+              (list 
+                (make-instance 'cycloidal-curve)))
+     ;; Position the dialog to the 
+     ;; left of the main window.
+     (let* ((pos (window-to-screen-units 
+                   window
+                  (make-position 
+                   (- (+ (exterior-width dialog) 10))
+                      40))))
+       ;; But don't let it go off the left 
+       ;; edge of the screen.
+       (setf (position-x pos)
+             (max 0 (position-x pos)))
+       (move-window dialog pos)))
+     (select-window dialog)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="51">
+  <li>Click on the <strong>Save All</strong> button to save all changes. </li>
+  <li>Run the doodler using the <strong>Run Project</strong> button or the <strong>Run | Run
+    Project</strong> command. </li>
+  <li>In the running Doodler, click on the <strong>Curve</strong> button on the toolbar. The
+    Curves dialog single-item-list should display the parameters for a single cycloidal curve.
+    The buttons on the Curves dialog will click, but nothing will happen yet when they are
+    clicked. You still shouldn't be able to draw anything. You'll activate the <strong>Draw
+    All</strong> button in the next Chapter.</li>
+  <li>Stop the running Doodler when you are finished testing it. </li>
+  <li>Go to <a href="doodler-ch4.htm">chapter 4</a>. If you wish to, you can stop working on
+    the tutorial now and return to it later. All the work you have done has been saved. </li>
+</ol>
+
+<p><small><small>Copyright © 2001-2004 Franz Inc. All rights reserved.</small></small></p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 3</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

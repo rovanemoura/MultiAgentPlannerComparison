@@ -1,0 +1,7 @@
+(define (problem BLOCKS-7-1)
+(:domain  ma-blocksworld)
+(:objects  r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 - robot E B D F G C A - block)
+(:INIT (HANDEMPTY r0) (HANDEMPTY r1) (HANDEMPTY r2) (HANDEMPTY r3) (HANDEMPTY r4) (HANDEMPTY r5) (HANDEMPTY r6) (HANDEMPTY r7) (HANDEMPTY r8) (HANDEMPTY r9) (HANDEMPTY r10) (CLEAR A) (CLEAR C) (ONTABLE G) (ONTABLE F) (ON A G) (ON C D) (ON D B)
+ (ON B E) (ON E F))
+(:goal (AND (ON A E) (ON E B) (ON B F) (ON F G) (ON G C) (ON C D)))
+)

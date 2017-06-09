@@ -1,0 +1,1357 @@
+;; =========================================================================    
+;;  (C) Copyright 2006, 2008 
+;;      Universidad Carlos III de Madrid
+;;      Planning & Learning Group (PLG)
+;; 
+;; =========================================================================
+;; 
+;; This file is part of SAYPHI
+;; 
+;; 
+;; SAYPHI is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;; 
+;; SAYPHI is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with SAYPHI.  If not, see <http://www.gnu.org/licenses/>.
+;; ========================================================================
+
+;; Author: Tomas de la Rosa 
+;; Description: Heuristic Search Algorithms
+;; Date: 2005.12.16
+;; 
+;; ========================================================================
+
+(defvar *trace-search* nil) 
+(defvar *trace-search-depth* 3)
+(defvar *trace-node* nil) 
+(defvar *trace-listnodes* (make-hash-table))
+(defvar *trace-ehc* nil)
+(defvar *trace-mem* nil)
+
+
+;; This are global variables for defaults planning's parameters
+(defvar *say-algorithm* 'enforced-hill-climbing)
+(defvar *say-heuristic* 'h-metric-rxplan)
+(defvar *say-costfn* 'node-path-cost)
+(defvar *say-helpful* t)
+(defvar *say-depthbound* 5000)
+(defvar *say-timeout* 30)
+(defvar *say-h-rounded* t)
+;; AGO 11-01-09
+(defvar *say-costbound* most-positive-double-float)
+
+;; 0:silent 1:plan 2:search & plan
+(defvar *say-solution* nil)
+(defvar *say-hash-solutions* nil)
+(defvar *search-failed* nil)
+(defvar *say-2try* t) ;; If first algorithm fails, try a complete best-first
+;AGO 10-11-08
+;If no solution found, partial solution is stored here
+(defvar *partial-solution* nil)
+
+;;tracing CBPlanning
+(defvar *hit-node* nil)
+(defvar *hit-average* 0)
+
+
+(defun reset-ehc-trace()
+  (setf *hit-node* nil
+	*hit-average* 0))
+
+(defmacro search-option-value (key-option search-options)
+  `(cadr (assoc ,key-option ,search-options)))
+
+;;DB. Modified so that it gets rid of state loops
+(defun build-path (node &optional (smoothing-p t))
+  (do* ((i-node node (snode-parent i-node))
+	(later-node nil (and smoothing-p 
+			     (snode-p i-node)
+			     (find i-node plan-path :test #'equal-state)))
+	(plan-path nil))
+       ((null i-node)
+	plan-path)
+    (when later-node
+      (do ((middle-node (snode-selected i-node) (snode-selected middle-node)))
+	  ((or (null middle-node) (eq middle-node (snode-selected later-node))))
+	(pop plan-path))
+      (setf (snode-selected i-node) (snode-selected later-node)))
+    (when (snode-p (snode-parent i-node))
+      (setf (snode-selected (snode-parent i-node)) i-node)
+      (push i-node plan-path))
+    ))
+
+
+(defun reach-time-bound (problem)
+  (let* ((initial-search-time (getf (problem-plist problem) :initial-search-time))
+	 (current-time (get-internal-run-time))
+	 (searching-seconds (float (/ (- current-time initial-search-time)
+				      internal-time-units-per-second))))
+    (when (> searching-seconds (get-sayp :say-timeout)) t)))
+
+
+
+(defparameter *say-memorybound* 2147483648)
+(defparameter *numnodes-to-mem-check* 1000)
+;; You should call (say-mem-free-pointers) a probably perform a (sb-ext:gc :full t)
+;; to make all memory available again.  Other way the next problem to plan will fail also
+;; (defun reach-memory-bound (&key (node-count nil)))
+;; 
+(defun reach-memory-bound (&key (node-count nil))
+  (when (numberp node-count)
+    (let ((last-node-number (getf (problem-plist *current-problem*) :lastnode-mem-check))
+	  (init-memory (getf (problem-plist *current-problem*) :prob-init-memory))
+	  (used-mem nil))
+      (when (>= (- node-count last-node-number) *numnodes-to-mem-check*)
+	(setf (getf (problem-plist *current-problem*) :lastnode-mem-check) node-count)
+	(setq used-mem (say-used-memory :last-memory-check))
+   	(if *trace-mem* (format t "~% Nodes: ~d; Current memory: ~d; Initial memory: ~d; Memory bound: ~d" node-count used-mem init-memory *say-memorybound*))
+	(> (- used-mem init-memory) *say-memorybound*)))))
+
+
+
+
+;; The default is the length of the solution-path, but in lookaheads we have
+;; to compute the length of lookahead plans
+(defun compute-solution-length (path)
+  (let ((length 0))
+    (dolist (i-node path length)
+      (cond ((lhnode-p i-node) 
+	     (setf length (+ length (lhnode-lookahead-depth i-node))))
+	    (t (incf length))))))
+	
+
+
+;;DB. Modified so that it accounts well for removing state loops wrt how the cost is computed
+;;    Set smoothing-p to t to avoid state loops in the solution generated by path of local minima
+;;    Set smoothing-p to nil if you want to learn/work from a tree, like in hc-bnb
+(defun build-solution (node problem found reason &key (smoothing-p t))
+  (let* ((stop-time (get-internal-run-time))
+     (initial-pre-time (getf (problem-plist problem) :initial-pre-time))
+     (initial-search-time (getf (problem-plist problem) :initial-search-time))
+	 (this-solution (make-solution
+			 :found found
+			 :total-time (float (/ (- stop-time initial-pre-time)
+					       internal-time-units-per-second))
+             :pre-time (float (/ (- initial-search-time initial-pre-time)
+				 internal-time-units-per-second))
+             :search-time (float (/ (- stop-time initial-search-time)
+				    internal-time-units-per-second))
+             :depth (when (snode-p node) (snode-depth node))
+             :path (when (snode-p node) (build-path node smoothing-p))
+             :num-nodes (1+ (getf (problem-plist problem) :node-counter)) 
+	     ;;mas el nodo inicial
+             :evaluated-nodes (getf (problem-plist problem) :node-evaluated)
+             :last-node node
+             :stop-reason reason)))
+    (setf (solution-length this-solution)
+	  (when (snode-p node) (compute-solution-length (solution-path this-solution))))
+    (setf (solution-total-cost this-solution)
+	  (when (snode-p node) (compute-total-cost (solution-path this-solution) problem)))
+    this-solution))
+
+
+;; It recomputes soltuion times when a multiple solutions are found, but not are the last
+;; step of the search.
+(defun update-solution-for-multiple (best-solution problem)
+  (let* ((stop-time (get-internal-run-time))
+	 (initial-pre-time (getf (problem-plist problem) :initial-pre-time))
+	 (initial-search-time (getf (problem-plist problem) :initial-search-time)))
+    (setf (solution-total-time best-solution) (float (/ (- stop-time initial-pre-time)
+							internal-time-units-per-second)))
+    (setf (solution-search-time best-solution) (float (/ (- stop-time initial-search-time)
+							 internal-time-units-per-second)))
+    (setf (solution-num-nodes best-solution) (1+ (getf (problem-plist problem) :node-counter))) ;;mas el nodo inicial
+    (setf (solution-evaluated-nodes best-solution) (getf (problem-plist problem) :node-evaluated))
+    best-solution))
+
+
+
+;;  I could put this in a way of signals handlers to add more functions to check each cycle
+(defun stop-search (node problem)
+  (cond ((null node)
+	 (cons t :search-failed))
+	((and (numberp (snode-h-value node))
+	      (= (snode-h-value node) most-positive-fixnum))
+ 	 (cons t :recognized-dead-end))
+	((goals-reached node)
+	 (cons t :goals-reached))
+	((>= (snode-depth node) (get-sayp :say-depthbound))
+	 (cons t :depth-bound))
+	((reach-time-bound problem)
+	 (cons t :time-bound))
+	((reach-memory-bound :node-count (getf (problem-plist *current-problem*) :node-counter))
+	 (cons t :memory-bound))
+	((and *trace-search* (>= (snode-depth node) *trace-search-depth*))
+	 (cons t :trace-search))
+	;Added AGO 11-01-09 Allows stopping if cost-bound is reached
+	((and (problem-metric problem) (< (get-sayp :say-costbound) most-positive-double-float) 
+	      (> (compute-total-cost (build-path node) problem) (get-sayp :say-costbound)))
+	 (cons t :cost-bound))
+	(t nil)))
+
+
+
+
+;; Stop condition for beam-like algorithms
+;; It returns (t or nil), the stopping node and the stop condition
+(defun stop-beam (beam problem)
+  (let ((goal-node (find-if #'(lambda (node) (goals-reached node)) beam)))
+    (cond ((null beam) (list t nil :search-failed))
+	  ((snode-p goal-node)
+	   (list t goal-node :goals-reached))
+	  ((every #'(lambda (node)
+		    (and (numberp (snode-h-value node))
+			 (= (snode-h-value node) most-positive-fixnum)))
+		  beam)
+	   (list t nil :recognized-dead-end))
+	  ((>= (snode-depth (car beam))  (get-sayp :say-depthbound))
+	   (list t nil :depth-bound))
+	((reach-time-bound problem)
+	 (list t nil :time-bound))
+	((reach-memory-bound :node-count (snode-number (car beam)))
+	 (list t nil :memory-bound))
+	((and *trace-search* (>= (snode-depth (car beam)) *trace-search-depth*))
+	 (list t nil :trace-search))
+	(t nil))))
+
+
+
+(defun stop-multiple (node problem hash-solutions max-sols &optional (smoothing-p nil))
+  (cond ((null node)
+	 (cons t :search-failed))
+
+	((and (numberp (snode-h-value node))
+	      (= (snode-h-value node) most-positive-fixnum))
+	 (setf (snode-closed node) t)
+ 	 (cons nil :recognized-dead-end))
+
+	((goals-reached node)
+	 (setf (gethash (1+ (hash-table-count hash-solutions)) hash-solutions) 
+	       (build-solution node *current-problem* t :goals-reached :smoothing-p smoothing-p))
+	 (setf (snode-closed node) t)
+	 (cons (>= (hash-table-count hash-solutions) max-sols) :goals-reached))
+
+	((>= (snode-depth node) (get-sayp :say-depthbound))
+	 (cons t :depth-bound))
+	((reach-time-bound problem)
+	 (cons t :time-bound))
+	((reach-memory-bound :node-count (snode-number node))
+	 (cons t :memory-bound))
+	((and *trace-search* (>= (snode-depth node) *trace-search-depth*))
+	 (cons t :trace-search))
+	;Added AGO 28-02-09 Allows stopping if cost-bound is reached
+	((and (problem-metric problem) (> (compute-total-cost (build-path node) problem) (get-sayp :say-costbound)))
+	 (cons t :cost-bound))
+	(t nil)))
+  
+
+
+(defun when-stop (reason node problem)
+  (case reason
+	(:goals-reached
+	 (setf *say-solution* (build-solution node problem t reason))
+	 (say-pp-solution *say-solution*))
+	(:recognized-dead-end
+	 (format t "~% DEAD END - UNREACHABLE GOALS")
+	 (setf *say-solution* (build-solution node problem nil reason)))
+	(:depth-bound 
+	 (format t "~% HIT DEPTH BOUND")
+ 	 ;Modified AGO, 10-11-08 to store the partial solution
+	 (setf *partial-solution* (build-solution node problem nil reason)))
+	(:time-bound
+	 (format t "~% HIT TIME BOUND")
+    	 (setf *partial-solution* (build-solution node problem nil reason)))
+	(:memory-bound
+	 (format t "~% HIT MEMORY BOUND")
+	 (setf *partial-solution* (build-solution node problem nil reason)))
+	(:search-failed 
+	 (format t "~% SEARCH FAILED!!")
+	 (setf *search-failed* t)
+	 (build-solution node problem nil reason))
+	(:trace-search
+	 (build-solution node problem nil reason)
+	 (format t "~% Trace search at depth ~d !!" (snode-depth node))
+	 (setf *trace-node* node))
+	(:multiple-stop
+	 (say-pp-solution *say-solution*))
+	;Added AGO 11-01-09 Allows stopping if cost-bound is reached
+	(:cost-bound
+	 (format t "~% HIT COST BOUND")
+	 (setf *partial-solution* (build-solution node problem nil reason)))))
+
+(defun when-multiple-stop (reason node problem)
+  (cond ((solution-p *say-solution*)
+;;  	 (say-pp-solution *say-solution*))
+ 	 (say-pp-solution (update-solution-for-multiple *say-solution* problem)))
+	(t 
+	 (when-stop reason node problem))))
+
+
+(defun write-node-mem-info (algorithm)
+  (let ((mem-trace-file (format nil "~a/result/mem-per-node.txt" *domain-dir*))
+	(mem-per-node (getf (problem-plist *current-problem*) :mem-per-node)))
+    (with-open-file (out-stream mem-trace-file :direction :output :if-exists 
+				:append :if-does-not-exist :create)
+      (format out-stream "~%~a ~a ~a" algorithm *problem-file* mem-per-node))))
+
+
+(defun write-mem-trace (info)
+  (let ((mem-trace-file (format nil "~a/result/memtrace-~a.txt" *domain-dir* *problem-file*)))
+    (with-open-file (out-stream mem-trace-file :direction :output :if-exists 
+				:append :if-does-not-exist :create)
+      (format out-stream "~% ~a ~a" info (say-used-memory :used-mem)))))
+
+
+    
+(defun trace-search-extras (info)
+  (when *trace-mem* (write-mem-trace info)))
+
+
+(defun eval-g-path (solution cost-fn init-node)
+  (setf (snode-g-value init-node) 0)
+  (dolist (i-node (solution-path solution) solution)
+    (unless (numberp (snode-g-value i-node))
+      (store-a-star-extras i-node cost-fn))))
+
+
+
+(defun lessthan-heuristic-plus (node-a node-b)
+  (cond ((< (snode-h-value node-a)(snode-h-value node-b)) t)
+	((= (snode-h-value node-a)(snode-h-value node-b))
+	 (< (snode-h-plus node-a) (snode-h-plus node-b)))
+	(t nil)))
+
+
+;; Select the first open from chlis or backtrack to the next open node
+(defun next-node (node sort-function)
+  (let ((node-selected nil))
+    (cond ((snode-p (setf node-selected 
+			  (find-if #'(lambda (xnode)
+				       (and (null (snode-closed xnode))
+					    (funcall sort-function (snode-h-value xnode) 
+						     (snode-h-value node))))
+				   (snode-children node))))
+	   node-selected)
+	  (t
+	   (setf (snode-closed node) t)
+	   (cond ((not (null (snode-parent node)))
+		  (next-node (snode-parent node) sort-function))
+		 (t nil))))))
+
+
+(defun next-open (node)
+  (let ((node-selected nil))
+    (cond ((snode-p (setf node-selected 
+			  (find-if #'(lambda (xnode)
+				       (null (snode-closed xnode)))
+				   (snode-children node))))
+	   node-selected)
+	  (t
+	   (setf (snode-closed node) t)
+	   (cond ((not (null (snode-parent node)))
+		  (next-open (snode-parent node)))
+		 (t nil))))))
+
+
+(defun store-h-extras (node h-function)
+  (multiple-value-bind 
+   (h-value relaxed-plan focus-goals) (funcall h-function node)
+    (declare (ignore focus-goals))
+     (setf (snode-h-value node) h-value)
+     (setf (snode-h-plus node) (length relaxed-plan))
+     (setf (snode-relaxed-plan node) relaxed-plan)
+     (incf (getf (problem-plist *current-problem*) :node-evaluated))
+
+     (when (= h-value most-positive-fixnum)
+       (setf (snode-closed node) t))
+     ))
+
+(defun map-heuristic (node h-function)
+  (dolist (inode (snode-children node))
+    (when (and (null (snode-h-value inode))
+	       (not (snode-closed inode)))
+      (store-h-extras inode h-function))))
+
+  
+(defun store-a-star-extras (inode cost-fn &key (w_g 1) (w_h 1))
+  (setf (snode-g-value inode) (funcall cost-fn inode))
+  (setf (snode-f-value inode) (+ (* w_g (snode-g-value inode))
+				 (* w_h (snode-h-value inode)))))
+
+
+(defun remove-node-by-number (parent node-number)
+  (remove-if #'(lambda (ichild)
+		 (when (= (snode-number ichild) node-number) t))
+	     (snode-children parent)))
+
+
+(defun node-path-cost (node)
+  (cond ((snode-p (snode-parent node))
+	 (+ (snode-g-value (snode-parent node)) (snode-cost node)))
+	(t 0)))
+
+
+(defun restore-nonhelpful (node h-fn)
+  (find-applicable-byte node nil)                   ;;Computing all applicable actions
+  (unless (equalp (snode-applicable-byte node)(snode-helpful-byte node))
+    (expand-state node :helpful nil 
+		       :restoring-byte (bit-andc2 (snode-applicable-byte node)(snode-helpful-byte node)))
+    (dolist (inode (snode-children node))
+      (when (null (snode-h-value inode))
+	(store-h-extras inode h-fn)))
+    ;;All nodes are now in children list
+    ;;But just returning new nodes
+    (remove-if #'snode-helpful-p (snode-children node))
+    ))
+
+
+;; (defun restore-nonhelpful (node h-fn)
+;;   (setf (snode-children node) nil)
+;;   (expand-state node :helpful nil)
+;;   
+;;   (map-heuristic node h-fn)
+;;   (snode-children node)
+;; )
+
+
+(defun lessthan-f-metricplus (node1 node2)
+  (cond ((< (snode-f-value node1) (snode-f-value node2)) t)
+	((and (= (snode-f-value node1) (snode-f-value node2))
+	      (< (snode-h-plus node1) (snode-h-plus node2))) t)
+	(t nil)))
+
+
+(defun recompute-relinked (node cost-fn &key (w_g 1) (w_h 1))
+  (dolist (jchild (snode-children node))
+    (unless (snode-closed jchild)
+      (setf (snode-depth jchild) (1+ (snode-depth (snode-parent jchild))))
+      (store-a-star-extras jchild cost-fn :w_g w_g :w_h w_h)
+      (unless (null (snode-children jchild))
+	(recompute-relinked jchild cost-fn :w_g w_g :w_h w_h)))))
+
+
+
+
+;; In a-star when a new node is found with less g it is re-linked: the old node
+;; it's put back in the open with the new parent (updating the descendants)
+;; Lookahead nodes cannot use this optimization because we don't know the 
+;; direct parent of them
+(defun relink-g-parent (node old-repeated cost-fn &key (w_g 1) (w_h 1))
+  (let ((parent (snode-parent node))
+	(old-parent (snode-parent old-repeated)))
+    (cond ((not (or (lhnode-p node)
+		    (lhnode-p old-repeated)))
+	   (when (= 2 *say-output*)
+	     (format t "~% ============RELINKING ============================== ")
+	     (format t "~% New Node: ~a          Parent    : ~a" (snode-number node) (snode-number parent))
+	     (format t "~% Repeated: ~a          Old Parent: ~a" (snode-number old-repeated) (snode-number old-parent))
+	     (format t "~% ============RELINKING ============================== "))
+	   
+	   (setf (snode-closed node) t)
+	   
+	   (setf (snode-parent old-repeated) parent)
+	   (setf (snode-depth old-repeated) (1+ (snode-depth parent)))
+	   
+;;;;;;;;;;     (setf (snode-children parent) (remove-node-by-number parent (snode-number node)))
+	   (push old-repeated  (snode-children parent))
+	   (setf (snode-children old-parent) (remove-node-by-number old-parent (snode-number old-repeated)))
+	   (recompute-relinked old-repeated cost-fn :w_g w_g :w_h w_h)
+	   )
+	  (t 
+	   (when (= 2 *say-output*)
+	     (format t "~% ===========AVOIDING RELINK (Lookahead nodes) ============== ")))
+	  )))
+  
+  
+
+;;if the node has a better g value than the repeated node
+(defun better-g-path (repeated-node node cost-fn)
+  (let ((new-g (funcall cost-fn node)))
+    (cond ((numberp (snode-g-value repeated-node))
+	   (< new-g (snode-g-value repeated-node)))
+	  (t 
+	   (< new-g (funcall cost-fn repeated-node))))))
+
+
+
+
+(defun compute-inconsistent-h-nodes (node)
+  (dolist (i-child (snode-children node))
+    (when (numberp (snode-h-value i-child))
+      (cond ((> (- (snode-h-value node) (snode-h-value i-child)) (snode-cost i-child))
+	     (push i-child (gethash 'inc- *hash-inconsistent-h*) ))
+	    ((> (- (snode-h-value i-child) (snode-h-value node)) (snode-cost i-child))
+	     (push i-child (gethash 'inc+ *hash-inconsistent-h*) ))
+	    ))))
+
+
+
+(defun get-enforced-heuristic (node h-function current-h visited-nodes &key (discrete nil)
+			       (current-h-plus 0))
+  (let ((better-found nil) (node-counter 0))
+    (dolist (i-child (snode-children node) better-found)
+      (when (null better-found)
+	(cond ((not (find i-child (gethash (snode-hash-code i-child) visited-nodes) :test #'equal-state))
+	       (incf node-counter)
+	       (store-h-extras i-child h-function)
+  	       (push i-child (gethash (snode-hash-code i-child) visited-nodes))
+	       (cond (discrete
+		      (when (< (snode-h-value i-child) current-h)
+			(setf better-found i-child)
+			(when *trace-ehc*
+			  (push node-counter *hit-node*))))
+		     (t
+		       (when (or (< (snode-h-value i-child) current-h)
+				 (and (= (snode-h-value i-child) current-h)
+				      (< (snode-h-plus i-child) current-h-plus)))
+			 (setf better-found i-child))))) 
+	      (t
+	       (setf (snode-closed i-child) t)))
+	       ))))
+
+
+(defun lessthan-h-metricplus (node1 node2)
+  (cond ((< (snode-h-value node1) (snode-h-value node2)) t)
+	((and (= (snode-h-value node1) (snode-h-value node2))
+	      (< (snode-h-plus node1) (snode-h-plus node2))) t)
+	(t nil)))
+
+
+(defun ehc-open-nodes (open-children sort-option)
+  (cond ((equal sort-option 'h-value)
+	 (stable-sort open-children #'lessthan-h-metricplus))
+	(t open-children)))
+
+
+;; Restarting the hash-table for duplicate nodes, since the breadth-first search should not 
+;; take care of past repeated nodes
+(defun reset-hash-visited (start-node)
+  (let ((new-visited (make-hash-table)))
+    (push start-node (gethash (snode-hash-code start-node) new-visited))
+    new-visited))
+
+
+
+(defun enforced-hill-climbing (init-node h-fn cost-fn search-options &optional (problem *current-problem*))
+  (declare (ignore cost-fn))
+  (let ((open-nodes nil) (open-children nil)
+	(node init-node) (next-node nil) (visited (make-hash-table))
+	(current-h 0) (current-h-plus 0) (better-h-node nil) (discrete-h (not (is-metric-domain)))
+	(lookahead (search-option-value :lookahead search-options))
+	(helpful (search-option-value :helpful search-options)))
+
+    (cond (*trace-mem* 
+	   (say-consed-bytes :mem-per-node (store-h-extras node h-fn))
+	   (write-node-mem-info 'ehc))
+	  (t (store-h-extras node h-fn)))
+
+    (setf current-h (snode-h-value node))
+    (setf current-h-plus (snode-h-plus node))
+    (do* ((stop-this (stop-search node problem) (stop-search node problem)))
+	 (stop-this (when-stop (cdr stop-this) node problem))
+      
+;;       (trace-search-extras (snode-number node))
+      (expand-state node :helpful helpful)
+      (when lookahead (expand-node-lookahead node lookahead visited))
+
+      (print-search-node node nil)
+
+      (setf better-h-node (get-enforced-heuristic node h-fn current-h visited :discrete discrete-h 
+						  :current-h-plus current-h-plus))
+      (cond ((snode-p better-h-node)
+	     (setf current-h (snode-h-value better-h-node))
+	     (setf current-h-plus (snode-h-plus better-h-node))
+	     (setf node better-h-node)
+	     (setf open-nodes nil)
+	     (setf open-children nil)
+ 	     (setf visited (reset-hash-visited node))
+	     )
+	    (t 
+	     (setf open-children (nconc (remove-if #'snode-closed (snode-children node)) 
+				       open-children))
+	     
+	     (cond ((not (snode-p (setf next-node (pop open-nodes))))
+		    (when (> *say-output* 1) (format t "  ~% [Expanding Breadth Level]"))
+		    (setf open-nodes (ehc-open-nodes open-children (car (find-argument search-options :children-sort))))
+		    
+		    (when (null open-nodes) ;;Recuperando la poda por las helpful actions
+		      (dolist (i-child (restore-nonhelpful node h-fn))
+			(cond ((find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state)
+			       (setf (snode-closed i-child) t))
+			      (t 
+			       (push i-child (gethash (snode-hash-code i-child) visited))
+			       (push i-child open-nodes))))
+			       
+;; 		      (setf open-nodes (restore-nonhelpful node h-fn))
+		      
+		      (when (> *say-output* 1) 
+			(format t "  ~%!!Restoring NON Helpful Nodes.")))
+		    (setf node (pop open-nodes))
+		    (setf open-children nil))
+		   (t 
+		    (setf node next-node)))))       
+      ;; 	 (when (snode-p node)
+      ;; 	   (print-search-node node nil)
+      )))
+
+
+
+
+(defun restore-breadth-nonhelpful (closed-level-list visited)
+  (let ((new-open-list nil))
+    ;;Removing from visited hash table
+    (dolist (i-node closed-level-list)
+      (dolist (i-child (snode-children i-node))
+	(setf (snode-hash-code i-child)
+	      (remove i-child (gethash (snode-hash-code i-child) visited) :key #'snode-number))))
+    ;;Re-expanding with no helpful actions
+    (dolist (i-node closed-level-list new-open-list)
+      (expand-state i-node :helpful nil)
+ 
+      (dolist (i-child (snode-children i-node))
+	(cond ((not (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state))
+	       (push i-child (gethash (snode-hash-code i-child) visited)))
+	      (t 
+	       (setf (snode-closed i-child) t))))
+      
+      (setf new-open-list (append (remove-if #'snode-closed (snode-children i-node))
+				    new-open-list)))))
+
+
+;; I re-programm this algorithm to deal with a global ordering of breadth-search levels
+;; The FF algorithm should be equivalent to this rather than the first Sayphi-EHC
+(defun breadth-hc (init-node h-fn cost-fn search-options)
+  (declare (ignore cost-fn))
+  (let ((problem *current-problem*)
+	(node nil) (open-level-list (list init-node)) (closed-level-list nil)
+	(visited (make-hash-table)) (breadth-depth 0)
+	(current-h most-positive-fixnum) (current-h-plus most-positive-fixnum)
+	(helpful (search-option-value :helpful search-options)))
+
+    (setf node (pop open-level-list))
+    (do* ((stop-this (stop-search node problem) (stop-search node problem)))
+	 (stop-this (when-stop (cdr stop-this) node problem))
+      
+      (cond ((not (find node (gethash (snode-hash-code node) visited) :test #'equal-state))
+	     (store-h-extras node h-fn)
+	     (push node (gethash (snode-hash-code node) visited))
+	     (when (or (< (snode-h-value node) current-h)
+		       (and (= (snode-h-value node) current-h)
+			    (< (snode-h-plus node) current-h-plus)))
+	       (setf current-h (snode-h-value node))
+	       (setf current-h-plus (snode-h-plus node))
+	       (setf open-level-list nil)
+	       (setf closed-level-list (list node))
+	       (setf breadth-depth 0)
+	       (print-search-node node nil)))
+	    (t
+	     (setf (snode-closed node) t)))
+      
+	     
+      (when (null open-level-list)
+	;; Some kind of sort function for closed-level-list
+	(incf breadth-depth)
+	(when (> *say-output* 1) (format t "[*~d]" breadth-depth))
+	(dolist (i-node closed-level-list)
+	  (expand-state i-node :helpful helpful)
+	  
+	  (dolist (i-child (snode-children i-node))
+	    (cond ((not (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state))
+		   (push i-child (gethash (snode-hash-code i-child) visited)))
+		  (t 
+		   (setf (snode-closed i-child) t))))
+	  
+	  (setf open-level-list (nconc (remove-if #'snode-closed (snode-children i-node))
+					      open-level-list)))
+	;;For restoring non-helpful actions [FF stop pruning!]
+	(when (null open-level-list)
+	  (when (> *say-output* 1) (format t "~% >> Restoring NON-HELPFUL Actions!!"))
+	  (setf open-level-list (restore-breadth-nonhelpful closed-level-list visited))
+	  (decf breadth-depth))
+	
+	;;Some kind of sort function for node ordering
+	
+	(setf closed-level-list nil)
+	)
+      (setf node (pop open-level-list))
+      (push node closed-level-list))
+    ))
+
+;; I use this ordering function for preferring nodes with less search (depth/length)
+;; because some actions can have cost 0.
+(defun less-than-f-value-and-length (node-a node-b)
+  (cond ((< (snode-f-value node-a)(snode-f-value node-b)) t)
+	((= (snode-f-value node-a)(snode-f-value node-b))
+	 (< (snode-length node-a) (snode-length node-b)))
+	(t nil)))
+
+
+
+
+(defun a-star (init-node h-fn cost-fn search-options)
+  (let ((open-nodes nil) (node init-node) (repeated nil) 
+	(visited (make-hash-table)) (open-hash (make-hash-table))
+	(current-h 0) (new-nodes nil)
+	(problem *current-problem*)
+	(lookahead (search-option-value :lookahead search-options))
+	(w_g (cond ((search-option-value :w_g search-options)) (t 1)))
+	(w_h (cond ((search-option-value :w_h search-options)) (t 1)))
+	(helpful (eq :bfs-helpful (search-option-value :helpful search-options))) 
+	)
+
+    (store-h-extras node h-fn)
+    (when *trace-mem* (write-node-mem-info 'a-star))
+
+    (store-a-star-extras node cost-fn :w_g w_g :w_h w_h)
+    (setf current-h (snode-h-value node))
+    (do* ((stop-this (stop-search node problem) (stop-search node problem)))
+	 (stop-this (when-stop (cdr stop-this) node problem))
+
+      (setf repeated nil)
+      (push node (gethash (snode-hash-code node) visited))
+      (setf (gethash (snode-hash-code node) open-hash)
+	    (delete node (gethash (snode-hash-code node) open-hash)))
+      
+      (expand-state node :helpful helpful)
+      (when lookahead (expand-node-lookahead node lookahead visited))
+
+      (setf new-nodes nil)
+      (dolist (i-child (snode-children node))
+	(setf repeated (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state))
+       	(cond ((snode-p repeated)
+;; 	       (format t "~% ========?? Repeated visited ~a" (snode-number i-child))
+	       (cond ((better-g-path repeated i-child cost-fn)
+		      (relink-g-parent i-child repeated cost-fn :w_g w_g :w_h w_h))
+		     (t 
+		      (setf (snode-closed i-child) t)))))
+	
+	(setf repeated (find i-child (gethash (snode-hash-code i-child) open-hash) :test #'equal-state))
+	(cond ((snode-p repeated)
+;;  	       (format t "~% ========?? Repeated open-list ~a" (snode-number i-child))
+	       (cond ((better-g-path repeated i-child cost-fn)
+		      (setf (snode-closed repeated) t))
+		     (t 
+		      (setf (snode-closed i-child) t)))))
+       
+	(unless (snode-closed i-child)
+	  (store-h-extras i-child h-fn)
+	  (store-a-star-extras i-child cost-fn :w_g w_g :w_h w_h)
+	  (push i-child (gethash (snode-hash-code i-child) open-hash))
+	  (push i-child new-nodes)))
+	
+      (setf new-nodes (stable-sort new-nodes #'< :key #'snode-f-value))
+      (setf open-nodes (merge 'list new-nodes (remove-if #'snode-closed open-nodes) #'less-than-f-value-and-length))
+;;       (setf open-nodes (stable-sort (remove-if #'snode-closed open-nodes) 
+;; 				    #'< :key #'snode-f-value))
+      
+      (setf node (pop open-nodes))
+      
+      (when (snode-p node)
+	(print-search-node node open-nodes))
+      )))
+
+
+		
+
+
+(defun k-best-first (init-node h-fn cost-fn search-options &key (k-beam 2))
+  (declare (ignore search-options))
+  (let ((open-nodes nil) (node init-node) (repeated nil) (visited nil) (current-h 0)
+	(beam-list nil)
+	(problem *current-problem*))
+    (store-h-extras node h-fn)
+    (store-a-star-extras node cost-fn)
+    (setf current-h (snode-h-value node))
+    (do* ((stop-this (stop-search node problem) (stop-search node problem)))
+	 (stop-this (when-stop (cdr stop-this) node problem))
+      (setf repeated nil)
+      (push node visited)
+      (expand-state node :helpful nil)
+      (dolist (i-child (snode-children node))
+	(setf repeated (find i-child visited :test #'equal-state))
+       	(cond ((snode-p repeated)
+;; 	       (format t "~% ========?? Repeated visited ~a" i-child)
+	       (cond ((better-g-path repeated i-child cost-fn)
+		      (relink-g-parent i-child repeated cost-fn))
+		     (t 
+		      (setf (snode-closed i-child) t)))))
+	
+	(setf repeated (find i-child open-nodes :test #'equal-state))
+	(cond ((snode-p repeated)
+;; 	       (format t "~% ========?? Repeated open-list ~a" i-child)
+	       (cond ((better-g-path repeated i-child cost-fn)
+		      (setf (snode-closed repeated) t))
+		     (t 
+		      (setf (snode-closed i-child) t)))))
+       
+	(unless (snode-closed i-child)
+	  (store-h-extras i-child h-fn)
+	  (store-a-star-extras i-child cost-fn)
+	  (push i-child open-nodes)))
+      
+      (when (null beam-list)
+	(setf open-nodes (stable-sort (remove-if #'snode-closed open-nodes) 
+				      #'< :key #'snode-f-value))
+	(setf beam-list (subseq open-nodes 0 (min k-beam (length open-nodes))))
+	(cond ((< k-beam (length open-nodes)) 
+	       (setf open-nodes (subseq open-nodes k-beam)))
+	      (t 
+	       (setf open-nodes nil))))
+        
+      (setf node (pop beam-list))
+      
+      (when (snode-p node)
+	(print-search-node node open-nodes))
+      )))
+
+
+
+(defun hc-next-node (node &optional (backtrack nil))
+  (let ((candidates (stable-sort (remove-if #'snode-closed (snode-children node)) 
+				 #'< :key #'snode-h-value)))
+    (cond (backtrack
+	   (cond ((snode-p (car candidates))
+		  (car candidates))
+		 (t
+		  (setf (snode-closed node) t)
+		  (when (> *say-output* 1) (format t "~% !! Hill-climbing Backtracking.."))
+		  (when (snode-p (snode-parent node))
+		    (hc-next-node (snode-parent node) t)))))
+	  (t (car candidates)))))
+    
+
+
+(defun hill-climbing (init-node h-function cost-fn search-options &optional  
+		      (problem *current-problem*))
+  (declare (ignore cost-fn))
+  (let ((helpful (search-option-value :helpful search-options))
+	(lookahead (search-option-value :lookahead search-options))
+	(visited (make-hash-table))
+	(node init-node)
+	(next-node nil))
+    (store-h-extras node h-function)
+    
+    (do* ((stop-this (stop-search node problem) (stop-search node problem)))
+	 (stop-this (when-stop (cdr stop-this) node problem))
+      (expand-state node :helpful helpful)
+      (when lookahead (expand-node-lookahead node lookahead visited))
+
+      (push node (gethash (snode-hash-code node) visited))
+      
+      (dolist (i-child (snode-children node))
+	(cond ((not (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state))
+	       (store-h-extras i-child h-function))
+	      (t 
+	       (setf (snode-closed i-child) t))))
+   
+      (setf next-node (hc-next-node node))
+      (cond ((snode-p next-node)
+	     (setf node next-node))
+	    (t
+	     (dolist (i-child (restore-nonhelpful node h-function))
+	       (when (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state)
+		 (setf (snode-closed i-child) t)))
+	     (when (> *say-output* 1) (format t "{~% Restoring NON-Helpful Actions!!}"))
+	     (setf node (hc-next-node node t))))
+
+
+      (when (snode-p node)
+	(print-search-node node nil))
+      ;; 	 (break)
+      )))
+
+
+;; It selects the upper cost bound in bfs-bnb
+;; If the heuristic over-estimates in solution path, we have to increase the cost bound.
+;; in order to get a solution
+(defun decide-upper-cost-bound (solution cost-fn)
+  (setf (snode-g-value (problem-search-tree *current-problem*)) 0)
+  (clean-bnb-first-sol solution)
+  (let ((upper-cost-bound (solution-total-cost solution)))
+    (dolist (i-node (solution-path solution) upper-cost-bound)
+      (unless (numberp (snode-g-value i-node))
+	(setf (snode-g-value i-node) (funcall cost-fn i-node)))
+      (when (> (+ (snode-h-value i-node) (snode-g-value i-node)) upper-cost-bound)
+	(setf upper-cost-bound (+ (snode-h-value i-node) (snode-g-value i-node)))
+	(when (> *say-output* 0)
+	  (format t "~% =>BFS-BNB > Over estimations in H(n)...increasing upper-cost bound"))))))
+
+
+(defun bfs-bnb (init-node h-fn cost-fn search-options)
+  (let ((open-nodes nil) (node init-node) (repeated nil) 
+	(visited (make-hash-table)) (open-hash (make-hash-table))
+	(current-h 0) (new-nodes nil)
+	(problem *current-problem*)
+	(lookahead (search-option-value :lookahead search-options))
+	(w_g (cond ((search-option-value :w_g search-options)) (t 1)))
+	(w_h (cond ((search-option-value :w_h search-options)) (t 1)))
+	(helpful (eq :bfs-helpful (search-option-value :helpful search-options)))
+	(max-solutions (search-option-value :max-solutions search-options))
+        (prune-function (when (search-option-value :prune-function search-options)
+			      (symbol-function (search-option-value :prune-function search-options))))
+	(exhaustive-search (search-option-value :exhaustive-search search-options))
+	(hash-solutions (make-hash-table))
+	(upper-cost-bound most-positive-fixnum)
+	(zero-sol nil) (first-sol nil))
+    
+    (when prune-function
+      (setf zero-sol (enforced-hill-climbing init-node h-fn cost-fn search-options))
+      (setf first-sol (if (and (solution-p zero-sol) 
+			       (or (solution-found zero-sol)
+				   (eq (solution-stop-reason zero-sol) :time-bound)))
+			  zero-sol
+			  (a-star init-node h-fn cost-fn (append search-options (list '(:w_h 3))))))
+      (when (and (solution-p first-sol)
+		 (solution-found first-sol))
+	(setf upper-cost-bound (decide-upper-cost-bound first-sol cost-fn))
+	(when (> *say-output* 0) 
+	    (format t "~% =>BFS-BNB >> Starting with Upper Bound {~a}" upper-cost-bound))
+	))
+
+    (setf *say-hash-solutions* hash-solutions)
+    (store-h-extras node h-fn)
+    (store-a-star-extras node cost-fn :w_g w_g :w_h w_h)
+    (setf current-h (snode-h-value node))
+
+    (do* ((stop-this (stop-multiple node problem hash-solutions max-solutions t) 
+		     (stop-multiple node problem hash-solutions max-solutions t)))
+	 ((car stop-this) (when-multiple-stop (cdr stop-this) node problem)) 
+
+      (when (snode-closed node)  ;;Goals reached
+	(when (< (solution-total-cost (gethash (hash-table-count hash-solutions) hash-solutions)) upper-cost-bound)
+	  (setf *say-solution* (gethash (hash-table-count hash-solutions) hash-solutions))
+	  (setf upper-cost-bound (solution-total-cost *say-solution*))
+	  (when (> *say-output* 0) 
+	    (format t "~% =>BFS-BNB >> Found new solution with Cost {~a}" (solution-total-cost *say-solution*)))))
+      (when (snode-p node)
+	(setf repeated nil)
+	(push node (gethash (snode-hash-code node) visited))
+	(setf (gethash (snode-hash-code node) open-hash)
+	      (delete node (gethash (snode-hash-code node) open-hash)))
+	
+	(expand-state node :helpful helpful)
+	(when lookahead (expand-node-lookahead node lookahead visited))
+	
+	(setf new-nodes nil)
+	
+	(dolist (i-child (snode-children node))
+	  (unless exhaustive-search 
+	    (setf repeated (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state))
+	    (cond ((snode-p repeated)
+		   ;; 	       (format t "~% ========?? Repeated visited ~a" (snode-number i-child))
+		   (cond ((better-g-path repeated i-child cost-fn)
+			  (relink-g-parent i-child repeated cost-fn :w_g w_g :w_h w_h))
+			 (t 
+			  (setf (snode-closed i-child) t)))))
+	    
+	    (setf repeated (find i-child (gethash (snode-hash-code i-child) open-hash) :test #'equal-state))
+	    (cond ((snode-p repeated)
+		   ;;  	       (format t "~% ========?? Repeated open-list ~a" (snode-number i-child))
+		   (cond ((better-g-path repeated i-child cost-fn)
+			  (setf (snode-closed repeated) t))
+			 (t 
+			  (setf (snode-closed i-child) t)))))
+	    )
+	  (unless (snode-closed i-child)
+	    (store-h-extras i-child h-fn)
+	    (store-a-star-extras i-child cost-fn :w_g w_g :w_h w_h)
+	    (push i-child new-nodes))
+	  )
+
+	(when (functionp prune-function)
+	  (setf new-nodes (remove-if #'(lambda (i-sibling)
+					 (> (funcall prune-function i-sibling) upper-cost-bound))
+				     new-nodes)))
+						
+	(dolist (i-child new-nodes)
+	  (push i-child (gethash (snode-hash-code i-child) open-hash)))
+
+	(setf new-nodes (stable-sort new-nodes #'< :key #'snode-f-value))
+	(setf open-nodes (merge 'list new-nodes (remove-if #'snode-closed open-nodes) #'less-than-f-value-and-length))
+;; 	(rolpp-open open-nodes)
+	(setf node (pop open-nodes))
+
+
+	(when (snode-p node)
+	(print-search-node node open-nodes))
+	)
+      )))
+
+
+
+
+(defun beam-search (init-node h-function cost-fn search-options &optional  
+		      (problem *current-problem*))
+  (declare (ignore cost-fn))
+  (let ((helpful (search-option-value :helpful search-options))
+	(lookahead (search-option-value :lookahead search-options))
+	(k-beam (or (search-option-value :k-beam search-options) 3))
+	(visited (make-hash-table))
+	(beam-list (list init-node)) (open-children nil))
+    (store-h-extras init-node h-function)
+    
+    (do* ((stop-this (stop-beam beam-list problem) (stop-beam beam-list problem)))
+	 (stop-this (when-stop (third stop-this) (second stop-this) problem))
+
+      (dolist (i-node beam-list)
+	(expand-state i-node :helpful helpful)
+	(when lookahead (expand-node-lookahead i-node lookahead visited))
+	(push i-node (gethash (snode-hash-code i-node) visited)))
+      
+      (setf open-children (mapcan #'snode-children beam-list))
+      (dolist (i-child open-children)
+	(cond ((not (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state))
+	       (store-h-extras i-child h-function))
+	      (t 
+	       (setf (snode-closed i-child) t))))
+
+      (setf open-children  (stable-sort (remove-if #'snode-closed open-children) #'< :key #'snode-h-value))
+      (cond (open-children 
+	     (setf beam-list (subseq open-children 0 (min k-beam (length open-children)))))
+	    (t
+	     (when (> *say-output* 1) (format t "{~% Restoring NON-Helpful Actions!!}"))
+	     (dolist (i-child (mapcan (lambda (inode)
+					(restore-nonhelpful inode h-function)) beam-list))
+	       (when (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state)
+		 (setf (snode-closed i-child) t)))
+	     (setf open-children  (stable-sort (remove-if #'snode-closed open-children) #'< :key #'snode-h-value))
+	     (setf beam-list (subseq open-children 0 (min k-beam (length open-children))))))
+
+      (when (and beam-list (> *say-output* 1))
+	(format t "~%Beam Nodes at Depth ~d" (snode-depth (car beam-list)))
+	(dolist (i-node beam-list)
+	  (print-search-node i-node nil)))
+      )))
+
+
+
+ 
+;; I include the evaluation to study h-relaxedplan behaviour      
+(defun breadth-first (init-node h-fn cost-fn search-options)
+  (declare (ignore cost-fn))
+  (let ((visited (make-hash-table)) (open-nodes nil) (node init-node)
+	(problem *current-problem*) (eval-h (not (find-argument search-options :not-eval))))
+    
+    (when eval-h (store-h-extras node h-fn))
+    (do* ((stop-this (stop-search node problem) (stop-search node problem)))
+	 (stop-this (when-stop (cdr stop-this) node problem))
+
+      (expand-state node :helpful nil)
+      (push node (gethash (snode-hash-code node) visited))
+
+      (dolist (i-child (snode-children node))
+	(cond ((find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state)
+	       (setf (snode-closed i-child) t))
+	      
+	      (t 
+	       (when eval-h (store-h-extras i-child h-fn)))))
+ 
+      (setf open-nodes (append open-nodes (remove-if #'snode-closed (snode-children node))))
+      
+      (setf node (pop open-nodes))
+      (when (snode-p node)
+	(print-search-node node nil)))))
+
+
+;; Counts the number of found solutions of cost 
+(defun count-depth-num-solution (cost)
+  (let ((nsols 0))
+    (maphash #'(lambda (n sol)
+		 (declare (ignore n))
+		 (when (= (solution-total-cost sol) cost)
+		   (incf nsols)))
+	     *say-hash-solutions*)
+  nsols
+  ))
+
+
+
+;; We need to clean the path of the solution when working with the
+;; whole tree in branch & bound algorithm.  EHC recompute states loops
+;; and the path may have no adjacent successors
+(defun clean-bnb-first-sol (solution)
+  (when (and (solution-p solution)
+	     (solution-found solution)
+	     (not (= (solution-depth solution) (solution-length solution))))
+    (setf (solution-path solution)
+	  (build-path (solution-last-node solution) nil))
+    (setf (solution-length solution)
+	  (compute-solution-length (solution-path solution)))
+    (setf (solution-total-cost solution)
+	  (compute-total-cost (solution-path solution) *current-problem*)))
+    solution
+    )
+
+
+;; Hill-climbing Branch & Bound It search first a solution with EHC
+;; and then tries to improve the solution searching with a
+;; backtracking Hill-climbing pruned by the first solution upper-cost
+;; bound
+(defun hc-bnb (init-node h-function cost-fn search-options &key 
+				(problem *current-problem*))
+  (when (> *say-output* 0) (format t "~% Finding EHC solution for Upper-cost Bound"))
+  (let* ((zero-sol (clean-bnb-first-sol (enforced-hill-climbing init-node h-function cost-fn search-options)))
+	 (first-sol (if (and (solution-p zero-sol) 
+			     (or (solution-found zero-sol)
+				 (eq (solution-stop-reason zero-sol) :time-bound)))
+			zero-sol
+			(a-star init-node h-function cost-fn (append search-options (list '(:w_h 3))))))
+	 (visited (make-hash-table)) (siblings nil)
+	 (hash-solutions (make-hash-table))
+	 (node init-node) (repeated nil)
+	 (upper-cost-bound nil)
+	 ;; 	(not-prune-inconsistent (search-option-value :not-prune-inconsistent search-options))
+	 (max-solutions (search-option-value :max-solutions search-options))
+	 (exhaustive-search (search-option-value :exhaustive-search search-options))
+         (prune-function (if (search-option-value :prune-function search-options)
+			     (symbol-function (search-option-value :prune-function search-options))
+			     #'snode-f-value))
+	 (helpful (search-option-value :helpful search-options)))
+    ;;     (setf *hash-inconsistent-h* (make-hash-table))
+    (setf *say-hash-solutions* hash-solutions)
+    (cond ((and (solution-p first-sol)
+		(solution-found first-sol) (> (solution-depth first-sol) 0))
+	   (setf upper-cost-bound (solution-total-cost first-sol))
+	   (setf (snode-closed (solution-last-node first-sol)) t)
+	   (setf (gethash 1 hash-solutions) first-sol)
+
+	   (store-a-star-extras node cost-fn)
+	   (push node (gethash (snode-hash-code node) visited))
+
+	   (when (> *say-output* 0) (format t "~% Running Branch & Bound [~a]" upper-cost-bound))
+	   
+	   (do* ((stop-this (stop-multiple node problem hash-solutions max-solutions) 
+			    (stop-multiple node problem hash-solutions max-solutions)))
+		((car stop-this) (when-multiple-stop (cdr stop-this) node problem)) 
+	     (when (snode-closed node)  ;;Goals reached
+	       (when (< (solution-total-cost (gethash (hash-table-count hash-solutions) hash-solutions)) upper-cost-bound)
+		 (setf *say-solution* (gethash (hash-table-count hash-solutions) hash-solutions))
+		 (setf upper-cost-bound (solution-total-cost *say-solution*))
+		 (when (> *say-output* 0) 
+		   (format t "~% => BnB >> Found new solution with Cost {~a}" (solution-total-cost *say-solution*))))
+	       (setf node (snode-parent node)))
+
+	     (unless (snode-expanded node) 
+	       (expand-state node :helpful helpful))
+	     (dolist (i-child (snode-children node))
+	       (unless (snode-closed i-child)
+		 (cond ((null (snode-h-value i-child))
+			(setf repeated 
+			      (unless exhaustive-search
+				(find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state)))
+			(cond ((or (not (snode-p repeated))
+				   (and (snode-p repeated)
+					(better-g-path repeated i-child cost-fn)))
+			       (store-h-extras i-child h-function)
+;; 			       (when (> *say-output* 1) (format t "~% Watch This!!!"))
+			       (push i-child (gethash (snode-hash-code i-child) visited)))
+			      (t
+			       
+			       (setf (snode-closed i-child) t)
+;; 			       (when (> *say-output* 1) 
+;; 				 (format t "~% == BnB ==>> Not evaluated repeated node ~a" (snode-number i-child)))
+			       )))
+		       (t
+			(when (and (not (snode-closed i-child))
+				   (not (find i-child (gethash (snode-hash-code i-child) visited) :key #'snode-number)))
+			  (push i-child (gethash (snode-hash-code i-child) visited)))))
+		 (when (and (not (snode-closed i-child)) (null (snode-f-value i-child)))
+		   (store-a-star-extras i-child cost-fn))
+		 ))
+	     
+;; 	     (compute-inconsistent-h-nodes node)
+	     
+	     (setf siblings (stable-sort (remove-if #'(lambda (i-sibling)
+							(or (snode-closed i-sibling)
+							    (> (funcall prune-function i-sibling) upper-cost-bound)
+;; 								 (or (not not-prune-inconsistent)
+;; 								     (and not-prune-inconsistent
+;; 									  (<= (- (snode-h-value i-sibling) (snode-h-value node))
+;; 									      (snode-cost i-sibling))))
+								 ))
+						    (snode-children node)) 
+					 #'< :key #'snode-f-value))
+;; ;;======================================================================
+;; 	     (format t "~%~% ===>children:")
+;; 	     (map nil #'(lambda (x) (format t " ~a (~a, ~a), " (snode-number x) (snode-f-value x)
+;; 					    (snode-closed x))) (snode-children node)) 
+;; 	     (format t "~% ===>siblings:")
+;; 	     (map nil #'(lambda (x) (format t " ~a " (snode-number x))) siblings) 
+;; ;;======================================================================
+	     (cond ((snode-p (car siblings))
+		    (setf (snode-selected (snode-parent (car siblings))) (car siblings))
+		    (setf node (car siblings)))
+		   (t 
+		    (setf (snode-selected node) nil)
+		    (setf (snode-closed node) t)
+		    (when (> *say-output* 1) (format t "~% == BnB ==>> Cost Pruning at node ~a [~a]" 
+						     (snode-number node) (snode-f-value node)))
+		    (setf node (if (snode-p (snode-parent node)) (snode-parent node) nil))
+		    
+		    ))
+	     
+	     (when (snode-p node)
+	       (print-search-node node nil))
+	     ))
+	  ;; 	  In case of no solution was found
+	  (t first-sol))))
+    
+
+    
+;; This implementation of depth-first take into account visited nodes.
+;; Call always this function with helpful actions to reduce the size of the search tree
+(defun depth-first (init-node h-function cost-fn search-options &optional  
+		      (problem *current-problem*))
+  (declare (ignore cost-fn))
+  (let ((helpful (search-option-value :helpful search-options))
+	(visited (make-hash-table))
+	(node init-node) (open-list nil))
+    (store-h-extras node h-function)
+  
+    (do* ((stop-this (stop-search node problem) (stop-search node problem)))
+	 (stop-this (when-stop (cdr stop-this) node problem))
+      (expand-state node :helpful helpful)
+      (push node (gethash (snode-hash-code node) visited))
+      
+      (setf open-list (nconc (remove-if #'(lambda (i-child)
+					    (find i-child (gethash (snode-hash-code i-child) visited) :test #'equal-state))
+					(snode-children node))
+			     open-list))
+      (setf node (pop open-list))
+
+      (when (snode-p node)
+	(store-h-extras node h-function)
+	(print-search-node node nil)
+	))))
+
+(defvar *ehc-solution* nil "To store the EHC search when expanding afterwards to A*")
+
+(defun ff (init-node h-fn cost-fn search-options &optional (w_g 1) (w_h 2))
+  (declare (special *ehc-solution*))
+  (let ((ehc-solution (enforced-hill-climbing init-node h-fn cost-fn 
+					      search-options)))
+    (setf *ehc-solution* ehc-solution)
+    (cond ((and ehc-solution (solution-found ehc-solution))
+       ehc-solution)
+	  ((not (eq (solution-stop-reason ehc-solution) :time-bound))
+       (format t "~%Changing to A* at time ~3$" (solution-total-time 
+						 ehc-solution))
+       (push (list :w_g w_g) search-options)
+       (push (list :w_h w_h) search-options)
+       (a-star init-node h-fn cost-fn search-options))
+      (t ehc-solution))))
+
+
+
+(defun initialize-current-problem ()
+;;   (insert-artificial-costs)
+  (update-artificial-initstate)
+  (instantiate-operators)
+  (init-heuristics)
+
+  (let ((problem *current-problem*))
+    (setf (getf (problem-plist problem) :node-counter) 0)
+    (setf (getf (problem-plist problem) :node-evaluated) 0)
+    (setf (getf (problem-plist problem) :lastnode-mem-check) 0)
+    (say-used-memory :prob-init-memory) 
+    
+    (setf *hash-nodes* (make-hash-table))
+    (setf (problem-search-tree problem)
+	  (make-snode :number 0
+		      :depth 0
+		      :length 0
+		      :state (copy-state (problem-init-state problem))
+		      :hash-code (compute-duphash-code (problem-init-state problem))
+		      ))))
+
+
+
+(defun say-plan-defaults (plan-option)
+  (case plan-option
+    (heuristic (cond ((is-metric-domain) #'h-metric-rxplan)
+		     (t #'h-relaxedplan)))
+    (algorithm #'enforced-hill-climbing)))
+
+
+(defun plan (&key (algorithm nil)
+	     (heuristic nil)
+	     (cost *say-costfn*)
+	     (timeout *say-timeout*)
+	     (depthbound *say-depthbound*)
+	     (costbound *say-costbound*)
+	     (helpful *say-helpful*)
+	     (w_g nil)
+	     (w_h nil)
+	     (max-solutions most-positive-fixnum)
+	     (rules-file nil)
+	     (use-rules-p nil)
+	     (lookahead nil)
+	     (k-beam nil)
+	     (search-options nil)
+	     (try2-search *say-2try*))
+  (declare (special *current-problem*)
+	   (ignore try2-search rules-file use-rules-p))
+  (let ((problem *current-problem*)
+	(i-node nil)
+	(algorithm-fn (if (not (null algorithm)) (symbol-function algorithm) (say-plan-defaults 'algorithm)))
+	(heuristic-fn (if (not (null heuristic)) (symbol-function heuristic) (say-plan-defaults 'heuristic)))
+	(cost-fn (symbol-function cost))
+	(start-time (get-internal-run-time))
+	(sol nil))
+
+    (set-sayp :say-timeout timeout)
+    (set-sayp :say-depthbound depthbound)
+    (set-sayp :say-costbound costbound)
+
+    (reset-ehc-trace)
+    (sayout-initialize)
+
+    (set-duplicate-hashing)
+    (setf i-node (initialize-current-problem))
+
+
+    (setf (getf (problem-plist problem) :initial-pre-time) start-time)
+    (setf (getf (problem-plist problem) :initial-search-time) (get-internal-run-time))
+    
+    (setf *search-failed* nil)
+    (setf *say-solution* nil)
+    (setf *say-hash-solutions* nil)
+
+    (push (list :helpful helpful) search-options)
+    (when (numberp max-solutions) (push (list :max-solutions max-solutions) search-options))
+    (when w_g (push (list :w_g w_g) search-options))
+    (when w_h (push (list :w_h w_h) search-options))
+    (when lookahead (push (list :lookahead lookahead) search-options))
+    (when k-beam (push (list :k-beam k-beam) search-options))
+
+    (sayout-search t algorithm heuristic cost)
+    (setf sol (funcall algorithm-fn i-node heuristic-fn cost-fn search-options))
+
+;;     Turning to best-first algorithm without helpful actions
+;;     (cond ((and *search-failed* try2-search)
+;; 	   (setf i-node (initialize-current-problem))
+;; 	   (setf sol (best-first i-node heuristic-fn cost-fn)))
+;; 	  (t sol))
+
+))
+
+;; This is a top function for function plan in order to have
+;; fixed arguments when calling from a executable core
+(defun runplan (run-algorithm timeout)
+  (case run-algorithm
+    (ehc-lookahead (plan :timeout timeout :lookahead t))
+    (bfs-bnb-h (plan :algorithm 'bfs-bnb :helpful :bfs-helpful :timeout timeout))
+    (bfs-bnb-prune (plan :algorithm 'bfs-bnb :timeout timeout :w_h 1 :search-options '((:prune-function snode-f-value))))
+    (bfs-bnb-learn (plan :algorithm 'bfs-bnb :timeout timeout :w_h 1 :search-options '((:prune-function snode-f-value)
+										       (:exhaustive-search t))))
+    (otherwise (plan :algorithm run-algorithm :timeout timeout))))
+
+
+		

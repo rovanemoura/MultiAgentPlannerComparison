@@ -1,0 +1,129 @@
+;; Code for the dialog :form2
+
+(in-package :cg-user)
+
+;; chapter 1, step 10
+;; chapter 3, step 24
+;; chapter 4, step 16
+;; Chapter 6, Step 55
+(defclass doodler (bitmap-window)
+  ((doodler-curve-dialog
+    :accessor doodler-curve-dialog
+    :initform nil)
+   (doodler-background-palette
+    :initform nil
+    :accessor doodler-background-palette)))
+
+;; chapter 3, step 29
+;; chapter 4, step 20
+;; chapter 4, step 23
+(defun doodler-toolbar-click 
+    (widget new-value old-value)
+  (declare 
+   (ignore-if-unused widget new-value old-value))
+  ;; Do the action only when a button is 
+  ;; being pressed (not unpressed)
+  (when new-value
+    (let ((doodler (parent (parent widget))))
+      (case (first new-value)
+        (:erase
+         (erase-window doodler))
+        (:curve 
+         (show-curve-dialog doodler))
+        (:scroll-to-center
+         (scroll-to-center doodler))
+        
+        (t nil))))
+  (not new-value))
+
+
+;; chapter 3, step 30
+;; chapter 3, step 36
+;; chapter 3, step 50
+(defmethod show-curve-dialog ((window doodler)) 
+   (let ((dialog (doodler-curve-dialog window))
+         (curve-list nil))               ; step 50
+      (when (or (not dialog) 
+                (not (windowp dialog))) 
+         (setq dialog 
+               (make-curve-dialog :owner window)) 
+         (setf (doodler-curve-dialog window) dialog)
+         (setq curve-list                ; step 50
+               (find-component :curve-list dialog))
+         (setf (range curve-list)        ; step 50
+
+               (list 
+                 (make-instance 'cycloidal-curve)))
+      ;; Position the dialog to the 
+      ;; left of the main window.
+      (let* ((pos (window-to-screen-units 
+                    window
+                    (make-position 
+                     (- (+ 
+                        (exterior-width dialog) 10))
+                         40))))
+        ;; But don't let it go off the left 
+        ;; edge of the screen.
+        (setf (position-x pos)
+
+              (max 0 (position-x pos)))
+        (move-window dialog pos)))
+      (select-window dialog)))
+
+;; chapter 3, step 30
+;; Chapter 6, Step 57
+(defmethod close :before ((window doodler) &key)
+  (let ((curve-dialog (doodler-curve-dialog window))
+        (background-palette
+         (doodler-background-palette window)))
+    (when (and (windowp curve-dialog)
+               curve-dialog)
+      (close curve-dialog))
+    (setf (doodler-curve-dialog window) nil)
+    (when (and (windowp background-palette)
+               background-palette)
+      (close background-palette))
+    (setf (doodler-background-palette window) nil)))
+
+
+;; chapter 4, step 25
+(defmethod erase-window ((window doodler))
+   (let ((pane (frame-child window)))
+      (erase-contents-box pane (page-box pane))))
+
+;; Chapter 5, Step 64
+(defmethod user-close ((window doodler))
+  (let ((modal-dialog (modal-window)))
+    (if* modal-dialog then
+            (beep window)
+            (pop-up-message-dialog window "Doodler"
+                                   (format nil "~
+ Close the ~a modal dialog before closing ~
+ the Doodler."
+                                     (title modal-dialog))
+                                   warning-icon 
+                                   "~OK")
+       else
+            (call-next-method))))
+
+;; Chapter 6, Step 54
+(defmethod initialize-instance :after 
+  ((window doodler) &rest initargs)
+  (declare (ignore initargs))
+  (show-background-palette window)
+  (select-window window))
+
+;; Chapter 6, Step 56
+(defmethod show-background-palette 
+    ((window doodler))
+  (let ((palette 
+         (doodler-background-palette window)))
+    (unless palette
+      (setq palette
+            (make-background-palette 
+             :owner window))
+      (select-window palette)
+      (setf 
+       (doodler-background-palette window) 
+       palette))
+    (select-window palette)))

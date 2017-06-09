@@ -1,0 +1,1481 @@
+The following updates are now available. See sys:update-allegro
+for more information on downloading and installing patches.
+
+There are currently 87 patches (69 unique).
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 318) ...
+Date Posted: -- in testing --
+Patch names: acl100413 (version 318), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: With this patch, global gc of very large spaces will try
+  to allocate additional work space to finish the marking phase in
+  one pass, before resorting to multiple mark passes. This can reduce
+  mark time significantly.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_292          lisp_build_293
+  freebsd      lisp_build_293          lisp_build_294
+  freebsd-64.64smplisp_build_292          lisp_build_293
+  linux86      lisp_build_293          lisp_build_294
+  linuxamd64.64lisp_build_292          lisp_build_293
+  linuxamd64.64smplisp_build_292          lisp_build_293
+  macosx86     lisp_build_293          lisp_build_294
+  macosx86-64.64lisp_build_292          lisp_build_293
+  macosx86-64.64smplisp_build_292          lisp_build_293
+  solaris      lisp_build_296          lisp_build_297
+  solaris.64   lisp_build_296          lisp_build_297
+  solarisamd64.64lisp_build_292          lisp_build_293
+  windows      lisp_build_318          lisp_build_319
+  windows.smp  lisp_build_317          lisp_build_318
+  windows.64   lisp_build_317          lisp_build_318
+  windows.64smplisp_build_317          lisp_build_318
+
+-------------------------------------------------------------------------------
+aserve patch aserve
+Date Posted: Fri Aug  5 08:57:52 PDT 2016
+Patch names: code/aserve.006
+Description: URLs that get rewritten by the clp file parser have been
+  set to root at the destination directory. This means clp files in
+  subdirectories that have relative url references are having those
+  references mis-written. This patch fixes the problem by keeping
+  track of the pathname position of the clp file being parsed
+  relative to the webaction's destination-directory.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 313) ...
+Date Posted: Thu Aug  4 15:47:41 PDT 2016
+Patch names: acl100413 (version 313), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Some types of foreign calls were not fully initializing
+  a control block on the stack, and this could make the garbage
+  collector find an invalid pointer where it expected a valid one.
+  The garbage collector would generally react to this by displaying a
+  fatal error message and terminating the process.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_288          lisp_build_289
+  freebsd      lisp_build_288          lisp_build_289
+  freebsd-64.64smplisp_build_288          lisp_build_289
+  linux86      lisp_build_288          lisp_build_289
+  linuxamd64.64lisp_build_288          lisp_build_289
+  linuxamd64.64smplisp_build_288          lisp_build_289
+  macosx86     lisp_build_288          lisp_build_289
+  macosx86-64.64lisp_build_288          lisp_build_289
+  macosx86-64.64smplisp_build_288          lisp_build_289
+  solaris      lisp_build_292          lisp_build_293
+  solaris.64   lisp_build_292          lisp_build_293
+  solarisamd64.64lisp_build_288          lisp_build_289
+  windows      lisp_build_313          lisp_build_314
+  windows.smp  lisp_build_313          lisp_build_314
+  windows.64   lisp_build_313          lisp_build_314
+  windows.64smplisp_build_313          lisp_build_314
+
+-------------------------------------------------------------------------------
+compile patch pkb007
+Date Posted: Wed Jul 27 15:05:52 PDT 2016
+Patch names: update/pkb007.001
+Description: Fixes a compiler error which results in a "closure vec
+  hasn't been initialized" error when dead code is compiled which
+  happens to have some stack-allocated-closures involved inside the
+  dead code.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 285) ...
+Date Posted: Fri Jul 22 19:47:34 PDT 2016
+Patch names: acl100413 (version 285), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Provides an aid in debugging GC errors. Now, a cpu
+  exception raised during a gc (scavenge or global) will terminate
+  the program with an error message similar to the one that appears
+  when the garbage collector recognizes the heap has been corrupted.
+Impact: minor
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_272          lisp_build_273
+  freebsd      lisp_build_272          lisp_build_273
+  freebsd-64.64smplisp_build_272          lisp_build_273
+  linux86      lisp_build_272          lisp_build_273
+  linuxamd64.64lisp_build_272          lisp_build_273
+  linuxamd64.64smplisp_build_272          lisp_build_273
+  macosx86     lisp_build_272          lisp_build_273
+  macosx86-64.64lisp_build_272          lisp_build_273
+  macosx86-64.64smplisp_build_272          lisp_build_273
+  solaris      lisp_build_276          lisp_build_277
+  solaris.64   lisp_build_276          lisp_build_277
+  solarisamd64.64lisp_build_272          lisp_build_273
+  windows      lisp_build_285          lisp_build_286
+  windows.smp  lisp_build_285          lisp_build_286
+  windows.64   lisp_build_285          lisp_build_286
+  windows.64smplisp_build_285          lisp_build_286
+
+-------------------------------------------------------------------------------
+base patch ffdyn ...
+Date Posted: Fri Jul 22 19:47:34 PDT 2016
+Patch names: code/ffdyn.001, update/pka016.002
+Description: Fix delivery issue caused by recent SSL patch. The
+  specific problem involved building runtime applications on
+  CentOS/RHEL and delivering on Ubuntu. The names of the OpenSSL
+  shared library that need to be loaded change from one system to the
+  next.  Now, on app startup, we do the same searching that we did
+  when (require :ssl) was originally done.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+aodbc-v2 patch aodbc-v2
+Date Posted: Fri Jul 22 19:47:34 PDT 2016
+Patch names: code/aodbc-v2.003
+Description: Unless an :hstmt argument is passed to dbi:sql when
+  using :query t, a new hstmt should be allocated on which to execute
+  the sql query. Due to a bug, the default hstmt on the argument :db
+  (or *default-database*) was always used, which could lead to
+  confusing or erroneous results when running multiple :query t
+  requests at the same time.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 370) ...
+Date Posted: Fri Jul 22 19:47:34 PDT 2016
+Patch names: acl100413 (version 370), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Newer OS libraries are using SSE registers, so more
+  protection of these registers, commonly used for floating point
+  instructions, is necessary. This patch causes these registers to be
+  saved and restored where neessary, in order to prevent them from
+  being trashed.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_223          lisp_build_224
+  freebsd      lisp_build_231          lisp_build_232
+  freebsd-64.64smplisp_build_236          lisp_build_237
+  linux86      lisp_build_241          lisp_build_242
+  linuxamd64.64lisp_build_226          lisp_build_227
+  linuxamd64.64smplisp_build_226          lisp_build_227
+  macosx86     lisp_build_245          lisp_build_246
+  macosx86-64.64lisp_build_236          lisp_build_237
+  macosx86-64.64smplisp_build_236          lisp_build_237
+  solaris      lisp_build_227          lisp_build_228
+  solaris.64   lisp_build_229          lisp_build_230
+  solarisamd64.64lisp_build_242          lisp_build_243
+  windows      lisp_build_370          lisp_build_371
+  windows.smp  lisp_build_358          lisp_build_359
+  windows.64   lisp_build_360          lisp_build_361
+  windows.64smplisp_build_358          lisp_build_359
+
+-------------------------------------------------------------------------------
+shared-library patch proc2common ...
+Date Posted: Fri Jul 22 19:47:34 PDT 2016
+Patch names: code/proc2common.002, update/pkb006.001, acl100413
+  (version 370), acli100413, libacl100413, libacli100413,
+  libacl100413s, libacli100413s, acl100413s, acli100413s,
+  libacl100416, libacli100416, acl100416, acli100416, libacl100416s,
+  libacli100416s, acl100416s, acli100416s, acli10041t3, libacli10041t3
+Description: Provide mp::memory-barrier function
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_231          lisp_build_232
+  freebsd      lisp_build_239          lisp_build_240
+  freebsd-64.64smplisp_build_244          lisp_build_245
+  linux86      lisp_build_249          lisp_build_250
+  linuxamd64.64lisp_build_234          lisp_build_235
+  linuxamd64.64smplisp_build_234          lisp_build_235
+  macosx86     lisp_build_253          lisp_build_254
+  macosx86-64.64lisp_build_244          lisp_build_245
+  macosx86-64.64smplisp_build_244          lisp_build_245
+  solaris      lisp_build_235          lisp_build_236
+  solaris.64   lisp_build_237          lisp_build_238
+  solarisamd64.64lisp_build_250          lisp_build_251
+  windows      lisp_build_383          lisp_build_384
+  windows.smp  lisp_build_370          lisp_build_371
+  windows.64   lisp_build_372          lisp_build_373
+  windows.64smplisp_build_370          lisp_build_371
+
+-------------------------------------------------------------------------------
+soap patch soap
+Date Posted: Tue Jul  5 14:46:57 PDT 2016
+Patch names: code/soap.001
+Description: Avoid signalling and error when WSDL specifies a message
+  with an empty body. Signal a warning because the client function
+  will most likely need to be hand modified.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+acldns patch acldns
+Date Posted: Tue Jul  5 14:46:57 PDT 2016
+Patch names: code/acldns.001
+Description: If /etc/resolv.conf lists a nameserver by ipv6 address
+  then acldns will make use of that nameserver.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 355) ...
+Date Posted: Tue Jul  5 14:46:57 PDT 2016
+Patch names: acl100413 (version 355), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Disables a new feature designed to improve global gc
+  performance on very large images, that was implicated in some gc
+  failures.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_214          lisp_build_215
+  freebsd      lisp_build_222          lisp_build_223
+  freebsd-64.64smplisp_build_227          lisp_build_228
+  linux86      lisp_build_232          lisp_build_233
+  linuxamd64.64lisp_build_217          lisp_build_218
+  linuxamd64.64smplisp_build_217          lisp_build_218
+  macosx86     lisp_build_236          lisp_build_237
+  macosx86-64.64lisp_build_227          lisp_build_228
+  macosx86-64.64smplisp_build_227          lisp_build_228
+  solaris      lisp_build_218          lisp_build_219
+  solaris.64   lisp_build_220          lisp_build_221
+  solarisamd64.64lisp_build_233          lisp_build_234
+  windows      lisp_build_355          lisp_build_356
+  windows.smp  lisp_build_343          lisp_build_344
+  windows.64   lisp_build_345          lisp_build_346
+  windows.64smplisp_build_343          lisp_build_344
+
+-------------------------------------------------------------------------------
+compiler patch pkb005
+Date Posted: Thu Jun 23 11:11:28 PDT 2016
+Patch names: update/pkb005.001
+Description: Fixes a bug whereby some closure's data vectors are
+  incorrectly inferred to be dynamic-extent When they should not be.
+Impact: recommended
+Other info: Could be a bit destabilzing. This is a compiler patch,
+  and all affected code should be recompiled in order to get the new
+  behavior.
+
+-------------------------------------------------------------------------------
+compiler patch pkb004
+Date Posted: Thu Jun 16 12:05:01 PDT 2016
+Patch names: update/pkb004.001
+Description: When trying to use fasl-write with *fasl-circle-default*
+  nil, any make-load-form will be ignored thus causing an error that
+  the object (presumably a CLOS instance) cannot currently be
+  written. This patch will cause fasl-write to obey certain
+  make-load-forms even when the fasl-circle default is nil.  Note
+  that only m-l-f forms which return one value (the creation form)
+  are allowed; other m-l-f definitions will cause an error. When
+  *fasl-circle-default* is nil, any objects that are shared within
+  CLOS instances will not be shared after the fasl file is loaded
+  (just like other objects), and any circularities are likely to
+  result in stack overflows due to infinite recursion.
+Impact: recommended
+Other info: If *fasl-circle-default* is true (the default), this
+  patch represents no effective change. See main body of entry for
+  details if *fasl-circle-default* is nil.
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 236) ... for smp only
+Date Posted: Thu Jun  9 11:27:16 PDT 2016
+Patch names: acl100413 (version 236), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: When a timer event's trigger time happened to be exactly
+  the time the timer process was checking for the next event to fire,
+  it could sometimes result in a blocked timer queue.
+Impact: recommended
+Other info: This is a reversion to an existing shared-library patch
+  as a problem was found in the shared library patch released on June
+  3, 2016.
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_159          lisp_build_160
+  freebsd      lisp_build_163          lisp_build_164
+  freebsd-64.64smplisp_build_161          lisp_build_162
+  linux86      lisp_build_163          lisp_build_164
+  linuxamd64.64lisp_build_161          lisp_build_162
+  linuxamd64.64smplisp_build_161          lisp_build_162
+  macosx86     lisp_build_163          lisp_build_164
+  macosx86-64.64lisp_build_159          lisp_build_160
+  macosx86-64.64smplisp_build_159          lisp_build_160
+  solaris      lisp_build_162          lisp_build_163
+  solaris.64   lisp_build_164          lisp_build_165
+  solarisamd64.64lisp_build_161          lisp_build_162
+  windows      lisp_build_236          lisp_build_237
+  windows.smp  lisp_build_227          lisp_build_228
+  windows.64   lisp_build_229          lisp_build_230
+  windows.64smplisp_build_227          lisp_build_228
+
+-------------------------------------------------------------------------------
+acache patch acache-3.0.8 ...
+Date Posted: Thu Jun  9 11:27:16 PDT 2016
+Patch names: code/acache-3.0.8.fasl (version 0308), code/acache.001,
+  acache-changelog.txt, acache-versions.txt
+Description: The AllegroCache stub file (acache.fasl) now has
+  version/changelog info.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 302) ...
+Date Posted: Fri Jun  3 08:09:02 PDT 2016
+Patch names: acl100413 (version 302), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Improve global gc performance for some data topologies
+  and reduce need for global gc mark rescans in large heaps.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_189          lisp_build_190
+  freebsd      lisp_build_194          lisp_build_195
+  freebsd-64.64smplisp_build_185          lisp_build_186
+  linux86      lisp_build_204          lisp_build_205
+  linuxamd64.64lisp_build_189          lisp_build_190
+  linuxamd64.64smplisp_build_189          lisp_build_190
+  macosx86     lisp_build_208          lisp_build_209
+  macosx86-64.64lisp_build_199          lisp_build_200
+  macosx86-64.64smplisp_build_199          lisp_build_200
+  solaris      lisp_build_190          lisp_build_191
+  solaris.64   lisp_build_192          lisp_build_193
+  solarisamd64.64lisp_build_205          lisp_build_206
+  windows      lisp_build_302          lisp_build_303
+  windows.smp  lisp_build_290          lisp_build_291
+  windows.64   lisp_build_292          lisp_build_293
+  windows.64smplisp_build_290          lisp_build_291
+
+-------------------------------------------------------------------------------
+ssl patch ssl ...
+Date Posted: Thu Jun  9 11:27:16 PDT 2016
+Patch names: code/ssl.001, sys/startup.001, aclissl.so (version
+  0200), aclssl.so, aclissl.dll, aclssl.dll, aclissl.dylib,
+  aclssl.dylib
+Description:
+  This patch changes the :ssl module to load dynamically
+  linked OpenSSL libraries. As a result, OpenSSL updates will no
+  longer require an ACL patch or update. This change will be
+  transparent to many users of SSL, but some will need to modify
+  their environment or their code to continue using SSL 
+  features.
+  
+  If (require :ssl) signals openssl-load-error, then it will
+  be necessary to specify the location of the OpenSSL shared
+  libraries.
+  
+  Most UNIX machines use the environment variable 
+  LD_LIBRARY_PATH to tell programs where to look for shared
+  libraries. Mac OS X uses the variable DYLD_LIBRARY_PATH.
+  Consult your operating system documentation for details on 
+  what you should use.
+  
+  On Windows, this patch changes nothing. Note: the method of
+  loading the SSL libraries has always been dynamic on Windows,
+  but we have been the supplier of those binaries. See the 
+  readme.txt
+  (http://franz.com/ftp/pub/openssl/windows/readme.txt) for more
+  details on the binaries we distribute and how to use them.
+  
+  In all cases, it is now the responsibility of the user to
+  maintain a suitable set of OpenSSL shared libraries. In
+  general, on machines with production software, those libraries
+  will be part of operating system updates.
+  
+  See the updated on-line documentation
+  (http://franz.com/support/documentation/current/doc/socket.htm#ssl-1)
+  for details.
+  
+Impact: recommended
+
+-------------------------------------------------------------------------------
+aserve patch aserve
+Date Posted: Mon May 23 11:46:54 PDT 2016
+Patch names: code/aserve.004
+Description: When processing a chunked HTTP request, the server used
+  to rely on the socket library to perform the dechunking operation.
+  The problem is that this is not currently implemented for SSL
+  sockets. To remedy that, the server now uses its own implementation
+  of a dechunking stream. This is the same method that is used to
+  decode chunked replies in the client code. In addition, trailing
+  headers received with a chunked request are now correctly processed
+  (these were previously ignored, even for non-SSL requests).
+Impact: recommended
+
+-------------------------------------------------------------------------------
+acache patch acache-3.0.7
+Date Posted: Wed May 25 08:39:40 PDT 2016
+Patch names: code/acache-3.0.7.fasl (version 0307)
+Description: An expression cursor that needed to do a slot-value
+  would not work in client/server mode.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch pka015 ... for smp only
+Date Posted: Fri May  6 13:15:17 PDT 2016
+Patch names: update/pka015.001, acl100413 (version 236), acli100413,
+  libacl100413, libacli100413, libacl100413s, libacli100413s,
+  acl100413s, acli100413s, libacl100416, libacli100416, acl100416,
+  acli100416, libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: When a timer event's trigger time happened to be exactly
+  the time the timer process was checking for the next event to fire,
+  it could sometimes result in a blocked timer queue.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_159          lisp_build_160
+  freebsd      lisp_build_163          lisp_build_164
+  freebsd-64.64smplisp_build_161          lisp_build_162
+  linux86      lisp_build_163          lisp_build_164
+  linuxamd64.64lisp_build_161          lisp_build_162
+  linuxamd64.64smplisp_build_161          lisp_build_162
+  macosx86     lisp_build_163          lisp_build_164
+  macosx86-64.64lisp_build_159          lisp_build_160
+  macosx86-64.64smplisp_build_159          lisp_build_160
+  solaris      lisp_build_162          lisp_build_163
+  solaris.64   lisp_build_164          lisp_build_165
+  solarisamd64.64lisp_build_161          lisp_build_162
+  windows      lisp_build_236          lisp_build_237
+  windows.smp  lisp_build_227          lisp_build_228
+  windows.64   lisp_build_229          lisp_build_230
+  windows.64smplisp_build_227          lisp_build_228
+
+-------------------------------------------------------------------------------
+aodbc-v2 patch aodbc-v2
+Date Posted: Thu May  5 15:00:22 PDT 2016
+Patch names: code/aodbc-v2.002
+Description: Fixes a bug in the previous version of this patch that
+  caused some API functions to stop working. Affected routines were
+  list-all-database-tables, list-all-table-columns,
+  get-type-information, and run-prepared-sql. Also, adds and export
+  dbi:drop-parameter-bindings. Please see the documentation for
+  details on what it does.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch rsa
+Date Posted: Thu May  5 15:00:22 PDT 2016
+Patch names: code/rsa.001
+Description: It was sometimes the case that encryption/decryption of
+  strings was not reversible (the output matched the input).
+  (unsigned-byte 8) vectors and integer arguments were unaffected by
+  this bug.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 232) ...
+Date Posted: Tue May  3 16:29:06 PDT 2016
+Patch names: acl100413 (version 232), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: The `Break' key was ineffective when the console window
+  has focus in a non-smp ide lisp. "Interrupt Lisp" from tray menu
+  ineffective in non-smp ide lisp.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_155          lisp_build_156
+  freebsd      lisp_build_159          lisp_build_160
+  freebsd-64.64smplisp_build_157          lisp_build_158
+  linux86      lisp_build_159          lisp_build_160
+  linuxamd64.64lisp_build_157          lisp_build_158
+  linuxamd64.64smplisp_build_157          lisp_build_158
+  macosx86     lisp_build_159          lisp_build_160
+  macosx86-64.64lisp_build_155          lisp_build_156
+  macosx86-64.64smplisp_build_155          lisp_build_156
+  solaris      lisp_build_158          lisp_build_159
+  solaris.64   lisp_build_160          lisp_build_161
+  solarisamd64.64lisp_build_157          lisp_build_158
+  windows      lisp_build_232          lisp_build_233
+  windows.smp  lisp_build_223          lisp_build_224
+  windows.64   lisp_build_225          lisp_build_226
+  windows.64smplisp_build_223          lisp_build_224
+
+-------------------------------------------------------------------------------
+aodbc-v2 patch aodbc-v2
+Date Posted: Fri Apr 15 11:19:32 PDT 2016
+Patch names: code/aodbc-v2.001
+Description: Exports two new routines, get-statement-handle and
+  free-statement-handle. The return value from get-statement-handle
+  can be passed into any routine that accepts an :hstmt keyword
+  argument. free-statement-handle should be used to free up hstmt
+  resources that will no longer be used.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+cg patch pkk003 for mswindows only
+Date Posted: Fri Apr 15 11:19:32 PDT 2016
+Patch names: update/pkk003.001
+Description: If you press a key on a non-US keyboard that generates a
+  multi-byte Unicode character such as
+  #latin_small_letter_e_with_caron, then Common Graphics passes the
+  wrong character to character-procedure. This can confuse some IDE
+  dialogs, and would affect any CG application that does custom
+  character handling by defining character-message methods.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+cg patch pkk002 for mswindows only
+Date Posted: Fri Apr 15 11:19:32 PDT 2016
+Patch names: update/pkk002.001
+Description: If you right-click a scroll bar that's built into a
+  window then a Microsoft pop-up menu appears with several commands
+  including `Top' and `Bottom'. For a regular window (rather than a
+  Microsoft control), CG scrolled the window to the bottom when Top
+  is selected, and scrolled to the top when Bottom is selected. This
+  is a trivial safe fix.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+cg patch cg-file-dialog for mswindows only
+Date Posted: Fri Apr 15 11:19:32 PDT 2016
+Patch names: code/cg-file-dialog.002
+Description: Corrects a problem where file-dialogs could hang or
+  occassionally crash on certain machines. This updates the previous
+  version of the patch in that a proper fix for the problem is now
+  implemented. Since the initial patch release, we have been able to
+  reproduce and diagnose the actual error, and thus have a higher
+  level of confidence in this change.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+aserve patch aserve
+Date Posted: Thu Mar 31 18:22:07 PDT 2016
+Patch names: code/aserve.003
+Description: When do-http-request or make-http-client-request were
+  called with a :ssl-method argument, an invalid keyword error was
+  signalled. This patch corrects the situation.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch fileutil
+Date Posted: Thu Mar 31 16:40:28 PDT 2016
+Patch names: code/fileutil.001
+Description: When :filter is used with a non-nil
+  :include-directories, the map-over-directory argument directory
+  wasn't one of the items passed to the filter function.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 227) ...
+Date Posted: Thu Mar 31 11:08:58 PDT 2016
+Patch names: acl100413 (version 227), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Enhances the fasl reader to accept 9.0 fasl files if
+  they are marked as `portable' and if they contain no function
+  objects.  Currently the only way to create a `portable' fasl file
+  is via excl:fasl-write.  To see if foo.fasl is portable, run `head
+  foo.fasl' in a shell prompt and look for `Portable' in the header
+  (usually around the 5th line down).
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_151          lisp_build_152
+  freebsd      lisp_build_155          lisp_build_156
+  freebsd-64.64smplisp_build_153          lisp_build_154
+  linux86      lisp_build_155          lisp_build_156
+  linuxamd64.64lisp_build_153          lisp_build_154
+  linuxamd64.64smplisp_build_153          lisp_build_154
+  macosx86     lisp_build_155          lisp_build_156
+  macosx86-64.64lisp_build_151          lisp_build_152
+  macosx86-64.64smplisp_build_151          lisp_build_152
+  solaris      lisp_build_154          lisp_build_155
+  solaris.64   lisp_build_156          lisp_build_157
+  solarisamd64.64lisp_build_153          lisp_build_154
+  windows      lisp_build_227          lisp_build_228
+  windows.smp  lisp_build_218          lisp_build_219
+  windows.64   lisp_build_220          lisp_build_221
+  windows.64smplisp_build_218          lisp_build_219
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 216) ...
+Date Posted: Thu Mar 31 11:08:58 PDT 2016
+Patch names: acl100413 (version 216), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Fix global gc can fail in image dumped with active
+  threads
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_147          lisp_build_148
+  freebsd      lisp_build_151          lisp_build_152
+  freebsd-64.64smplisp_build_149          lisp_build_150
+  linux86      lisp_build_151          lisp_build_152
+  linuxamd64.64lisp_build_149          lisp_build_150
+  linuxamd64.64smplisp_build_149          lisp_build_150
+  macosx86     lisp_build_151          lisp_build_152
+  macosx86-64.64lisp_build_147          lisp_build_148
+  macosx86-64.64smplisp_build_147          lisp_build_148
+  solaris      lisp_build_150          lisp_build_151
+  solaris.64   lisp_build_152          lisp_build_153
+  solarisamd64.64lisp_build_149          lisp_build_150
+  windows      lisp_build_216          lisp_build_217
+  windows.smp  lisp_build_214          lisp_build_215
+  windows.64   lisp_build_216          lisp_build_217
+  windows.64smplisp_build_214          lisp_build_215
+
+-------------------------------------------------------------------------------
+lisp patch pka014 ...
+Date Posted: Thu Mar 31 10:35:33 PDT 2016
+Patch names: update/pka014.001, update/pkb003.001
+Description: Fixes a memory leak whenever files containing defclass
+  forms with accessors are compiled. Each compile-file was previously
+  adding another method to the methods slot of each accessor.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka013
+Date Posted: Thu Mar 31 10:35:33 PDT 2016
+Patch names: update/pka013.001
+Description: When an intervening directory doesn't have sufficient
+  permissions to read, give a more accurate error (permission denied)
+  rather than `file exists.'  Also, if an intervening directory is
+  not a directory, signal an *enotdir* error rather than `file
+  exists.'
+Impact: recommended
+
+-------------------------------------------------------------------------------
+jlinker patch pkn001
+Date Posted: Thu Mar 10 14:39:09 PST 2016
+Patch names: update/pkn001.001
+Description: When a dynamically dispatched jlinker call to Java
+  cannot determine which of several methods should be called, a
+  continuable error is signalled. The prompt asks the used to pick an
+  entry from a list, but the list was not displayed. This patch makes
+  sure the list is displayed before the prompt.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka003
+Date Posted: Wed Mar  9 14:10:13 PST 2016
+Patch names: update/pka003.002
+Description: Fixes a problem where uses of with-standard-io-syntax
+  compiled with the previous version of this patch,
+  update/pka003.001, cause errors when the compiled file is loaded
+  into a lisp without the patch.
+Impact: recommended
+Other info: if you have the .001 version of this patch, it is highly
+  recommended you replace it with the .002 version, and recompile
+  your code.
+
+-------------------------------------------------------------------------------
+ssl patch aclissl ...
+Date Posted: Fri Mar  4 07:43:47 PST 2016
+Patch names: aclissl.so (version 101s), aclssl.so, aclissl.dll,
+  aclssl.dll, aclissl.dylib, aclssl.dylib
+Description:
+  Security fixes from OpenSSL 1.0.1s. Windows users, please read
+  the OpenSSL readme.txt
+  (http://franz.com/ftp/pub/openssl/windows/readme.txt) for
+  installation instructions.
+  
+Impact: recommended
+
+-------------------------------------------------------------------------------
+ide patch ide-process-browser
+Date Posted: Tue Feb 23 08:35:38 PST 2016
+Patch names: code/ide-process-browser.001
+Description: The Processes dialog in the IDE sorted
+  sys:*all-processes* to reduce the amount or re-sorting that's
+  needed on each update. But that global list should never be
+  modified, which is never thread-safe and in an SMP lisp could lead
+  to some processes failing to exit.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka012
+Date Posted: Tue Feb 23 08:35:38 PST 2016
+Patch names: update/pka012.001
+Description: Allow the BUFFER argument to with-output-to-buffer to be
+  :growable, indicating the desire for a growable buffer (as would be
+  the case if BUFFER were unsupplied).
+Impact: recommended
+
+-------------------------------------------------------------------------------
+sax patch sax
+Date Posted: Fri Feb 19 10:26:55 PST 2016
+Patch names: code/sax.002
+Description: Fixes bug in code/sax.001. Previously sax-parse-stream
+  always closed the stream that was passed to it. sax-parse-stream
+  now accepts the keyword argument :close-on-eof (which defaults to t
+  to maintain compatibility with prior behavior). If :close-on-eof is
+  nil, the stream will not be closed by sax-parse-stream.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+sax patch sax
+Date Posted: Fri Feb 19 10:26:55 PST 2016
+Patch names: code/sax.001
+Description: Previously sax-parse-stream always closed the stream
+  that was passed to it. sax-parse-stream now accepts the keyword
+  argument :close-on-eof (which defaults to t to maintain
+  compatibility with prior behavior). If :close-on-eof is nil, the
+  stream will not be closed by sax-parse-stream.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+compiler patch pkb002
+Date Posted: Fri Feb  5 13:43:30 PST 2016
+Patch names: update/pkb002.002
+Description: Replacement patch for update/pkb002.001. This version
+  undoes the optimization for 64-bit sparcs only, which have a
+  stack-consing bug which the first version of this patch exposes.
+Impact: recommended
+Other info: If you have already updated to update/pkb002.001 on
+  64-bit sparc, you should immediately update to pkb002.002 in order
+  to counteract the exposure to the bug.  The bug itself has not been
+  fixed, but it is highly doubtful that it will be seen if the
+  previous version of this patch was never loaded or if it has been
+  overwritten by this version. This patch affects nothing in any
+  other architecture.
+
+-------------------------------------------------------------------------------
+shared-library patch osi ...
+Date Posted: Fri Feb  5 13:43:30 PST 2016
+Patch names: code/osi.003, acl100413 (version 197), acli100413,
+  libacl100413, libacli100413, libacl100413s, libacli100413s,
+  acl100413s, acli100413s, libacl100416, libacli100416, acl100416,
+  acli100416, libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: If a lisp forked after having done at least one global
+  gc, the child could hang the first time it did a global gc.
+Impact: recommended
+Other info: Affects non-windows, non-smp.
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_134          lisp_build_135
+  freebsd      lisp_build_138          lisp_build_139
+  freebsd-64.64smplisp_build_136          lisp_build_137
+  linux86      lisp_build_138          lisp_build_139
+  linuxamd64.64lisp_build_136          lisp_build_137
+  linuxamd64.64smplisp_build_136          lisp_build_137
+  macosx86     lisp_build_138          lisp_build_139
+  macosx86-64.64lisp_build_134          lisp_build_135
+  macosx86-64.64smplisp_build_134          lisp_build_135
+  solaris      lisp_build_136          lisp_build_137
+  solaris.64   lisp_build_136          lisp_build_137
+  solarisamd64.64lisp_build_136          lisp_build_137
+  windows      lisp_build_197          lisp_build_198
+  windows.smp  lisp_build_195          lisp_build_196
+  windows.64   lisp_build_197          lisp_build_198
+  windows.64smplisp_build_195          lisp_build_196
+
+-------------------------------------------------------------------------------
+osi patch osi
+Date Posted: Fri Feb  5 13:43:30 PST 2016
+Patch names: code/osi.002
+Description: Minor fix to code/osi.001
+Impact: recommended
+
+-------------------------------------------------------------------------------
+ssl patch aclissl ...
+Date Posted: Thu Jan 28 15:06:44 PST 2016
+Patch names: aclissl.so (version 101r), aclssl.so, aclissl.dll,
+  aclssl.dll, aclissl.dylib, aclssl.dylib
+Description:
+  Security fixes from OpenSSL 1.0.1r. Windows users, please read
+  the OpenSSL readme.txt
+  (http://franz.com/ftp/pub/openssl/windows/readme.txt) for
+  installation instructions.
+  
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch st-json
+Date Posted: Wed Jan 27 16:01:30 PST 2016
+Patch names: code/st-json.001
+Description: Add provide to module.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 168) ... for windows only
+Date Posted: Wed Jan 27 16:01:30 PST 2016
+Patch names: acl100413 (version 168), acli100413, acl100416,
+  acli100416
+Description: Print diagnostic info when heaps cannot be restored on
+  start
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  windows      lisp_build_168          lisp_build_169
+  windows.smp  lisp_build_166          lisp_build_167
+  windows.64   lisp_build_168          lisp_build_169
+  windows.64smplisp_build_166          lisp_build_167
+
+-------------------------------------------------------------------------------
+osi patch osi
+Date Posted: Wed Jan 27 16:01:30 PST 2016
+Patch names: code/osi.001
+Description: The :delete keyword to excl.osi:with-open-temp-file has
+  a new possible value, :on-error, which causes the temporary file to
+  be deleted only when there is an error processing the body of
+  excl.osi:with-open-temp-file.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka010
+Date Posted: Wed Jan 27 16:01:30 PST 2016
+Patch names: update/pka010.002
+Description: Fixes a bug in version 001 of this patch which caused an
+  error to occur for hash-tables which are unrelated to the patch.
+  The patch, which was intended to be completely transparent for all
+  hash-table uses except the one it was intended for, should now
+  accomplish that goal.
+Impact: significant
+Other info: (from the previous version - if you opted out of the
+  previous version it is recommended that you also opt out of this
+  one.) There are several caveats: any attempt to rehash a large
+  hash-table with this patch loaded will result in a continuable
+  error. Also, capturing the hash-table as a constant by the file
+  compiler will result in the re-loaded hash-table reverting back to
+  normal newspace allocation. If you do not want the continuable
+  error for large hash-tables you are working with, you may have to
+  set the value of the internal variable
+  excl::*large-hash-table-cerror-threshold* to a very large value (or
+  do not download the patch).
+
+-------------------------------------------------------------------------------
+datetime patch datetime
+Date Posted: Wed Jan 13 14:37:48 PST 2016
+Patch names: code/datetime.001
+Description: Improve performance of ut-to-date-time
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch uri
+Date Posted: Wed Jan  6 14:47:39 PST 2016
+Patch names: uri/uri.002
+Description: Prior to this patch, URIs with empty query parts were
+  canonicalized to have no (nil) query. They now have an empty ("")
+  query part.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+ssl patch aclissl ...
+Date Posted: Wed Dec 30 08:51:27 PST 2015
+Patch names: aclissl.so (version 101q), aclssl.so, aclissl.dll,
+  aclssl.dll, aclissl.dylib, aclssl.dylib
+Description:
+  Security fixes from OpenSSL 1.0.1q. Windows users, please read
+  the OpenSSL readme.txt
+  (http://franz.com/ftp/pub/openssl/windows/readme.txt) for
+  installation instructions.
+  
+Impact: recommended
+
+-------------------------------------------------------------------------------
+json-rpc patch json-rpc.fasl (version 0) ...
+Date Posted: Thu Dec 17 16:02:47 PST 2015
+Patch names: code/json-rpc.fasl (version 0), code/json-rpc-aserve.fasl
+Description: <patch-doc>
+Add new <link name="JSON-RPC module">
+http://franz.com/support/documentation/current/doc/miscellaneous.htm#json-rpc-1
+</link>
+</patch-doc>
+Impact: recommended
+
+-------------------------------------------------------------------------------
+compiler patch pkb002
+Date Posted: Fri Dec 11 10:13:29 PST 2015
+Patch names: update/pkb002.001
+Description: Fixes a regression in the compilaton of any macros which
+  make restarts; these forms cause some closures not to be
+  stack-allocated that were in 9.0. This patch brings back the
+  stack-allocation, and thus improves performance both at run-time
+  and gc time.
+Impact: recommended
+Other info: Since this patch is compiler-related, any affected code
+  must be recompiled after the patch is installed.
+
+-------------------------------------------------------------------------------
+lisp patch pka010
+Date Posted: Sat Dec  5 20:26:27 PST 2015
+Patch names: update/pka010.001
+Description: Adds extra functionality to allow hash-tables to be
+  built with key and value vectors in oldspace or static space. This
+  new functionality is not exported or documented; it is transitional
+  for 9.0 and 10.0. If you desire to know more, pleas contact Franz
+  Inc.
+Impact: significant
+Other info: There are several caveats: any attempt to rehash a large
+  hash-table with this patch loaded will result in a continuable
+  error. Also, capturing the hash-table as a constant by the file
+  compiler will result in the re-loaded hash-table reverting back to
+  normal newspace allocation. If you do not want the continuable
+  error for large hash-tables you are working with, you may have to
+  set the value of the internal variable
+  excl::*large-hash-table-cerror-threshold* to a very large value (or
+  do not download the patch).
+
+-------------------------------------------------------------------------------
+lisp patch pka011
+Date Posted: Fri Dec  4 09:13:08 PST 2015
+Patch names: update/pka011.001
+Description:
+  Add new function excl:gethash-random to randomly select
+  key/value pairs from a hashtable.
+  
+
+
+gethash-random        hash-table  &optional random-state
+    
+Exported from the excl package.
+    
+hash-table must be a non-empty hash-table.
+random-state must be a random-state. If omitted, the value of
+*random-state* is used.
+    
+The function selects a random key-value pair from the hash-table
+and returns the two values key and value.
+    
+If the hash-table does not support a value per key, gethash-random
+returns two values, both of which are the selected key.
+    
+If hash-table is empty, gethash-random signals an error.
+
+Impact: recommended
+
+-------------------------------------------------------------------------------
+ssl patch aclissl ...
+Date Posted: Tue Dec  1 09:39:54 PST 2015
+Patch names: aclissl.so (version 101p), aclssl.so, aclissl.dll,
+  aclssl.dll, aclissl.dylib, aclssl.dylib
+Description: Enable lock callbacks to prevent failures in
+  multi-threaded use of openssl functions.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp-and-shared-library patch pka009 ...
+Date Posted: Tue Dec  1 09:39:54 PST 2015
+Patch names: update/pka009.001, acl100413 (version 148), acli100413,
+  libacl100413, libacli100413, libacl100413s, libacli100413s,
+  acl100413s, acli100413s, libacl100416, libacli100416, acl100416,
+  acli100416, libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Recognize Os-signaled stack overflow.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_102          lisp_build_103
+  freebsd      lisp_build_106          lisp_build_107
+  freebsd-64.64smplisp_build_104          lisp_build_105
+  linux86      lisp_build_106          lisp_build_107
+  linuxamd64.64lisp_build_104          lisp_build_105
+  linuxamd64.64smplisp_build_104          lisp_build_105
+  macosx86     lisp_build_106          lisp_build_107
+  macosx86-64.64lisp_build_102          lisp_build_103
+  macosx86-64.64smplisp_build_102          lisp_build_103
+  solaris      lisp_build_104          lisp_build_105
+  solaris.64   lisp_build_104          lisp_build_105
+  solarisamd64.64lisp_build_104          lisp_build_105
+  windows      lisp_build_148          lisp_build_149
+  windows.smp  lisp_build_146          lisp_build_147
+  windows.64   lisp_build_148          lisp_build_149
+  windows.64smplisp_build_146          lisp_build_147
+
+-------------------------------------------------------------------------------
+lisp patch pka008
+Date Posted: Wed Nov 18 10:16:21 PST 2015
+Patch names: update/pka008.001
+Description: enough-namestring with a `pathname' that has a device of
+  :unspecific and a `defaults' that has a device of `nil' would
+  simply return `pathname' rather than perform the normal operation
+  of enough-namestring. ANS section 19.2.2.2.3.1 indicates nil and
+  :unspecific are to be treated the same, except when merging, which
+  enough-namestring is not doing.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch proc2-s ...
+Date Posted: Wed Nov 18 08:06:08 PST 2015
+Patch names: code/proc2-s.001, code/proc2common.001
+Description: Add mp:with-locked-queue macro for use when specializing
+  the mp:enqueue and mp:dequeue methods.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka006 ...
+Date Posted: Tue Nov 17 11:15:48 PST 2015
+Patch names: update/pka006.001, update/pka007.001, update/pkb001.001
+Description:
+  Fixes an annoying aspect of the newer source location
+  information which changed in version 10.0: messages are not
+  only more verbose, which in one sense is good because more
+  information is available, but they are also repetitive when
+  they should not have to be.
+  
+  If update/pka006.001 is installed without the other two
+  patches, there might be a pendulum swing toward over-terseness
+  - only the first instance of a particular condition will be
+  printed, and other information will be elided too much.
+  
+  With all three loaded, redundant information will be elided on
+  both a per-command-line and a per-compile-file basis which
+  should provide exatly enough information as needed without
+  being overly verbose.
+  
+  Nothing happens when update/pka007.001 and/or pkb001.001 are
+  loaded without update/pka006.001
+  
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch smputil
+Date Posted: Tue Nov 17 09:38:17 PST 2015
+Patch names: code/smputil.001
+Description:
+  The memtrace facility was failing to record the values of
+  traced functions, and memtrace wrappers were not compiled in
+  some cases. This patch correct these misbehaviors.
+  
+  The behavior of the memtrace macro is modified and a 
+  new macro, memtrace-def is added. See the revised
+  on-line documentation for full details.
+  
+  
+  * memtrace-def:
+    Creates memtrace fwrappers but does not modify any function
+    definitions. 
+  * memtrace, at top-level:
+    Creates fwrappers and calls fwrap for all the listed
+    functions. 
+  * memtrace, not at top-level:
+    Does not create the fwrapper and signals a warning if the
+    fwrapper has not been created previously. Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch debug ...
+Date Posted: Tue Nov 17 09:38:17 PST 2015
+Patch names: code/debug.001, update/pka005.001
+Description: Before the patch, variable liveness was only determined
+  by debug info, which is not always loaded, so many local variable
+  slots were called out as live even when they were dead or not
+  initialized. This could sometimes cause problems with printing of
+  the values of those uninitialized variables, especially if the
+  random bits look like something semi-legitimate. With the patch,
+  most functions will be stopped at what is called a "census point",
+  which is what the new precise gc uses to determine liveness of the
+  variable. Of course, if the function is not stopped at a census
+  point, the older style of determining (or not) the liveness of the
+  slot is used.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acli10041t3.dll (version 80) ... for express only
+Date Posted: Tue Nov 17 09:38:17 PST 2015
+Patch names: acli10041t3.dll (version 80), libacli10041t3.dylib,
+  libacli10041t3.so
+Description:
+  Changes the location of the aclmalloc heap location so that it
+  is less likely to conflict with the location chosen by other
+  shared libraries or stacks .
+  
+  IMPORTANT: If you are in the situation where your Allegro CL
+  10.0 Express Edition CL will not start, you will not be able 
+  to use the normal mechanism for installing new patches. If you
+  are installing Allegro CL for the first time, you may or may
+  not encounter this problem. To ensure that Allegro CL starts
+  properly, you will need to manually download the following
+  patch, based on your platform, and copy it into the `Allegro
+  directory'. You will then need to run update.exe in order to
+  complete the process of installing this patch. Once it is
+  completed, Allegro CL should start successfully.
+  
+  
+  * Windows:
+    Download acli10041t3.dll
+    (http://franz.com/ftp/pub/patches/10.0/windows/acli10041t3.dll)
+  
+  * Macosx86:
+    Download libacli10041t3.dylib
+    (http://franz.com/ftp/pub/patches/10.0/macosx86/libacli10041t3.dylib)
+  
+  * Linux86:
+    Download libacli10041t3.so
+    (http://franz.com/ftp/pub/patches/10.0/linux86/libacli10041t3.so)
+  
+  * FreeBSD:
+    Download libacli10041t3.so
+    (http://franz.com/ftp/pub/patches/10.0/freebsd/libacli10041t3.so)
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  freebsd-trialN/A                     lisp_build_70
+  linux86-trialN/A                     lisp_build_70
+  macosx86-trialN/A                     lisp_build_70
+  windows-trialN/A                     lisp_build_80
+
+-------------------------------------------------------------------------------
+lisp patch pka004
+Date Posted: Mon Nov  9 21:45:44 PST 2015
+Patch names: update/pka004.001
+Description: Adds two new keyword options to both string-to-native
+  and octets-to-native: &key (null-terminate t) and result-vector.
+  The former allows the resultant C char* to not have a termination
+  at the end of the array of characters (but a length must then be
+  provided). The latter allows an octet vector to be passed in to
+  provide a thread-safe result location without locking. There are no
+  changes to the default behavior of either of these functions. Also
+  this patch fixes a bug where if the :address argument to
+  string-to-native is unspecified or nil and :aligned is true, the
+  function will fail to return the correct aligned address.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka003
+Date Posted: Mon Nov  9 21:45:44 PST 2015
+Patch names: update/pka003.001
+Description: Rewrites the with-standard-io-syntax macro so that it
+  does not itself cons.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+cg patch cg-pixmap-file-io for gtk only
+Date Posted: Thu Oct 22 15:56:59 PDT 2015
+Patch names: code/cg-pixmap-file-io.001
+Description: On the GTK platforms (Mac and Linux), calling
+  load-pixmap or load-texture-info breaks if you pass the
+  :use-gdi-plus argument that's new in ACL 10.0. That argument has an
+  effect only on the Windows platform, but if passed in
+  cross-platform code then it would break on the GTK platforms. This
+  broke the Navigator dialog example called "A Pixmap Viewer and
+  Manager" on GTK.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+asdf patch asdf
+Date Posted: Thu Oct 22 09:47:35 PDT 2015
+Patch names: code/asdf.001
+Description: Update to ASDF version 3.1.6.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+aserve patch aserve ...
+Date Posted: Thu Oct 22 09:47:35 PDT 2015
+Patch names: code/aserve.002, code/deflate.001
+Description: Add functions to set trailers in a response. Trailers
+  are headers that appear after the body has been sent. Also make
+  sure that all header names read are keyword symbols. Before
+  non-standard header names were strings.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+cg patch cg-file-dialog for mswindows only
+Date Posted: Thu Oct 22 09:47:35 PDT 2015
+Patch names: code/cg-file-dialog.001
+Description: On infrequent occasions on just two known Windows
+  machines, the file dialog invoked by ask-user-for-new-pathname and
+  ask-user-for-existing-pathname could crash lisp when no
+  :default-extension argument is passed. This patch is very safe,
+  though we are not certain that it will always avoid the problem due
+  to the difficulty in reproducing it.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+ide patch ide-project for mswindows only
+Date Posted: Thu Oct 22 09:47:35 PDT 2015
+Patch names: code/ide-project.001
+Description: Franz news was getting updated in Express only whenever
+  patches are listed, or when it has never been retrieved from Franz
+  yet, as in 9.0. But in 10.0 patches are no longer listed
+  automatically, and so news would never get updated if the user
+  never lists patches.  This patch causes news to be fetched from
+  Franz at IDE startup in Express if the
+cached news file is more than a week old.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka002
+Date Posted: Wed Oct 21 13:59:20 PDT 2015
+Patch names: update/pka002.001
+Description: Allow conditional update on complex slot-value.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 72) ...
+Date Posted: Wed Oct 21 13:59:20 PDT 2015
+Patch names: acl100413 (version 72), acli100413, libacl100413,
+  libacli100413, libacl100413s, libacli100413s, acl100413s,
+  acli100413s, libacl100416, libacli100416, acl100416, acli100416,
+  libacl100416s, libacli100416s, acl100416s, acli100416s,
+  acli10041t3, libacli10041t3
+Description: Space profiler in smp lisps was not recording cons
+  allocation.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_59           lisp_build_60
+  freebsd      lisp_build_61           lisp_build_62
+  freebsd-64.64smplisp_build_61           lisp_build_62
+  linux86      lisp_build_61           lisp_build_62
+  linuxamd64.64lisp_build_61           lisp_build_62
+  linuxamd64.64smplisp_build_61           lisp_build_62
+  macosx86     lisp_build_61           lisp_build_62
+  macosx86-64.64lisp_build_59           lisp_build_60
+  macosx86-64.64smplisp_build_61           lisp_build_62
+  solaris      lisp_build_61           lisp_build_62
+  solaris.64   lisp_build_61           lisp_build_62
+  solarisamd64.64lisp_build_61           lisp_build_62
+  windows      lisp_build_72           lisp_build_73
+  windows.smp  lisp_build_72           lisp_build_73
+  windows.64   lisp_build_72           lisp_build_73
+  windows.64smplisp_build_72           lisp_build_73
+
+-------------------------------------------------------------------------------
+cg patch pkk001
+Date Posted: Thu Oct  8 13:02:24 PDT 2015
+Patch names: update/pkk001.001
+Description: Using any Common Graphics scroll bar on a non-widget
+  window or a lisp widget could error on the GTK platforms, though
+  probably only in a 32-bit lisp on a 64-bit Mac. In the IDE, the IDE
+  would freeze shortly thereafter.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch uri
+Date Posted: Thu Oct  8 10:07:35 PDT 2015
+Patch names: uri/uri.001
+Description: The hdfs scheme is now handled like the file scheme when
+  there is no authority in the URI.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+shared-library patch acl100413 (version 51) ...
+Date Posted: Thu Oct  8 10:07:35 PDT 2015
+Patch names: acl100413 (version 51), acli100413, acl100413s,
+  acli100413s, acl100416, acli100416, acl100416s, acli100416s,
+  acli10041t3
+Description: Export the symbol `disclaim_memory' on Windows.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  windows      lisp_build_51           lisp_build_52
+  windows.smp  lisp_build_51           lisp_build_52
+  windows.64   lisp_build_51           lisp_build_52
+  windows.64smplisp_build_51           lisp_build_52
+
+-------------------------------------------------------------------------------
+shared-library patch libacl100413 (version 46) ...
+Date Posted: Wed Oct  7 09:40:21 PDT 2015
+Patch names: libacl100413 (version 46), libacli100413, acl100413,
+  acli100413, libacl100413s, libacli100413s, acl100413s, acli100413s,
+  libacl100416, libacli100416, acl100416, acli100416, libacl100416s,
+  libacli100416s, acl100416s, acli100416s, acli10041t3, libacli10041t3
+Description: Large applications could develop a virtual memory leak
+  in global garbage collection, resulting in eventual exhaustion of
+  the virtual address space and program termination.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_10           lisp_build_11
+  freebsd      lisp_build_12           lisp_build_13
+  freebsd-64.64smplisp_build_12           lisp_build_13
+  linux86      lisp_build_12           lisp_build_13
+  linuxamd64.64lisp_build_12           lisp_build_13
+  linuxamd64.64smplisp_build_12           lisp_build_13
+  macosx86     lisp_build_12           lisp_build_13
+  macosx86-64.64lisp_build_12           lisp_build_13
+  macosx86-64.64smplisp_build_12           lisp_build_13
+  solaris      lisp_build_12           lisp_build_13
+  solaris.64   lisp_build_12           lisp_build_13
+  solarisamd64.64lisp_build_12           lisp_build_13
+  windows      lisp_build_46           lisp_build_47
+  windows.smp  lisp_build_46           lisp_build_47
+  windows.64   lisp_build_46           lisp_build_47
+  windows.64smplisp_build_46           lisp_build_47
+
+-------------------------------------------------------------------------------
+shared-library patch libacl100413 (version 18) ...
+Date Posted: Wed Oct  7 09:40:21 PDT 2015
+Patch names: libacl100413 (version 18), libacli100413, acl100413,
+  acli100413, libacl100413s, libacli100413s, acl100413s, acli100413s,
+  libacl100416, libacli100416, acl100416, acli100416, libacl100416s,
+  libacli100416s, acl100416s, acli100416s, acli10041t3, libacli10041t3
+Description: Fixes a bug in stack traversal which was introduced in
+  10.0. Debuggers and the gdb/dbx/windbg interface all call the
+  affected function, which was incorrectly modified to add some
+  functionality. Failure modes include not seeing enough stack and
+  sometimes memory faults.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_6            lisp_build_7
+  freebsd      lisp_build_8            lisp_build_9
+  freebsd-64.64smplisp_build_8            lisp_build_9
+  linux86      lisp_build_8            lisp_build_9
+  linuxamd64.64lisp_build_8            lisp_build_9
+  linuxamd64.64smplisp_build_8            lisp_build_9
+  macosx86     lisp_build_8            lisp_build_9
+  macosx86-64.64lisp_build_8            lisp_build_9
+  macosx86-64.64smplisp_build_8            lisp_build_9
+  solaris      lisp_build_8            lisp_build_9
+  solaris.64   lisp_build_8            lisp_build_9
+  solarisamd64.64lisp_build_8            lisp_build_9
+  windows      lisp_build_18           lisp_build_19
+  windows.smp  lisp_build_18           lisp_build_19
+  windows.64   lisp_build_18           lisp_build_19
+  windows.64smplisp_build_18           lisp_build_19
+
+-------------------------------------------------------------------------------
+shared-library patch libacl100413 (version 41) ...
+Date Posted: Wed Sep 30 19:13:22 PDT 2015
+Patch names: libacl100413 (version 41), libacli100413, acl100413,
+  acli100413, libacl100413s, libacli100413s, acl100413s, acli100413s,
+  libacl100416, libacli100416, acl100416, acli100416, libacl100416s,
+  libacli100416s, acl100416s, acli100416s, acli10041t3, libacli10041t3
+Description: The presence of very large objects (> 2^21 bytes) in
+  32-bit lisps could cause gc errors or access violations during or
+  after a global gc or a resize-areas operation.
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_18           lisp_build_19
+  freebsd      lisp_build_27           lisp_build_28
+  freebsd-64.64smplisp_build_20           lisp_build_21
+  linux86      lisp_build_27           lisp_build_28
+  linuxamd64.64lisp_build_20           lisp_build_21
+  linuxamd64.64smplisp_build_20           lisp_build_21
+  macosx86     lisp_build_27           lisp_build_28
+  macosx86-64.64lisp_build_20           lisp_build_21
+  macosx86-64.64smplisp_build_20           lisp_build_21
+  solaris      lisp_build_20           lisp_build_21
+  solaris.64   lisp_build_20           lisp_build_21
+  solarisamd64.64lisp_build_20           lisp_build_21
+  windows      lisp_build_41           lisp_build_42
+  windows.smp  lisp_build_34           lisp_build_35
+  windows.64   lisp_build_34           lisp_build_35
+  windows.64smplisp_build_34           lisp_build_35
+
+-------------------------------------------------------------------------------
+shared-library patch libacl100413 (version 9) ...
+Date Posted: Wed Sep 23 10:09:48 PDT 2015
+Patch names: libacl100413 (version 9), libacli100413, acl100413,
+  acli100413, libacl100413s, libacli100413s, acl100413s, acli100413s,
+  libacl100416, libacli100416, acl100416, acli100416, libacl100416s,
+  libacli100416s, acl100416s, acli100416s, acli10041t3, libacli10041t3
+Description: Make GC output conditional on gc-parameter :print
+Impact: recommended
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  linux86smp   lisp_build_9            lisp_build_10
+  freebsd      lisp_build_17           lisp_build_18
+  freebsd-64.64smplisp_build_11           lisp_build_12
+  linux86      lisp_build_17           lisp_build_18
+  linuxamd64.64lisp_build_11           lisp_build_12
+  linuxamd64.64smplisp_build_11           lisp_build_12
+  macosx86     lisp_build_17           lisp_build_18
+  macosx86-64.64lisp_build_11           lisp_build_12
+  macosx86-64.64smplisp_build_11           lisp_build_12
+  solaris      lisp_build_11           lisp_build_12
+  solaris.64   lisp_build_11           lisp_build_12
+  solarisamd64.64lisp_build_11           lisp_build_12
+  windows      lisp_build_29           lisp_build_30
+  windows.smp  lisp_build_23           lisp_build_24
+  windows.64   lisp_build_23           lisp_build_24
+  windows.64smplisp_build_23           lisp_build_24
+  freebsd-trialN/A                     lisp_build_19
+  linux86-trialN/A                     lisp_build_19
+  macosx86-trialN/A                     lisp_build_19
+  windows-trialN/A                     lisp_build_31
+
+-------------------------------------------------------------------------------
+base patch lldb
+Date Posted: Wed Sep 23 10:09:48 PDT 2015
+Patch names: code/lldb.001
+Description: Fixes a bug which caused e.g. ':step over 0' to skip
+  some breakpoints which should have been stopped at.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+xml-rpc patch xml-rpc
+Date Posted: Wed Sep 23 10:09:48 PDT 2015
+Patch names: code/xml-rpc.001
+Description: Ensure that :fault-code is passed properly to the client.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+lisp patch pka001
+Date Posted: Wed Sep 23 10:09:48 PDT 2015
+Patch names: update/pka001.001
+Description: Fixes a bad interpretation on the part of the debugger
+  when it pulls what looks like a valid symbol on the stack (but we
+  never allocate symbols on the stack!). The contents of the
+  purported symbol were of course garbage, causing havoc on the gc.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+aserve patch aserve ...
+Date Posted: Thu Sep 17 08:42:29 PDT 2015
+Patch names: code/aserve.001, code/webactions.001
+Description: Updates the version of AllegroServe which had become out
+  of sync with the github repository. No other changes.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+cg patch cg-touch for mswindows only
+Date Posted: Thu Jun  9 11:27:16 PDT 2016
+Patch names: code/cg-touch.001
+Description: The higher-level gesture-event touchscreen API that was
+  added to ACL 9.0 for Windows 8 and 8.1 didn't work on Windows 10
+  due to a curious difference in a value that needs to be passed to a
+  Microsoft function. It should work on both Windows 8/8.1 and
+  Windows 10 with this patch.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+acache patch acache-3.0.6.fasl
+Date Posted: Tue Sep 15 09:04:04 PDT 2015
+Patch names: code/acache-3.0.6.fasl
+Description: Fix versioning error in acache-3.0.5.fasl release.
+Impact: recommended
+
+-------------------------------------------------------------------------------
+base patch smphash for smp only
+Date Posted: Tue Sep 15 09:04:04 PDT 2015
+Patch names: code/smphash.001
+Description: An smp hazard in puthash could result in entries being
+  lost in fairly rare circumstances.
+Impact: recommended
+
+--- Initial ACLID_lisp_build numbers -- 
+
+  _Platform_   _ACLID_                 Intl. _ACLID_
+  freebsd-64.64lisp_build_10           lisp_build_9
+  freebsd      lisp_build_13           lisp_build_14
+  linux86      lisp_build_13           lisp_build_14
+  linux86smp   lisp_build_8            lisp_build_7
+  linuxamd64.64lisp_build_10           lisp_build_9
+  linuxamd64.64smplisp_build_10           lisp_build_9
+  macosx86-64.64lisp_build 10           lisp_build 9
+  macosx86-64.64smplisp_build_10           lisp_build_9
+  macosx86     lisp_build_13           lisp_build 14
+  solaris.64   lisp_build_10           lisp_build_9
+  solaris      lisp_build_10           lisp_build_9
+  solarisamd64.64lisp_build_10           lisp_build_9
+  windows.64   lisp_build_14           lisp_build_15
+  windows.64smplisp_build_14           lisp_build_15
+  windows      lisp_build_17           lisp_build_18
+  windowssmp   lisp_build_17           lisp_build_18

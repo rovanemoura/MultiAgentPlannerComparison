@@ -1,0 +1,34 @@
+This is a simple chart demo.
+
+This demo is not supported yet.
+
+The hardest thing about this demo is compiling it, because it requires
+the KLG JChart package, which can be downloaded from www.klg.com, as
+well as the visiginic ORB.
+
+The file chart.idl encapsulates the interface of a dataset and several charts.
+
+The chart server can be started via 
+ (load "cl/dataset-invoke.cl")
+ (dataset-server)
+
+To make the Java client, assuming that the JChart classes are in your classpath,
+from java/visibroker the make all command should work.
+
+Following this, 
+ make run
+
+will bring up a chart. 
+
+Any number of chart clients can execute. A point can edited by dragging
+it with the mouse. Clicking on the right mouse button on a chart
+allows for customization of color and chart type.
+
+Executing
+
+(dataset-perturb dataset)
+
+in the Lisp server will randomly modify the dataset values.
+This will be reflected in all listeners.
+
+

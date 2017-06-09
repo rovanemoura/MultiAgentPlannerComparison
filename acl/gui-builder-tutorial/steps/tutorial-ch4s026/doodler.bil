@@ -1,0 +1,196 @@
+;; -*- lisp-version: "6.0.pre-final.9 [Windows] (Oct 18, 2000 13:49)"; common-graphics: "1.389.2.34"; form: doodler; -*-
+;;;
+;;; Define :doodler
+ 
+(in-package :common-graphics-user)
+
+;; The finder-function, which returns the window if it already
+;; exists, and otherwise creates and returns it.
+;; Call this function if you need only one copy of this window,
+;; and that window is a non-owned top-level window.
+(defun doodler ()
+  (find-or-make-application-window :doodler 'make-doodler))
+ 
+;; The maker-function, which always creates a new window.
+;; Call this function if you need more than one copy,
+;; or the single copy should have a parent or owner window.
+;; (Pass :owner to this function; :parent is for compatibility.)
+(defun make-doodler
+    (&key parent (owner (or parent (screen *system*)))
+     (exterior (make-box 160 149 576 375)) (name :doodler)
+     (title "Doodler") (border :frame) (child-p nil) form-p)
+  (let ((owner
+         (make-window name :owner owner
+           :class 'doodler
+           :exterior exterior
+           :border border
+           :child-p child-p
+           :close-button t
+           :cursor-name :arrow-cursor
+           :font (make-font-ex :swiss "MS Sans Serif / ANSI" 11 nil)
+           :form-state :normal
+           :maximize-button t
+           :minimize-button t
+           :name :doodler
+           :package-name :common-graphics-user
+           :pop-up nil
+           :resizable t
+           :scrollbars t
+           :state :normal
+           :status-bar nil
+           :system-menu t
+           :title title
+           :title-bar t
+           :toolbar t
+           :form-p form-p
+           :help-string nil
+           :package-name :common-graphics-user)))
+    (let ((owner
+           (make-window :toolbar :owner owner
+             :class 'toolbar
+             :exterior (make-box-relative 0 0 408 28)
+             :border :static
+             :close-button nil
+             :cursor-name :arrow-cursor
+             :dialog-items (list (make-instance
+                                  'multi-picture-button
+                                  :font
+                                  (make-font-ex
+                                   nil
+                                   "Tahoma / ANSI"
+                                   11
+                                   nil)
+                                  :left
+                                  2
+                                  :name
+                                  :multi-picture-button-1
+                                  :on-change
+                                  'doodler-toolbar-click
+                                  :range
+                                  (list
+                                   (make-instance
+                                    'button-info
+                                    :name
+                                    :erase
+                                    :pixmap-name
+                                    :erase
+                                    :pixmap-source
+                                    "erase.bmp"
+                                    :pixmap-icon
+                                    nil
+                                    :background-color
+                                    nil
+                                    :foreground-color
+                                    nil
+                                    :title
+                                    nil
+                                    :width
+                                    nil
+                                    :height
+                                    nil
+                                    :stretching
+                                    t
+                                    :tooltip
+                                    "Erase"
+                                    :help-string
+                                    "Erase and redisplay image.")
+                                   (make-instance
+                                    'button-info
+                                    :name
+                                    :curve
+                                    :pixmap-name
+                                    :Curve
+                                    :pixmap-source
+                                    "Curve.bmp"
+                                    :pixmap-icon
+                                    nil
+                                    :background-color
+                                    nil
+                                    :foreground-color
+                                    nil
+                                    :title
+                                    nil
+                                    :width
+                                    nil
+                                    :height
+                                    nil
+                                    :stretching
+                                    t
+                                    :tooltip
+                                    "Curve"
+                                    :help-string
+                                    "Create and modify curves.")
+                                   (make-instance
+                                    'button-info
+                                    :name
+                                    :scroll-to-center
+                                    :pixmap-name
+                                    :center
+                                    :pixmap-source
+                                    "center.bmp"
+                                    :pixmap-icon
+                                    nil
+                                    :background-color
+                                    nil
+                                    :foreground-color
+                                    nil
+                                    :title
+                                    nil
+                                    :width
+                                    nil
+                                    :height
+                                    nil
+                                    :stretching
+                                    t
+                                    :tooltip
+                                    "Scroll to Center"
+                                    :help-string
+                                    "Scroll to center of page."))
+                                  :top
+                                  2
+                                  :unavailable-color-mapper
+                                  (list
+                                   (cons black gray)
+                                   (cons dark-gray gray)
+                                   (cons dark-blue gray)
+                                   (cons dark-green gray)
+                                   (cons dark-red gray)
+                                   (cons dark-cyan gray)
+                                   (cons dark-yellow gray)
+                                   (cons dark-magenta gray)
+                                   (cons red dark-red)
+                                   (cons green dark-green)
+                                   (cons blue dark-blue)
+                                   (cons yellow dark-yellow)
+                                   (cons cyan dark-cyan)
+                                   (cons magenta dark-magenta))
+                                  :width
+                                  355))
+             :font (make-font-ex :swiss "MS Sans Serif / ANSI" 11 nil)
+             :maximize-button nil
+             :minimize-button nil
+             :name :toolbar
+             :overlapped nil
+             :pop-up nil
+             :resizable nil
+             :scrollbars nil
+             :state :normal
+             :status-bar nil
+             :system-menu nil
+             :title "Toolbar"
+             :title-bar nil
+             :toolbar nil)))
+      owner)
+    owner))
+
+(defun make-doodler-widgets () nil)
+
+(defparameter doodler-widgets (make-doodler-widgets))
+
+(defun doodler-widgets ()
+  (let (window)
+    (if* (dolist (dialog-item doodler-widgets)
+           (and (setq window (window dialog-item)) (windowp window)
+                (return t)))
+       then (make-doodler-widgets)
+       else doodler-widgets)))

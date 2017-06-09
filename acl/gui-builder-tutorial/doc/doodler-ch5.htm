@@ -1,0 +1,824 @@
+<html>
+
+<head>
+<title>Chapter 5: Create the Coefficients Dialog</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 5</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h2>Chapter 5: Create the Coefficients Dialog</h2>
+
+<ol>
+  <li>Start Allegro CL if you exited in <a href="doodler-ch4.htm">Chapter 4</a>. Open the <strong>gui-builder-tutorial</strong>
+    project we left in <a href="doodler-ch4.htm">Chapter 4</a>. (If you have restarted Allegro
+    CL, a dialog may appear asking if you want to open that project, along with any other
+    projects recently worked on. If not, use <strong>File | Open Project</strong> and choose
+    the file <strong>gui-builder-tutorial.lpr</strong> in your tutorial project directory,
+which is <strong>C:\Program
+Files\allegro-projects\gui-builder-tutorial\</strong> or
+<strong>allegro-projects/gui-builder-tutorial/</strong> on Linux if
+you used the defaults. The <strong>Recent</strong> menu may also provide a way to open the
+    project.) You should now be where you stopped at the end of <a href="doodler-ch4.htm">Chapter
+    4</a>. </li>
+  <li>In this chapter, you will create a Coefficients dialog similar to this one:</li>
+</ol>
+
+<blockquote>
+  <p><img src="ch5-1-coef.jpg" width="367" height="181" alt="ch5-1-coef.bmp (199878 bytes)"></p>
+</blockquote>
+
+<ol start="3">
+  <li>Click on the <strong>New Form</strong> button on the Standard toolbar (or choose <strong>File
+    | New Form</strong>). Select <strong>dialog</strong> from the list and click <strong>OK</strong>.
+    This defines the new form as an instance of <strong>dialog</strong>.</li>
+  <li>Reshape the new form to be roughly the same size as the illustration in Step 2. </li>
+  <li>Inspect the new form (double-clicking on it will expose the Inspector window with the
+    new form inspected). </li>
+  <li>In the inspector, change (where necessary) the <strong>minimize-button</strong> to nil, <strong>maximize-button</strong>
+    to nil, <strong>name</strong> to :coefficient-dialog, <strong>resizable</strong> to nil, <strong>child-p</strong>
+    to nil, and <strong>title</strong> to Coefficients. </li>
+  <li>In the Project Manager dialog, select the coefficient-dialog and click on the <strong>View
+    Selected Code</strong> button. </li>
+  <li>In the editor buffer, enter the following defclass.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass coefficient-dialog (dialog)
+    ())</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="9">
+  <li>Evaluate the coefficient-dialog <strong>defclass</strong>. (Once again, we have create a
+    new subclass of dialog that we will specialize for our application without affecting other
+    instances of the class <strong>dialog</strong>.)</li>
+  <li>Save the buffer to <em>coeffiicient-dialog.cl</em> to your tutorial directory using the <big>Save</big>
+    button or <strong>File | Save</strong>.</li>
+  <li>In the coefficient-dialog inspector, change <strong>class</strong> to
+    coefficient-dialog. </li>
+  <li>On the Coefficients form, sketch in a <strong>static-text</strong> control. The icon for
+    static-text is a capital A.</li>
+  <li>Inspect the new static-text and change <strong>name</strong> to :a-text and <strong>value</strong>
+    to ~A:. </li>
+  <li>Reshape the static-text sizing handles so that they closely surround the text.
+    Reposition the control so that it sits in the upper left part of the form. See the
+    illustration in Step 2. (This control provides a label for the editable text widget
+    displaying 200 in the picture). </li>
+  <li>Now sketch in an editable-text control on the right-hand side of the static-text. The
+    icon for editable-text looks like <strong>ab|</strong>.</li>
+  <li>Inspect the new editable-text control and change the <strong>name</strong> to
+    :a-coefficient-text. </li>
+  <li>Reshape and reposition a-coefficient-text next to the static-text control (see the
+    illustration after step 2).</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>Want more control over repositioning components vertically?</h3>
+    <p>You need to turn off the grid and component alignment options.<ol type="a">
+      <li>Select <strong>Tools | Options</strong>. The <strong>Options</strong> dialog will
+        appear.</li>
+      <li>Choose the <strong>Form</strong> tab. </li>
+      <li>Clear the check boxes on <strong>Snap to Grid</strong> and <strong>Snap to Components</strong>.
+      </li>
+      <li>Click on <strong>Apply</strong> to apply the changes.</li>
+      <li>Leave the <strong>Options</strong> dialog open while you make the adjustments you want
+        to the controls on the Coefficients dialog. Drag everything to the location that satisfies
+        you.</li>
+      <li>Re-select <strong>Snap to Grid</strong> and <strong>Snap to Components</strong> before
+        clicking <strong>OK</strong> to close the <strong>Options</strong> dialog and moving on to
+        the next step. You'll need them again later.</li>
+    </ol>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>If you only clear <strong>Snap to Grid</strong> you will still have trouble getting an
+    alignment of vertical centers because these components are so similarly sized that they
+    &quot;stick&quot; to the nearby edges of neighboring components. Clear both the <strong>Snap
+    to Grid</strong> and <strong>Snap to Components</strong> options to make this exercise
+    easier.</p>
+    <p>These two options comprise a feature called <em>sticky alignment</em>.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="18">
+  <li>Now sketch in an <strong>up-down-control</strong> next to the a-coefficient-text on the
+    right-hand side. </li>
+</ol>
+
+<blockquote>
+  <p><img src="up-down-icon.jpg" width="135" height="81"
+  alt="up-down-icon.bmp (33102 bytes)"></p>
+</blockquote>
+
+<ol start="19">
+  <li>Drag the new <strong>up-down-control</strong> so that it overlaps the right edge of the <strong>editable-text</strong>.
+  </li>
+</ol>
+
+<blockquote>
+  <p>If done properly, the <strong>up-down-control</strong> will attach itself to the <strong>editable-text</strong>
+  control. You will be able to tell because the <strong>up-down-control</strong> will
+  reposition and resize itself to match the <strong>editable-text</strong>. It will also
+  accompany the <strong>editable-text</strong> if you drag it around on the form.</p>
+</blockquote>
+
+<ol start="20">
+  <li>Inspect the new <strong>up-down-control</strong>. Verify that its <strong>buddy-widget</strong>
+    is :a-coefficient-text. Change its <strong>name</strong> to :a-coefficient-control, <strong>range</strong>
+    to (1 1000), and <strong>value</strong> to 1. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p>The <strong>buddy-widget</strong> property helps unify these two controls and keep
+    their functions connected. </p>
+    <p>Note that it is a read-only property of the <strong>up-down-control</strong>. You must
+    change it graphically (using the mouse and the IDE); the inspector wouldn&#146;t know how
+    to reposition the controls if you changed it textually (by typing into the value location
+    in the Inspector).</p>
+  </blockquote>
+</blockquote>
+
+<ol start="21">
+  <li>Click on the <strong>Save All</strong> button on the standard toolbar or choose <strong>File
+    | Save All</strong>. </li>
+  <li>Set focus to the Coefficients form and click <strong>Run | Run Form</strong>. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>Run Form versus Run Project</h3>
+    <p><strong>Run | Run Project</strong> (or the <strong>Run Project</strong> button) invokes
+    the project init function. This creates and displays the window associated with the main
+    (Doodler) form only. Other windows must be created and displayed programmatically. <strong>Run
+    | Run Project</strong> will not display the window we are working on since it is not the
+    main form. </p>
+    <p><strong>Run | Run Form</strong> works here because it creates and displays the window
+    associated with the selected form whether or not it is the main form.</p>
+    <p>Another difference, not specifically relevant in this case, is that projects are run in
+    a new thread, different from the IDE thread (IDE GUI) while forms are run in the IDE
+    thread. (Display the <strong>Process Browser</strong> with <strong>View | Processes</strong>
+    and update it while running a project to see this.) </p>
+  </blockquote>
+</blockquote>
+
+<ol start="23">
+  <li>When you are satisfied that the <strong>up-down-control</strong> and the <strong>editable-text</strong>
+    are working (clicking on the <strong>up-down-control</strong> arrows should change the
+    value in the <strong>editable-text</strong>) on the Coefficients dialog, click the <strong>Stop</strong>
+    button (or choose <strong>Run | Stop</strong>). </li>
+  <li>Drag-select the <strong>static-text</strong> control for the A coefficient, the
+    editable-text, and the up-down-control on the coefficient-dialog form. All three controls
+    should be selected now. To drag-select, place the cursor just above and to the left of the
+    <strong>static-text</strong> control, depress the left mouse button and drag the cursor to
+    just below and to the right of the <strong>up-down-control</strong>. Release the mouse
+    button. All controls should be selected, as indicated by white squares in their corners, as
+    shown in this illustration:</li>
+</ol>
+
+<blockquote>
+  <p><img src="ch5-ds.jpg" width="469" height="216" alt="ch5-ds.bmp (304182 bytes)"></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>Selecting More Than One Object</h3>
+    <p>When multiple controls are group-selected, the selection handles for each control will
+    appear hollow and light colored rather than solid and dark colored. This indicates that
+    the controls can be moved as a group but not resized.<ul>
+      <li>Use drag-selection (click the mouse key, hold it down, and drag it across) to select a
+        group of widgets easily. This technique works best when not in a tight space.</li>
+      <li>Use shift-selection (hold down the SHIFT key, then click on each object you want to
+        select) to select a group of items that prove difficult to drag-select.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<ol start="25">
+  <li>Copy the selected controls using the <strong>Edit | Copy</strong> command. </li>
+  <li>Paste the controls using the <strong>Edit | Paste</strong> command. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p>The pasted controls appear to the right and below the controls being copied.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="27">
+  <li>Leave the pasted controls selected. Move them as a group into alignment with the
+    original group of controls. Refer to the illustration in Step 2 for the position of the B
+    coefficient control. Horizontal alignment marks will begin appearing to guide you when you
+    get close. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p>Turn sticky alignment back on (see step 17) if you don't have alignment guides and want
+    to see them. Although you have a group of controls already selected; it will still come on
+    right away and assist you during this step.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="28">
+  <li>Inspect the pasted <strong>static-text</strong> control. Change its <strong>name</strong>
+    to :b-text and its <strong>value</strong> to &quot;~B:&quot;. </li>
+  <li>Inspect the newly pasted <strong>editable-text</strong> control. Change the <strong>name</strong>
+    to :b-coefficient-text. </li>
+  <li>Inspect the newly pasted <strong>up-down-control</strong>. Change the <strong>name</strong>
+    to :b-coefficient-control. Verify that the <strong>buddy-widget</strong> is
+    :b-coefficient-text. </li>
+  <li>Click on the <strong>Save All</strong> button to save your changes. </li>
+  <li>Set focus on the Coefficients form and choose the <strong>Run | Run Form</strong>
+    command.</li>
+  <li>Verify that the <strong>up-down-control</strong>s are working for both the A and B
+    coefficients. </li>
+  <li>Stop the running Coefficients dialog using the <strong>Stop</strong> button or choosing <strong>Run
+    | Stop</strong>. </li>
+  <li>Repeat the previous pasting and editing process to create the controls for the C
+    coefficient. See the illustration in Step 2 for reference. </li>
+  <li>Sketch a <strong>group-box</strong> enclosing all the controls on the Coefficients form.
+  </li>
+</ol>
+
+<blockquote>
+  <p><img src="gb-icon.jpg" width="135" height="63" alt="gb-icon.bmp (25758 bytes)"></p>
+</blockquote>
+
+<ol start="37">
+  <li>Inspect the new <strong>group-box</strong> and change its <strong>name</strong> to
+    :coefficient-box and clear its <strong>title</strong>.</li>
+  <li>Click on the <strong>Save All</strong> button to save your changes. </li>
+  <li>Set focus to the Coefficients form and click <strong>Run | Run Form</strong>. </li>
+  <li>Verify that all the up-down-controls are working, then stop the running dialog.</li>
+</ol>
+
+<blockquote>
+  <p>If the controls aren't changing numbers in the editable-text boxes, confirm that each
+  has its partnering <strong>editable-text</strong> control name showing as the <strong>buddy-widget</strong>
+  value in the Inspect window. </p>
+</blockquote>
+
+<h2>Add Button Controls to the Coefficients Dialog</h2>
+
+<ol start="41">
+  <li>In the Coefficients form, sketch a <strong>default-button</strong> in the lower-left
+    corner. </li>
+  <li>Inspect the new button and change its <strong>name</strong> to :ok-button and <strong>title</strong>
+    to ~OK. </li>
+  <li>Sketch in a <strong>cancel-button</strong> on the right side of the OK button. Align the
+    top edge with the OK button. </li>
+  <li>Inspect the <strong>cancel-button</strong> and change its <strong>name</strong> to
+    :cancel-button and its <strong>title</strong> to ~Cancel (its title starts as Cancel,
+    without the leading tilde). </li>
+  <li>Sketch a <strong>button</strong> on the right side of the Cancel Button. Align the top
+    edge with the other two buttons. </li>
+  <li>Inspect the new <strong>button</strong> and change its <strong>name</strong> to
+    :test-button and its <strong>title</strong> to ~Test. </li>
+  <li>Click on the <strong>Save All</strong> button to save your changes. </li>
+</ol>
+
+<h2>Activate the Test Button</h2>
+
+<p>The Test button allows users to test-draw a curve and make adjustments without leaving
+the Coefficients dialog. 
+
+<ol start="48">
+  <li>In the inspector of the test-button, click on the <strong>Events</strong> tab. </li>
+  <li>In the test-button inspector, click on the <strong>on-change</strong> event and then,
+    click on the Extended Editor button (the one with the three dots). </li>
+  <li>In the coefficient-dialog buffer (which should be visible), edit the skeleton code for
+    the on-change function <strong>coefficients-dialog-test-button-on-change</strong> to match
+    the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun coefficient-dialog-test-button-on-change
+    (widget new-value old-value)
+   (declare 
+     (ignore-if-unused widget new-value old-value))
+   (when new-value
+     (test-curve (parent widget)))
+   (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="51">
+  <li>Evaluate the <strong>coefficient-dialog-test-button-on-change</strong> function. </li>
+  <li>Add the <strong>test-curve</strong> method to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod test-curve 
+    ((dialog coefficient-dialog))
+   (let* ((curve 
+            (make-instance 'cycloidal-curve
+              :a-coefficient 
+              (value
+               (find-component 
+                 :a-coefficient-control
+                 dialog))
+              :b-coefficient 
+              (value
+               (find-component 
+                 :b-coefficient-control
+                 dialog))
+              :c-coefficient 
+              (value 
+               (find-component 
+                 :c-coefficient-control
+                 dialog))))
+          (curve-dialog (owner dialog))
+          (doodler (owner curve-dialog)))
+      (draw-curve (frame-child doodler) curve)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="53">
+  <li>Evaluate the <strong>test-curve</strong> method. </li>
+  <li>Save the coefficient-dialog buffer. </li>
+  <li>In the coefficient-dialog buffer, click inside the <strong>cycloidal-curve</strong>
+    text. Then, click <strong>Tools | Browse Class</strong></li>
+  <li>You should see the class browser dialog displayed with the information about the class <strong>cycloidal-curve</strong>.
+  </li>
+  <li>In the Class Browser dialog, click on the <strong>Direct Slots</strong> icon in the toolbar (the one with three horizonatl lines) and display
+    the information.</li>
+</ol>
+
+<blockquote>
+  <p><img src="ch5-2-clabr.jpg" width="600" height="319"
+  alt="ch5-2-clabr.bmp (574254 bytes)"></p>
+</blockquote>
+
+<blockquote>
+  <p>We are following the convention of naming the accessor the same as the slot; slots
+  shown here have the same names as their accessor functions.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>Using the Class Browser</h3>
+    <p>Use the <strong>Class Browser</strong> to quickly look up slots and methods of a class.</p>
+    <p>Click on the <strong>Methods</strong> tab now and you&#146;ll see a list of the methods
+    (including the accessors) for <font face="Courier New">cycloidal-curve</font>.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Displaying the Coefficients Dialog from the Curves Dialog</h2>
+
+<ol start="58">
+  <li>In the <strong>General</strong> tab of the <strong>Project Manager</strong> dialog,
+    select curve-dialog and click on the <strong>View Selected Code</strong> button. </li>
+  <li>In the curve-dialog buffer, modify the <strong>curve-dialog</strong> class to add a slot
+    to store the coefficient-dialog. It should match the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass curve-dialog (dialog)
+  ((curve-coefficient-dialog
+    :initform nil
+    :accessor curve-coefficient-dialog)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="60">
+  <li>Now add the following <strong>close</strong> :before method to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod close :before ((dialog curve-dialog) &amp;key)
+  (let ((coefficient-dialog
+           (curve-coefficient-dialog dialog)))
+    (when (and (windowp coefficient-dialog)
+                coefficient-dialog)
+      (close coefficient-dialog))
+    (setf (curve-coefficient-dialog dialog) nil)))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Since the curve-dialog creates the coefficient-dialog, it must also close it. The
+  dialog must be explicitly closed since it is a pop-up window.</p>
+</blockquote>
+
+<ol start="61">
+  <li>Click on the <strong>Save All</strong> button on the standard toolbar to save your
+    changes. </li>
+  <li>Click <strong>Tools | Compile Project</strong> to compile your changes. </li>
+  <li>In the <strong>Project Manager</strong> dialog, select doodler and click on the <strong>View
+    Selected Code</strong> button. </li>
+  <li>In the doodler buffer, add the <strong>user-close</strong> method.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod user-close ((window doodler))
+  (let ((modal-dialog (modal-window)))
+    (if* modal-dialog then
+      (beep window)
+      (pop-up-message-dialog window &quot;Doodler&quot;
+        (format nil &quot;~
+         Close the ~a modal dialog before closing ~
+         the Doodler.&quot;
+         (title modal-dialog))
+         warning-icon 
+         &quot;~OK&quot;)
+       else
+       (call-next-method))))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Since the Coefficients dialog is displayed modally, you cannot close the Doodler when
+  the coefficient-dialog is displayed. Therefore, you must customize the <strong>user-close</strong>
+  method for doodlers to prevent your users from closing the Doodler while the Coefficients
+  dialog is displayed.</p>
+</blockquote>
+
+<h2>Activating the Add Button</h2>
+
+<ol start="65">
+  <li>In the Project Manager, select curve-dialog and click on the <strong>View Selected Form</strong>
+    button. </li>
+  <li>In the curve-dialog form, inspect the <strong>Add</strong> button. </li>
+  <li>In the Add button inspector on the <strong>Events</strong> tab, select the <strong>on-change</strong>
+    event. Click on the Extended Editor button (the one with the three dots). </li>
+  <li>In the curve-dialog buffer, change the <strong>on-change</strong> function (<strong>curve-dialog-add-button-on-change</strong>)
+    to match the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun curve-dialog-add-button-on-change 
+    (widget new-value old-value)
+  (declare 
+    (ignore-if-unused widget new-value old-value))
+  (when new-value
+     (add-curve (parent widget)))
+  (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="69">
+  <li>Now add the following <strong>add-curve</strong>, <strong>get-coefficient-dialog</strong>,
+    and <strong>show-coefficient-dialog</strong> methods to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod add-curve ((dialog curve-dialog))
+  (let* ((curve-list 
+          (find-component :curve-list dialog))
+         (default-curve (value curve-list))
+         (curve (show-coefficient-dialog dialog
+                 (if default-curve
+                    (copy-object default-curve)
+                    ;; else
+                    (make-instance 
+                      'cycloidal-curve)))))
+    (when curve
+      (setf (range curve-list)
+            (append (range curve-list) 
+                    (list curve))))))
+
+(defmethod get-coefficient-dialog 
+    ((dialog curve-dialog))
+  (let ((coefficient-dialog 
+         (curve-coefficient-dialog dialog)))
+    (when (or (not coefficient-dialog)
+              (not (windowp coefficient-dialog)))
+      (setq coefficient-dialog
+            (make-coefficient-dialog :owner dialog))
+      (setf (curve-coefficient-dialog dialog)
+             coefficient-dialog))
+    coefficient-dialog))
+
+(defmethod show-coefficient-dialog 
+    ((dialog curve-dialog) 
+     &amp;optional (curve 
+                (make-instance 'cycloidal-curve)))
+  (let* ((coefficient-dialog 
+          (get-coefficient-dialog dialog))
+         (a-widget 
+          (find-component :a-coefficient-control
+            coefficient-dialog))
+         (b-widget 
+          (find-component :b-coefficient-control
+            coefficient-dialog))
+         (c-widget 
+          (find-component :c-coefficient-control
+            coefficient-dialog)))
+    (move-window coefficient-dialog 
+      (window-to-screen-units 
+        dialog (make-position 10 10)))
+    ;; initialize the value of the widgets
+    (setf (value a-widget) (a-coefficient curve))
+    (setf (value b-widget) (b-coefficient curve))
+    (setf (value c-widget) (c-coefficient curve))
+    ;; display the dialog as modal
+    (when (pop-up-modal-dialog coefficient-dialog
+            :stream (owner dialog))
+    ;; if the user clicks on OK, change 
+    ;; the new curve to
+    ;; reflect the values shown in the dialog
+      (setf (a-coefficient curve) (value a-widget))
+      (setf (b-coefficient curve) (value b-widget))
+      (setf (c-coefficient curve) (value c-widget))
+      curve)))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>add-curve</strong> initializes a new curve to the same values as the selected
+  curve.</p>
+  <p><strong>show-coefficient-dialog</strong> uses the <strong>pop-up-modal-dialog</strong>
+  function to display the Coefficients dialog modally.</p>
+</blockquote>
+
+<ol start="70">
+  <li>In the curve-dialog buffer, select everything (<strong>Edit | Select All</strong>) and
+    evaluate the selection (<strong>Tools | Incremental Evaluation</strong>). </li>
+  <li>Click on the <strong>Save All</strong> button to save everything. </li>
+  <li>Click the <strong>Run Project</strong> button to run the Doodler. Display the Curves
+    dialog by clicking on the blue <strong>Curve</strong> button displaying a cycloid
+    graph. In the Curves dialog, click on the <strong>Add</strong> button. Make sure that the
+    Coefficients dialog is modal with respect all the other Doodler windows (meaning you
+    cannot select another Doodler window until the Coefficients dialog is closed).</li>
+  <li>When you are satisfied, click the <strong>Stop</strong> button or <strong>Run | Stop</strong>
+    to stop running.</li>
+</ol>
+
+<h2>Activating the Edit Button</h2>
+
+<ol start="74">
+  <li>In the <strong>Project Manager</strong>, select the curve-dialog and click on the <strong>View
+    Selected Form</strong> button. </li>
+  <li>Inspect the <strong>Edit</strong> button on the curve-dialog form. Switch to the <strong>Events</strong>
+    tab if necessary. </li>
+  <li>Select the <strong>on-change</strong> property. Click on the Editor button (the one with
+    three dots). There is a default function -- <strong>return-t-from-pop-up-dialog</strong>
+    -- already provided but it is not suitable for our purposes.)</li>
+  <li>In the curve-dialog buffer, edit the <strong>on-change </strong>function (<strong>curve-dialog-edit-button-on-change</strong>)
+    to match the following.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun curve-dialog-edit-button-on-change 
+    (widget new-value old-value)
+  (declare 
+    (ignore-if-unused widget new-value old-value))
+  (when new-value 
+    (edit-curve (parent widget)))
+  (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="78">
+  <li>In the curve-dialog buffer, add the <strong>edit-curve</strong> method:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod edit-curve ((dialog curve-dialog))
+  (let* ((curve-list (find-component :curve-list dialog))
+         (curve (value curve-list))
+         (range (range curve-list)))
+    (when curve
+      (when (show-coefficient-dialog dialog curve)
+      ;; reset the range to force 
+      ;; the scrolling list
+      ;; to redisplay its curve information
+        (setf (range curve-list) nil)
+        (setf (range curve-list) range)))))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="79">
+  <li>Click on the <strong>Save All</strong> button on the standard toolbar to save your
+    changes.</li>
+  <li>Run the Doodler using the <strong>Run</strong> button or the <strong>Run | Run Project</strong>
+    command. </li>
+  <li>In the Doodler, click on the <strong>Curve</strong> button. In the Curves dialog, click
+    on the <strong>Edit</strong> button. Notice that nothing happens. </li>
+</ol>
+
+<blockquote>
+  <p>Select the curve in the list box and click Edit again. This time the coefficients
+  dialog will appear since you have selected a curve. When satisfied, click the <strong>Stop</strong>
+  button to stop running the Doodler.</p>
+</blockquote>
+
+<ol start="82">
+  <li>In the curve-dialog buffer, enter the <strong>select-curve-warning</strong> method.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod select-curve-warning 
+    ((dialog curve-dialog))
+  (pop-up-message-dialog dialog &quot;Doodler&quot;
+    &quot;Select a curve first&quot;
+    warning-icon &quot;~OK&quot;))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="83">
+  <li>In the curve-dialog buffer, modify the <strong>edit-curve</strong> method to match the
+    following.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod edit-curve ((dialog curve-dialog))
+  (let* ((curve-list 
+          (find-component :curve-list dialog))
+         (curve (value curve-list))
+         (range (range curve-list)))
+    (if curve
+       (when (show-coefficient-dialog dialog curve)
+          ;; reset the range to force the 
+          ;; scrolling list to redisplay
+          ;; its curve information
+          (setf (range curve-list) nil)
+          (setf (range curve-list) range))
+        ;; else
+        (select-curve-warning dialog))))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="84">
+  <li>Select the whole curve-dialog buffer (<strong>Edit | Select All</strong>) and evaluate
+    it (<strong>Tools | Incremental Evaluation</strong>). Then click on the <strong>Save All</strong>
+    button to save your changes. </li>
+  <li>Run the doodler using the <strong>Run</strong> button or <strong>Run | Run Project</strong>.
+    In the Doodler window, click on the <strong>Curve</strong> button and then click on the <strong>Edit</strong>
+    button. You&#146;ll see a warning saying that you need to select a curve first. Click <strong>OK</strong>
+    to accept the warning. Select a curve and try editing a curve. </li>
+  <li>Your application will look something like this after adding, editing, and drawing the
+    curves.</li>
+</ol>
+
+<p><img src="ch5-3-doodles.jpg" width="795" height="499"
+alt="ch5-3-doodles.bmp (1191666 bytes)"></p>
+
+<blockquote>
+  <p>When satisfied, click <strong>Run | Stop</strong> command to stop running the doodler.</p>
+</blockquote>
+
+<h2>Making the Delete Button Work</h2>
+
+<ol start="87">
+  <li>In the <strong>Project Manager</strong> dialog, select curve-dialog and click on the <strong>View
+    Selected Form</strong> button. </li>
+  <li>Inspect the <strong>Delete</strong> button and select the <strong>Events</strong> tab. </li>
+  <li>In the <strong>delete-button</strong> inspector, select the <strong>on-change</strong>
+    event and click on the <strong>Extended Editor</strong> button (the one with three dots).
+    The curve-dialog buffer will appear with some skeleton code in it. </li>
+  <li>In the curve-dialog buffer, edit the on-change function (<strong>curve-dialog-delete-button-on-change</strong>)
+    to match the following.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun curve-dialog-delete-button-on-change 
+    (widget new-value old-value)
+   (declare 
+     (ignore-if-unused widget new-value old-value))
+   (when new-value 
+      (delete-curve (parent widget)))
+   (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="91">
+  <li>Now add the <strong>delete-curve</strong> method to the same buffer. Notice that the <strong>draw-all</strong>
+    and <strong>select-curve-warning</strong> functions are reused here.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod delete-curve ((dialog curve-dialog))
+  (let* ((curve-list 
+          (find-component :curve-list dialog))
+         (curve (value curve-list)))
+    (if* curve then
+       (setf (range curve-list)
+             (remove curve (range curve-list)))
+       (setf (value curve-list) nil)
+             (erase-window (owner dialog))
+       (draw-all dialog)
+      else
+       (select-curve-warning dialog))))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="92">
+  <li>Click on the <strong>Save All</strong> button on the Standard toolbar to save your
+    changes.</li>
+  <li>Click the <strong>Run</strong> button to run the Doodler. Add a few curves to the dialog
+    using the <strong>Add</strong> button. Try using the <strong>Delete</strong> button to see
+    how it works.</li>
+  <li>When you are satisfied, click the <strong>Stop</strong> button to stop running the
+    Doodler.</li>
+</ol>
+
+<h2>Handling a Double-Click</h2>
+
+<ol start="95">
+  <li>In the <strong>Project Manager</strong> dialog, select the curve-dialog and click on the
+    <strong>View Selected Form</strong> button.</li>
+  <li>In the Curves form, inspect the curve-list, which is a single-item-list control.</li>
+  <li>In the curve-list inspector, select the <strong>Events</strong> tab. Select the <strong>on-double-click</strong>
+    event and click on the <strong>Extended Editor</strong> button (the one with the three
+    dots).</li>
+  <li>98.&nbsp;&nbsp;&nbsp; In the curve-dialog buffer, change the <strong>on-double-click</strong>
+    function (<strong>curve-dialog-curve-list-on-double-click</strong>) to match the
+    following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun curve-dialog-curve-list-on-double-click 
+    (dialog widget)
+  (declare (ignore-if-unused dialog widget))
+  (curve-list-double-click dialog widget)
+  t) ;; Return t to accept the new value</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="99">
+  <li>Now add the <strong>curve-list-double-click</strong> method to the same buffer:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod curve-list-double-click 
+    ((dialog curve-dialog) widget)
+  (declare (ignore widget))
+  (edit-curve dialog))</pre>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;&nbsp;&nbsp; 100. Click on the <strong>Save All</strong> button to save your
+changes.<br>
+&nbsp;&nbsp;&nbsp; 101. Run the Doodler using the <strong>Run</strong> button. Try
+double-clicking on a curve to edit it.<br>
+&nbsp;&nbsp;&nbsp; 102. When you are satisfied, click the <strong>Stop</strong> button to
+stop running the Doodler.<br>
+&nbsp;&nbsp;&nbsp; 103. Go on to <a href="doodler-ch6.htm">Chapter 6</a>. If you wish to,
+you can stop working on the tutorial now and return to it later. All the work you have
+done has been saved. </p>
+
+<p><small><small>Copyright © 2001-2004 Franz Inc. All rights reserved.</small></small></p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 5</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

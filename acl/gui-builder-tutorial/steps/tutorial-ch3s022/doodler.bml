@@ -1,0 +1,101 @@
+;; -*- lisp-version: "6.0.pre-final.9 [Windows] (Oct 18, 2000 13:49)"; common-graphics: "1.389.2.34"; -*-
+
+
+(in-package :common-graphics-user)
+
+(:pixmap-names :center :Curve :erase)
+
+(restore-pixmaps
+  (make-instance 'pixmap :name :center :bits-per-pixel
+                 4 :width 16 :height 15 :invert-p t :source
+                 "center.bmp" :colors
+                 (vector black dark-red
+                         dark-green
+                         dark-yellow
+                         dark-blue
+                         dark-magenta
+                         dark-cyan
+                         light-gray
+                         gray red
+                         green yellow
+                         blue magenta
+                         cyan white)
+                 :contents
+                 '((7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7)
+                   (7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 7)
+                   (7 0 15 15 15 15 15 15 15 15 15 15 15 15 0 7)
+                   (7 0 15 15 15 7 15 15 15 15 7 15 15 15 0 7)
+                   (7 0 15 15 7 15 8 8 8 8 15 7 15 15 0 7)
+                   (7 0 15 15 15 8 15 15 15 15 8 15 15 15 0 7)
+                   (7 0 15 15 15 8 15 9 9 15 8 15 15 15 0 7)
+                   (7 0 15 15 15 8 15 9 9 15 8 15 15 15 0 7)
+                   (7 0 15 15 15 8 15 15 15 15 8 15 15 15 0 7)
+                   (7 0 15 15 7 15 8 8 8 8 15 7 15 15 0 7)
+                   (7 0 15 15 15 7 15 15 15 15 7 15 15 15 0 7)
+                   (7 0 15 15 15 15 15 15 15 15 15 15 15 15 0 7)
+                   (7 4 4 4 4 4 4 4 4 4 4 4 4 4 4 7)
+                   (7 4 4 4 4 4 4 4 4 4 4 4 4 4 4 7)
+                   (7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7))
+                 :mask-contents nil)
+  (make-instance 'pixmap :name :Curve :bits-per-pixel 4
+                 :width 16 :height 15 :invert-p t :source "Curve.bmp"
+                 :colors
+                 (vector black dark-red
+                         dark-green
+                         dark-yellow
+                         dark-blue
+                         dark-magenta
+                         dark-cyan
+                         light-gray
+                         gray red
+                         green yellow
+                         blue magenta
+                         cyan white)
+                 :contents
+                 '((7 7 7 7 0 0 0 0 7 7 7 0 7 7 7 7)
+                   (7 7 7 7 0 14 14 0 0 0 0 0 0 7 7 7)
+                   (7 7 7 7 0 14 14 14 0 0 14 14 0 7 7 7)
+                   (0 0 0 0 0 0 14 0 0 0 14 14 0 7 7 7)
+                   (0 14 14 14 0 0 0 0 15 0 14 14 0 7 7 7)
+                   (0 14 14 14 0 0 0 0 0 0 0 0 0 0 0 7)
+                   (0 0 14 0 0 0 0 15 0 0 0 0 14 14 0 0)
+                   (7 0 0 0 15 0 15 0 15 0 0 14 14 14 14 0)
+                   (0 0 14 0 0 0 0 15 0 0 0 0 14 14 0 0)
+                   (0 14 14 14 0 0 0 0 0 0 0 0 0 0 0 7)
+                   (0 14 14 14 0 0 0 0 15 0 14 14 0 7 7 7)
+                   (0 0 0 0 0 0 14 0 0 0 14 14 0 7 7 7)
+                   (7 7 7 7 0 14 14 14 0 0 14 14 0 7 7 7)
+                   (7 7 7 7 0 14 14 0 0 0 0 0 0 7 7 7)
+                   (7 7 7 7 0 0 0 0 7 7 7 0 7 7 7 7))
+                 :mask-contents nil)
+  (make-instance 'pixmap :name :erase :bits-per-pixel 4
+                 :width 16 :height 15 :invert-p t :source "erase.bmp"
+                 :colors
+                 (vector black dark-red
+                         dark-green
+                         dark-yellow
+                         dark-blue
+                         dark-magenta
+                         dark-cyan
+                         light-gray
+                         gray red
+                         green yellow
+                         blue magenta
+                         cyan white)
+                 :contents
+                 '((7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7)
+                   (7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7)
+                   (7 7 0 0 0 0 0 0 0 7 7 7 7 7 7 7)
+                   (7 0 7 7 7 7 7 7 0 0 7 7 7 7 7 7)
+                   (7 0 7 7 7 7 7 7 0 3 0 7 7 7 7 7)
+                   (7 0 7 7 7 7 7 7 0 3 3 0 7 7 7 7)
+                   (7 7 0 15 11 15 11 15 11 0 3 3 0 7 7 7)
+                   (7 7 7 0 15 11 15 11 15 11 0 3 3 0 7 7)
+                   (7 7 7 7 0 15 11 15 11 15 11 0 3 3 0 7)
+                   (7 7 7 7 7 0 15 11 15 11 15 11 0 3 0 7)
+                   (7 7 7 7 7 7 0 15 11 15 11 15 11 0 0 7)
+                   (7 7 7 7 7 7 7 0 15 11 15 11 15 11 0 7)
+                   (7 7 7 7 7 7 7 7 0 0 0 0 0 0 7 7)
+                   (7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7)
+                   (7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7))
+                 :mask-contents nil))

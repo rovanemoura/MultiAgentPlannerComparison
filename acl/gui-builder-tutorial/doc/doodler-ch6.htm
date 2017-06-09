@@ -1,0 +1,821 @@
+<html>
+
+<head>
+<title>Chapter 6: Add Color Options to the Dialogs</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 6</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h2>Chapter 6: Add Color Options to the Dialogs</h2>
+
+<ol>
+  <li>Start Allegro CL if you exited in <a href="doodler-ch5.htm">Chapter 5</a>. Open the <strong>gui-builder-tutorial</strong>
+    project we left in <a href="doodler-ch5.htm">Chapter 5</a>. If you have restarted Allegro
+    CL, a dialog may appear asking if you want to open that project, along with any other
+    projects recently worked on. If not, use <strong>File | Open Project</strong> and choose
+    the file <strong>gui-builder-tutorial.lpr</strong> in your tutorial project directory,
+which is <strong>C:\Program
+Files\allegro-projects\gui-builder-tutorial\</strong> or
+<strong>allegro-projects/gui-builder-tutorial/</strong> on Linux if
+you used the defaults. The <strong>Recent</strong> menu may also provide a way to open the
+    project. You should now be where you stopped at the end of <a href="doodler-ch5.htm">Chapter
+    5</a>. </li>
+  <li>You will create a Background color palette and modify the coefficient-dialog to add a
+    color palette to it also. It will look like the following figure.</li>
+</ol>
+
+<blockquote>
+  <p><img src="ch6-1-bgcoef.jpg" width="501" height="184"
+  alt="ch6-1-bgcoef.bmp (276790 bytes)"></p>
+</blockquote>
+
+<h2>Create a color-mixin Class</h2>
+
+<blockquote>
+  <blockquote>
+    <h3>Creating a Shared Class</h3>
+    <p>Since the palette in the Coefficients dialog and the Background palette are going to
+    use the same controls and functions for color, a new shared class called <strong>color-mixin</strong>
+    will encapsulate their shared behaviors. The <strong>-mixin</strong> suffix means that you
+    will never create an instance of this class, but that you can create subclasses of it.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="3">
+  <li>Click on the <strong>New</strong> button on the Standard toolbar or choose <strong>File
+    | New</strong>. You are placed in an Untitled buffer in the <strong>Editor Workbook</strong>.</li>
+  <li>In the Untitled buffer, type in the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(in-package :common-graphics-user)
+
+(defclass color-mixin ()
+   ())</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>There is a nickname in the system for the :common-graphics-user package called
+  :cg-user. You may see this in some of the already compiled files in the final directory.</p>
+</blockquote>
+
+<ol start="5">
+  <li>Evaluate the <strong>defclass</strong>. Save the Untitled buffer as <strong>colorx.cl</strong>
+    in your tutorial directory.</li>
+  <li>You should have been queried (with a pop-up dialog) about adding the file to the current
+    project. If not, or if you answered No, add it now. If you did add it, skip to the next
+    step. In the <strong>Project Manager</strong> dialog, click on the Add button (it looks
+    like a big <strong>+</strong>). Choose <strong>Code</strong> from the dialog that appears
+    (meaning you are adding a source file) and add colorx.cl from your tutorial directory by
+    selecting its name from the list of files and clicking <strong>Open</strong>. The dialog
+    will close and you will see colorx.cl appear in the <strong>Project Manager</strong>.</li>
+  <li>In the <strong>Project Manager</strong> dialog, select coefficient-dialog and click on
+    the <strong>View Selected Form</strong> button. </li>
+  <li>In the coefficient-dialog form, sketch in a <strong>multi-picture-button</strong>
+    control below the coefficient controls. Refer to the diagram in Step 2 for the position of
+    the control. (Make the <strong>group-box</strong> surrounding the existing controls bigger
+    if necessary. You want the <strong>multi-picture-button</strong> in the group box.)</li>
+</ol>
+
+<blockquote>
+  <p><img src="mpb-icon.jpg" width="113" height="91" alt="mpb-icon.bmp (30994 bytes)"></p>
+</blockquote>
+
+<ol start="9">
+  <li>Inspect the new <strong>multi-picture-button</strong> control. Switch to the <strong>Properties</strong>
+    tab (if necessary) and change its <strong>name</strong> to :color-list and <strong>range</strong>
+    to nil. The buttons on the control will disappear, but you will see the sizing handles
+    while the control is selected.</li>
+  <li>On the coefficient-dialog form, sketch in a <strong>button</strong> control to the right
+    of the <strong>multi-picture-button</strong>. See the illustration at the beginning of
+    this section for reference. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>When Are Invisible Controls Being Overlapped?</h3>
+    <p>If you are concerned about overlapping your new button control with the now-invisible
+    multi-picture-button, try dragging it slowly to the left and intentionally overlapping the
+    two. Look for the visual cues.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="ch6-2-coef.jpg" width="429" height="265" alt="ch6-2-coef.bmp (341374 bytes)"></p>
+  </blockquote>
+</blockquote>
+
+<ol start="11">
+  <li>Inspect the new button and change the <strong>name</strong> to :color-button and the <strong>title</strong>
+    to Other Color... (note the three trailing dots).</li>
+  <li>Save the files by clicking on the <strong>Save All</strong> button on the standard
+    toolbar.</li>
+  <li>In the <strong>Project Manager</strong> dialog, select colorx and click on the <strong>View
+    Selected Code</strong> button.</li>
+  <li>In the colorx buffer, add the <strong>initialize-instance</strong> :after method and the
+    <strong>default-color-range</strong> function.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod initialize-instance :after 
+    ((dialog color-mixin) &amp;rest initargs)
+  (declare (ignore initargs))
+  (let ((color-list 
+         (find-component :color-list dialog)))
+    (when color-list
+       (setf (range color-list) 
+             (default-color-range))
+       (setf (recessed color-list) t))))
+
+(defun default-color-range ()
+  (list 
+    (make-instance 'button-info 
+      :name :black 
+      :image #S(rgb red 0 green 0 blue 0))
+    (make-instance 'button-info 
+      :name :red 
+      :image #S(rgb red 255 green 0 blue 0))
+    (make-instance 'button-info 
+      :name :green 
+      :image #S(rgb red 0 green 255 blue 0))
+    (make-instance 'button-info 
+      :name :blue 
+      :image #S(rgb red 0 green 0 blue 255))
+    (make-instance 'button-info 
+      :name :cyan 
+      :image #S(rgb red 0 green 255 blue 255))
+    (make-instance 'button-info 
+      :name :magenta 
+      :image #S(rgb red 255 green 0 blue 255))
+    (make-instance 'button-info 
+      :name :yellow 
+      :image #S(rgb red 255 green 255 blue 0))
+    (make-instance 'button-info 
+      :name :white 
+      :image #S(rgb red 255 green 255 blue 255))))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>What&#146;s going on?</h3>
+    <p>This enables both the Coefficients and the Background dialogs to fill their <strong>multi-picture-button</strong>
+    wells with color. You won&#146;t see the colors until Step 59 at the end of the Chapter.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>initialize-instance Customizes the Two Dialog Palettes</h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Initially, the list of colors in the Background dialog and the Coefficient dialog
+    palettes are the same. Therefore, whenever you create a subclass of <strong>color-mixin</strong>,
+    the range of the color list control should be initialized.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>In CLOS, you use <strong>initialize-instance</strong> to customize initialization for
+    all instances of a class. You usually add an :after method to <strong>initialize-instance</strong>
+    to avoid overriding the default CLOS initialization process. </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>In this case, the <strong>initialize-instance</strong> sets the range of the
+    :color-list multi-picture-button and the style of the control&#146;s display. Since this <strong>multi-picture-button</strong>
+    control holds color like a real paint box, you&#146;re using recessed wells for the
+    buttons.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="15">
+  <li>Save the colorx buffer.</li>
+  <li>In the <strong>General</strong> tab of the <strong>Project Manager</strong> dialog,
+    select coefficient-dialog and click on the <strong>View Selected Code</strong> button.</li>
+  <li>Change the <strong>defclass</strong> to match the following. In this case, it
+    doesn&#146;t matter whether <strong>color-mixin</strong> is the first or second
+    superclass. By convention, a <strong>&#150;mixin</strong> is the first superclass.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass coefficient-dialog (color-mixin dialog)
+   ())</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="18">
+  <li>Click on Save All to save your changes.</li>
+  <li>Run the Doodler using the <strong>Run</strong> button. In the Doodler, display the
+    Coefficients dialog and verify that the <strong>multi-picture-button</strong>'s color list
+    is displayed.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p>You won't be able to add color to the curve yet, but you can manipulate the control and
+    select different portions of it. The <strong>Other Color...</strong> button does nothing
+    as yet.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="20">
+  <li>When satisfied, click the <strong>Stop</strong> button to stop running the Doodler.</li>
+</ol>
+
+<h2>Adding Color to the Curve Drawing</h2>
+
+<ol start="21">
+  <li>Select the colorx buffer from the <strong>Editor Workbook</strong> to display the code.
+    Add the <strong>draw-curve</strong> :around method.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod draw-curve :around 
+    ((window basic-pane)
+     (curve cycloidal-curve))
+  (with-foreground-color (window (color curve))
+  (call-next-method)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="22">
+  <li>In the General tab of the <strong>Project Manager</strong> dialog, select curve-dialog
+    and click on the <strong>View Selected Code</strong> button. Change the <strong>show-coefficient-dialog</strong>
+    method to match the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod show-coefficient-dialog 
+    ((dialog curve-dialog)
+     &amp;optional (curve 
+                (make-instance 'cycloidal-curve)))
+  (let* ((coefficient-dialog 
+          (get-coefficient-dialog dialog))
+          (a-widget 
+           (find-component 
+             :a-coefficient-control
+             coefficient-dialog))
+          (b-widget 
+           (find-component 
+             :b-coefficient-control
+             coefficient-dialog))
+          (c-widget 
+           (find-component 
+             :c-coefficient-control
+             coefficient-dialog))
+          (color-list (find-component :color-list
+                        coefficient-dialog))
+          (color-name 
+            (find-color-name 
+              coefficient-dialog (color curve))))
+    (move-window coefficient-dialog 
+       (window-to-screen-units 
+         dialog (make-position 10 10)))
+
+    ;; initialize the value of the widgets
+    (setf (value a-widget) (a-coefficient curve))
+    (setf (value b-widget) (b-coefficient curve))
+    (setf (value c-widget) (c-coefficient curve))
+    (setf (value color-list)
+          (when color-name 
+            (list color-name)))
+    ;; display the dialog as modal
+    (when (pop-up-modal-dialog coefficient-dialog
+             :stream (owner dialog))
+       ;; if the user click on OK, change 
+       ;; the new curve
+       ;; to reflect the values shown in 
+       ;; the dialog
+
+       (setf (a-coefficient curve) (value a-widget))
+       (setf (b-coefficient curve) (value b-widget))
+       (setf (c-coefficient curve) (value c-widget))
+       (setf (color curve)
+             (current-color coefficient-dialog))
+       curve)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="23">
+  <li>Now select the colorx buffer to bring it forward in the <strong>Editor Workbook</strong>.
+    Add the <strong>current-color</strong> and <strong>find-color-name</strong> methods to the
+    buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod current-color ((dialog color-mixin))
+  (let* ((color-list 
+          (find-component :color-list dialog))
+         (value (first (value color-list))))
+    (if value
+      (color (find value (range color-list)
+               :key #'name))
+    ;; else
+     black)))
+
+(defmethod find-color-name ((dialog color-mixin) 
+                             &amp;optional (color black))
+  (let ((color-list 
+         (find-component :color-list dialog)))
+    (name (find color (range color-list)
+                :key #'color
+                :test #'rgb-equal))))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="24">
+  <li>Click on the coefficient-dialog buffer tab in the <strong>Editor Workbook</strong> to
+    display the code. Edit the <strong>test-curve</strong> method to match the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod test-curve ((dialog coefficient-dialog))
+  (let* ((curve 
+          (make-instance 'cycloidal-curve
+            :a-coefficient 
+            (value (find-component 
+                     :a-coefficient-control
+                     dialog))
+            :b-coefficient
+             (value (find-component 
+                      :b-coefficient-control
+                      dialog))
+            :c-coefficient 
+             (value (find-component 
+                      :c-coefficient-control
+                      dialog))
+            :color (current-color dialog)))
+         (curve-dialog (owner dialog))
+         (doodler (owner curve-dialog)))
+    (draw-curve (frame-child doodler) curve)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="25">
+  <li>Save all files by clicking on the <strong>Save All</strong> button.</li>
+  <li>Run the Doodler using the <strong>Run Project</strong> button. In the running Doodler,
+    draw and center the curve in the Curves dialog, and then use the <strong>Edit</strong>
+    button in the Curves dialog to edit that curve or the <strong>Add</strong> button to add
+    another curve. In the Coefficients dialog, choose a new color and try using the <strong>Test</strong>
+    button to see that the color is displayed correctly. The <strong>Other Color&#133;</strong>
+    button on the Curves dialog still won&#146;t work.</li>
+  <li>When you are satisfied, click the <strong>Stop</strong> button to stop running the
+    Doodler.</li>
+</ol>
+
+<h2>Activating the Other Color Button</h2>
+
+<ol start="28">
+  <li>In the <strong>Project Manager</strong> dialog, select coefficient-dialog and click on
+    the <strong>View Selected Form</strong> button.</li>
+  <li>In the coefficient-dialog form, inspect the <strong>Other Color&#133;</strong> button. </li>
+  <li>In the <strong>Other Color&#133;</strong> button Inspector (it will say :color-button
+    button in the history window at the top), select the <strong>Events</strong> tab. Click on
+    the Extended Editor button (the one with the three dots) for the <strong>on-change</strong>
+    property.</li>
+  <li>In the coefficient-dialog buffer, modify the <strong>on-change</strong> (<strong>coefficient-dialog-button-on-change</strong>)
+    function to match the following.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun coefficient-dialog-color-button-on-change 
+    (widget new-value old-value) 
+  (declare 
+    (ignore-if-unused widget new-value old-value)) 
+  (when new-value 
+     (add-other-color (parent widget))) 
+  (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="32">
+  <li>Switch to the colorx buffer and add the <strong>add-other-color</strong> and <strong>new-color-name</strong>
+    methods.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod add-other-color ((dialog color-mixin))
+  (let* ((new-color (ask-user-for-color
+                      :initial-color
+                      (current-color dialog)))
+         (color-list 
+          (find-component :color-list dialog))
+         (color-name nil))
+    ;; do nothing if user canceled
+    (when new-color
+       ;; do not add color if it already 
+       ;; is on the list.
+       (when 
+         (not 
+          (setf color-name 
+               (find-color-name dialog new-color)))
+          (setf color-name (new-color-name dialog))
+
+          (let* ((colors (range color-list)))
+            (setf (range color-list)
+                  (append colors
+                    (list 
+                      (make-instance 'button-info
+                        :name color-name
+                        :image new-color))))))
+
+       ;; change which color is pressed
+       (setf (value color-list) 
+             (list color-name)))))
+
+(defmethod new-color-name ((dialog color-mixin))
+  (let ((range 
+         (range (find-component :color-list dialog)))
+        (name nil))
+    (do ((index 1 (1+ index)))
+        (nil)
+       (setf name (intern
+                     (format nil 
+                             &quot;CUSTOM-COLOR-~d&quot; index)
+                            (find-package :keyword)))
+       ;; make sure no other colors already have
+       ;; the same name
+       (unless (find name range :key #'name)
+       (return name)))))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="33">
+  <li>Save all files by clicking on the <strong>Save All</strong> button.</li>
+  <li>Run the Doodler using the <strong>Run Project</strong> button. Try using the <strong>Other
+    Color&#133;</strong> button on the <strong>Coefficients</strong> dialog to choose another
+    color for the curve you are adding.</li>
+  <li>When you are satisfied, stop the running Doodler by clicking the <strong>Stop</strong>
+    button.</li>
+</ol>
+
+<h2>Create the Background Color Form</h2>
+
+<ol start="36">
+  <li>Click on the <strong>New Form</strong> button (or <strong>File | New Form</strong>) on
+    the standard toolbar and select dialog from the list of options. Click <strong>OK</strong>
+    to create the new form. You are creating the Background color dialog that will modify the
+    Doodler&#146;s background color.</li>
+  <li>Inspect the new form. Change (where necessary) its <strong>border</strong> to :palette, <strong>close-button</strong>
+    to nil, <strong>minimize-button</strong> to nil, <strong>maximize-button</strong> to nil, <strong>name</strong>
+    to :background-palette, <strong>child-p</strong> to nil, <strong>resizable</strong> to
+    nil, and <strong>title</strong> to Background.</li>
+</ol>
+
+<blockquote>
+  <p>Reshape the new form to look like the illustration.</p>
+</blockquote>
+
+<blockquote>
+  <p><img src="ch6-3-back.jpg" width="203" height="206" alt="ch6-3-back.bmp (126126 bytes)"></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>Changing the Location of a Form</h3>
+    <p>At any point, you can choose a new location to display the form by dragging it around
+    on your screen. Once you've saved the project, Lisp will remember the new location of the
+    form. It will display in that location when you run the project. This is true for any
+    non-modal dialog.</p>
+    <p>Drag the Background dialog over to the right of the Doodler window now and it will
+    reappear there when you reopen the project next time. (You may have to move the Doodler
+    form to the left.)</p>
+  </blockquote>
+</blockquote>
+
+<ol start="38">
+  <li>In the <strong>Project Manager</strong> dialog, select background-palette and click on
+    the <strong>View Selected Code</strong> button.</li>
+  <li>In the Editor buffer that comes up, add the following <strong>defclass</strong>:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass background-palette (color-mixin dialog)
+   ())</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="40">
+  <li>Evaluate the <strong>defclass</strong>.</li>
+  <li>Save the buffer to <em>background-palette.cl</em> in your tutorial project directory.</li>
+  <li>Inspect the background-palette form and change the <strong>class</strong> to
+    background-palette.</li>
+  <li>Add a <strong>multi-picture-button</strong> to the Background form. </li>
+  <li>Inspect the new <strong>multi-picture-button</strong>. Change its <strong>name</strong>
+    to :color-list and <strong>range</strong> to nil.</li>
+  <li>In the color-list Inspector, select the <strong>Events</strong> tab. Select the <strong>on-change</strong>
+    event and click on the <strong>Extended Editor</strong> button (the one with three dots).
+    The background-palette buffer will display with some skeleton code for the <strong>on-change</strong>
+    event (<strong>background-palette-color-list-on-change</strong>).</li>
+  <li>Modify the <strong>on-change</strong> function in the buffer to match the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun background-palette-color-list-on-change 
+    (widget new-value old-value)
+  (declare 
+    (ignore-if-unused widget new-value old-value))
+  (when new-value
+    (change-background-color (parent widget)))
+  (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="47">
+  <li>Now add the <strong>change-background-color</strong> method to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod change-background-color 
+    ((palette background-palette))
+  (let ((color (current-color palette))
+        (doodler (owner palette)))
+    (setf 
+      (background-color (frame-child doodler)) 
+      color)
+    (erase-window doodler)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="48">
+  <li>On the background-palette form, add a <strong>button</strong> control below the <strong>multi-picture-button</strong>.</li>
+  <li>Inspect the new button and change its <strong>name</strong> to :color-button and title
+    to <strong>Other Color...</strong>.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p>This is exactly like the button you put on the Coefficients dialog (in Step 10) since <strong>background-palette</strong>
+    also inherits from the <strong>color&#150;mixin</strong> class.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="50">
+  <li>In the inspector for the new button, select the <strong>Events</strong> tab. Select the <strong>on-change</strong>
+    event and click on the <strong>Extended Editor</strong> button (the one with three dots).
+    The background-palette buffer of the <strong>Editor Workbook</strong> will appear with
+    some skeleton code for the <strong>on-change</strong> event (<strong>background-palette-color-button-on-change</strong>).</li>
+  <li>In the background-palette buffer, modify the <strong>on-change</strong> function to
+    match the following.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun background-palette-color-button-on-change 
+    (widget new-value old-value)
+  (declare 
+    (ignore-if-unused widget new-value old-value))
+  (when new-value
+     (add-other-color (parent widget)))
+  (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="52">
+  <li>Now add the initialize-instance :after method to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod initialize-instance :after 
+    ((palette background-palette) &amp;rest initargs)
+  (declare (ignore initargs))
+  (let* ((pane (frame-child (owner palette)))
+         (color-name (find-color-name palette
+                       (or (background-color pane)
+         (default-background-color pane)))))
+    (initialize-value 
+     (find-component :color-list palette)
+     (list color-name))))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="53">
+  <li>In the <strong>Project Manager</strong> dialog, select doodler and click on the <strong>View
+    Selected Code</strong> button.</li>
+  <li>In the doodler buffer, add the <strong>initialize-instance</strong> :after method. This
+    method allows Doodler to bring up the Background dialog.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod initialize-instance :after 
+    ((window doodler) &amp;rest initargs)
+  (declare (ignore initargs))
+  (show-background-palette window)
+  (select-window window))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="55">
+  <li>Modify the doodler <strong>defclass</strong> to add the slot and the accessor for the
+    new dialog Doodler needs to open.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass doodler (bitmap-window)
+  ((doodler-curve-dialog
+    :accessor doodler-curve-dialog
+    :initform nil)
+   (doodler-background-palette
+    :initform nil
+    :accessor doodler-background-palette)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="56">
+  <li>Now add the <strong>show-background-palette</strong> method to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod show-background-palette 
+    ((window doodler))
+  (let ((palette 
+         (doodler-background-palette window)))
+    (unless palette
+      (setq palette
+            (make-background-palette 
+              :owner window))
+      (select-window palette)
+      (setf 
+        (doodler-background-palette window) 
+        palette))
+      (select-window palette)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="57">
+  <li>In the doodler buffer, modify the <strong>close</strong> :before method to match the
+    following. This completes the specialization of Doodler to accommodate, open, and close
+    the background-palette.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod close :before ((window doodler) &amp;key)
+  (let ((curve-dialog (doodler-curve-dialog window))
+        (background-palette
+          (doodler-background-palette window)))
+    (when (and (windowp curve-dialog)
+               curve-dialog)
+       (close curve-dialog))
+    (setf (doodler-curve-dialog window) nil)
+    (when (and (windowp background-palette)
+               background-palette)
+       (close background-palette))
+    (setf (doodler-background-palette window) nil)))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="58">
+  <li>Save all files by clicking on the <strong>Save All</strong> button on the standard
+    toolbar.</li>
+  <li>Run the Doodler by clicking the <strong>Run</strong> button.</li>
+  <li>Try everything. Congratulations! The tutorial is done. <strong>Stop</strong> the Doodler
+    when done testing.</li>
+</ol>
+
+<h2>Suggestions for further reading</h2>
+
+<ul>
+  <li>Graham, Paul, <em>ANSI Common Lisp</em>, Prentice Hall, 1996. ISBN 0-13-370875-6</li>
+</ul>
+
+<blockquote>
+  <p>Included with this tutorial is the <a href="ansi-common-lisp-on-clos.htm">CLOS chapter</a>
+  from this book. Many thanks to Paul Graham and Prentice Hall for their excellent
+  contribution.<br>
+  This book introduces Common Lisp with special attention to topics that have grown more
+  important recently including macros, optimization, object-oriented programming, and
+  generating HTML. Included are discussions and examples illustrating unique capabilities of
+  Common Lisp. Finally, it has a 100-page reference manual for ANSI CL that most people find
+  sufficient for everyday use.</p>
+</blockquote>
+
+<ul>
+  <li>Keene, Sonya E., <em>Object-Oriented Programming in Common Lisp</em>, Addison Wesley,
+    1989.</li>
+</ul>
+
+<blockquote>
+  <p>Provides a good introduction to CLOS and the use of CLOS in object oriented
+  programming. An advanced book that teaches you how to extend CLOS and design your own
+  language using CLOS.</p>
+</blockquote>
+
+<ul>
+  <li>Koschmann, Timothy, <em>The Common Lisp Companion</em>, John Wiley, 1990.</li>
+</ul>
+
+<blockquote>
+  <p>Designed to introduce Common Lisp to readers who have experience with other programming
+  languages.</p>
+</blockquote>
+
+<ul>
+  <li>Norvig, Peter, <em>Paradigms of AI Programming: Case Studies in Common Lisp</em>, Morgan
+    Kaufmann, 1992.</li>
+</ul>
+
+<blockquote>
+  <p>An excellent advanced book with many detailed real-world examples. Provides an in-depth
+  exposition of advanced AI programming techniques. It focuses on the programming techniques
+  necessary for building large AI systems, including object-oriented programming. This book
+  also serves as an advanced introduction to Common Lisp, with sections on the Loop macro,
+  CLOS and sequences, and some coverage of error handling, series, and the package facility.</p>
+</blockquote>
+
+<ul>
+  <li>Steele, Guy L. Jr., <em>Common LISP: The Language</em>. 2nd Edition, Digital Press,
+    1984.</li>
+</ul>
+
+<blockquote>
+  <p>A complete reference for almost-ANSI Common Lisp and CLOS.</p>
+</blockquote>
+
+<ul>
+  <li>Touretzky, David S., <em>Common LISP: A Gentle Introduction to Symbolic Computation</em>,
+    Benjamin/Cummings, 1990.</li>
+</ul>
+
+<blockquote>
+  <p>An introductory text for readers who want to learn the basics of Common Lisp.</p>
+</blockquote>
+
+<ul>
+  <li>Wilensky, Robert, <em>Common LISPcraft</em>, W. W. Norton, 1986.</li>
+</ul>
+
+<blockquote>
+  <p>An introductory text on the basics of Common Lisp for non-programmers.</p>
+</blockquote>
+
+<p><small><small>Copyright © 2001-2004 Franz Inc. All rights reserved.</small></small><br>
+</p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 6</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

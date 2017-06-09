@@ -1,0 +1,227 @@
+Segmentation fault (core dumped)
+rm: cannot remove 'downward.tmp.*': No such file or directory
+rm: cannot remove 'output': No such file or directory
+rm: cannot remove 'output.sas': No such file or directory
+rm: cannot remove 'plan_numbers_and_cost': No such file or directory
+rm: cannot remove 'elapsed.time': No such file or directory
+rm: cannot remove 'lama-output*': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/out.txt': No such file or directory
+./run-lama-first.sh: line 10: ././src/fast-downward.py: Permission denied
+cp: cannot stat '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+./plan.sh: line 110: 21342 Segmentation fault      (core dumped) ./map-core --eval "(progn (sb-ext:disable-debugger)
+			(let* (
+				(init-time (get-internal-real-time))
+				(solution (case '$FORMAT (sol \"$INP\")
+			        (ipc-num (solution-from-file \"$INP\"))
+			        (ipc (read-plan-from-file \"$INP\"))))
+			
+			)
+
+			(read-pddl-domain \"$DOM\")
+       			(read-pddl-problem \"$PROB\")
+			
+			(setf *agents* (get-init-agents \"$AG\"))
+			(setq parallel-plan
+ 	     			(mapcar #'(lambda(x) (cons (car x) (des-obfuscate (cdr x))))
+ 	             	(build-parallel-plan solution))
+			)
+			
+
+				 (setq *ma-pddl-alist*
+		   (with-open-file (infile \"filename.txt\" :direction :input :if-does-not-exist :ERROR)
+				       (read infile nil 'eof))
+				    )
+				
+				
+				  (write-solution-in-output-file \"$OUTP\" parallel-plan nil nil nil nil nil nil
+				     (elapsed-time init-time 'real-time) :ma-pddl-p t)
+			
+				)
+
+
+		    (quit))"
+
+real	0m0.246s
+user	0m0.004s
+sys	0m0.000s
+
+Segmentation fault (core dumped)
+rm: cannot remove 'downward.tmp.*': No such file or directory
+rm: cannot remove 'output': No such file or directory
+rm: cannot remove 'output.sas': No such file or directory
+rm: cannot remove 'plan_numbers_and_cost': No such file or directory
+rm: cannot remove 'elapsed.time': No such file or directory
+rm: cannot remove 'lama-output*': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/out.txt': No such file or directory
+./run-lama-first.sh: line 10: ././src/fast-downward.py: Permission denied
+cp: cannot stat '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+./plan.sh: line 110:  7468 Segmentation fault      (core dumped) ./map-core --eval "(progn (sb-ext:disable-debugger)
+			(let* (
+				(init-time (get-internal-real-time))
+				(solution (case '$FORMAT (sol \"$INP\")
+			        (ipc-num (solution-from-file \"$INP\"))
+			        (ipc (read-plan-from-file \"$INP\"))))
+			
+			)
+
+			(read-pddl-domain \"$DOM\")
+       			(read-pddl-problem \"$PROB\")
+			
+			(setf *agents* (get-init-agents \"$AG\"))
+			(setq parallel-plan
+ 	     			(mapcar #'(lambda(x) (cons (car x) (des-obfuscate (cdr x))))
+ 	             	(build-parallel-plan solution))
+			)
+			
+
+				 (setq *ma-pddl-alist*
+		   (with-open-file (infile \"filename.txt\" :direction :input :if-does-not-exist :ERROR)
+				       (read infile nil 'eof))
+				    )
+				
+				
+				  (write-solution-in-output-file \"$OUTP\" parallel-plan nil nil nil nil nil nil
+				     (elapsed-time init-time 'real-time) :ma-pddl-p t)
+			
+				)
+
+
+		    (quit))"
+
+real	0m0.301s
+user	0m0.004s
+sys	0m0.000s
+
+ SOLUTION FOUND!. See file /home/rovane/planners/pmr/PMR/temp/plan.out.pp
+
+Parallel-plan save in /home/rovane/planners/pmr/PMR/temp/plan.out.pp
+ SOLUTION FOUND!. See file ../plan.out
+
+real	0m1.100s
+user	0m1.320s
+sys	0m0.248s
+
+;;NIL, NIL, NIL, NIL, NIL
+;;Makespan: 31
+;;Plan length: 116
+;;Parallelization time: 0.03
+;;Total-time:0.00, assignment-time:0.00, planning-agents:15, public-goals:0
+  0: (NAVIGATE_USV USV1 AREA1 AREA16)
+  0: (NAVIGATE_UGV UGV3 AREA13 AREA24)
+  0: (NAVIGATE_USV USV3 AREA13 AREA24)
+  0: (PICKUP_BOX UGV1 UGV1STORE CDM1 AREA1 BOX3)
+  0: (NAVIGATE_UAV UAV1 AREA1 AREA18)
+  1: (NAVIGATE_USV USV1 AREA16 AREA18)
+  1: (NAVIGATE_UGV UGV3 AREA24 AREA23)
+  1: (TAKE_PICTURE USV3 AREA24 DISASTER2)
+  1: (NAVIGATE_UGV UGV1 AREA1 AREA3)
+  1: (TAKE_PICTURE UAV1 AREA18 DISASTER7)
+  2: (NAVIGATE_USV USV1 AREA18 AREA20)
+  2: (NAVIGATE_UGV UGV3 AREA23 AREA21)
+  2: (NAVIGATE_USV USV3 AREA24 AREA22)
+  2: (DROP_BOX UGV1 UGV1STORE AREA3 BOX3)
+  2: (NAVIGATE_UAV UAV1 AREA18 AREA20)
+  3: (NAVIGATE_USV USV1 AREA20 AREA19)
+  3: (PICKUP_BOX UGV3 UGV3STORE CDM3 AREA21 BOX4)
+  3: (COMMUNICATE_DATA USV3 CDM3 DISASTER2 AREA22 AREA21)
+  3: (NAVIGATE_UGV UGV1 AREA3 AREA4)
+  3: (TAKE_PICTURE UAV1 AREA20 DISASTER1)
+  4: (NAVIGATE_USV USV1 AREA19 AREA17)
+  4: (NAVIGATE_UGV UGV3 AREA21 AREA23)
+  4: (NAVIGATE_USV USV3 AREA22 AREA24)
+  4: (NAVIGATE_UGV UGV1 AREA4 AREA10)
+  4: (NAVIGATE_UAV UAV1 AREA20 AREA5)
+  5: (SAMPLE_WATER USV1 USV1STORE AREA17)
+  5: (NAVIGATE_UGV UGV3 AREA23 AREA24)
+  5: (NAVIGATE_USV USV3 AREA24 AREA13)
+  5: (NAVIGATE_UGV UGV1 AREA10 AREA13)
+  5: (TAKE_PICTURE UAV1 AREA5 DISASTER4)
+  6: (NAVIGATE_USV USV1 AREA17 AREA19)
+  6: (NAVIGATE_UGV UGV3 AREA24 AREA13)
+  6: (NAVIGATE_USV USV3 AREA13 AREA9)
+  6: (PICKUP_BOX UGV1 UGV1STORE CDM2 AREA13 BOX2)
+  6: (NAVIGATE_UAV UAV1 AREA5 AREA6)
+  7: (NAVIGATE_USV USV1 AREA19 AREA20)
+  7: (NAVIGATE_UGV UGV3 AREA13 AREA10)
+  7: (NAVIGATE_USV USV3 AREA9 AREA4)
+  7: (NAVIGATE_UGV UGV1 AREA13 AREA10)
+  7: (TAKE_PICTURE UAV1 AREA6 DISASTER6)
+  8: (NAVIGATE_USV USV1 AREA20 AREA18)
+  8: (TAKE_PICTURE UGV3 AREA10 DISASTER3)
+  8: (NAVIGATE_USV USV3 AREA4 AREA2)
+  8: (NAVIGATE_UGV UGV1 AREA10 AREA4)
+  8: (NAVIGATE_UAV UAV1 AREA6 AREA7)
+  9: (NAVIGATE_USV USV1 AREA18 AREA16)
+  9: (NAVIGATE_UGV UGV3 AREA10 AREA4)
+  9: (NAVIGATE_USV USV3 AREA2 AREA6)
+  9: (NAVIGATE_UGV UGV1 AREA4 AREA3)
+  9: (TAKE_PICTURE UAV1 AREA7 DISASTER5)
+ 10: (NAVIGATE_USV USV1 AREA16 AREA14)
+ 10: (NAVIGATE_UGV UGV3 AREA4 AREA3)
+ 10: (NAVIGATE_USV USV3 AREA6 AREA12)
+ 10: (NAVIGATE_UGV UGV1 AREA3 AREA15)
+ 10: (NAVIGATE_UAV UAV1 AREA7 AREA9)
+ 11: (NAVIGATE_USV USV1 AREA14 AREA2)
+ 11: (COMMUNICATE_DATA UGV3 CDM1 DISASTER3 AREA3 AREA1)
+ 11: (NAVIGATE_USV USV3 AREA12 AREA10)
+ 11: (NAVIGATE_UGV UGV1 AREA15 AREA16)
+ 11: (COMMUNICATE_DATA UAV1 CDM2 DISASTER1 AREA9 AREA13)
+ 11: (COMMUNICATE_DATA UAV1 CDM2 DISASTER4 AREA9 AREA13)
+ 11: (COMMUNICATE_DATA UAV1 CDM2 DISASTER5 AREA9 AREA13)
+ 11: (COMMUNICATE_DATA UAV1 CDM2 DISASTER6 AREA9 AREA13)
+ 11: (COMMUNICATE_DATA UAV1 CDM2 DISASTER7 AREA9 AREA13)
+ 12: (NAVIGATE_USV USV1 AREA2 AREA4)
+ 12: (NAVIGATE_UGV UGV3 AREA3 AREA15)
+ 12: (SAMPLE_WATER USV3 USV3STORE AREA10)
+ 12: (NAVIGATE_UGV UGV1 AREA16 AREA17)
+ 13: (NAVIGATE_USV USV1 AREA4 AREA9)
+ 13: (NAVIGATE_UGV UGV3 AREA15 AREA18)
+ 13: (NAVIGATE_USV USV3 AREA10 AREA12)
+ 13: (NAVIGATE_UGV UGV1 AREA17 AREA14)
+ 14: (NAVIGATE_USV USV1 AREA9 AREA13)
+ 14: (NAVIGATE_UGV UGV3 AREA18 AREA20)
+ 14: (NAVIGATE_USV USV3 AREA12 AREA6)
+ 14: (DROP_BOX UGV1 UGV1STORE AREA14 BOX2)
+ 15: (NAVIGATE_USV USV1 AREA13 AREA24)
+ 15: (NAVIGATE_UGV UGV3 AREA20 AREA19)
+ 15: (NAVIGATE_USV USV3 AREA6 AREA2)
+ 15: (NAVIGATE_UGV UGV1 AREA14 AREA17)
+ 16: (NAVIGATE_USV USV1 AREA24 AREA22)
+ 16: (DROP_BOX UGV3 UGV3STORE AREA19 BOX4)
+ 16: (NAVIGATE_USV USV3 AREA2 AREA4)
+ 16: (NAVIGATE_UGV UGV1 AREA17 AREA16)
+ 17: (NAVIGATE_USV USV1 AREA22 AREA21)
+ 17: (NAVIGATE_USV USV3 AREA4 AREA9)
+ 17: (NAVIGATE_UGV UGV1 AREA16 AREA1)
+ 18: (DROP_SAMPLE USV1 USV1STORE AREA21 AREA17 CDM3)
+ 18: (NAVIGATE_USV USV3 AREA9 AREA13)
+ 18: (PICKUP_BOX UGV1 UGV1STORE CDM1 AREA1 BOX1)
+ 19: (NAVIGATE_USV USV1 AREA21 AREA22)
+ 19: (DROP_SAMPLE USV3 USV3STORE AREA13 AREA10 CDM2)
+ 19: (NAVIGATE_UGV UGV1 AREA1 AREA3)
+ 20: (NAVIGATE_USV USV1 AREA22 AREA24)
+ 20: (NAVIGATE_USV USV3 AREA13 AREA9)
+ 20: (NAVIGATE_UGV UGV1 AREA3 AREA15)
+ 21: (NAVIGATE_USV USV1 AREA24 AREA13)
+ 21: (NAVIGATE_USV USV3 AREA9 AREA4)
+ 21: (NAVIGATE_UGV UGV1 AREA15 AREA18)
+ 22: (NAVIGATE_USV USV1 AREA13 AREA9)
+ 22: (NAVIGATE_USV USV3 AREA4 AREA5)
+ 22: (NAVIGATE_UGV UGV1 AREA18 AREA20)
+ 23: (NAVIGATE_USV USV1 AREA9 AREA4)
+ 23: (SAMPLE_WATER USV3 USV3STORE AREA5)
+ 23: (DROP_BOX UGV1 UGV1STORE AREA20 BOX1)
+ 24: (SAMPLE_WATER USV1 USV1STORE AREA4)
+ 24: (NAVIGATE_USV USV3 AREA5 AREA4)
+ 25: (NAVIGATE_USV USV1 AREA4 AREA2)
+ 25: (NAVIGATE_USV USV3 AREA4 AREA9)
+ 26: (NAVIGATE_USV USV1 AREA2 AREA1)
+ 26: (NAVIGATE_USV USV3 AREA9 AREA13)
+ 27: (DROP_SAMPLE USV1 USV1STORE AREA1 AREA4 CDM1)
+ 27: (NAVIGATE_USV USV3 AREA13 AREA24)
+ 28: (NAVIGATE_USV USV3 AREA24 AREA22)
+ 29: (NAVIGATE_USV USV3 AREA22 AREA21)
+ 30: (DROP_SAMPLE USV3 USV3STORE AREA21 AREA5 CDM3)
+

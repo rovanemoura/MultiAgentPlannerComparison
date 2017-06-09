@@ -1,0 +1,76 @@
+
+:nodes 
+(make-instance 'example-node-picture :name ':node25 :label
+               "Left-click the background to update the layout." :links
+               (list ':link111 ':link110) :color nil :node-box
+               (make-box 974 642 1091 719) :label-margin 4) 
+(make-instance 'example-node-picture :name ':menus :label
+               "And check out the other options on the right-click menus for node-pictures, link-lines, and the background."
+               :links (list ':link3 ':link1) :color nil :node-box
+               (make-box 1144 1038 1291 1143) :label-margin 4) 
+(make-instance 'example-node-picture :name ':drag-scroll :label
+               "Left-click and drag the background to scroll everything in any direction."
+               :links (list ':link46) :color
+               #S(rgb :red 128 :green 255 :blue 128) :node-box
+               (make-box 1414 852 1535 960) :label-margin 4) 
+(make-instance 'example-node-picture :name ':select-link :label
+               "Left-click a line to select it." :links
+               (list ':link3 ':link-clicks) :color nil :node-box
+               (make-box 1031 969 1114 1027) :label-margin 4) 
+(make-instance 'example-node-picture :name ':drag-link :label
+               "Left-click and drag a line to connect one of its ends to a different node."
+               :links (list ':link23 ':link-clicks) :color
+               #S(rgb :red 128 :green 255 :blue 128) :node-box
+               (make-box 1018 843 1128 938) :label-margin 4) 
+(make-instance 'example-node-picture :name ':connect-to-node :label
+               "Right-click a node and select \"Connect to Node\" to stretch a new link between two nodes."
+               :links (list ':link46 ':link36 ':link23 ':link1) :color
+               #S(rgb :red 255 :green 255 :blue 0) :node-box
+               (make-box 1195 886 1323 1005) :label-margin 4) 
+(make-instance 'example-node-picture :name ':new-node :label
+               "Right-click the background and select \"Add Node\" to create a new node."
+               :links (list ':link36 ':node-stuff) :color
+               #S(rgb :red 255 :green 255 :blue 0) :node-box
+               (make-box 1185 759 1335 839) :label-margin 4) 
+(make-instance 'example-node-picture :name ':drag-node :label
+               "Left-click and drag a node to move it around." :links
+               (list ':link110 ':node-stuff) :color
+               #S(rgb :red 128 :green 255 :blue 128) :node-box
+               (make-box 1133 649 1258 716) :label-margin 4) 
+(make-instance 'example-node-picture :name ':node27 :label
+               "Left-click a node to move it to the center." :links
+               (list ':link111) :color nil :node-box
+               (make-box 818 642 922 716) :label-margin 4) 
+(make-instance 'example-link-line :name ':link3 :node-picture-one
+               ':menus :node-picture-two ':select-link :color nil
+               :line-width 2 :line-dashing :solid) 
+(make-instance 'example-link-line :name ':link23 :node-picture-one
+               ':connect-to-node :node-picture-two ':drag-link :color
+               #S(rgb :red 0 :green 0 :blue 200) :line-width 3
+               :line-dashing :solid) 
+(make-instance 'example-link-line :name ':link-clicks :node-picture-one
+               ':drag-link :node-picture-two ':select-link :color nil
+               :line-width 2 :line-dashing :solid) 
+(make-instance 'example-link-line :name ':node-stuff :node-picture-one
+               ':new-node :node-picture-two ':drag-node :color
+               #S(rgb :red 0 :green 0 :blue 200) :line-width 3
+               :line-dashing :solid) 
+(make-instance 'example-link-line :name ':link1 :node-picture-one
+               ':connect-to-node :node-picture-two ':menus :color nil
+               :line-width 2 :line-dashing :solid) 
+(make-instance 'example-link-line :name ':link36 :node-picture-one
+               ':connect-to-node :node-picture-two ':new-node :color
+               #S(rgb :red 0 :green 170 :blue 0) :line-width 2
+               :line-dashing :solid) 
+(make-instance 'example-link-line :name ':link46 :node-picture-one
+               ':connect-to-node :node-picture-two ':drag-scroll :color
+               #S(rgb :red 0 :green 170 :blue 0) :line-width 2
+               :line-dashing :solid) 
+(make-instance 'example-link-line :name ':link110 :node-picture-one
+               ':drag-node :node-picture-two ':node25 :color nil
+               :line-width 2 :line-dashing :solid) 
+(make-instance 'example-link-line :name ':link111 :node-picture-one
+               ':node25 :node-picture-two ':node27 :color
+               #S(rgb :red 0 :green 0 :blue 200) :line-width 2
+               :line-dashing :solid) 
+(make-instance 'network-of-nodes :name ':sample-network) 

@@ -1,0 +1,152 @@
+Segmentation fault (core dumped)
+rm: cannot remove 'downward.tmp.*': No such file or directory
+rm: cannot remove 'output': No such file or directory
+rm: cannot remove 'output.sas': No such file or directory
+rm: cannot remove 'plan_numbers_and_cost': No such file or directory
+rm: cannot remove 'elapsed.time': No such file or directory
+rm: cannot remove 'lama-output*': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/out.txt': No such file or directory
+./run-lama-first.sh: line 10: ././src/fast-downward.py: Permission denied
+cp: cannot stat '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+./plan.sh: line 110: 20166 Segmentation fault      (core dumped) ./map-core --eval "(progn (sb-ext:disable-debugger)
+			(let* (
+				(init-time (get-internal-real-time))
+				(solution (case '$FORMAT (sol \"$INP\")
+			        (ipc-num (solution-from-file \"$INP\"))
+			        (ipc (read-plan-from-file \"$INP\"))))
+			
+			)
+
+			(read-pddl-domain \"$DOM\")
+       			(read-pddl-problem \"$PROB\")
+			
+			(setf *agents* (get-init-agents \"$AG\"))
+			(setq parallel-plan
+ 	     			(mapcar #'(lambda(x) (cons (car x) (des-obfuscate (cdr x))))
+ 	             	(build-parallel-plan solution))
+			)
+			
+
+				 (setq *ma-pddl-alist*
+		   (with-open-file (infile \"filename.txt\" :direction :input :if-does-not-exist :ERROR)
+				       (read infile nil 'eof))
+				    )
+				
+				
+				  (write-solution-in-output-file \"$OUTP\" parallel-plan nil nil nil nil nil nil
+				     (elapsed-time init-time 'real-time) :ma-pddl-p t)
+			
+				)
+
+
+		    (quit))"
+
+real	0m0.278s
+user	0m0.000s
+sys	0m0.000s
+
+Segmentation fault (core dumped)
+rm: cannot remove 'downward.tmp.*': No such file or directory
+rm: cannot remove 'output': No such file or directory
+rm: cannot remove 'output.sas': No such file or directory
+rm: cannot remove 'plan_numbers_and_cost': No such file or directory
+rm: cannot remove 'elapsed.time': No such file or directory
+rm: cannot remove 'lama-output*': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+rm: cannot remove '/home/rovane/planners/pmr/PMR/temp/out.txt': No such file or directory
+./run-lama-first.sh: line 10: ././src/fast-downward.py: Permission denied
+cp: cannot stat '/home/rovane/planners/pmr/PMR/temp/plan_lf': No such file or directory
+./plan.sh: line 110:  6282 Segmentation fault      (core dumped) ./map-core --eval "(progn (sb-ext:disable-debugger)
+			(let* (
+				(init-time (get-internal-real-time))
+				(solution (case '$FORMAT (sol \"$INP\")
+			        (ipc-num (solution-from-file \"$INP\"))
+			        (ipc (read-plan-from-file \"$INP\"))))
+			
+			)
+
+			(read-pddl-domain \"$DOM\")
+       			(read-pddl-problem \"$PROB\")
+			
+			(setf *agents* (get-init-agents \"$AG\"))
+			(setq parallel-plan
+ 	     			(mapcar #'(lambda(x) (cons (car x) (des-obfuscate (cdr x))))
+ 	             	(build-parallel-plan solution))
+			)
+			
+
+				 (setq *ma-pddl-alist*
+		   (with-open-file (infile \"filename.txt\" :direction :input :if-does-not-exist :ERROR)
+				       (read infile nil 'eof))
+				    )
+				
+				
+				  (write-solution-in-output-file \"$OUTP\" parallel-plan nil nil nil nil nil nil
+				     (elapsed-time init-time 'real-time) :ma-pddl-p t)
+			
+				)
+
+
+		    (quit))"
+
+real	0m0.341s
+user	0m0.000s
+sys	0m0.004s
+
+ SOLUTION FOUND!. See file /home/rovane/planners/pmr/PMR/temp/plan.out.pp
+
+Parallel-plan save in /home/rovane/planners/pmr/PMR/temp/plan.out.pp
+ SOLUTION FOUND!. See file ../plan.out
+
+real	0m0.661s
+user	0m0.748s
+sys	0m0.180s
+
+;;NIL, NIL, NIL, NIL, NIL
+;;Makespan: 9
+;;Plan length: 41
+;;Parallelization time: 0.03
+;;Total-time:0.00, assignment-time:0.00, planning-agents:15, public-goals:0
+  0: (NAVIGATE_USV USV1 AREA1 AREA2)
+  0: (NAVIGATE_USV USV3 AREA13 AREA9)
+  0: (PICKUP_BOX UGV1 UGV1STORE CDM1 AREA1 BOX1)
+  0: (PICKUP_BOX UGV3 UGV3STORE CDM2 AREA13 BOX2)
+  0: (NAVIGATE_UAV UAV1 AREA1 AREA12)
+  1: (NAVIGATE_USV USV1 AREA2 AREA4)
+  1: (NAVIGATE_USV USV3 AREA9 AREA8)
+  1: (NAVIGATE_UGV UGV1 AREA1 AREA3)
+  1: (NAVIGATE_UGV UGV3 AREA13 AREA10)
+  1: (TAKE_PICTURE UAV1 AREA12 DISASTER2)
+  2: (NAVIGATE_USV USV1 AREA4 AREA9)
+  2: (SAMPLE_WATER USV3 USV3STORE AREA8)
+  2: (TAKE_PICTURE UGV1 AREA3 DISASTER5)
+  2: (TAKE_PICTURE UGV3 AREA10 DISASTER3)
+  2: (NAVIGATE_UAV UAV1 AREA12 AREA7)
+  3: (SAMPLE_WATER USV1 USV1STORE AREA9)
+  3: (NAVIGATE_USV USV3 AREA8 AREA9)
+  3: (COMMUNICATE_DATA UGV1 CDM1 DISASTER5 AREA3 AREA1)
+  3: (NAVIGATE_UGV UGV3 AREA10 AREA4)
+  3: (TAKE_PICTURE UAV1 AREA7 DISASTER4)
+  4: (NAVIGATE_USV USV1 AREA9 AREA4)
+  4: (NAVIGATE_USV USV3 AREA9 AREA13)
+  4: (NAVIGATE_UGV UGV1 AREA3 AREA5)
+  4: (NAVIGATE_UGV UGV3 AREA4 AREA3)
+  4: (NAVIGATE_UAV UAV1 AREA7 AREA8)
+  5: (NAVIGATE_USV USV1 AREA4 AREA2)
+  5: (DROP_SAMPLE USV3 USV3STORE AREA13 AREA8 CDM2)
+  5: (NAVIGATE_UGV UGV1 AREA5 AREA11)
+  5: (COMMUNICATE_DATA UGV3 CDM1 DISASTER3 AREA3 AREA1)
+  5: (TAKE_PICTURE UAV1 AREA8 DISASTER1)
+  6: (NAVIGATE_USV USV1 AREA2 AREA1)
+  6: (NAVIGATE_UGV UGV1 AREA11 AREA9)
+  6: (NAVIGATE_UGV UGV3 AREA3 AREA5)
+  6: (NAVIGATE_UAV UAV1 AREA8 AREA9)
+  7: (DROP_SAMPLE USV1 USV1STORE AREA1 AREA9 CDM1)
+  7: (DROP_BOX UGV1 UGV1STORE AREA9 BOX1)
+  7: (NAVIGATE_UGV UGV3 AREA5 AREA11)
+  7: (COMMUNICATE_DATA UAV1 CDM2 DISASTER1 AREA9 AREA13)
+  7: (COMMUNICATE_DATA UAV1 CDM2 DISASTER2 AREA9 AREA13)
+  7: (COMMUNICATE_DATA UAV1 CDM2 DISASTER4 AREA9 AREA13)
+  8: (DROP_BOX UGV3 UGV3STORE AREA11 BOX2)
+

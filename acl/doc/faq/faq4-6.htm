@@ -1,0 +1,140 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>Allegro CL FAQ: 4.6: Allegro CL LITE and Allegro CL Trial</title>
+</head>
+
+<body>
+
+<h3>4.6: Allegro CL Trial</h3>
+
+<p>(The TRIAL edition, available at no cost for Windows, Linux, LinuxPPC, MacOS X, and
+FreeBSD, is a restricted version of Allegro CL. See the Franz Inc. home page (<a
+href="http://www.franz.com">www.franz.com</a>) for more information on the Trial version.)</p>
+
+<blockquote>
+  <p><a href="#461">Q 4.6-1) What about patches for an ACL Trial image?</a><br>
+  <a href="#462">Q 4.6-2) When I try to run Allegro CL Trial, it fails with the error
+  &quot;missing or invalid license file&quot;. Why?</a><br>
+  <a href="#463">Q 4.6-3) Why is there only one image with Trial (ANSI with the IDE)? How do
+  I make other images?</a></p>
+</blockquote>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="461"></a><strong>Q 4.6-1)</strong> What about patches for an ACL Trial image?</p>
+
+<p><strong>A 4.6-1)</strong> Patches work for the Trial image just like they do for all
+Allegro CL images. Just follow the instructions for getting patches and building patched images
+in <a href="../introduction.htm">introduction.htm</a>.</p>
+
+<hr>
+
+<p><a name="462"></a><strong>Q 4.6-2)</strong> When I try to run Allegro CL Trial, it
+fails with the error &quot;missing or invalid license file&quot;. Why?</p>
+
+<p><strong>A 4.6-2)</strong> The license file you received from the URL sent to you by
+email after you requested a Trial version must be saved to the file <em>devel.lic</em> in
+the Allegro directory. Because Windows tools for saving files are often mysterious (since
+they automatically do what Windows thinks you want to do), the file is often saved an <em>devel.lic.txt</em>
+or <em>devel.lic.htm</em>, rather than devel.lic. You can see there is a problem if you
+look at the file in the Windows Explorer and the type is shown to be <em>anything</em>
+other than LIC file. If the file has a type that is anything other than LIC, select the
+file in the Windows Explorer, right click and choose <strong>Rename</strong> from the menu
+that appears. Then type `devel.lic'. You may get a warning saying that changing a type
+often is destabilizing and asking if you really want to do it. Answer yes, you really do.
+(UNIX users rarely have this problem because file saving is more transparent on UNIX.) </p>
+
+<p>Now you have a file whose name and type are devel.lic in the Allegro directory. If
+Allegro CL still will not start, the file is presumably invalid rather than missing. Look
+at it using a text editor (like Notepad in Windows and Emacs in UNIX). It should have a
+bunch of comment lines at the top (lines starting with `;;'), then a Lisp form starting
+`(:lisp' and including some encrypted text string, followed by a closing parenthesis.
+Finally, there is the comment line `;; END OF FILE'.</p>
+
+<p>If there is additional material (such as HTML markers), remove them and save the file.</p>
+
+<p>You can get a new license file by going to the Download section of the Franz Inc. web
+site and starting to download the Trial version again. Immediately after accepting the
+license agreement, a page appears explaining how to download. On that page, it tells you
+what to do if you have lost your license. Follow those instructions (being sure to specify
+the same email address used for the original download). A copy of your license file will
+be mailed to you.</p>
+
+<hr>
+
+<p><a name="463"></a><strong>Q 4.6-3)</strong> Why is there only one image with Trial (ANSI
+with the IDE)? How do I make other images?</p>
+
+<p><strong>A 4.6-3)</strong> To make the downloadable file as small as possible, we have
+only included one Allegro CL image, one that includes the IDE and is in International
+&quot;ANSI&quot; mode (case insensitive upper, as opposed to case sensitive lower of
+&quot;Modern&quot; images). </p>
+
+<p>The other images which are commonly found in an Allegro CL installation are: </p>
+
+<table>
+  <tr>
+    <td width="20%"><b>mlisp</b> </td>
+    <td width="80%">Modern base Lisp image, international (16-bit characters) </td>
+  </tr>
+  <tr>
+    <td width="20%"><b>alisp</b> </td>
+    <td width="80%">ANSI base Lisp image, international (16-bit characters) </td>
+  </tr>
+  <tr>
+    <td width="20%"><b>allegro</b> </td>
+    <td width="80%">Modern IDE image, international (16-bit characters) </td>
+  </tr>
+  <tr>
+    <td width="20%"><b>alisp8</b> </td>
+    <td width="80%">ANSI base Lisp image, 8-bit characters (not available with trial) </td>
+  </tr>
+  <tr>
+    <td width="20%"><b>mlisp8</b> </td>
+    <td width="80%">Modern base Lisp image, 8-bit characters (not available with trial) </td>
+  </tr>
+</table>
+
+<p>To build one of the available above images (the 8-bit images are unavailable), start up
+<b>allegro-ansi.exe</b> and evaluate one or more of the following forms in the Debug
+window: </p>
+
+<pre>
+  ;; mlisp:
+  (progn
+    (build-lisp-image &quot;mlisp.dxl&quot; :case-mode :case-sensitive-lower
+                      :include-ide nil :restart-app-function nil)
+    (sys:copy-file &quot;sys:allegro-ansi.exe&quot; &quot;sys:mlisp.exe&quot;))
+
+  ;; alisp:
+  (progn
+    (build-lisp-image &quot;alisp.dxl&quot; :case-mode :case-insensitive-upper
+                      :include-ide nil :restart-app-function nil)
+    (sys:copy-file &quot;sys:allegro-ansi.exe&quot; &quot;sys:alisp.exe&quot;))
+
+  ;; allegro:
+  (progn
+    (build-lisp-image &quot;allegro.dxl&quot; :case-mode :case-sensitive-lower)
+    (sys:copy-file &quot;sys:allegro-ansi.exe&quot; &quot;sys:allegro.exe&quot;))
+</pre>
+
+<p>Evaluating any of the above forms does not add a menu item to the Start Menu. To run
+the resulting image, you will need to run the executable created in each form. </p>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq4-7.htm">4.7 OLE</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq4-5.htm">4.5. Runtime</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999, 2000, 2002, 2004, Franz Inc., Berkeley, CA.&nbsp; All rights
+reserved.</small><br>
+<small>$Revision: 1.4 $</small></p>
+</body>
+</html>

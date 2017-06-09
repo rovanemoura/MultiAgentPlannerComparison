@@ -1,0 +1,401 @@
+<html>
+  <head>
+    <title>Getting started</title>
+  </head>
+
+  <body>
+    <h1><a name="tutorial">Getting started with ORBLink: A tutorial</a></h1>
+<hr>
+<p>
+<h2> Prerequisites for working through the tutorial</h2>
+These are the prerequisites for running the tutorial:
+<ol>
+<li>You should be able to load Allegro Common Lisp and ORBLink.
+<li>You should have some familiarity with CORBA
+<li>You should have read the <a href="mapping.htm">IDL/Lisp mapping document</a>.
+<li>You should know where the ORBLink home directory is located.
+</ol>
+<p>
+
+However, even if you do not have all the prerequisites, you might find the tutorial useful to get an idea
+of what an ORBLink application entails.
+<p>
+
+Because of the length of this tutorial, you may find it more convenient to print out rather than to read on-line.
+<h2> Overview of the tutorial </h2>
+In this tutorial, we will work through a very simple example of implementing IDL in Lisp and then invoking the Lisp client.
+After doing this, we will see how to modify the server itself on the fly.
+<p>
+
+We will assume that there are two distinct Lisp worlds that have been started: one is
+called the <em>server</em> and the other the <em>client</em>. 
+<p>
+
+Commands that should be typed into the server or client listener are
+prefaced with <code>[server-listener]USER></code> or
+<code>[client-listener]USER></code> in the text below.
+<p>
+
+In broad terms, to start our application we will:
+<ul>
+<li>start a server, 
+<li>start a client, 
+<li>invoke methods from the client to the server. 
+</ul>
+<p>
+
+Our tasks are thus logically partitioned into two categories: <em>server-side</em> and <em>client-side</em>.
+<h3 align=center>Server side steps</h3>
+<ol>
+<li><a href="#serverloadorblink">Load ORBLink</a>
+<li><a href="#servercompiletheidl">Compile the IDL on the server</a>
+<li><a href="#defineclasses">Define the implementation classes and methods</a>
+<li><a href="#instantiate">Instantiate a server object</a>
+<li><a href="#publish">Publish the IOR of the server object</a>
+</ol>
+<h3 align-center>Client side steps</h3>
+<ol>
+<li><a href="#clientloadorblink">Load ORBLink on the client</a>
+<li><a href="#clientloadorblink">Compile the IDL on the client</a>
+<li><a href="#clientproxy">Retrieve the IOR of the server object and generate a client proxy from this IOR</a>
+<li><a href="#clientinvoke">Invoke methods on the client proxy</a>. 
+<p>
+These method invocations will result
+in the forwarding of remote requests to the server object.
+</ol>
+<p>
+
+It is important to note that either the client or the server side can be implemented in any CORBA-compliant
+language; that the client or server process can reside on the same or on a different computer in numerous platforms; and that
+the overall structure of these steps is the same for any language/platform configuration.
+<p>
+
+After these basic steps we will show how a Lisp <a href="#servermodification">server</a> or 
+<a href="#clientmodification">client</a> can be modified dynamically.
+<p>
+
+Let us, thus, begin by starting the server side:
+<p>
+
+<h2><a name="serverloadorblink">Loading ORBLink on the server</a></h2>
+<p>
+
+The Lisp source code for this example is included in the directory <a href="../examples/grid/cl/readme.htm">examples/grid/cl/</a>.
+You can load the example code from any directory. However, for specificity we will assume here that the current working directory is the root of the ORBLink home installation. You can use the <code>:cd</code> from within a Lisp listener to set the current working directory of the listener, e.g.
+<pre>
+[server-listener]USER> :cd /usr/acl-5/code/orblink
+[server-listener]USER> (require :orblink)
+</pre>
+<p>
+
+We recommend as well setting the current package to <code>user</code>:
+<pre>
+:package :user
+</pre>
+<p>
+
+<h2><a name="servercompiletheidl">Compile the IDL on the server</a></h2>
+The <a href="../examples/grid/idl/grid.idl">IDL source code</a> for this example encapsulates the interface to a simple two-dimensional array of strings:
+<pre>
+module example {
+  interface grid;
+  interface grid {
+    readonly attribute short height;
+    readonly attribute short width;
+    void set(
+      in short n,
+      in short m,
+      in string value
+    );
+    string get(
+      in short n,
+      in short m
+    );
+  };
+};
+</pre>
+<p>
+
+To compile the IDL, give the pathname of the IDL as the argument to the IDL compiler:
+<p>
+
+<pre>
+[server-listener]USER>  (corba:idl "examples/grid/idl/grid.idl")
+</pre>
+This will define the classes <code>example:grid</code>, <code>example:grid-proxy</code>, and
+<code>example:grid-servant</code>. The <code>corba:idl</code> function will return an Interface Repository object that
+encapsulates in CORBA compliant format the definitions in the <a href="../examples/grid/idl/grid.idl">IDL file</a>.
+<p>
+
+The class <code>example:grid-servant</code> already has defined slots named <code>op:width</code> and 
+<code>op:height</code>, corresponding to the attributes in the IDL definition of the <code>grid</code> interface. These slots have pre-defined readers
+named <code>op:width</code> and <code>op:height</code> with corresponding initialization arguments
+<code>:width</code> and <code>:height</code>.
+<p>
+
+<h2><a name="defineclasses">Define the implementation classes and methods</a></h2>
+In order to write a server for the <code>grid</code> interface, it is first necessary to define a class
+that extends <code>example:grid-servant</code> (technically this step is unnecessary, insofar as the new methods could
+be defined on the <code>example:grid-servant</code> class directly, but this usage would be poor style.
+<p>
+
+We will name our user-defined class, which extends <code>example:grid-servant</code>, <code>user::grid-implementation</code>.
+<p>
+
+Our class <code>user::grid-implementation</code> will extend <code>example:grid-servant</code> and will include a single
+extra slot named <code>array</code> that holds the actual values in the grid.
+<p>
+
+The <code>example:grid-servant</code> class defines slots named <code>op:width</code> and <code>op:height</code> and, since these are <code>readonly</code>
+attributes, it defines readers of the same name. Our <code>grid-implementation</code> will add default initforms to these slots
+of values <code>4</code> and <code>5</code> respectively. Users who wish to initialize the grid with a different size can do so using the 
+automatically defined <code>:width</code> and <code>:height</code> initargs.
+<p>
+
+Our class definition thus looks like this (or see the file <a href="../examples/grid/cl/grid-implementation.cl">examples/grid/cl/grid-implementation.cl</a>):
+<p>
+
+<pre>
+(defclass grid-implementation (example:grid-servant)
+  (
+   (op:width  :initform 4)
+   (op:height :initform 5)
+   (array)))
+</pre>
+We define an initializer for this class that simply initializes the
+array to the size specified by the values of the slots named <code>op:width</code>
+and <code>op:height</code>, with initial element the string <code>"initial"</code>:
+<pre>
+(defmethod initialize-instance :after ((this grid-implementation) &rest args)
+  (setf (slot-value this 'array)
+    (make-array `(,(op:width this) ,(op:height this)) :initial-element "Initial")))
+</pre>
+<p>
+
+Finally, we implement the IDL operations named <code>get</code> and <code>set</code>. Because these are IDL operations,
+their implementation must be via the <code>corba:define-method</code> macro. The syntax
+of <code>corba:define-method</code> is specified as part of the CORBA IDL/Lisp mapping and closely follows
+the syntax of the usual <code>defmethod</code> macro.
+<p>
+
+For example the <code>get</code> method is implemented as:
+<p>
+
+<pre>
+(corba:define-method get ((this grid-implementation) row column)
+  (aref (slot-value this 'array) row column))
+</pre>
+<p>
+
+You should now load the file that contains the definitions of the grid implementation class and its
+associatiated methods:
+<pre>
+[server-listener]USER> :ld examples/grid/cl/grid-implementation.cl
+</pre>
+<p>
+
+<h2><a name="instantiate">Instantiate a server object</a></h2>
+We can now verify that the appropriate classes have been loaded by instantiating an instance
+of <code>user::grid-implementation</code>:
+
+<p>
+
+<pre>
+[server-listener]USER> (setq test-grid (make-instance 'grid-implementation))
+[server-listener]USER> (op:set test-grid 1 2 "This is a test.")
+[server-listener]USER> (op:get test-grid 1 2)
+---> "This is a test"
+</pre>
+
+<p>
+
+(Note that not all responses from the Lisp listeners are printed here).
+
+<p>
+
+The ORB itself is only involved implicitly in this
+computation; there is no marshalling or unmarshalling, and no socket
+connections, involved. The <code>op:get</code> and <code>op:set</code> methods are normal CLOS
+methods. 
+<h2> <a name="publish">Publishing the IOR</a></h2>
+In order to invoke methods on <code>test-grid</code> remotely, it is
+necessary to publish the IOR (interoperable object reference) of
+<code>test-grid</code>.
+
+<p>
+
+The IOR of the <code>test-grid</code> object can be obtained by invoking the
+<code>op:object_to_string</code> method on the ORB itself. The ORB is always bound
+to <code>corba:orb</code>:
+<pre>
+USER>	(op:object_to_string corba:orb test-grid)
+---> [a long string of characters beginning with "IOR"]
+</pre>
+As a side effect of computing this string, called a <em>stringified IOR</em>, a 
+TCP socket listener has been started that waits from invocations on the <code>test-grid</code> object.
+Since no client yet knows the IOR of <code>test-grid</code>, however, no invocations can be forthcoming until
+we make this IOR available to a client.
+<p>
+
+The simplest way to make the IOR available is for the server to write the IOR to a file that is then
+read by the client. This method is not particularly general, of course, but it will suffice to run simple
+examples. Choose a file for storing the IOR that is both writeable by the server and that
+can be read by any client. For example, you can try using the filename <code>[directory]/grid.ior</code> where the string
+"[directory]" in the following should be replaced by some directory to which you have write access:
+<pre>
+USER> (orblink:write-ior-to-file test-grid "[directory]/grid.ior")
+</pre>
+You should verify now that the IOR string you computed above has indeed been
+written to the file <code>[directory]/grid.ior</code>. Note that you can examine the source
+to the <code>write-ior-to-file</code> function in the file <a href="../examples/ior-io/cl/sample-ior-io.cl">examples/ior-io/cl/sample-ior-io.cl</a>:
+<pre>
+(defun orblink:write-ior-to-file (object pathname)
+  "Writes the IOR of object, the first argument, to the file denoted by pathname, the
+  second argument. Because this routine is primary explanatory, little error checking is
+  performed. If *default-ior-directory* is non-nil, pathname is first merged with
+  *default-ior-directory*"
+  (when *default-ior-directory*
+    (setq pathname (merge-pathnames pathname *default-ior-directory*)))
+  (ensure-directories-exist pathname)	; Create intermediate directories if necessary
+  (with-open-file
+      (stream pathname :direction :output :if-exists :supersede)
+    (format stream ("~A" (op:object_to_string corba:orb object)))
+    (format t "Wrote ior to file: ~a~%" pathname)
+    (force-output)
+    t))
+</pre>
+<p>
+
+<h2><a name="clientloadorblink">Starting the client: Load ORBLink and compile the IDL on the client</a></h2>
+Now that the IOR of the <code>test-grid</code> object has been published in a "well-known" place, a client
+can bind to it. You should start a new Lisp world for this portion of the tutorial, perhaps
+on a different machine, and then restart ORBLink and recompile the file <code>examples/grid/idl/grid.idl</code>.
+Thus there are now two Lisp listeners: the client and the server. (In fact this example will work just as well if the client and
+server are implemented in the same image and the same listener, but it is clearer for the exposition to separate them).
+<pre>
+[client-listener]USER> (require :orblink)
+[client-listener]USER> (corba:idl "examples/grid/idl/grid.idl")
+</pre>
+<p>
+
+<h2><a name="clientproxy">Generate a client proxy for the server object</a></h2>
+The process of generating a proxy is conceptually divided into two phases: reading the IOR and 
+converting the IOR into a proxy. 
+<p>
+
+Since the IOR now resides in the file <code>[directory]/grid.ior</code>, it may be read simply via:
+<pre>
+[client-listener]USER> (setq ior
+                         (with-open-file (stream "[directory]/grid.ior" :direction :input)
+                           (read-line stream)))
+</pre>
+<p>
+
+This form should return, in the client listener, the same long string that was returned above in the server listener
+as the result of calling <code>op:object_to_string</code> on the <code>test-grid</code> object.
+<p>
+
+The next step is to create a proxy from this IOR. This can be done using the CORBA compliant 
+<code>string_to_object</code> operation on the ORB:
+<p>
+
+<pre>
+[client-listener] USER> (setq test-grid-proxy (op:string_to_object corba:orb ior))
+</pre>
+<p>
+
+This should return an instance of type <code>example:grid-proxy</code>. This proxy
+may then be used to invoke operation on the server-side object in the server image from the client image.
+<p>
+
+Note: the preceding two steps, reading an IOR from a file and forming a proxy from that IOR could have
+been coalesced into the single invocation:
+<pre>
+	            (setq test-grid-proxy (orblink:read-ior-from-file "[directory]/grid.ior))
+</pre>
+The source code for the <code>orblink:read-ior-from-file</code> function is also located in the file
+<a href="../examples/ior-io/cl/sample-ior-io.cl">examples/ior-io/cl/sample-ior-io.cl</a>.
+<h2><a name="clientinvoke">Invoke methods on the client proxy</h2>
+You can now invoke methods on the <code>test-grid-proxy</code> object using exactly the
+same calling sequence as you did to invoke methods directly on the <code>test-grid</code> object:
+<p>
+
+<pre>
+[client-listener]USER> (op:set test-grid-proxy 1 3 "proxy-test")
+[client-listener]USER> (op:get test-grid-proxy 1 3)
+---> "proxy-test"
+</pre>
+<p>
+
+You can verify from the server world that these values really have changed:
+<p>
+
+<pre>
+[server-listener]USER> (op:get test-grid 1 3)
+----> "proxy-test"
+</pre>
+<p>
+
+This concludes the first part of the tutorial.
+<p>
+
+Next, we discuss the issue of modifying the server on the fly.
+<p>
+
+<h2><a name="servermodification">Modifying the server</a></h2>
+One convenient feature of Lisp is its ability to add functionality to the server without stopping and restarting the
+application. To demonstrate this functionality, we presume that it is desired to augment the <code>grid</code> object with a new
+attribute, say <code>name</code>. Make a copy of the file <a href="../examples/grid/idl/grid.idl">examples/grid/idl/grid.idl</a> and 
+modify the copy by adding the line
+<pre>
+           attribute string name;
+</pre>
+in the interface definition. Now recompile the modified file using the <code>corba:idl</code> function.
+<p>
+
+For your convenience the modified version is in the file <a href="../examples/grid/idl/grid-modified.idl">examples/grid/idl/grid-modified.idl</a> and thus
+the recompilation step is done via:
+<pre>
+[server-listener]USER> (corba:idl "examples/grid/idl/grid-modified.idl")
+</pre>
+<p>
+
+If you now evaluate the form <code>(describe test-grid)</code> on the server side, you will see that a new
+slot named <code>name</code> has indeed been added to the <code>test-grid</code> object. Now let's set the value of this new slot:
+<pre>
+[server-listener]USER> (setf (op:name test-grid) "Modified grid")
+[server-listener]USER> (op:name test-grid)
+----> "Modified grid"
+</pre>
+<h2><a name="clientmodification">Modifying the client</a></h2>
+In order for the client to invoke the newly defined methods on
+the <code>test-grid</code> proxy, it also needs to recompile the IDL source:
+<pre>
+[client-listener]USER> (corba:idl "examples/grid/idl/grid-modified.idl")
+</pre>
+<p>
+
+Now the client can invoke the new methods:
+<pre>
+[client-listener]USER> (op:name test-grid-proxy)
+----> "Modified grid"
+[client-listener]USER> (setf (op:name test-grid-proxy) "client-modified name")
+[client-listener]USER> (op:name test-grid-proxy)
+----> "client-modified name"
+</pre>
+<h2>Moving on </h2>
+ORBLink offers many features not discussed in this introductory tutorial, among which are 
+<a href="exceptions.htm">customizable exception handling</a>, 
+handling many other data types, support for <a href="naming.htm">persistent IORs</a>,
+<code>any</code> handling, and so forth.
+<p>
+
+<h2>Parting words on the tutorial</h2>
+CORBA is not always as simple as in this case. In general, there will
+be configuration problems in starting up different ORBs: all sorts of
+environment variables have to be set up correctly and various daemons
+need to be started. Once these configuration issues are resolved, the
+actual invocation of methods on remote objects is normally
+straightforward.
+</body>
+</html>

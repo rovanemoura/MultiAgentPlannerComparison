@@ -1,0 +1,1 @@
+java -classpath .;c:\jdk1.1.6\lib\classes.zip;i:visibroker\lib\vbjorb.jar;i:visibroker\lib\vbjapp.jar;i:klg\jclass\chart\lib\jcchart220-classes.zip;i:klg ChartDrawer h:\stiller\orblink\examples\chart\dataset.ior

@@ -1,0 +1,41 @@
+package floods;
+
+import cartago.*;
+
+public class VehicleUav extends Artifact {
+	
+	void init(String area) {
+		defineObsProperty("at",area);
+	}
+	
+	@OPERATION void navigate(String from, String to) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		if (cond1.stringValue().equals(from)) {
+			Thread.sleep(10);
+			getObsProperty("at").updateValue(to);
+		} else {
+		failed("Action navigate has failed.");
+    }
+	}
+	
+	@OPERATION void take_picture(String area, String disaster, String areas) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		if (cond1.stringValue().equals(area) && areas.contains(area)) {
+			Thread.sleep(10);
+			defineObsProperty("have_picture", disaster);
+		} else {
+			failed("Action take_picture has failed.");
+	    }
+	}
+	
+	@OPERATION void communicate_data(String to, String to2, String disaster, String disaster2, String areas) throws InterruptedException {
+		
+		if (cond1.stringValue().equals(area) && areas.contains(area)) {
+			Thread.sleep(10);
+			defineObsProperty("communicated_data", flood);
+			removeObsPropertyByTemplate("have_picture", flood);
+		}
+	}	
+	
+}
+

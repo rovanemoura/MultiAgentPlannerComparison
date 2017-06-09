@@ -1,0 +1,140 @@
+# Sample .twmrc
+# $Header: /repo/cvs.copy/cl/sample-files/dot-twmrc,v 1.4 1993/05/05 03:47:38 layer Exp $
+# (All lines that begin with '#' are comments)
+
+#
+# Variables
+#
+color
+{
+	IconManagerBackground	"black"
+	IconManagerForeground	"DarkGreen"
+	MenuBackground		"black"
+	MenuForeground		"LimeGreen"
+	BorderColor		"red"
+	IconBorderColor		"black"
+	IconBackground		"blue"
+	IconForeground		"orange"
+}
+
+monochrome
+{
+	IconManagerBackground	"black"
+	IconManagerForeground	"white"
+	MenuBackground		"black"
+	MenuForeground		"white"
+	BorderColor		"white"
+	IconBorderColor		"black"
+	IconBackground		"white"
+	IconForeground		"black"
+}
+
+iconmanagergeometry	"=583x100-3+123" 4
+showiconmanager
+sorticonmanager
+nocasesensitive
+iconifybyunmapping
+donticonifybyunmapping {
+	"TWM Icon Manager"
+	"xclock"
+	"oclock"
+	"xload"
+	"xmeter"
+}
+iconmanagerdontshow {
+	"xclock"
+	"oclock"
+	"xload"
+	"xmeter"
+}
+
+notitle
+{
+	"TWM Icon Manager"
+	"xclock"
+	"oclock"
+	"xload"
+	"xmeter"
+	"xbiff"
+	"xeyes"
+	"xfrom"
+	"emacs"
+}
+
+defaultfunction		f.beep
+
+autorelativeresize
+opaquemove
+noraiseonmove
+noraiseonresize
+nograbserver
+notitlefocus
+zoom
+
+iconfont	"9x15"
+menufont	"-*-times-bold-r-*-*-18-*"
+menufont	"-*-times-bold-r-*-*-18-*"
+
+borderwidth	3
+
+#
+# Buttons
+#
+button3	=	c	: window|title|icon|frame	: f.lower
+
+button2	=	c	: window|title|icon|frame	: f.raise
+
+button1	=	c|m	: window|title|frame	: f.focus
+button1	=	c|m	: root		: f.unfocus
+
+button1	=	s|m	: window	: f.delete
+button1	=	s|c|m	: window	: f.destroy
+
+button1 =	m	: window|title|frame	: f.iconify
+
+button1	=	m	: icon		: f.deiconify
+button1	=		: icon		: f.deiconify
+
+button2	=	m	: window|title|icon|frame	: f.move
+
+button3	=	m	: window|title|frame	: f.resize
+
+button1	=		: root		: f.menu "shells"
+button1	=	s	: root		: f.menu "shells"
+button2	=		: root		: f.menu "machines"
+button2	=	s	: root		: f.menu "machines"
+button3	=		: root		: f.menu "commands"
+button3	=	s	: root		: f.menu "commands"
+
+#
+# Menus
+#
+menu "commands"
+{
+	"Commands"	f.title
+	"refresh"	f.refresh
+	"restart"	f.twmrc
+	"EXIT"		f.quit
+}
+
+menu "shells"
+{
+	"Shells"	f.title
+	"cour10"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour11"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour12"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour14"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour17"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour18"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"cour20"	!"xterm -fn '*courier-medium-r-*-*-10-*' &"
+	"9x15"		!"xterm -fn 9x15 &"
+	"8x13"		!"xterm -fn 8x13 &"
+	"6x13"		!"xterm -fn 6x13 &"
+	"6x12"		!"xterm -fn 6x12 &"
+}
+
+menu "machines"
+{
+	"Machines"	f.title
+	"localhost"	!"xon localhost xterm -ls -n localhost &"
+}

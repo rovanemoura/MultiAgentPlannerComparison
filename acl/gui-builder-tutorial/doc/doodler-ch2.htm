@@ -1,0 +1,255 @@
+<html>
+
+<head>
+<title>Chapter 2: Add a Toolbar and Revise the Buttons</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 2</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h2>Chapter 2: Add a Toolbar and Revise the Buttons</h2>
+
+<ol>
+<li>
+Start Allegro CL if you exited in <a href="doodler-ch1.htm">Chapter
+1</a>. Open the <strong>gui-builder-tutorial</strong> project we left
+in <a href="doodler-ch1.htm">Chapter 1</a>. If you have restarted
+Allegro CL, a dialog may appear asking if you want to open that
+project, along with any other projects recently worked on. If not, use
+<strong>File | Open Project</strong> and choose the file
+<strong>gui-builder-tutorial.lpr</strong> in your tutorial project
+directory, which is <strong>C:\Program
+Files\allegro-projects\gui-builder-tutorial\</strong> or
+<strong>allegro-projects/gui-builder-tutorial/</strong> on Linux if
+you used the defaults. The <strong>Recent</strong> menu may also
+provide a way to open the project. You should now be where you stopped
+at the end of <a href="doodler-ch1.htm">Chapter 1</a>.
+</li>
+</ol>
+
+<h3>Add a Toolbar</h3>
+
+<ol start="2">
+  <li>Inspect the doodler form by double clicking anywhere on its grid or by selecting the
+    form and clicking <strong>Tools | Inspect Selected Object</strong>. <br>
+  </li>
+  <li>In the doodler inspector, double click on the <strong>toolbar</strong> property to
+    change it to t. </li>
+</ol>
+
+<blockquote>
+  <p>A blank toolbar should appear at the top of the Doodler form, just under the title bar.
+  It appears as a slender sunken rectangle spanning the length of the form.</p>
+</blockquote>
+
+<ol start="4">
+  <li>Sketch in a multi-picture-button across the length of the toolbar in the Doodler window.
+    The steps are:<br>
+    <ol type="a">
+      <li>Click on the <strong>multi-picture-button</strong> icon on the Components toolbar. The
+        icon for <strong>multi-picture-button</strong> is not the most obvious: it is towards the
+        right and looks like two adjacent squares:</li>
+    </ol>
+  </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p><img src="mpb-icon.jpg" width="113" height="91" alt="mpb-icon.bmp (30994 bytes)"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <ol type="a" start="2">
+    <li>Point the mouse cursor somewhere near the upper left corner of the Doodler toolbar and
+      click. The <font face="Courier New">multi-picture-button control</font> will appear inside
+      the toolbar, ready to be resized.</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="ch2-1-dtb.jpg" width="176" height="88" alt="ch2-1-dtb.bmp (46518 bytes)"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <ol type="a" start="3">
+    <li>Click on one of the sizing handles and drag the mouse to the right until the control
+      almost fills the toolbar. Release the mouse key when you are satisfied with the size of
+      the control.</li>
+  </ol>
+</blockquote>
+
+<ol start="5">
+  <li>The multi-picture-button will now be the selected object. You should see sizing handles
+    on the perimeter of the control indicating that it is selected. This also means that it is
+    the object being shown in the inspector. If it is not shown, select it by clicking on it. </li>
+  <li>In the multi-picture-button inspector, change (if necessary) <strong>height</strong> to
+    22, <strong>left</strong> to 2, and <strong>top</strong> to 2.</li>
+</ol>
+
+<blockquote>
+  <h3>Entering Numeric Values in the Inspector</h3>
+  <p>Since these are numeric values, click once on each value field to select it. Type in
+  the number with the field selected (you&#146;ll see it darkened, indicating that it has
+  the keyboard focus), and hit ENTER to register the value in the inspector.</p>
+  <p>If you double click the value, you&#146;ll see an Edit Expression window appear with
+  the current value of the property in it. Type the new value in that window. Click the OK
+  button to register the new value and close the window.</p>
+</blockquote>
+
+<h2>Change the Buttons</h2>
+
+<ol start="7">
+  <li>Still inspecting the multi-picture-button, select the <strong>range</strong> property
+    and click on the Extended Editor button (the one with three dots). An Edit Expression
+    window will open and display the range. </li>
+</ol>
+
+<blockquote>
+  <p>Select the entire range by double clicking at the very beginning of the expression in
+  the window. Delete the expression. Change the range to the expression shown below.</p>
+  <p>This will change the look, number, and behavior of the buttons on the multi-picture
+  button, but not the size of the bounding-box. The bounding-box of the control will remain
+  the same size. You can change that later by clicking on the control and dragging the
+  sizing handles in closer to the boundaries of the buttons.</p>
+  <h3>Pasting Code into the Extended Editor: ignore messy-looking code</h3>
+  <p>You can copy and paste directly from the Tutorial into the Extended Editor (using
+  Control-V keyboard equivalent of Paste). Ignore any extra line feeds in the newly pasted
+  text; they will disappear once you commit the code to the Editor window by clicking OK.</p>
+  <p>Paste this code into the Extended Editor (the code is delibrately mis-indented, in
+  order to show that the Editor will re-indent code automatically; other code in this
+  document will be correctly indented):</p>
+  <pre>(list
+ (make-instance 'button-info
+ :name :erase
+ :image &quot;erase.bmp&quot;
+ :tooltip &quot;Erase&quot;
+ :help-string &quot;Erase and redisplay image.&quot;)
+ (make-instance 'button-info
+ :name :curve
+    :image &quot;curve.bmp&quot;
+ :tooltip &quot;Curve&quot;
+ :help-string &quot;Create and modify curves.&quot;)
+    (make-instance 'button-info
+   :name :scroll-to-center
+  :image &quot;center.bmp&quot;
+     :tooltip &quot;Scroll to Center&quot;
+   :help-string &quot;Scroll to center of page.&quot;))</pre>
+</blockquote>
+
+<ol start="8">
+  <li>Once you commit the code by clicking OK and closing the window, notice that there are
+    three new buttons in your toolbar. Those are illustrated by the <strong>erase.bmp</strong>,
+    <strong>curve.bmp</strong>, and <strong>center.bmp</strong> bitmaps you&#146;ve given Lisp
+    as arguments to the button-info instances above. You copied those bmp files into your
+    project directory in step 6 of <a href="doodler-ch1.htm">chapter 1</a>. Here is the
+    toolbar in the doodler window now:</li>
+</ol>
+
+<blockquote>
+  <p><img src="doodler-new-toolbar.jpg" width="113" height="62"
+  alt="doodler-new-toolbar.bmp (21134 bytes)"></p>
+</blockquote>
+
+<ol start="9">
+  <li>Now re-examine the <strong>range</strong> of the multi-picture-button using the Extended
+    Editor button in the inspector. It may look different from the example you pasted (or
+    entered) from above. The code has been parsed by the Lisp, fleshed out, and reformatted to
+    fit the correct internal representation. This is a feature of the Extended Editor. Close
+    the Extended Editor when you are done examining the code.</li>
+  <li>Click on the <strong>Save All</strong> button or choose <strong>File | Save All</strong>
+    to save all changes. </li>
+</ol>
+
+<blockquote>
+  <p><img src="ch1-1-sa.jpg" width="128" height="37" alt="ch1-1-sa.bmp (14262 bytes)"></p>
+  <h3>.bml Files</h3>
+  <p>Once you&#146;ve saved a form with .bmp files associated with it, a <strong>.bml</strong>
+  file is created by the IDE. This file holds the Lisp representation of the bitmap. The
+  .bmp file is no longer referred to or needed once you&#146;ve got a <strong>.bml</strong>
+  file.</p>
+  <p>If you change a .bmp file&#146;s characteristics after creating a <strong>.bml</strong>
+  file, the change will not be noted until a new .bml file is created. <br>
+  See Also: <strong>doc/cg/cg-pixmaps.htm</strong>.</p>
+</blockquote>
+
+<ol start="11">
+  <li>Click on the <strong>Run Project</strong> button on the standard toolbar to run the
+    Doodler. There is now a new toolbar in your Doodler window with three buttons called
+    Erase, Curve, and Scroll to Center. Roll the mouse over them for a moment to see their
+    ToolTips. </li>
+</ol>
+
+<blockquote>
+  <p><img src="ch1-4-rb.jpg" width="148" height="32" alt="ch1-4-rb.bmp (14262 bytes)"></p>
+</blockquote>
+
+<blockquote>
+  <h3>ToolTip Delay</h3>
+  <p>The IDE is deliberately set up with a property called <strong>tooltip-delay</strong>.
+  This prevents you from seeing annoying flashes of ToolTip messages whenever you drag the
+  cursor across a large expanse of screen. </p>
+  <p>After you&#146;ve started focusing on a tool, there is a slight delay until you see the
+  first ToolTip. Once you&#146;ve focused on one tool and then moved to another, there will
+  be no delay in the ToolTip popping up.</p>
+</blockquote>
+
+<ol start="12">
+  <li>When you are finished looking at the running application, use the <strong>Stop</strong>
+    button to stop and close the Doodler. </li>
+</ol>
+
+<blockquote>
+  <p><img src="ch1-5-sb.jpg" width="119" height="35" alt="ch1-5-sb.bmp (12654 bytes)"></p>
+</blockquote>
+
+<ol start="13">
+  <li>Go to <a href="doodler-ch3.htm">chapter 3</a> . If you wish to, you can stop working on
+    the tutorial now and return to it later. All the work you have done has been saved. </li>
+</ol>
+
+<p><small><small>Copyright © 2001-2004 Franz Inc. All rights reserved.</small></small></p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 2</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

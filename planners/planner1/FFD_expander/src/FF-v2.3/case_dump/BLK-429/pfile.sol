@@ -1,0 +1,6 @@
+# Domain file: zeno.pddl
+# Problem file: zeno230_2.pddl
+3
+BOARD PERSON1 PLANE1 CITY3
+FLY PLANE1 CITY3 CITY1 FL6 FL5
+DEBARK PERSON1 PLANE1 CITY1

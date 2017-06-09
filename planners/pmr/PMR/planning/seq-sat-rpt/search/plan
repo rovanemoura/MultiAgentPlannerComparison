@@ -1,0 +1,28 @@
+#! /bin/sh
+
+# Paths to planner components
+TRANSLATE="./translate/translate.py"
+PREPROCESS="./preprocess/preprocess"
+SEARCH="./search/downward"
+
+run_planner() {
+    python2.7 "$TRANSLATE" "$1" "$2"
+    "$PREPROCESS" < output.sas
+
+    tr '[:upper:]' '[:lower:]' < $4 > output.txt
+
+    "$SEARCH" --heuristic "hff=ff(cost_type=1)" --heuristic "hffc=ff(cost_type=0)" \
+        --search "iterated([
+            rpt([lazy_greedy(hff,preferred=hff,cost_type=1)],nodes=100000,p=0.0,r=1.0,planr="output.txt"),
+            lazy_greedy(hffc,preferred=hffc,cost_type=0),
+            lazy_wastar(hffc,preferred=hffc,w=5,cost_type=0),
+            lazy_wastar(hffc,preferred=hffc,w=3,cost_type=0),
+            lazy_wastar(hffc,preferred=hffc,w=1,cost_type=0),
+            lazy_wastar(hffc,w=1,cost_type=0),
+            astar(blind(),cost_type=0),],
+            repeat_last=true,continue_on_fail=true)" \
+        --plan-file "$3" < output
+
+}
+
+run_planner "$1" "$2" "$3" "$4"

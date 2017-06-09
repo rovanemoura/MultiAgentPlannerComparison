@@ -1,0 +1,10 @@
+#compilamos lama por si acaso
+BASEDIR=${PWD}
+cd planning/fd
+./build
+
+cd $BASEDIR
+sbcl --dynamic-space-size 6000  --control-stack-size 100 --load build.lisp
+#El control-stack-size no se puede poner muy alto porque el codigo de la IPC tiene limitada la memoria y no funciona
+#sbcl --dynamic-space-size 6000 --control-stack-size 6000 --load build.lisp
+

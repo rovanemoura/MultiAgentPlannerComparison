@@ -1,0 +1,187 @@
+CGGL - OpenGL Hooks in Common Graphics
+
+CGGL allows you to draw OpenGL graphics on any Common Graphics window
+or other CG stream.  CGGL itself has a very small API that lets you
+establish a CG stream as the current OpenGL drawing destination.  Then
+you can insert pure OpenGL code into redisplay-window methods to do
+the actual drawing.  You can also add methods on mouse-left-down and
+virtual-key-down, for example, just as you would for any other CG
+window, except adding OpenGL code to them for rotating the image and
+so on.
+
+The CGGL code is written on top of Microsoft's WGL facility for doing
+OpenGL in Microsoft Windows, so you shouldn't need to call WGL
+functions directly.  And the file opengl.cl (included with CGGL)
+defines foreign functions for the entire OpenGL API, so you can call
+OpenGL functions as lisp functions directly.
+
+To load CGGL, simply load the file load.cl into ACL 6.2 or 7.0 (with
+CG present).
+
+Two examples are included (and are loaded by load.cl).  cggltest.cl
+contains a very basic example that draws a multicolored triangle; this
+provides a small code example to point out what the various pieces of
+code are that you need to write.  cgteapot.cl is a much fancier
+example that draws a three-dimensional teapot that rotates when you
+press the arrow keys on the keyboard.  You can run these examples with
+the forms (color-triangle) and (red-teapot).
+
+If you would like to draw ordinary CG graphics over top of what OpenGL
+draws, you would need to do that in a redisplay-window :after method
+that specializes on your window class.  That may not often be useful
+due to not knowing the 2-D CG coordinates to which OpenGL will map a
+3-D drawing, but for example adding the following method to the teapot
+example would draw a bit of text toward the bottom of the window,
+safely under the teapot:
+
+(defmethod redisplay-window :after ((window cg-teapot) &optional box)
+  (declare (ignore box))
+  (with-boxes (text-box)
+    (nmake-box text-box 0
+      (floor (* .9 (interior-height window)))
+      (interior-width window)(interior-height window))
+    (draw-string-in-box window " Press the Arrow Keys! "
+                        nil nil text-box :center :top nil t)))
+
+The rest of this document describes the several exported CGGL symbols.
+The symbols are in the cggl package, and the cg-user package will use
+the cggl package when CGGL is loaded.  If you find the CGGL API to be
+insufficient, you can modify the CGGL source code yourself; it's
+rather small and fairly well documented internally.  We do not supply
+any documentation for OpenGL itself.
+
+Of the CGGL symbols, you probably will need only the cggl-mixin class
+and the (setf current-cggl-stream) function.
+
+------------------------------------------------------------
+cggl-mixin
+
+[class]
+  
+You must mix this class into any CG stream class that you would like
+to use for OpenGL.  You can use OpenGL on windows as well as on
+bitmap-streams and printer streams.
+
+Example:
+
+(defclass my-opengl-window (cggl-mixin frame-window)())
+
+------------------------------------------------------------
+current-cggl-stream ()
+
+Returns the CG stream that is the current OpenGL drawing destination,
+or nil if no destination has been set or the current destination is
+something other than a CG window.
+
+------------------------------------------------------------
+(setf current-cggl-stream)(value)
+
+[function]
+  
+Call this function to specify that a particular CG stream should start
+receiving all OpenGL output.  Typically you would call this at the top
+of any redisplay-window method that calls OpenGL functions.  (This
+function does nothing if the stream is already the current OpenGL
+destination.)
+
+Example:
+
+(setf (current-cggl-stream)
+      (make-window :window-one
+        :class 'my-opengl-window))
+
+------------------------------------------------------------
+exit-cggl ()
+
+[function]
+  
+Call this function if desired to clean up all OpenGL resources that
+have been used in cg streams.  We expect that it's not necessary to
+call this function.
+
+------------------------------------------------------------
+cggl-double-buffering (stream cg-stream)
+
+[overridable generic function]
+
+By default, any CG stream that is visible on the screen will use WGL's
+double-buffering option.  This eliminates flashing by drawing all
+content on a memory bitmap (the "second buffer") and then copying to
+the visible stream at the end.  This could be overridden by defining a
+cggl-double-buffering method that returns different values for your
+own subclasses.  The default methods return true for windows and nil
+for other CG streams, which is likely appropriate for almost all
+applications.
+
+When cggl-double-buffering returns true, a built-in redisplay-window
+:after method will call wgl:SwapBuffers to copy the memory buffer to
+the visible window for you.  So you don't need to call that.
+
+Example:
+
+(defmethod cggl-double-buffering ((stream my-opengl-window))
+
+  ;; Return nil to disable the usual double-buffering.
+  ;; (You probably DO want the double-buffering though.)
+  nil)
+
+Side note: In 7.0.final, CG has a new double-buffered option that you
+can turn on for any CG window.  You should not use this with a window
+that's to be used for OpenGL, and instead use WGL's double-buffering
+which is enabled by default.
+
+------------------------------------------------------------
+pixel-format-descriptor-custom-values (stream)
+
+[overridable generic function]
+
+The Microsoft WGL functionality includes a PIXELFORMATDESCRIPTOR
+structure where you can specify various options for an OpenGL stream.
+CGGL fills this in with options that should work fine for most
+applications.  But if you need to use different values and are
+familiar with WGL, then you can write a
+pixel-format-descriptor-custom-values method that overrides the
+default options.
+
+The method should return a plist of option names and their values.
+The option names are keywords that correspond to Microsoft's WGL
+names, and may be any of the following:
+
+:nVersion :dwFlags :iPixelType :cColorBits
+:cRedBits :cRedShift :cGreenBits :cGreenShift
+:cBlueBits :cBlueShift :cAlphaBits :cAlphaShift
+:cAccumBits :cAccumRedBits :cAccumGreenBits :cAccumBlueBits
+:cDepthBits :cStencilBits :cAuxBuffers :iLayerType
+:bReserved :dwLayerMask :dwVisibleMask :dwDamageMask
+
+The default method returns nil, which means to default everything to
+CGGL's internal defaults.  If you define a method yourself, then each
+option that it specifies will override the default for that option,
+and other options will still use CG's internal defaults.
+
+Example:
+
+Here is an example that would be redundant with the built-in defaults
+for a double-buffered window.  (If cggl-double-buffering returns nil
+for the stream, then the PFD_DOUBLEBUFFER flag would NOT be included
+by default.  And a bitmap-stream passes PFD_DRAW_TO_BITMAP instead of
+PFD_DRAW_TO_WINDOW by default, while a printer uses neither.)  So if
+you want values that are different from any of these, then you could
+define a similar method that includes only the differing values.
+
+(defmethod pixel-format-descriptor-custom-values ((stream my-opengl-window))
+  (list :nVersion 1
+        :dwFlags (logior wgl:PFD_DRAW_TO_WINDOW
+                         wgl:PFD_DOUBLEBUFFER
+                         wgl:PFD_SUPPORT_OPENGL)
+        :iPixelType wgl:PFD_TYPE_RGBA
+        :cColorBits (bits-per-pixel (screen *system*))
+        :cDepthBits (bits-per-pixel (screen *system*))
+        :iLayerType wgl:PFD_MAIN_PLANE))
+
+------------------------------------------------------------
+That's it!  Refer to the examples in cggltest.cl and cgteapot.cl to
+see how to integrate calls to the above functions with OpenGL code in
+a CG application.
+
+------------------------------------------------------------

@@ -1,0 +1,160 @@
+<html>
+
+<head>
+<title>Allegro CL FAQ: 4.1 Emacs-Lisp interface</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<h3>4.1: Emacs-Lisp interface</h3>
+
+<blockquote>
+  <p><a href="#411">Q 4.1-1) How do I print to the emacs-lisp interface created
+  *common-lisp* buffer when I run my application in its own Lisp image?</a><br>
+  <a href="#412">Q 4.1-2) Can I connect a UNIX emacs to a Windows Lisp?</a><br>
+  <a href="#413">Q 4.1-3) Can I run Emacs on Windows and Lisp on UNIX?</a><br>
+  <a href="#414">Q 4.1-4) Why doesn't the emacs-lisp interface startup when I don't have a
+  network connection?</a></p>
+</blockquote>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="411"></a><strong>Q 4.1-1)</strong> How do I print to the emacs-lisp interface
+created *common-lisp* buffer when I run my application in its own Lisp image? </p>
+
+<p><strong>A 4.1-1)</strong> You can do this by putting advice on the function <strong>excl:start-emacs-lisp-interface</strong>.
+The advice must, however, exist at the time the emacs-lisp interface is started, which
+means you will have to make a new Lisp image. </p>
+
+<p>For example, put the following into a file, /tmp/test.cl: </p>
+
+<pre>(in-package :user) 
+
+(defun doit () 
+  (sleep 3) 
+  (let* ((proc (multiprocessing:process-name-to-process 
+                #+mswindows &quot;*common-lisp*&quot; 
+                #-mswindows &quot;Initial Lisp Listener&quot;)) 
+         (stream 
+          #+mswindows 
+          (mp::symeval-in-process '*standard-output* proc) 
+          #-mswindows 
+         (mp::symeval-in-stack-group 
+           '*standard-output* 
+           (mp::process-stack-group proc)))) 
+     (format stream &quot;The emacs-lisp interface has started...~%&quot;) 
+     (force-output stream))) 
+
+(advise excl:start-emacs-lisp-interface :after :eli-startup-print nil (doit)) </pre>
+
+<p>start up Lisp and do this: </p>
+
+<pre>:cl /tmp/test.cl (dumplisp :name &quot;/tmp/test.dxl&quot;) </pre>
+
+<p>and startup Lisp with the image you just created using <strong>M-x fi:common-lisp</strong>,
+and specifying /tmp/test.dxl as the image. You will then see </p>
+
+<pre>The emacs-lisp interface has started... </pre>
+
+<p>in the *common-lisp* buffer. </p>
+
+<hr>
+
+<p><a name="412"></a><strong>Q 4.1-2)</strong> Can I connect a UNIX emacs to a Windows
+Lisp? </p>
+
+<p><strong>A 4.1-2)</strong> Not in release 5.0 or earlier, but in release 5.0.1 and
+later, you can. Follow these instructions. 
+
+<ol>
+  <li>On Windows start Lisp and evaluate the following form: </li>
+</ol>
+
+<blockquote>
+  <pre>(excl:start-emacs-lisp-interface) </pre>
+</blockquote>
+
+<ol start="2">
+  <li>On UNIX, in Emacs, do: </li>
+</ol>
+
+<blockquote>
+  <pre>M-x set-variable RET fi:connect-to-windows RET t </pre>
+  <pre>M-x fi:common-lisp RET RET &lt;specify windows host&gt; RET ... </pre>
+</blockquote>
+
+<p>You should now be connected to the Lisp running on Windows. </p>
+
+<hr>
+
+<p><a name="413"></a><strong>Q 4.1-3)</strong> Can I run Emacs on Windows and Lisp on
+UNIX? </p>
+
+<p><strong>A 4.1-3)</strong> No. The emacs-lisp interface does not currently support this.
+</p>
+
+<hr>
+
+<p><a name="414"></a><strong>Q 4.1-4)</strong> Why doesn't the emacs-lisp interface
+startup when I don't have a network connection?</p>
+
+<p><strong>A 4.1-7)</strong> Typically this is a not a problem on Unix, so we will discuss
+how to deal with this on Windows (but the Unix solution is similar). </p>
+
+<p>The short answer is the startup is failing because the emacs-lisp interface does a
+lookup on the host <em>localhost</em>, looking in a Windows <em>hosts</em> file for a
+translation of <em>localhost</em>. If such a translation cannot be found, either because
+there is no <em>hosts</em> file or the <em>hosts</em> file does not contain a translation
+for <em>localhost</em> (to 127.0.0.1), then the ELI function <strong>fi:common-lisp</strong>
+will fail to startup lisp. </p>
+
+<p>You can check if you have this problem by typing</p>
+
+<blockquote>
+  <pre>ping localhost</pre>
+</blockquote>
+
+<p>to a DOS prompt (Windows 95/98/Me) or a Command prompt (Windows NT/2000): If the result
+is a message like <em>host localhost not found</em>, then you will not be able to use <strong>fi:common-lisp</strong>
+without further work. </p>
+
+<p>There are two solutions: 
+
+<ol>
+  <li>Create a <em>&lt;Windows directory&gt;\hosts</em> file (no extension) with the contents:
+  </li>
+</ol>
+
+<blockquote>
+  <pre>127.0.0.1    localhost </pre>
+</blockquote>
+
+<blockquote>
+  <p>There is a TAB between <font face="Courier New">127.0.0.1</font> and <font
+  face="Courier New">localhost</font>. The <em>&lt;Windows directory&gt;</em> is often <em>c:\windows\</em>
+  but may be different on your machine.</p>
+</blockquote>
+
+<ol start="2">
+  <li>Put the following in your <em>c:\.emacs</em> file: </li>
+</ol>
+
+<blockquote>
+  <pre>(setq fi:common-lisp-host &quot;127.0.0.1&quot;) </pre>
+</blockquote>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq4-2.htm">4.2. Lisp-Editor Protocol (LEP)</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq3-9.htm">3.9 Heap placement issues</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999, 2002, 2004 Franz Inc., Berkeley, CA.&nbsp; All rights reserved.</small><br>
+<small>$Revision: 1.1.1.1 $</small></p>
+</body>
+</html>

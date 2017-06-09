@@ -1,0 +1,196 @@
+<html>
+
+<head>
+<title>Naming and persistent IORs</title>
+</head>
+
+<body>
+
+<h1 align="center">Naming and persistent IORs</h1>
+
+<hr>
+
+<p>One of the trickiest problems in CORBA is the bootstrap problem: how does a CORBA
+client get an initial object on which to invoke object references? </p>
+
+<h2>Introduction and terminology of naming</h2>
+
+<p>Recall that in CORBA, every object has a unique <i>Interoperable Object Reference</i>,
+or IOR, that can be used to locate the object. The IOR contains information such as the
+host on which the object resides, the TCP/IP port on which the object is listening for
+requests, and an object key that distinguishes the object from other objects listening on
+that port. </p>
+
+<p>An IOR has an opaque string representation, called a <i>stringified IOR</i> that may be
+read by any CORBA-compliant ORB. An typical stringified IOR (or just IOR for short) looks
+like (we have added line breaks indicated with a \ for readability): </p>
+
+<pre>
+IOR:005858580000001549444C3A69646C746573742F746573743A312E3000585858\
+0000000100000000000000350001005800000006636F726261009B44000000214F52\
+424C696E6B3A3A636F7262613A33393734383A3A736B656C65746F6E202330
+</pre>
+
+<p>CORBA itself defines two operations in the ORB pseudo interface for acting on
+stringified IORs: </p>
+
+<pre>
+module CORBA {
+   pseudo interface ORB {
+    string object_to_string (in Object obj);
+    Object string_to_object (in String ior);
+   };
+}
+</pre>
+
+<p>Thus, given a stringified IOR bound to the string <code>str</code>, a Lisp proxy for
+the object represented by the string can be created via: </p>
+
+<pre>
+(op:string_to_object corba:orb str)
+</pre>
+
+<p>Given an object, its stringified IOR can be formed via: </p>
+
+<pre>
+(op:object_to_string corba:orb str)
+</pre>
+
+<p>Recall here that <code>corba:orb</code> is always bound the the ORB itself. </p>
+
+<p>The simplest way for a client to access the server object on which it is to make
+invocations is for it to retrieve the stringified IOR of the server object. </p>
+
+<p>ORBLink offers two utility functions to facilitate this. </p>
+
+<p>The function <code>orblink:read-ior-from-file</code>, given a filename, returns a proxy
+for the IOR string stored in that filename. </p>
+
+<p>The function <code>orblink:write-ior-to-file</code>, given an object and a pathname,
+writes the IOR of the given object to the file denoted by its argument. </p>
+
+<p>The definition of these functions are located in the file <a
+href="../examples/ior-io/cl/sample-ior-io.cl">examples/ior-io/cl/sample-ior-ior.cl</a>. </p>
+
+<p>This method for bootstrapping, although simple to understand and test, has several
+disadvantages, preeminent among which is the need for the client and the server to share
+access to a file system. </p>
+
+<p>CORBA also defines a naming service. A Name Service is simply a standard CORBA object
+which contains operations that bind human-readable names to objects. </p>
+
+<p>ORBLink itself will interoperate with other CORBA-compliant name services and, in
+addition, ORBLink contains a name service that is bundled, with source, with the ORB. The
+source to the ORBLink name service is located in the directory <a
+href="../examples/naming/readme.htm">examples/naming/</a>. </p>
+
+<p>However, configuring and using a CORBA compliant name service has two disadvantages: 
+
+<ol>
+  <li>Its API is somewhat complicated (although standardized). </li>
+  <li>The IOR of the name service itself must be published. </li>
+</ol>
+
+<p>The advantage of 1. above is that, although the CORBA Naming API is complicated, there
+are numerous third-party books that describe it. Once the CORBA Naming API and the
+IDL/Lisp mapping are learned, the Lisp API to the naming service is immediate. </p>
+
+<p>In particular, if a CORBA naming service is already in use in your organization, this
+can be a good solution. </p>
+
+<p>Another good solution to the naming problem is for the server to write the IOR to a
+file as usual, but for the client to retrieve the file via <code>http:</code>. This
+requires that a Web server have access to the file system to which the application server
+wrote the IOR. Such an architecture is particularly useful when the client is in Java and
+the server is in Lisp. </p>
+
+<p>Finally, the process of disseminating IORs can be made simpler if the IOR is <i>persistent</i>;
+that is, if it does not change over even when the process holding the object it represents
+is started and stopped. </p>
+
+<h2>Creating persistent IORs</h2>
+
+<p>The IOR of an ORBLink object is formed from three fields: 
+
+<ul>
+  <li>The host on which the ORB runs.</li>
+  <li>The port on which the ORB is listening</li>
+  <li>The marker of the object.</li>
+</ul>
+
+<p>The <code>host</code> and the <code>port</code> are attributes of the ORB, the object
+bound to <code>corba:orb</code>. </p>
+
+<p>The salient IDL for these attributes is located in the file: <a href="orblink-idl.htm">orblink-idl.htm</a>:
+</p>
+
+<pre>
+module ORBLink{
+  pseudo interface ORB : CORBA::ORB {
+  ...
+    attribute unsigned long port;
+    attribute string host;
+};
+};
+</pre>
+
+<p>These attributes are described in more detail in the section on the <a href="orb.htm">ORB</a>
+pseudo-interface. </p>
+
+<p>Each servant has a readonly attribute, its <code>_marker</code>. The name of this
+attribute is <code>_marker</code>, from the IDL </p>
+
+<pre>
+module CORBA {
+  pseudo interface Servant {
+    readonly attribute string _marker; // Only apples to servants
+  };
+</pre>
+
+<p>A CORBA implementation object inherits from <code>corba:servant</code>. You can assign
+a <strong>marker, a unique name for the implementation object within the ORB, by using the
+<code>:_marker</code> initarg at object creation time. It is an error to assign the same
+marker to distinct objects. </p>
+
+<p>Thus, the following sample code should return an object whose IOR is constant over
+different invocations. We assume that the class <code>grid-implementation</code> has been
+defined to inherit from <code>corba:servant</code>, for example using </p>
+
+<pre>
+      (defclass grid-implementation (interface_name-servant)...)
+</pre>
+
+<p>(setf (op:port corba:orb) 50000) ; Set the port on which the ORB listens. (setq
+grid-object (make-instance 'grid-implementation :_marker &quot;GridServer&quot;))
+(corba:object_to_string grid-object) ; get the IOR and start the socket listener </p>
+
+<p>The string returned by the call to <code>object_to_string</code> should be constant
+across Lisp world invocations on the same host. </p>
+
+<h2>Architecting naming services</h2>
+
+<p>If you do not already have a Naming Service configuration, we recommend the following
+architecture. 
+
+<ol>
+  <li>Set up a single factory object for your application. This server will simply provide the
+    IOR of the actual entities in your application. You can customize and design it as you
+    wish, but it is better to separate it from the application logic. For example sample IDL
+    might be: <pre>
+	module ObjectFactory{
+	  interface ApplicationFactory{
+		Object GetApplicationInstance();};};
+</pre>
+  </li>
+  <li>Implement the <code>GetApplicationInstance</code> operation in the IDL. Start the <code>ApplicationFactory</code>
+    server and publish its IOR. There are several ways to publish the IOR as described above: <ul>
+      <li>Write it to a file that can be read by all the clients. </li>
+      <li>Store it in a Web Server. </li>
+      <li>Start the <code>ApplicationFactory</code> server as a persisent IOR and hardcode the IOR
+        into application code or into the applet parameter fields in HTML. </li>
+    </ul>
+  </li>
+</ol>
+</strong>
+</body>
+</html>

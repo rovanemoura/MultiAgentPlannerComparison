@@ -1,0 +1,137 @@
+#!/bin/bash
+
+#Configuration for the CoDMAP, MAPR, makespan, unitcost, macros and only-one-macro
+#PRUEBA MERGING
+#./run-map.sh -d $1 -p $2 -o $3 -A mapr -m t -s name -P private -M t -P t -a lama-unit-cost -r lama-unit-cost -g rest-achievable -y nil -Y lama-second -t 1800 -O t -u t -C t 
+#OTRAS 
+#./map-core --eval "(progn (execute-map \"/home/nluis/pmr-competition/domains/codmap-satellites/domain/domain.pddl\" \"/home/nluis/pmr-competition/domains/codmap-satellites/problems/p03-pfile3.pddl\" \"kk.plan\" :run-cmap-p t :goal-selection 'best-cost :ma-pddl-p t) (quit))"
+#./run-map.sh -d $path/domains/$domain/domain/$domain.pddl -p $path/domains/$domain/problems/$domain-$problem -o $path/mapr/result/$folder/$ga-$problem.soln -A $algorithm -m t -s name -g $ga -a lama-unit-cost -r lama-unit-cost -t 1800" > "result/$folder/$ga-$problem.txt
+# ./run-map.sh -d $1 -p $2 -o $3 -A mapr -s mingoals -P public -M nil  -a lama-unit-cost -r lama-unit-cost -g rest-achievable -y nil -Y lama-second -t 1800 -C t  -O t -u t 
+#/home/nluis/pmr-competition/domains/codmap-satellites/problems/codmap-p03-pfile3.pddl
+
+path=/home/nluis/pmr-competition
+#domain=elevators08
+
+
+ga="nothing"
+ 
+
+
+for domain in $path/benchmarks/unfactored/*; do
+   domain=`basename $domain`
+ 	echo $domain
+	j=0
+	echo "$domain----->STARTS"
+	cd
+	cd $path/result
+	currentdate=$(date +%Y%m%d_%H%M%S)
+	folder=$currentdate"_"$domain
+	#folder="20150326_190641_codmap-zenotravel"
+	mkdir $folder
+    while [ $j -lt 4 ]; do   
+    	
+	    if [[ $j == 3 ]]; then
+		    ga="all-achievable"
+
+	    elif [[ $j == 0 ]]; then
+		  ga="best-cost"
+
+	    elif [[ $j == 1 ]]; then
+		 ga="rest-achievable"
+
+	    elif [[ $j == 2 ]]; then
+		ga="load-balance"
+	    fi
+
+	
+    for problem in $path/benchmarks/unfactored/$domain/*; do
+
+        problem=`basename $problem`      
+    	echo $problem
+        # while [ $problem -lt 16 ]; do
+             #echo "Executing problem $problem"
+	     cd 
+	     cd $path/ma-sat-mcodmap-mk
+	
+	     	    #./run-map.sh -d $path/domains/$domain/domain/domain.pddl -p $path/domains/$domain/problems/probLOGISTICS-$problem-0.pddl -o $path/result/$folder/$ga-$problem.soln -A mapr -m t -s name -P private -M t -P t -a lama-unit-cost -r lama-unit-cost -g $ga -y nil -Y lama-second -t 1800 -O t -u t -C t
+	     
+timeout --signal=SIGKILL 1800 ./run-map.sh -d $path/benchmarks/unfactored/$domain/$problem/domain.pddl -p $path/benchmarks/unfactored/$domain/$problem/problem.pddl -o $path/result/$folder/$ga-$problem.soln -A mapr -m t -s subgoals -P nil -M nil -a lama-unit-cost -r lama-unit-cost -g $ga -y nil -Y lama-second -t 1800 -O t -u t -C t
+
+        cp $path/benchmarks/unfactored/$domain/$problem/merged-obfuscated-domain.pddl $path/result/$folder/domain-$ga-$problem.pddl
+        cp $path/benchmarks/unfactored/$domain/$problem/merged-obfuscated-problem.pddl $path/result/$folder/problem-$ga-$problem.pddl
+
+        # cp $path/domains/$domain/domain/merged-obfuscated-domain.pddl $path/result/$folder/domain-$ga-$problem.pddl
+        # cp $path/domains/$domain/problems/merged-obfuscated-problem.pddl $path/result/$folder/problem-$ga-$problem.pddl
+
+	#line=$(sed -n '3p' $path/result/$folder/$ga-$problem.soln)
+	#timess=$(grep -o "\\([0-9][0-9]*.[0-9][0-9]*\\)" <<<"$line")
+
+	#line=$(sed -n '4p' $path/result/$folder/$ga-$problem.soln.pp)
+	#timep=$(grep -o "\\([0-9][0-9]*.[0-9][0-9]*\\)" <<<"$line")
+
+	#num=$(echo $timess + $timep | bc)
+
+	#tot_num=$(echo 1800 - $num | bc)
+	#dtot_num=$(echo "($tot_num+0.5)/1" | bc)
+
+	if [[ -f $path/result/$folder/$ga-$problem.soln ]]; then
+		line=$(sed -n '2p' $path/result/$folder/$ga-$problem.soln)
+		cost=$(grep -o "\\([0-9][0-9]*\\)" <<<"$line")
+		if [[ $cost -ne 0 ]]; then
+		cd $path
+		./ma-sat-mcodmap-mk/planning/fd/src/VAL/validate -v $path/result/$folder/domain-$ga-$problem.pddl $path/result/$folder/problem-$ga-$problem.pddl $path/result/$folder/$ga-$problem.soln > $path/result/$folder/val-$ga-$problem-seq.txt
+
+			STATS1=$?
+		fi
+	fi
+
+	if [[ -f $path/result/$folder/$ga-$problem.soln.pp ]]; then
+		 cd $path
+		./ma-sat-mcodmap-mk/planning/fd/src/VAL/validate -v $path/result/$folder/domain-$ga-$problem.pddl $path/result/$folder/problem-$ga-$problem.pddl $path/result/$folder/$ga-$problem.soln.pp > $path/result/$folder/val-$ga-$problem-par.txt
+			STATS2=$?
+	#else
+		#echo "The parallel plan $ga-$problem has not been generated"
+	fi
+
+	$OUTP=$path/result/$folder/$ga-$problem.out
+
+	line=$(sed -n '3p' $path/result/$folder/$ga-$problem.soln)
+	timess=$(grep -o "\\([0-9][0-9]*.[0-9][0-9]*\\)" <<<"$line")
+
+	line=$(sed -n '4p' $path/result/$folder/$ga-$problem.soln.pp)
+	timep=$(grep -o "\\([0-9][0-9]*.[0-9][0-9]*\\)" <<<"$line")
+
+	echo -e "$domain \t $problem \t $ga \t VAL seq: $STATS1 \t VAL par: $STATS2 \t Time seq: $timess \t Time par: $timep" >> out_$domain.txt
+
+
+	#if [ -f $path/result/$folder/val-$ga-$problem-seq.txt ]; then
+	#	if [ ! -f $path/result/$folder/reuse-$ga-$problem ]; then
+	#	 if grep -q "Plan failed to execute" $path/result/$folder/val-$ga-$problem-seq.txt ; then
+	#		z=1
+	#		while [  $z -lt 6 ]; do
+	#		timeout --signal=SIGKILL 1800 ./planning/LPG-adapt/run-lpg-adapt.sh $path/result/$folder/domain-$ga-$problem.pddl $path/result/$folder/problem-$ga-$problem.pddl $path/result/$folder/reuse-$ga-$problem-$z $path/result/$folder/$ga-$problem.soln 1800
+	#		let z=z+1
+	#		done
+	#	fi
+	#	fi
+	#	if [ ! -f $path/result/$folder/reuse-$ga-$problem ]; then
+	#	 if grep -q "Plan invalid" $path/result/$folder/val-$ga-$problem-seq.txt ; then
+	#		z=1
+	#		while [  $z -lt 6 ]; do
+	#		timeout --signal=SIGKILL 1800 ./planning/LPG-adapt/run-lpg-adapt.sh $path/result/$folder/domain-$ga-$problem.pddl $path/result/$folder/problem-$ga-$problem.pddl $path/result/$folder/reuse-$ga-$problem-$z $path/result/$folder/$ga-$problem.soln 1800
+	#		let z=z+1
+	#		done
+	#	fi
+	#	fi
+	#	if [ ! -f $path/result/$folder/reuse-$ga-$problem ]; then
+		 
+	#	   if grep -q "Plan executed successfully" $path/result/$folder/val-$ga-$problem-par.txt ; then
+	#		echo "The parallel plan is valid; no reuse phase was needed"
+	#	   fi
+	#	fi
+	#fi
+	#let i=i+1 
+	done
+    let j=j+1 
+    done
+done

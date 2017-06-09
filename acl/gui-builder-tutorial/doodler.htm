@@ -1,0 +1,167 @@
+<html>
+
+<head>
+<title>Doodler interface builder tutorial</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#FFFF00"><b>Introduction</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/ansi-common-lisp-on-clos.htm"><b>CLOS
+        Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h3>Doodler interface builder tutorial</h3>
+
+<p>The steps are divided into Chapters, each a logical chunk of work. Steps are numbered.
+Do the Chapters in sequential order; each one builds on the changes you make in the prior
+Chapter(s). </p>
+
+<h3>Notation</h3>
+
+<p>A menu command is denoted <strong><em>Menu</em> | <em>Command</em></strong>, thus click
+<strong>File | Save</strong> means click the <strong>Save</strong> command on the <strong>File</strong>
+menu. We sometimes say <em>choose</em> <strong>File | Save</strong> instead of <em>click</em>
+<strong>File | Save</strong>.</p>
+
+<h3>A note on pathnames</h3>
+
+<p>We use either forward slashes (/) or backward slashes (\) to identify directories in
+pathnames (so <em>tutorial/steps/readme.txt</em> or <em>tutorial\steps\readme.txt</em>).
+Backward slashes are standard in Windows but Allegro CL accepts either forward or backward
+slashes.</p>
+
+<h3>Using ToolTips</h3>
+
+<p><img src="doc/d-1.jpg" width="360" height="87" alt="d-1.bmp (94014 bytes)"></p>
+
+<p>In the early Chapters of the tutorial you'll see many illustrations for Allegro CL
+controls, toolbars, and menus. They are meant to help familiarize you with everything in
+the interface and will begin to diminish in number as you push further into the tutorial
+material. This leaves you to rely on your memory and the ToolTips. ToolTips are the tiny
+pop-ups you see whenever you pause your mouse over a button or another feature having
+'what's this?' functionality. </p>
+
+<p>The first time you move your mouse over a button the ToolTip will take a second to
+display; if you then move your mouse to another button, the ToolTip appears immediately.</p>
+
+<h3>Saving files</h3>
+
+<p>We instruct you to save files at appropriate places as you work through the tutorial.
+However, certain actions, such as running a form or project (by choosing <strong>Run | Run
+Project</strong> or <strong>Run | Run Form</strong> or clicking on the <strong>Run</strong>
+button), causes the system to prompt you to save project files if necessary. You can
+either save files at that point or not. Saving when instructed is sufficient but
+additional saves are harmless. </p>
+
+<h3>Entering code</h3>
+
+<p>Running the tutorial is easier if you copy and paste rather than enter all of the code
+yourself. You can select and copy code from this document to the editor buffers in Allegro
+CL in the usual Windows way. 
+
+<ol>
+  <li>Select the code in this document.</li>
+  <li>Click <strong>Edit | Copy</strong> (or Control-c) and go to Allegro CL. </li>
+  <li>Give focus to the desired editor buffer with the cursor at the desired location.</li>
+  <li>Click <strong>Edit | Paste</strong> (or Control-v).</li>
+</ol>
+
+<p>When you paste code in an editor buffer, extra spaces or blank lines may appear. They
+can be ignored. Only be concerned if a break appears within a word rather than at a space
+or a carriage return.</p>
+
+<h3>Getting Help: if you are stuck</h3>
+
+<p>Some of the Chapters in the Tutorial are long. You may find that you&#146;ve either
+lost your place or missed a step if you had to save your work and are resuming it later
+on. Figuring out which step you&#146;ve missed can be time-consuming and frustrating.
+We&#146;ve provided a time-saving device for you.</p>
+
+<p>There is a set of directories of code files created at points (checkpoints) in the
+tutorial where you are most likely to encounter a problem. If you are stuck and would like
+to copy the code for that checkpoint and move on to the next step, these directories will
+help you.</p>
+
+<p>Read the <em><strong>tutorial/steps/readme.txt</strong></em> file. It gives an
+explanation of how the check-pointed files were created. Subdirectories containing code
+files are numbered according to a <em>tutorial-chxx-sxxx</em> convention, where <em>chxx</em>
+is the Chapter and <em>sxxx</em> is the Step. You should be able to copy the files from
+that directory into your tutorial directory and then to move on from that point in the
+tutorial.</p>
+
+<p>For example, if you are stuck in Chapter 2, Step 10, then you are looking for the <em><strong>tutorial/steps/tutorial-ch2s010</strong></em>
+directory. All the files you need to move on from Chapter 2, step 10 will be there. If you
+are stuck on an intermediate step for which there is no directory, look for the most
+recent check-pointed step you&#146;ve passed and copy those files. You can move on from
+that point.</p>
+
+<p>Adding files to the Project Manager is covered in Chapter 1.</p>
+
+<p>Online help (in HTML format) is available for every function, variable, system dialog,
+class, etc. Typically, pressing the F1 key while in a Lisp window displays online help for
+the currently selected object. Also, see the file <em><strong>doc/cgide.htm</strong></em>,
+which provides general information on CG/IDE documentation and essays on particular
+topics.</p>
+
+<h3>Finished application</h3>
+
+<p>Here is a picture of the application when you are finished.</p>
+
+<p><img src="doc/d-2-finapp.jpg" width="518" height="339"
+alt="d-2-finapp.bmp (527538 bytes)"></p>
+
+<p><img src="doc/d-3-finapp2.jpg" width="405" height="383"
+alt="d-3-finapp2.bmp (465782 bytes)"><br>
+</p>
+
+<p>This is a list of books on Lisp at the end of <a href="doc/doodler-ch6.htm">Chapter 6</a>.
+An introduction to CLOS (the Common Lisp Object System) from ANSI Common Lisp by Paul
+Graham is <a href="doc/ansi-common-lisp-on-clos.htm">here</a>. Links to all chapters and
+to the introduction to CLOS from Paul Graham's <em>ANSI Common Lisp</em> book are in the
+header and footer of each HTML file.</p>
+
+<p>Start the tutorial at <a href="doc/doodler-ch1.htm">Chapter 1</a>. </p>
+
+<p id="2"><small>Copyright © 2001-2004, Franz Inc. Oakland, CA., USA. All rights
+reserved.</small></p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#FFFF00"><b>Introduction</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doc/ansi-common-lisp-on-clos.htm"><b>CLOS
+        Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

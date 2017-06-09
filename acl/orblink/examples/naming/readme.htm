@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <title>CORBA Naming Service in Lisp</title>
+  </head>
+
+  <body>
+    <h1>CORBA Naming Service in Lisp</h1>
+<hr>
+The files in this directory provide a straightforward implementation of a
+CORBA Name Service in Lisp.
+<p>
+These files also serve to  illustrate:
+some issues in starting up a persistent server.
+<p>
+Although the CORBA Naming service is the sanctioned CORBA method for inter-orb naming, 
+<a href="CosNaming.idl">its IDL</a> and semantics can be complicated too learn and to use
+in simple applications. Unless you have an existing CORBA name service installed, you might
+find it easiest to use a more straightforward mechanism (see the discussion of
+<a href="../../doc/naming.htm">naming</a>
+in the main ORBLink documentation tree.
+<p>
+The detailed semantics of a CORBA naming service are discussed in any good book on CORBA. They will not
+be described here.
+
+<h2> Starting up the naming service</h2>
+In order to start up this naming service you must not yet
+have started a a listener.
+
+After loading <code>orblink</code>
+
+you should load the file <a href="naming-invoke.cl">naming-invoke.cl</a>
+and evaluate <code>(load-naming)</code>:
+<pre>
+(in-package :user)
+(require :orblink)
+(load "naming-invoke.cl")
+(load-naming)
+</pre>
+<p>
+This will define the class 
+<pre>
+orblink/naming:NamingContext
+</pre>
+
+which
+implements the IDL interface 
+<pre>
+CosNaming::NamingContext
+</pre>
+ defined in the
+file <a href="CosNaming.idl">CosNaming.idl</a>. 
+<p>
+You can instantiate an instance of
+<pre>
+orblink/naming:NamingContext
+</pre>
+via 
+<pre>
+(make-instance 'orblink/naming:NamingContext)
+</pre>. 
+<p>
+You can then publish and re-use this
+IOR however you want.
+<p>
+In many situations the naming service is used expressly to
+avoid, or at any rate to minimize the complexity of, publishing the
+IOR. In certain such situations it can be convenient for the IOR to be
+<em>persistent</em>, which means that the server will always listen on the same
+port and on the same host (with the same marker).
+<p>
+The function 
+<pre>(orblink/naming:start-nameserver)</pre>
+will create an instance
+of <code>orblink/naming:NamingContext</code> [which, of course, is something
+different from the IDL compiler generated class
+<code>COSNaming:NamingContext</code>] whose IOR is persistent over invocations. In
+this case, this should be the first object published; normally you
+will want a single Lisp world dedicated to running the nameserver.
+<p>
+Any other ORBLink invocation can then get the IOR of this
+NamingContext by invoking the 
+<pre>
+(orblink/naming:nameservice-ior)
+</pre>
+function with appropriate host keyword argument.
+
+The 
+<pre>(start-nameserver)</pre>
+invocation can fail  in two
+ways:
+<ol>
+<li>It will signal an error if a server has already been
+started on a same or different port in that Lisp world. 
+<li>It
+will signal an error if a nameserver on the designated port of that
+host already exists. 
+</ol>
+The default port number is given by
+<pre>
+orblink/naming:*default-naming-port*
+</pre>
+
+It is worthwhile to study the code in <code>naming-administration.cl</code> as it
+illustrates the process of creating a persistent IOR. 
+<p>
+Of course, the code in the other .cl files can be used to study the
+implementation of a nontrivial IDL interface.
+<p>
+<h2>Descriptions of files used in this directory</h2>
+<p>
+Here are the files used in this directory:
+<p>
+<ul>
+<li><a href="CosNaming.idl">CosNaming.idl</a>
+contains the IDL for the CORBA Services Name
+Service.
+<li><a href="naming-invoke.cl">naming-invoke.cl</a>
+is intended to be loaded by the user. It
+defines the <code>orblink/naming</code> package and the <code>(user::load-naming)</code>
+function.
+<li><a href="naming.cl">naming.cl</a> contains the </em>implementation</a> of the
+<pre>CosNaming::NamingContext</pre> IDL interface as the Lisp class named
+<pre>orblink/naming:NamingContext
+</pre> 
+
+<p>This Lisp class defines a single slot, <code>entries</code>,
+that holds an <code>alist</code> encoding the bindings managed by that naming
+context.  This file contains implementations for all of the
+IDL-defined operations in the interface <code>CosNaming::NamingContext</code>.
+<p>
+<li>
+	<a href="naming-utility.cl">naming-utility.cl</a> contains helper functions that do the work
+of looking up names; the operation implementations just dispatch to
+appropriate helper functions. The only tricky aspect is that
+exactly the right exceptions must be signalled and a local
+<code>namingcontext</code> implementation (that is an instance of class
+<code>orblink/naming:NamingContext</code>, may contain bindings that point to
+proxies for the IDL interface <code>CosNaming::NamingContext</code>. Thus, the utility functions
+cannot normally be invoked iteratively.
+<li>
+	<a href="naming-administration.cl">naming-administration.cl</a>
+contains functions that actually
+start a name service on a specified port. The invocation protocol is
+described above.
+<li>
+	<a href="naming-accessors.cl">naming-accessors.cl</a> contains accessors for managing the <code>alist</code>
+of <code>entries</code>.
+<li>
+	<a href="binding-iterator.cl">binding-iterator.cl</a>
+ contains the implementation of the
+<code>CosNaming::BindingIterator</code> IDL interface. The interface is implemented by a Lisp class
+named <code>orblink/naming:BindingIterator</code>.
+  </body>
+</html>

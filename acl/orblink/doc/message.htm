@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Message pseudo-interface</title>
+  </head>
+
+  <body>
+    <h1>The Message pseudo-interface</h1>
+<hr>
+<p>
+The IDL for the message interface in ORBLink is:
+<pre>
+  pseudo interface Message{
+    enum MessageDirection {incoming,outgoing,unknown}; 
+    readonly attribute MessageDirection direction;     
+    enum MessageType {Request,Reply,CancelRequest,LocateRequest,
+		       LocateReply,CloseConnection,MessageError,Fragment}; 
+    readonly attribute MessageType type;
+    readonly attribute junction ForwardingJunction;
+  }
+</pre>
+<p>
+The corresponding Lisp class is named <code>ORBLink:message</code> and instances of that class represent IIOP messages.
+<p>
+Suppose <code>m</code> is bound to an instance of <code>ORBLink:message</code>. Then the form
+<p>
+<pre>
+(op:direction m)
+</pre>
+<p>
+corresponding to the <code>direction</code> attribute will return a value of type <code>ORBLink:MessageDirection</code>, that is, one of <code>:incoming</code>, <code>:outgoing</code>, or <code>:unknown</code> depending on whether <code>m</code>
+represents an incoming, outgoing, or message of unknown direction. 
+<p>
+The form
+<p>
+<pre>
+(op:type m)
+</pre>
+<p>
+corresponding to the <code>type</code> attribute of <code>m</code> returns a keyword of type <code>ORBLink:MessageType</code>, a member of
+<code>(:request :reply :cancelrequest :locaterequest :locatereply :closeconnection :messageerror :fragment)</code>.
+<p>
+The <code>ForwardingJunction</code> attribute of <code>m</code> holds an instance of class 
+<a href="connection.htm"><code>ORBLink:Junction</code></a> which
+represents the junction from which the message was received (if an incoming message) or to which the message is being sent (if an outgoing message).
+<p>
+Only <code>Request</code> messages can actually be obtained using exposed APIs.
+<p>
+A <code>Request</code> message (a message whose <code>type</code> attribute is <code>:request</code>) is
+obtained as follows.
+<p>
+When a <code>ServerJunction</code> receives an IIOP <code>Request</code> message from a client,
+the operands are dispatched to the appropriate local implementation
+object which then executes the body of the <code>corba:define-method</code>
+corresponding to the operation requested by the message. Within the
+dynamic scope of that body, the special variable <code>orblink:*message*</code> is
+bound to the corresponding request message.
+<p>
+The appropriate server junction can then be obtained from the value of
+the <code>ForwardingJunction</code> attribute of <code>message</code>.
+<p>
+The IDL and implementation in 
+<a href="../examples/test/test.idl">examples/test/test.idl</a>
+and
+<a href="../examples/test/test-implementation.cl">examples/test/test-implementation.cl</a>
+include a simple example for
+accessing the message from the body of a <code>corba:define-method</code> form.
+<p>
+The relevant IDL is in <a href="../examples/test/test.idl">examples/test/test.idl</a>:
+
+<pre>
+ module idltest{ interface test
+    oneway void testmessage (in unsigned short delay);
+</pre>
+<p>
+The associated implementation class in 
+<a href="../examples/test/test-implementation.cl">examples/test/test-implementation.cl</a>
+is:
+<pre>
+(defclass test-implementation (idltest:test-servant)
+  ((message :accessor get-message)))
+</pre>
+<p>
+The implementation of the operation defined in the IDL is given by:
+<pre>
+(corba:define-method testmessage ((this test-implementation) delay)
+  (sleep delay)
+  (format t "testmessage: got message of: ~s~%" orblink:*message* this)
+  (force-output)
+  (setf (get-message this) orblink:*message*)
+  )
+</code>
+(The delay can be used easily to verify that <code>orblink:*message*</code> is bound to 
+different messages in different threads).
+<p>
+Thus, the <code>serverjunction</code>  corresponding to a message can be obtained via:
+<pre>
+(op:forwardingjunction orblink:*message*)
+</pre>
+In conjunction with the <code>handlejunctionclose</code> operation and the
+<code>HandleJunctionClosePolicy</code> attribute in pseudo interface <code>ORBLink::ORB</code>,
+these features allow the user, for example, to determine which
+implementations correspond to which server junctions and to perform
+local cleanup if desired.
+<p>
+  </body>
+</html>

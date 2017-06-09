@@ -1,0 +1,417 @@
+<html>
+
+<head>
+<title>The Allegro CL FAQ</title>
+</head>
+
+<body>
+
+<h1><a href="http://www.franz.com/support/documentation/8.0/doc/faq/index.htm">Allegro CL
+8.0<br>
+Frequently Asked Questions with Answers</a><a Allegro CL 8.0<br></h1>
+
+<p></a><a href="changes.htm">Recent changes to this FAQ.</a></p>
+
+<p>This document applies to Allegro CL 8.0 (see <a href="old.htm">information on old FAQs</a>
+for availability of older Allegro CL FAQs). This is a list of frequently asked questions
+on Allegro Common Lisp (ACL) 8.0. Allegro CL 8.0 runs on various UNIX platforms (including
+Linux and FreeBSD), Windows NT-based operating systems, Mac OS X, and on MkLinux and
+linuxppc on PowerPC based machines. Please read this document before sending mail
+reporting problems to <a href="mailto:support@franz.com">support@franz.com</a>.
+Periodically, also, some items from this list will be incorporated into our documentation
+(and dropped from here). Other items stay in the FAQ more or less permanently.</p>
+
+<p>See the document <a href="changes.htm">changes.htm</a>, which lists recent
+modifications.</p>
+
+<p>This FAQ comprises a number of HTML files. Each topic has it own file containing all
+questions specifically related to that topic.</p>
+
+<p><strong>This FAQ is regularly updated</strong>. The title at the top is usually linked
+to the latest version of the 8.0 FAQ on the Franz Inc. web site (<a
+href="http://www.franz.com/">www.franz.com</a>). If you are viewing a downloaded version
+of this FAQ, clicking on the title will display the absolutely latest version.</p>
+
+<p>See <a href="http://www.franz.com/support/documentation">www.franz.com/support/documentation</a>
+for information on downloading the FAQ (though we recommend looking at the FAQ on the
+Franz Inc. website, linked by the title of the document, since it is always the most
+up-to-date).</p>
+
+<p>A copy of the current ACL documentation is also on our website. (See <a
+href="http://www.franz.com/support/documentation/8.0/doc/introduction.htm">http://www.franz.com/support/documentation/8.0/doc/introduction.htm</a>,
+which is a link to the documentation introduction and overview, for the current 8.0
+documentation. Note that the ACL HTML documentation will be periodically updated to
+correct errors and to provide new information based on customer questions. This document
+is linked to the latest update of the documentation. After updates are available, unless
+you update the Allegro CL documentation by downloading the updated version, the
+information you see on a page referred to by a FAQ document may be different from the
+corresponding page of your version of the ACL documentation. Instructions for updating the
+documentation are provided on the <a href="http://www.franz.com/support/documentation">www.franz.com/support/documentation</a>
+page.</p>
+
+<p>Your comments, additions and fixes to this list are welcome: please send them to <a
+href="mailto:support@franz.com">support@franz.com</a>.</p>
+
+<h2>Table of Contents</h2>
+
+<h3>1. Administrative Issues:</h3>
+
+<p>Each numbered heading <em>N.M</em> is a link to a separate HTML file named <em>faqN-M.htm</em>
+(e.g. the file <em>faq1-1.htm</em> contains answers to the question about <strong>1.1 ACL
+current version info</strong>). Each entry is followed by the date that it was created or
+last significantly modified. If the modification simply updated the version number, the
+modification date is not changed (so if you are familiar with the entry from a previous
+release, you will not find new information in the entry).</p>
+
+<p><a href="faq1-1.htm">1.1. ACL current version info</a></p>
+
+<blockquote>
+  <p><a href="faq1-1.htm#111">Q1.1-1) What is the current version of ACL?</a> (Last modified
+  10/31/01)</p>
+</blockquote>
+
+<p><a href="faq1-2.htm">1.2. ACL-related communication</a></p>
+
+<blockquote>
+  <p><a href="faq1-2.htm#121">Q 1.2-1) How should I report bugs?</a> (Created or last
+  modified 11/14/00)<br>
+  <a href="faq1-2.htm#122">Q 1.2-2) dribble-bug output seems to lag behind Lisp I/O.</a>
+  (Created or last modified 11/14/00)<br>
+  <a href="faq1-2.htm#123">Q 1.2-3) Sometimes CL output is not logged in the dribble-bug
+  file. What do I do about this?</a> (Created or last modified 11/30/00)<br>
+  <a href="faq1-2.htm#124">Q 1.2-4) Is there a mailing list for Allegro CL? How do I sign
+  up?</a> (Created or last modified 10/7/01)</p>
+</blockquote>
+
+<p><a href="faq1-3.htm">1.3. Patches</a></p>
+
+<blockquote>
+  <p><a href="faq1-3.htm#131">Q 1.3-1) Is there a public patch directory you maintain for
+  incremental patches to ACL? If so, how do I get to it?</a> (Last modified 11/13/01)<br>
+  <a href="faq1-3.htm#133">Q 1.3-3) Why are there patches on the ftp site with date stamps
+  that are still in the future?</a> (Except for version info, last modified 9/1/99)<br>
+  <a href="faq1-3.htm#135">Q 1.3-5) Is there a list of available patches for ACL 8.0?</a>
+  (Except for version info, last modified on 11/4/99)</p>
+</blockquote>
+
+<p><a href="faq1-4.htm">1.4. ACL Documentation</a></p>
+
+<blockquote>
+  <p><a href="faq1-4.htm#141">Q 1.4-1) What is the relationship between this FAQ and ACL
+  documentation?</a> (Created or last modified 9/1/99)<br>
+  <a href="faq1-4.htm#142">Q 1.4-2) Is the ACL documentation available on-line?</a> (Created
+  or last modified 9/1/99)<br>
+  <a href="faq1-4.htm#143">Q 1-4.3) Is the ACL documentation updated between releases, and
+  if so, where can I get the update?</a> (Last modified 11/13/01)</p>
+</blockquote>
+
+<p><a href="faq1-5.htm">1.5. Installation</a></p>
+
+<blockquote>
+  <p><a href="faq1-5.htm#151">Q 1.5-1) [Windows only] How do I clean out a previous
+  installation if I deleted the files without using the proper uninstall method?</a> (Last
+  modified 11/14/01)<br>
+  <a href="faq1-5.htm#152">Q 1.5-2) [Windows only] If I run cleanreg.exe (see Q 1.5-2)
+  before installing ACL 8.0, can I continue to use ACL 7.0?</a> (Except for version info,
+  created or last modified 9/1/99)</p>
+</blockquote>
+
+<p><a href="faq1-6.htm">1.6 License files</a></p>
+
+<blockquote>
+  <p><a href="faq1-6.htm#161">Q 1.6-1) How do I install the License File into Allegro CL?</a>
+  (Updated 2/28/06)<br>
+  <a href="faq1-6.htm#162">Q 1.6-2) I have misplaced the email telling me the URL from which
+  I can download your license?</a> (Created 2/5/00)<br>
+  <a href="faq1-6.htm#163">Q 1.6-3) I can not access the URL for retrieving my license. What
+  should I do? </a>(Created 2/5/00)<br>
+  <a href="faq1-6.htm#164">Q 1.6-4) I have lost my license, but I am not able to access
+  http://lfs.franz.com:4100/lostlicense. Is there an alternate location? </a>(Created
+  2/5/00)<br>
+  <a href="faq1-6.htm#165">Q 1.6-5) [Trial users only] My license file is expiring: how do I
+  renew and reinstall it?</a> (Updated 2/12/00)<br>
+  <a href="faq1-6.htm#166">Q 1.6-6) [ACL Trial users only] I am trying to run the newlicense
+  program to renew my ACL trial, but I get an error: &quot;Unknown host:
+  lfs.franz.com&quot;. How do I keep ACL trial from expiring?</a> (Created 2/5/00)<br>
+  <a href="faq1-6.htm#167">Q 1.6-7) [ACL Trial users only] When I run newlicense to renew my
+  ACL trial, I get a Connection Refused error. How can I fix that?</a> (Except for version
+  info, last modified 2/12/00)<br>
+  <a href="faq1-6.htm#168">Q 1.6-8) I still have problems with my license file. Can I
+  contact Franz Inc. for assistance?</a> (Created 2/5/00)<br>
+  <a href="faq1-6.htm#169">Q 1.6-9) I'm behind a firewall and am required to use a proxy
+  host to access the web. How can I update my license file with the newlicense?</a> (Last
+  updated 7/23/03)<br>
+  <a href="faq1-6.htm#1610">Q 1.6-10) [Trial Users Only] When I try to run Allegro CL, a
+  message says my license has expired, but when I run newlicense, it says it is too early to
+  renew. Why might this happen?</a> (Created 10/21/03)</p>
+</blockquote>
+
+<p><a href="faq1-7.htm">1.7 Operating systems</a></p>
+
+<blockquote>
+  <p><a href="faq1-7.htm#171">Q 1.7-1) How do I know if Allegro CL will run on my operating
+  system version?</a> (Created 10/12/04)<br>
+  <a href="faq1-7.htm#172">Q 1.7-2) What is the best question to ask of Franz Inc as to my
+  particular operating system and Allegro CL?</a> (Created 10/12/04)</p>
+</blockquote>
+
+<h3>2. Architecture-specific problems:</h3>
+
+<p><a href="faq2-1.htm">2.1. SPARC</a></p>
+
+<blockquote>
+  <p>[no entries at this time]</p>
+</blockquote>
+
+<p><b>2.2. SGI</b></p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Allegro CL 8.0 is not supported on the
+SGI.]</p>
+
+<p><a href="faq2-3.htm">2.3. IBM RS6000</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [no entries at this time]</p>
+
+<p><a href="faq2-4.htm">2.4. HP</a></p>
+
+<blockquote>
+  <p><a href="faq2-4.htm#241">Q 2.4-1) Allegro CL 8.0 won't start on HP/UX 10.20 because
+  needed shared libraries seem to be missing. How can this be fixed?</a> (Except for version
+  info, last modified 5/1/01)<br>
+  <a href="faq2-4.htm#242">Q 2.4-2) Why do foreign loads sometimes cause Lisp to die on
+  HP/UX 11.00?</a> (Created 12/4/03)</p>
+</blockquote>
+
+<p><a href="faq2-5.htm">2.5. HP ALPHA</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [no entries at this time]</p>
+
+<p><a href="faq2-6.htm">2.6. Windows</a></p>
+
+<blockquote>
+  <p><a href="faq2-6.htm#261">Q 2.6-1) How do I get the functionality of the ~/time/ and
+  ~/date/ format directives available in 3.0.2?</a> (Last modified 9/1/99)<br>
+  <a href="faq2-6.htm#262">Q 2.6-2) Why can't I use `dir' with run-shell-command?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq2-6.htm#263">Q 2.6-3) How do I get the functionality of the 3.0.2 function
+  allegro:read-lisp-line?</a> (Created or last modified 9/1/99)<br>
+  <a href="faq2-6.htm#264">Q 2.6-4) How do I control the stack size on Windows?</a> (Last
+  modified 8/9/02)<br>
+  <a href="faq2-6.htm#265">Q 2.6-5) How do I get ANSI ACL (rather than Modern ACL) to start
+  when I double-click on an lpr file?</a> (Created 11/14/00)</p>
+</blockquote>
+
+<p><a href="faq2-7.htm">2.7 Linux</a></p>
+
+<blockquote>
+  <p><a href="faq2-7.htm#271">Q 2.7-1) On which x86 (i.e Intel Pentium and friends) Linux
+  versions does Allegro CL 8.0 run?</a> (Created 1/22/02)<br>
+  <a href="faq2-7.htm#272">Q 2.7-2) How can I replace lesstif installed with Redhat Linux
+  7.2 with Openmotif (required for CLIM)?</a> (Created 4/9/02)</p>
+</blockquote>
+
+<p><a href="faq2-8.htm">2.8 MacOSX</a></p>
+
+<blockquote>
+  <p>No entries at this time.</p>
+</blockquote>
+
+<h3>3. Using Allegro CL:</h3>
+
+<p><a href="faq3-1.htm">3.1. Base Lisp</a></p>
+
+<blockquote>
+  <p><a href="faq3-1.htm#311">Q 3.1-1) I'm left with running Lisp processes after I exit my
+  Emacs/xterm. What do I do to avoid this?</a> (Created or last modified 9/1/99)<br>
+  <a href="faq3-1.htm#312">Q 3.1-2) Why doesn't make-pathname merge the given :directory
+  component with the directory component in :defaults argument?</a> (Created or last
+  modified 9/1/99)<br>
+  <a href="faq3-1.htm#313">Q 3.1-3) I am getting stack overflows and occasional Lisp failure
+  when I sort on large arrays. Why and what can I do?</a> (Created or last modified 9/1/99)<br>
+  <a href="faq3-1.htm#314">Q 3.1-4) I have set the stack cushion to a reasonable value, but
+  the soft stack limit is not being detected, and I get a lisp death instead. Why is that?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq3-1.htm#315">Q 3.1-5) Why does it take so long to load a file that interns
+  several thousand symbols in a package?</a> (Created 11/15/99)</p>
+</blockquote>
+
+<p><a href="faq3-2.htm">3.2. Garbage collector</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No entries at this time.</p>
+
+<p><a href="faq3-3.htm">3.3. Foreign functions</a></p>
+
+<blockquote>
+  <p>No entries at this time.</p>
+</blockquote>
+
+<p><a href="faq3-4.htm">3.4: Time issues in Allegro CL</a></p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No entries at this time.</p>
+
+<p><a href="faq3-5.htm">3.5: Lisp as a shared library (or DLL)</a></p>
+
+<blockquote>
+  <p>No entries at this time.</p>
+</blockquote>
+
+<p><a href="faq3-6.htm">3.6: Allegro CL and cl-http</a></p>
+
+<blockquote>
+  <p><a href="faq3-6.htm#361">Q 3.6-1) Can I use CL-HTTP with Allegro CL?</a> (Last modified
+  11/13/01)</p>
+</blockquote>
+
+<p><a href="faq3-7.htm">3.7 The stepper</a></p>
+
+<blockquote>
+  <p>No entries at this time.</p>
+</blockquote>
+
+<p><a href="faq3-8.htm">3.8 Building images</a></p>
+
+<blockquote>
+  <p><a href="faq3-8.htm#381">Q 3.8-1) I get an error when I try to build an image with
+  excl:build-lisp-image (and also with excl:generate-application) but the build process
+  simply quits. How can I debug this error?</a> (Last modified 7/6/02)<br>
+  Q 3.8-2 removed because it is no longer relevant.<br>
+  Q 3.8-3 removed because it is no longer relevant.<br>
+  <a href="faq3-8.htm#384">Q 3.8-4) I notice that when I run generate-application, a license
+  file is placed in the distribution directory. Is that license file tied to the image file?</a>
+  (Created 1/16/01)</p>
+</blockquote>
+
+<p><a href="faq3-9.htm">3.9 Heap placement issues</a></p>
+
+<blockquote>
+  <p><a href="faq3-9.htm#391">Q 3.9-1) Sometimes Allegro CL, particularly large images, run
+  out of memory or fail totally with a bus error or a segv. Why might this be happening?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq3-9.htm#392">Q 3.9-2) How is heap placement determined and what can go wrong?</a>
+  (Created or last modified 11/14/00)<br>
+  <a href="faq3-9.htm#393">Q 3.9-3) How does Lisp start up, in terms of shared-library
+  linking and loading?</a> (Created or last modified 11/30/00)<br>
+  <a href="faq3-9.htm#394">Q 3.9-4) What is the &quot;Old Sun4&quot; problem?</a> (Created
+  or last modified 9/1/99)<br>
+  <a href="faq3-9.htm#395">Q 3.9-5) How can I tell what addresses are being used in my
+  process space?</a> (Last modified 6/7/02)<br>
+  <a href="faq3-9.htm#396">Q 3-9.6) [Windows only] How do I move DLL in memory so that it
+  doesn't conflict with the Lisp heap?</a> (Created or last modified 7/17/00)<br>
+  <a href="faq3-9.htm#397">Q 3-9.7) What does the &quot;Temporarily scaling back lisp
+  reserved region from XXX to YYY bytes.&quot; mean?</a> (Created or last modified 7/17/00)</p>
+</blockquote>
+
+<h3>4. Add-on products/features:</h3>
+
+<p><a href="faq4-1.htm">4.1. Emacs-Lisp interface</a></p>
+
+<blockquote>
+  <p><a href="faq4-1.htm#411">Q 4.1-1) How do I print to the emacs-lisp interface created
+  *common-lisp* buffer when I run my application in its own Lisp image?</a> (Last modified
+  10/31/01)<br>
+  <a href="faq4-1.htm#412">Q 4.1-2) Can I connect a UNIX emacs to a Windows Lisp?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq4-1.htm#413">Q 4.1-3) Can I run Emacs on Windows and Lisp on UNIX?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq4-1.htm#414">Q 4.1-4) Why doesn't the emacs-lisp interface startup when I
+  don't have a network connection?</a> (Created or last modified 9/1/99)</p>
+</blockquote>
+
+<p><a href="faq4-2.htm">4.2. Lisp-Editor Protocol (LEP)</a></p>
+
+<blockquote>
+  <p><a href="faq4-2.htm#421">Q 4.2-1) How can I open a stream to an emacs buffer?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq4-2.htm#422">Q 4.2-2) How can another stream be used for background output
+  instead of creating the *background-interaction* buffer?</a> (Created or last modified
+  9/1/99)<br>
+  <a href="faq4-2.htm#423">Q 4.2-3) How can arbitrary elisp code be run from lisp?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq4-2.htm#424">Q 4.2-4) Is there a way to programmatically determine if the
+  emacs-lisp interface connect has been established?</a> (Created or last modified 9/1/99)<br>
+  <a href="faq4-2.htm#425">Q 4.2-5) How can I tell if lep had a problem?</a> (Created or
+  last modified 9/1/99)</p>
+</blockquote>
+
+<p><a href="faq4-3.htm">4.3. CLIM</a></p>
+
+<blockquote>
+  <p><a href="faq4-3.htm#431">Q 4.3-1) How do I provide scrollable popup menus in Allegro
+  CLIM 2.x?</a> (Created or last modified 9/1/99)<br>
+  <a href="faq4-3.htm#432">Q 4.3-2) Why do I need an XNLSPATH environment variable?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq4-3.htm#433">Q 4.3-3) What should I do to avoid getting palette-full error
+  messages?</a> (Created or last modified 9/1/99)<br>
+  <a href="faq4-3.htm#434">Q 4.3-4) CLIM does not work on RedHat 9 with OpenMotif 2.2.2. Why
+  not?</a> (Created 8/26/03)</p>
+</blockquote>
+
+<p><a href="faq4-4.htm">4.4. Common Graphics and the Integrated Development Environment</a>
+<strong>[Windows only]</strong></p>
+
+<blockquote>
+  <p><a href="faq4-4.htm#441">Q 4.4-1) How do I not save prefs.cl when I exit the ide?</a>
+  (Created or last modified 9/1/99)<br>
+  <a href="faq4-4.htm#442">Q 4.4-2) Sometimes when I run my project, I get mysterious
+  redefinition warnings. Why and should I worry about them?</a> (Created or last modified
+  9/1/99)<br>
+  <a href="faq4-4.htm#443">Q 4.4-3) I have developed my application in the IDE, and when I
+  test it there it runs fine. But when I try to run the application as generated by File |
+  Build Project Distribution, it starts and the application window appears, but it then
+  immediately exits. </a>(Created or last modified 9/3/99)</p>
+</blockquote>
+
+<p><a href="faq4-5.htm">4.5. Runtime</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [no entries at this time]</p>
+
+<p><a href="faq4-6.htm">4.6 Allegro CL Trial</a> <br>
+(The TRIAL edition is available for Windows, Linux, FreeBSD, and MacOS X.&nbsp;There are
+some restrictions on the product. See the Franz Inc. home page (<a
+href="http://www.franz.com/">www.franz.com</a>) for more information on the Trial
+version.)</p>
+
+<blockquote>
+  <p><a href="faq4-6.htm#461">Q 4.6-1) What about patches for an ACL Trial image?</a>
+  (Created or last modified 11/14/00)<br>
+  <a href="faq4-6.htm">Q 4.6-2) When I try to run Allegro CL Trial, it fails with the error
+  &quot;missing or invalid license file&quot;. Why?</a> (Except for version info, last
+  modified 11/14/00)<br>
+  <a href="faq4-6.htm#463">Q 4.6-3) Why is there only one image with Trial (ANSI with the
+  IDE)? How do I make other images?</a> (Created 11/4/04)</p>
+</blockquote>
+
+<p><a href="faq4-7.htm">4.7 OLE</a>&nbsp; <strong>[Windows only]</strong></p>
+
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>&nbsp;&nbsp;&nbsp; No entries at this
+time.</p>
+
+<p><a href="faq4-8.htm">4.8 Allegro ODBC</a></p>
+
+<blockquote>
+  <p><a href="faq4-8.htm">Q 4.8-1) How do I set up an Excel spreadsheet for use with AODBC?</a>
+  (Created or last modified 9/1/99)</p>
+</blockquote>
+
+<p><a href="faq4-9.htm">4.9 Allegro Composer</a></p>
+
+<blockquote>
+  <p><a href="faq4-9.htm#4.9-1">Q 4.9-1) Why does composer:start-composer sometimes warn
+  that &quot;fcntl failed&quot;?</a> (Created or last modified 9/1/99)</p>
+</blockquote>
+
+<p><a href="faq4-10.htm">4.10 AllegroStore</a></p>
+
+<blockquote>
+  <p>AllegroStore is not available with Allegro CL 8.0.</p>
+</blockquote>
+
+<p><a href="faq4-11.htm">4.11 Allegro CL jLinker Java interface</a></p>
+
+<blockquote>
+  <p>No entries at this time.</p>
+</blockquote>
+
+<hr>
+
+<p><font face="Courier New"><small>$Revision: 1.5 $</small></font><br>
+<small>© Copyright 1999, 2000, 2001, 2002, Franz Inc., Berkeley, CA.&nbsp; All rights
+reserved.</small></p>
+</body>
+</html>

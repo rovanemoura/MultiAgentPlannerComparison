@@ -1,0 +1,121 @@
+<html>
+
+<head>
+<title>Interface Repository</title>
+</head>
+
+<body>
+
+<h1>The Interface Repository in ORBLink</h1>
+
+<hr>
+
+<p>An interface repository is an object implementing the <code>CORBA::Repository</code>
+interface. This is a standard CORBA interface whose IDL is given in the <a
+href="../idl/corba.idl">CORBA Core IDL</a>. </p>
+
+<p>The purpose of the interface repository is to maintain type information about IDL
+files. Once an IDL file is compiled, its definitions can be stored in an interface
+repository and can be retrieved remotely by other ORBs. </p>
+
+<p>The semantics of the interface repository are specified in the CORBA Core standard as
+well as in most good books on CORBA. Therefore, we will not discuss the semantics here in
+detail except to give a few simple examples. Unlike most ORBs, ORBLink naturally and
+seamlessly can access multiple interface repositories. Each invocation of the IDL compiler
+creates a new interface repository that can be navigated. </p>
+
+<h2>Getting the root interface repository object</h2>
+
+<p>The simplest way to obtain the interface repository object is as the value returned by
+the IDL/Lisp compiler, <code>corba:idl</code>. </p>
+
+<p>The script below illustrates navigation of the <a href="../examples/grid/idl/grid.idl">grid
+example IDL</a>. </p>
+
+<pre>
+
+; Get the repository object
+USER(5): (setq repository (corba:idl &quot;examples/grid/idl/grid.idl&quot;)) 
+#&lt; ORBLINK::CORBA-REPOSITORY-IMPLEMENTATION :DEF_KIND :DK_REPOSITORY  @ #x86b680a&gt;
+
+; List all definitions in the repository
+USER(6): (op:contents repository :dk_all nil) 
+(#&lt; ORBLINK::CORBA-MODULEDEF-IMPLEMENTATION 
+    :NAME &quot;example&quot; :ID &quot;IDL:example:1.0&quot; :DEF_KIND :DK_MODULE  @ #x86b9dca&gt;)
+
+; Get the first (and only) definition
+USER(8): (setq moduledef (car (op:contents repository :dk_all nil))) 
+#&lt; ORBLINK::CORBA-MODULEDEF-IMPLEMENTATION 
+   :NAME &quot;example&quot; :ID &quot;IDL:example:1.0&quot; :DEF_KIND :DK_MODULE  @ #x86b9dca&gt;
+
+; Get the name of this definition
+USER(9): (op:name moduledef)
+&quot;example&quot;
+
+; describe the module definition (this returns a struct)
+USER(10): (op:describe moduledef)
+#&lt; CORBA:MODULEDESCRIPTION :NAME &quot;example&quot; :ID &quot;IDL:example:1.0&quot; 
+   :DEFINED_IN &quot;&quot; :VERSION &quot;1.0&quot;  @ #x86bd67a&gt;
+
+; List the contents of the module
+USER(11): (op:contents moduledef :dk_all nil)
+(#&lt; ORBLINK::CORBA-INTERFACEDEF-IMPLEMENTATION :NAME &quot;grid&quot; 
+    :ID &quot;IDL:example/grid:1.0&quot; :DEF_KIND :DK_INTERFACE  @ #x86bf31a&gt;)
+
+; Get the interface defined in the module
+USER(12): (setq interfacedef (car (op:contents moduledef :dk_all nil)))
+#&lt; ORBLINK::CORBA-INTERFACEDEF-IMPLEMENTATION :NAME &quot;grid&quot; 
+   :ID &quot;IDL:example/grid:1.0&quot; :DEF_KIND :DK_INTERFACE  @ #x86bf31a&gt;
+
+; Describe the interface
+USER(13): (op:describe interfacedef)
+#&lt; CORBA:INTERFACEDESCRIPTION :NAME &quot;grid&quot; :ID &quot;IDL:example/grid:1.0&quot; 
+   :DEFINED_IN &quot;IDL:example:1.0&quot; :VERSION &quot;1.0&quot; :BASE_INTERFACES NIL  @
+  #x86c0732&gt;
+
+; Get the repository ID of the interface
+USER(14): (op:id interfacedef)
+&quot;IDL:example/grid:1.0&quot;
+
+; List the contents of the interface
+USER(15): (op:contents interfacedef :dk_all nil)
+(#&lt; ORBLINK::CORBA-OPERATIONDEF-IMPLEMENTATION :NAME &quot;_get_width&quot; 
+    :ID &quot;IDL:example/grid/_get_width:1.0&quot; :DEF_KIND :DK_OPERATION  @ #x86c247a&gt;
+ #&lt; ORBLINK::CORBA-OPERATIONDEF-IMPLEMENTATION :NAME &quot;_get_height&quot; 
+    :ID &quot;IDL:example/grid/_get_height:1.0&quot; :DEF_KIND :DK_OPERATION  @ #x86c2602&gt;
+ #&lt; ORBLINK::CORBA-ATTRIBUTEDEF-IMPLEMENTATION :NAME &quot;height&quot; 
+    :ID &quot;IDL:example/grid/height:1.0&quot; :DEF_KIND :DK_ATTRIBUTE  @ #x86c37aa&gt;
+ #&lt; ORBLINK::CORBA-ATTRIBUTEDEF-IMPLEMENTATION :NAME &quot;width&quot; 
+    :ID &quot;IDL:example/grid/width:1.0&quot; :DEF_KIND :DK_ATTRIBUTE  @ #x86c392a&gt;
+ #&lt; ORBLINK::CORBA-OPERATIONDEF-IMPLEMENTATION :NAME &quot;set&quot; 
+    :ID &quot;IDL:example/grid/set:1.0&quot; :DEF_KIND :DK_OPERATION  @ #x86c3aca&gt;
+ #&lt; ORBLINK::CORBA-OPERATIONDEF-IMPLEMENTATION :NAME &quot;get&quot; 
+    :ID &quot;IDL:example/grid/get:1.0&quot; :DEF_KIND :DK_OPERATION  @ #x86c3c22&gt;)
+
+</pre>
+
+<h2>Getting the interface repository from an object</h2>
+
+<p>Given any CORBA object o, in theory the invocation: </p>
+
+<pre>
+(op:_get_interface o)
+</pre>
+
+<p>will return an instance of class <code>CORBA:InterfaceDef</code> that can be used (via
+the <code>op:containing_repository</code> method) to get the repository. However, in
+practice some ORBs either do not implement interface repositories or do not enable them by
+default. However, this call should always work for any ORBLink object. In fact, it can be
+used to traverse the repository of all CORBA definitions: given any ORBLink object oo, the
+invocation: </p>
+
+<pre>
+(op:containing_repository 
+ (op:_get_interface 
+   (op:_get_interface oo)))
+</pre>
+
+<p>should return a corba:repository object that represents all of the CORBA Core
+definitions. </p>
+</body>
+</html>

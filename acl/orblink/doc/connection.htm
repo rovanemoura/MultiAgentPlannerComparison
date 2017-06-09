@@ -1,0 +1,243 @@
+<html>
+
+<head>
+<title>Connection Management</title>
+</head>
+
+<body>
+
+<h1>Connection Management in ORBLink</h1>
+
+<hr>
+
+<h2>Connection management introduction and terminology</h2>
+
+<p>Connection management refers to the set of APIs that perform administrative functions
+that handle socket opening and closing. Using the connection management API, an
+application can determine the set of open sockets, can close them when applicable, and can
+set hooks that are called when a particular connection is closed. </p>
+
+<p>All of the connection management APIs are encapsulated in <a href="orblink-idl.htm">IDL</a>.
+</p>
+
+<h2>Junction</h2>
+
+<p>The ORB interfaces to TCP/IP sockets through the abstract interface <code>ORBLink::Junction</code>:
+</p>
+
+<pre>
+module ORBLink{
+  pseudo interface Junction {
+    readonly attribute value socket;
+    unsigned long SecondsIdle();     
+    boolean isOpen();
+};
+</pre>
+
+<p>The attributes and operations supported by the <code>ORBLink::Junction</code>
+pseudointerface (which is to say, the Lisp class named <code>orblink:junction</code>: 
+
+<ul>
+  <li>The <code>socket</code> attribute of <code>ORBLink::Junction</code> is an opaque Lisp
+    type corresponding to the underlying socket stream. </li>
+  <li>The <code>SecondsIdle()</code> operation gives the number of seconds the junction has
+    been idle. It is reset to <code>0</code> on creation or I/O activity, but information
+    requests do not result in resetting the idle time. </li>
+  <li>The <code>isOpen()</code> operation returns <code>T</code> if and only if the junction
+    is actively forwarding messages, that is if its state is <code>open</code>. This state can
+    be set to closed by the <code>ActiveJunction::close()</code> operation. </li>
+</ul>
+
+<h2>Subclasses of Junction</h2>
+
+<pre>
+module ORBLink {...
+  pseudo interface ActiveJunction : Junction { 
+    readonly attribute unsigned long MessagesReceived;
+    readonly attribute string RemoteHost;
+    readonly attribute unsigned long RemotePort;
+    void close();
+    };
+  pseudo interface PassiveJunction : Junction {;};
+  pseudo interface ClientJunction : ActiveJunction {;};
+  pseudo interface ServerJunction : ActiveJunction {};
+ };
+};
+</pre>
+
+<p>Any junction instance is an instance of one of three disjoint classes: 
+
+<ol>
+  <li><code>Orblink:ClientJunction</code><p>An instance of <code>ORBLink:ClientJunction</code>
+    is responsible for forwarding messages, normally request messages, from a CORBA client to
+    a CORBA server. </p>
+  </li>
+  <li><code>ORBLink:ServerJunction</code><p>An instance of <code>ORBLink:ServerJunction</code>
+    is responsible for forwarding messages, normally replies, from a CORBA server to a CORBA
+    client. </p>
+  </li>
+  <li><code>ORBLink:PassiveJunction</code>. <p>An instance of <code>ORBLink:PassiveJunction</code>
+    is responsible for listening to connection requests from prospective clients and
+    allocating Server junctions as necessary to handle the resulting connections. </p>
+  </li>
+</ol>
+
+<h3><code>ActiveJunction</code></h3>
+
+<p>An instance of <code>Orblink:ActiveJunction</code> is either an instance of <code>orblink:clientjunction</code>
+or an instance of <code>orblink:serverjunction</code>. The attributes supported by the
+pseudo-interface <code>ORBLink::ActiveJunction</code> are: 
+
+<ul>
+  <li>The <code>MessagesReceived</code> attribute gives the number of messages that have been
+    received. </li>
+  <li>The <code>RemoteHost</code> attribute gives the name of the host to which the active
+    junction is connected. </li>
+  <li>The <code>RemotePort</code> attribute is the remote port of the corresponding socket. </li>
+</ul>
+
+<p>An instance of <code>orblink:activejunction</code> also supports the <code>close</code>
+operation. When invoked on a junction, the <code>close</code> operation: 
+
+<ul>
+  <li>closes the junction - future invocations of the <code>isOpen()</code> operation will
+    return <code>nil</code> </li>
+  <li>Terminates any associated threads, typically threads listening for input, and </li>
+  <li>closes any associated streams, namely the value of the <code>socket</code> attribute if
+    it is an open stream. </li>
+</ul>
+
+<p>An active junction also closes itself if its associated <code>socket</code> stream
+signals an I/O error, including an EOF error. 
+
+<ul>
+  <li>When a <code>ServerJunction</code> is closed, it removes itself from the list of
+    ServerJunctions maintained by the ORB in its <code>ServerJunctions</code> attribute; it
+    cannot be reused. </li>
+  <li>When a <code>ClientJunction</code> junction is closed, however, it is reopened when a
+    new <code>Request</code> is invoked through that junction. </li>
+</ul>
+
+<h2>Determining the available junctions</h2>
+
+<p>The ORB itself offers facilities for listing the available junctions and for
+customizing the behavior of a junction on closure: </p>
+
+<pre>
+module ORBLink {
+  pseudo interface ORB : CORBA::ORB{
+       readonly attribute ServerJunctionList ServerJunctions;
+       readonly attribute ClientJunctionList ClientJunctions;
+       readonly attribute PassiveJunctionList PassiveJunctions;
+ };
+};
+</pre>
+
+<p>The <code>ORBLink::ORB::ServerJunctions</code>, <code>ORBLink::ORB::ClientJunctions</code>,
+and <code>ORBLink::ORB::PassiveJunctions</code> attributes contain lists of the
+operational junctions of the appropriate type. </p>
+
+<p>Thus, the forms: </p>
+
+<pre>
+(op:serverjunctions corba:orb)
+(op:clientjunctions corba:orb)
+(op:passivejunctions corba:orb)
+</pre>
+
+<p>Will return lists (or sequences) of the server, client, and passive junctions. </p>
+
+<h2>Junction close policies</h2>
+
+<p>The behavior of junctions on closure is determined by the following pseudo-IDL: </p>
+
+<pre>
+module ORBLink {
+  pseudo interface ORB : CORBA::ORB{
+    attribute boolean HandleJunctionClosePolicy;
+    void HandleJunctionClose (in Junction j);
+}
+</pre>
+
+<p>When the value of the <code>HandleJunctionClosePolicy</code> attribute of the <code>corba:orb</code>
+singleton is <code>nil</code>, junction closure operates normally. </p>
+
+<p>When the value of the <code>HandleJunctionClosePolicy</code> attribute of the <code>corba:orb</code>
+singleton is <code>T</code>, on the other hand, after a junction <code>j</code> is closed
+the <code>HandleJunctionClose</code> operation of the <code>CORBA:ORB</code> object is
+invoked with parameter of <code>j</code>. In this case, the user should override the
+definition of <code>HandleJunctionClose</code>. </p>
+
+<p>For example, the following set of definitions will print a message whenever a junction
+is closed: </p>
+
+<pre>
+(corba:define-method HandleJunctionClose ((orb ORBLink:ORB) junction)
+  (format t &quot;HandleJunctionClose: closed junction: ~s ~%&quot; junction)
+  (force-output) 
+)
+
+(setf (op:HandleJunctionClosePolicy CORBA:ORB) T)
+</pre>
+
+<h2>Junction error policies</h2>
+
+<p>The behavior described in this section is experimental and has not been tested. </p>
+
+<p>The behavior of the ORB on a server junction error (that is, an I/O error, as
+contrasted with an error signalled by a servant) is also customizable. It is encapsulated
+in the ORB IDL: </p>
+
+<pre>
+module ORBLink {
+  pseudo interface ORB : CORBA::ORB{
+    enum ServerJunctionErrorPolicyType {continue, debug, handle};
+    attribute ServerJunctionErrorPolicyType ServerJunctionErrorPolicy;
+ };
+};
+</pre>
+
+<p>Because a junction error results in a junction close, normally customization of the
+close method is sufficient. </p>
+
+<p>The server junction error handling is determined by the <code>ServerJunctionErrorPolicy</code>
+attribute of <code>CORBA:ORB</code>: 
+
+<ol>
+  <li>If this value is <code>:continue</code>, the error is ignored. </li>
+  <li>If the value is <code>:debug</code>, a debugger is invoked. </li>
+  <li>If the value is <code>:handle</code>. the <code>HandleJunctionError</code> operation on
+    the <code>CORBA:ORB</code> object is invoked with parameters the server junction that
+    caused the error and the error itself. </li>
+</ol>
+
+<p>The default value of the ServerJunctionErrorPolicy is <code>:continue</code>. </p>
+
+<p>Client junction errors are normally signalled back to the invoking client; thus, client
+junction error customization is not exposed in this API. </p>
+
+<h2>Forcing errors to outstanding requests when a socket closes</h2>
+
+<p>In release 6.1, a new function has been added to let an application force errors to all
+outstanding requests when a socket closes. The function is <strong>orblink:break-pending-requests</strong>:
+</p>
+
+<h3>orblink:break-pending-requests <em>junction</em> </h3>
+
+<p>This function takes an Orblink junction as its argument and generates an error response
+for any outstanding request made on the junction. </p>
+
+<p>A typical use: </p>
+
+<pre>(setf 
+  (op:HandleJunctionClosePolicy CORBA:ORB) t 
+  (op:ServerJunctionErrorPolicy CORBA:ORB) :handle 
+  (op:break_policy corba:orb) :return) </pre>
+
+<pre>(corba:define-method HandleJunctionClose ((orb ORBLink:ORB) junction) 
+   (orblink:break-pending-requests junction)) </pre>
+
+<p>This will cause a transient error return to any process waiting for a response on a
+broken socket.</p>
+</body>
+</html>

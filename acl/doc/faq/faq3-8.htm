@@ -1,0 +1,63 @@
+<html>
+
+<head>
+<title>Allegro CL FAQ 3.8: Building images</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<h3>3.8: Building images</h3>
+
+<p><a href="#381">Q 3.8-1) I get an error when I try to build an image with
+excl:build-lisp-image (and also with excl:generate-application) but the build process
+simply quits. How can I debug this error?</a><br>
+<a href="#384">Q 3.8-4) I notice that when I run generate-application, a license file is
+placed in the distribution directory. Is that license file tied to the image file?</a></p>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="381"></a><strong>Q 3.8-1)</strong> I get an error when I try to build an image
+with <strong>excl:build-lisp-image</strong> (and also with <strong>excl:generate-application</strong>)
+but the build process simply quits. How can I debug this error?</p>
+
+<p><strong>A 3-8.1)</strong> Since <a href="../operators/excl/generate-application.htm">generate-application</a>
+calls <a href="../operators/excl/build-lisp-image.htm">build-lisp-image</a>, the same
+answer applies to both functions.</p>
+
+<p>See section <a href="../building-images.htm#build-debug-1">Debugging an image build
+problem or failure</a> in <a href="../building-images.htm">building-images.htm</a>.</p>
+
+<hr>
+
+<p><a name="384"></a><strong>Q 3.8-4)</strong> I notice that when I run <a
+href="../operators/excl/generate-application.htm">generate-application</a>, a license file
+is placed in the distribution directory. Is that license file tied to the image file?</p>
+
+<p><strong>A 3.8-4)</strong> There is a license file created when <a
+href="../operators/excl/generate-application.htm">generate-application</a> is called. It
+is named <em>&lt;application-name&gt;.lic</em> and is placed in the distribution
+directory. It must be there to run the application and it is tied to the application image
+(<em>dxl</em>) file: it only works with that image file and that image file only works
+when the license file is present. If you have to update the image file (for example, to
+add new features to the application or to fix bugs), be sure to create the new image using
+<a href="../operators/excl/generate-application.htm">generate-application</a> (which will,
+of course, create a whole directory of files including the image and a new license file)
+and be sure to send at least both the image and the license file to the application users.
+(The more typical thing to do is to send the whole directory.)</p>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq3-9.htm">3.9 Heap placement issues</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq3-7.htm">3.7 The stepper</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999, 2002, 2004 Franz Inc., Berkeley, CA.&nbsp; All rights
+reserved.</small><br>
+<small>$Revision: 1.2 $</small></p>
+</body>
+</html>

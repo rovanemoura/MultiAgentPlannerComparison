@@ -1,0 +1,327 @@
+<html>
+
+<head>
+<title>Chapter 4: Drawing the Cycloidal Curve</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 4</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></td>
+        <td align="left" bgcolor="#00FFFF"></a><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h2>Chapter 4: Drawing the Cycloidal Curve</h2>
+
+<ol>
+  <li>Start Allegro CL if you exited in <a href="doodler-ch3.htm">Chapter 3</a>. Open the <strong>gui-builder-tutorial</strong>
+    project we left in <a href="doodler-ch3.htm">Chapter 3</a>. (If you have restarted Allegro
+    CL, a dialog may appear asking if you want to open that project, along with any other
+    projects recently worked on. If not, use <strong>File | Open Project</strong> and choose
+    the file <strong>gui-builder-tutorial.lpr</strong> in your tutorial project directory,
+which is <strong>C:\Program
+Files\allegro-projects\gui-builder-tutorial\</strong> or
+<strong>allegro-projects/gui-builder-tutorial/</strong> on Linux if
+you used the defaults. The <strong>Recent</strong> menu may also provide a way to open the
+    project.) You should now be where you stopped at the end of <a href="doodler-ch3.htm">Chapter
+    3</a>. </li>
+</ol>
+
+<h2>Activating the Draw All Button</h2>
+
+<ol start="2">
+  <li>Open the Project Manager (<strong>View | Project Manager</strong>) if necessary. Display
+    the <strong>curve-dialog</strong> form by selecting it from the list on the General tab
+    and clicking on the <strong>View Selected Form</strong> button. </li>
+  <li>Inspect the <strong>draw-all</strong> button. Switch to <strong>Events</strong> tab of
+    the Inspector by clicking on the <strong>Events</strong> button. Click on the Extended
+    Editor key (the one with 3 dots) for the <strong>on-change</strong> event. </li>
+</ol>
+
+<blockquote>
+  <p>You will be placed in the curve-dialog buffer of the Editor Workbook. You'll see the <strong>defclass</strong>
+  you pasted in earlier and some skeleton code for the <strong>on-change</strong> handler
+  named <strong>curve-dialog-draw-all-button-on-change</strong>. You are going to replace
+  this code.</p>
+  <p>There is a class supplied by <em>cycloid.cl</em> (one of the files you copied to the
+  tutorial project directory) that will draw itself, called <strong>cycloidal-curve</strong>.
+  You are setting up the <strong>draw-all</strong> button to act on that class.</p>
+</blockquote>
+
+<ol start="4">
+  <li>In the <em>curve-dialog.cl</em> editor, modify the <strong>curve-dialog-draw-all-button-on-change</strong>
+    function to match the following:</li>
+</ol>
+
+<blockquote>
+  <pre>(defun curve-dialog-draw-all-button-on-change 
+    (widget new-value old-value)
+ (declare 
+   (ignore-if-unused widget new-value old-value))
+ (when new-value
+   (draw-all (parent widget)))
+ (not new-value))</pre>
+</blockquote>
+
+<ol start="5">
+  <li>Now add the <strong>draw-all</strong> method to the same buffer.</li>
+</ol>
+
+<blockquote>
+  <pre>(defmethod draw-all ((dialog curve-dialog))
+  (let ((curve-list 
+         (find-component :curve-list dialog))
+        (pane (frame-child (owner dialog))))
+    (dolist (curve (range curve-list))
+      (draw-curve pane curve))))</pre>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>What&#146;s going on?</h3>
+    <p><strong>frame-child</strong> fills the client area of the Doodler window, and is a
+    child-window of doodler. It is where cycloidal curves get drawn. As the Doodler window
+    gets resized and moved, the <strong>frame-child</strong> gets repositioned and redrawn to
+    match. </p>
+    <p>doodler has a <strong>frame-child</strong> because it inherits that property from <strong>non-refreshing-window</strong>;
+    its parent class. You&#146;re going to see some of the consequences of inheriting from <strong>non-refreshing-window</strong>
+    soon.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="6">
+  <li>Click on the Save All button or choose <strong>File | Save All</strong>. </li>
+</ol>
+
+<blockquote>
+  <p><img src="ch1-1-sa.jpg" width="128" height="37" alt="ch1-1-sa.bmp (14262 bytes)"></p>
+</blockquote>
+
+<ol start="7">
+  <li>Recompile everything by clicking <strong>Tools | Full Compile</strong>. </li>
+  <li>Run the doodler by clicking <strong>Run | Run Project</strong> or the <strong>Run</strong>
+    button. </li>
+  <li>Display the Curves dialog and click on the <strong>Draw All</strong> button. You should
+    see the top portion of a cycloidal curve displayed in the lower-right corner of the
+    Doodler. If not, increase the width and height of your Doodler window. </li>
+  <li>Try minimizing and restoring the running Doodler window. (Or, move the Curves window
+    over the drawing and then away from it.) Notice that the curve disappears. Close the
+    running project and proceed to the next step.</li>
+</ol>
+
+<blockquote>
+  <p>The drawing has not refreshed itself because the type of window (a subclass of <strong>non-refreshing-window</strong>)
+  has no backing-store. This will be changed during step 16. </p>
+  <p>Stop running the Doodler before continuing with the next step.</p>
+</blockquote>
+
+<h2>Using a bitmap-window</h2>
+
+<ol start="11">
+  <li>In the Project Manager, select <strong>curve-dialog</strong> and click on the <strong>View
+    Selected Code</strong> button. </li>
+  <li>Search for the call to <strong>draw-curve</strong> in the <strong>draw-all</strong>
+    method. Place the cursor in between the open parenthesis and the <strong>draw-curve</strong>.
+    Click <strong>Search | Find in Files</strong>. </li>
+  <li>The <strong>Definitions</strong> dialog should be displayed with the symbol set as <strong>draw-curve</strong>.
+    Make sure the <strong>Project</strong> radio button is selected in the Search area in the
+    middle of the dialog (the other choices are <strong>Editors</strong> and <strong>Directories</strong>).
+    Click on the <strong>Search</strong> button in the dialog. </li>
+  <li>Two references should be found, one in <em>curve-dialog.cl</em> (which we are already
+    looking at) and one in <em>cycloid.cl</em>. (You added the supplied file <em>cycloid.cl</em>
+    to the project in chapter 1.) Double click on <em>cycloid.cl</em> and the source for <strong>draw-curve</strong>
+    is displayed in a new editor called <em>cycloid.cl</em>. </li>
+  <li>In the Project Manager dialog choose the doodler form and click on it <strong>View
+    Selected Code</strong>, displaying the associated code. </li>
+  <li>In the <em>doodler.cl</em> editor, change the <strong>defclass</strong> to match the
+    following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defclass doodler (bitmap-window)
+    ((doodler-curve-dialog
+      :accessor doodler-curve-dialog
+      :initform nil)))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>(The only change is the superclass of doodler is now <strong>bitmap-window</strong>,
+  not <strong>non-refreshing-window</strong>.)</p>
+</blockquote>
+
+<ol start="17">
+  <li>Evaluate the new <strong>defclass</strong>. </li>
+  <li>Make sure that there is no currently running Doodler (close the running Doodler project
+    if you find one). Click on the <strong>Run Project</strong> button to run the Doodler
+    again. Save All files when prompted. </li>
+</ol>
+
+<blockquote>
+  <p><img src="ch1-4-rb.jpg" width="148" height="32" alt="ch1-4-rb.bmp (14262 bytes)"></p>
+</blockquote>
+
+<ol start="19">
+  <li>In the running Doodler, try drawing the curve and scrolling the Doodler window, etc. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>What&#146;s going on?</h3>
+    <p>The cycloidal curve will now be redrawn whether you minimize/maximize or scroll
+    up/scroll down because you've changed the Doodler class to one (<strong>bitmap-window</strong>)
+    with a backing store. </p>
+    <p>The original choice of a parent class for doodler was <strong>non-refreshing-window</strong>.
+    That was a reasonable choice for a parent if you thought your display would never need
+    refreshing. <strong>non-refreshing-windows</strong> can display bitmaps but won&#146;t
+    repaint them. Since this window now needs occasional refreshing, you've changed the parent
+    class portion of <strong>defclass</strong> to accommodate that. CLOS permits you to change
+    these relationships dynamically and on-the-fly.</p>
+    <p>Graphics are usually best displayed in a <strong>bitmap-window</strong> unless you are
+    using them as a splash screen or in a modal dialog.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Leave the Doodler project running and go to the next step.</p>
+</blockquote>
+
+<h2>Activating the Scroll to Center Button</h2>
+
+<ol start="20">
+  <li>In the doodler buffer, change the definition of <strong>doodler-toolbar-click</strong>
+    to match the following:</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defun doodler-toolbar-click 
+    (widget new-value old-value)
+   (declare 
+     (ignore-if-unused widget new-value old-value))
+   ;; Do the action only when a button is 
+   ;; being pressed (not unpressed)
+   (when new-value
+      (let ((doodler (parent (parent widget))))
+         (case (first new-value)
+           (:curve 
+             (show-curve-dialog doodler))
+           (:scroll-to-center
+             (scroll-to-center doodler))
+           (t nil))))
+   (not new-value))</pre>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>This code adds a <strong>scroll-to-center</strong> method. The method will be the next
+  thing you test in the running project. It is already included in your project, in the <em>util.cl</em>
+  file.</p>
+</blockquote>
+
+<ol start="21">
+  <li>Save the doodler buffer and evaluate the new <strong>doodler-toolbar-click</strong>
+    function. </li>
+  <li>In the running Doodler, click on the <strong>Scroll to Center</strong> button and watch
+    the graphics reposition. Leave the running project open and go to the next step. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h3>What happened?</h3>
+    <p>You didn&#146;t need to stop the running project or compile to see the changes provided
+    by the new scroll-to-center method. An incremental evaluation and saving the buffer was
+    all you needed for Lisp to be able to use the new method.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Activating the Erase button</h2>
+
+<ol start="23">
+  <li>23.&nbsp;&nbsp;&nbsp; In the doodler buffer, change <strong>doodler-toolbar-click</strong>
+    to match the following:</li>
+</ol>
+
+<blockquote>
+  <pre>(defun doodler-toolbar-click 
+    (widget new-value old-value)
+   (declare 
+     (ignore-if-unused widget new-value old-value))
+   ;; Do the action only when a button is 
+   ;; being pressed (not unpressed)
+   (when new-value
+      (let ((doodler (parent (parent widget))))
+        (case (first new-value)
+          (:erase
+            (erase-window doodler))
+          (:curve 
+            (show-curve-dialog doodler))
+          (:scroll-to-center
+            (scroll-to-center doodler))
+          (t nil))))
+   (not new-value))</pre>
+</blockquote>
+
+<ol start="24">
+  <li>Evaluate the new <strong>doodler-toolbar-click</strong> function and save the doodler
+    buffer. </li>
+  <li>In the doodler buffer, add the new <strong>erase-window</strong> method.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <pre>(defmethod erase-window ((window doodler))
+  (let ((pane (frame-child window)))
+    (erase-contents-box pane (page-box pane))))</pre>
+  </blockquote>
+</blockquote>
+
+<ol start="26">
+  <li>Evaluate the <strong>erase-window</strong> method and save the doodler buffer. </li>
+  <li>In the running Doodler, try clicking on the <strong>Erase</strong> button. Watch the
+    graphics disappear. </li>
+  <li>Click on the <strong>Save All</strong> button to save all of your changes. </li>
+  <li>Go on to <a href="doodler-ch5.htm">Chapter 5</a>. If you wish to, you can stop working
+    on the tutorial now and return to it later. All the work you have done has been saved. </li>
+</ol>
+
+<p><small><small>Copyright © 2001-2004 Franz Inc. All rights reserved.</small></small></p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch1.htm"><b>Chapter 1</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 4</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></td>
+        <td align="left" bgcolor="#00FFFF"></a><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

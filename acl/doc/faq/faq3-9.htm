@@ -1,0 +1,845 @@
+<html>
+
+<head>
+<title>Allegro CL FAQ 3.9: Heap placement</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<h3>3.9: Heap placement issues</h3>
+
+<p>When Allegro CL starts, it maps the image, data, and shared objects to memory. With
+larger images and applications, this mapping has become a concern for programmers. In this
+collection of FAQ entries, we describe the issues surrounding heap placement. </p>
+
+<blockquote>
+  <p><a href="#391">Q 3.9-1) Sometimes Allegro CL, particularly large images, run out of
+  memory or fail totally with a bus error or a segv. Why might this be happening?</a><br>
+  <a href="#392">Q 3.9-2) How is heap placement determined and what can go wrong?</a><br>
+  <a href="#393">Q 3.9-3) How does Lisp start up, in terms of shared-library linking and
+  loading?</a><br>
+  <a href="#394">Q 3.9-4) What is the &quot;Old Sun4&quot; problem?</a><br>
+  <a href="#395">Q 3.9-5) How can I tell what addresses are being used in my process space?</a><br>
+  <a href="#396">Q 3-9.6) [Windows only] How do I move DLL in memory so that it doesn't
+  conflict with the Lisp heap?</a><br>
+  <a href="#397">Q 3-9.7) What does the &quot;Temporarily scaling back lisp reserved region
+  from XXX to YYY bytes.&quot; mean?</a></p>
+</blockquote>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="391"></a><strong>Q 3.9-1)</strong> Sometimes Allegro CL, particularly large
+images, run out of memory or fail totally with a bus error or a segv. Why might this be
+happening?</p>
+
+<p><strong>A 3.9-1)</strong> There are problems with the memory mapping and locations of
+the Lisp and foreign (C) heaps in a running Lisp image. We refer to these problems
+collectively as the <em>heap placement problem</em>. While these problems are not in fact
+new, they are only triggered when the Lisp image is large (typically greater than 500
+Mbytes). Only recently have such large images become common.</p>
+
+<hr>
+
+<p><a name="392"></a><strong>Q 3.9-2)</strong> How is heap placement determined and what
+can go wrong?</p>
+
+<p><strong>A 3.9-2)</strong> When Allegro CL starts up, space must be found for the
+following: 
+
+<ul>
+  <li>The Lisp heap. This is where Lisp data is stored.</li>
+  <li>The C heap. This is where space allocated by aclmalloc is located, along with the value
+    of certain C variables. Note that <em>C heap</em> is an unfortunate name because it is not
+    directly related to C.</li>
+  <li>Shared libraries. These are the .so (on most UNIX machines), .sl (on HP's), and .dll (on
+    Windows) files built with the system.</li>
+  <li>The stack.</li>
+</ul>
+
+<p>If you use 32 bit addressing (as Allegro CL does on most platforms), there are
+potentially 4 Gigabytes of address space. However, most operating systems only allow 31
+bit addresses, so only 2 Gigabytes are really available. Locations near address 0 (the
+bottom) are usually used by OS or kernel related things. Allegro CL therefore usually
+tries to start at some OS-dependent location, typically x20000000, so there is about 1.6
+Gigabytes potentially above that. That is plenty for an application that uses less than,
+say, 0.5 Gigabytes, but as the application grows to, say, 1.5 Gigabytes, finding enough
+space becomes problematic.</p>
+
+<p>A further complication arises from mapping of shared libraries, including the Allegro
+CL shared library which has extension .pll. Most shared libraries have a location where
+they prefer to be mapped. In some cases, problems arise if they cannot be mapped in that
+location.</p>
+
+<p>Finally, Lisp has an idea (provided by the <em>lisp-heap-size</em> argument to <a
+href="../operators/excl/build-lisp-image.htm">build-lisp-image</a> (see <a
+href="../building-images.htm">building-images.htm</a>) of how much space it will need.
+When Lisp starts up, it tries to &quot;get&quot; that amount of space. We put
+&quot;get&quot; in quotation marks because it does not have a platform-independent
+meaning. On some (Sparcs, e.g.) you can reserve space but, like a reserve credit line, it
+is only taken when actually needed. More precisely, on such machines, Allegro CL reserves
+that amount of space. The Operating System then precludes other programs from using the
+reserved address space, but does not map the reserved space to actual swap space. When
+reserved space is mapped to swap space, the space is then <em>committed</em>. This is fine
+on the machines that support the distinction between reserved and committed space, but
+some machines (HP's running HP-UX 10.20, machines running Linux, and IBM machines running
+AIX) do not. On these machines the space you need is committed as soon as asked for, and
+so specifying a large lisp-heap-size on those machines can cause excessive swap space
+usage if the committed space is not actually needed.</p>
+
+<p>So , what might go wrong when Allegro CL starts up? The following might be problems: 
+
+<ul>
+  <li>On machines (like some HP's, IBM, and Linux) that do not support a reserve/commit
+    distinction, there may not be sufficient swap space to accommodate the requested Lisp heap
+    size.</li>
+  <li>Shared libraries may not be mapped at their desired locations. The worst offender in
+    this regard is Windows NT. In some cases where a .dll cannot be mapped where it wants to
+    be, it will not work properly.</li>
+  <li>Even if there is space to map everything, the first try at mapping may fail and
+    everything may need to be remapped. If the relocation is not done properly, this can cause
+    Lisp to fail.</li>
+</ul>
+
+<p>Even though this problem may affect any user of Allegro CL or an Allegro CL
+application, it is mostly a problem with developers of programs which will be distributed
+to a user base. Users who have an Allegro CL distribution and use a particular machine
+can, perhaps with trial and error (and perhaps with assistance from Franz Inc.), figure
+out how to build an image that will work on that machine. But VAR's, say, who are
+preparing a distribution requiring large images which will be sent to many customers, each
+of whom may have a different machine configuration and different programs running, may
+find it difficult to produce a single image suitable for all potential users on a
+particular platform.</p>
+
+<p>Programmers can affect heap placements using these arguments to <a
+href="../operators/excl/build-lisp-image.htm">build-lisp-image</a> (see <a
+href="../building-images.htm">building-images.htm</a>): 
+
+<ul>
+  <li><em>lisp-heap-start </em></li>
+  <li><em>lisp-heap-size </em></li>
+  <li><em>c-heap-start </em></li>
+  <li><em>c-heap-size </em></li>
+</ul>
+
+<p>Improvements in heap location management made available staring in release 5.0.1 make
+the successful mapping of large images more likely, and make the providing of one image
+for all users on a particular platform easier to solve. But, any application that uses
+most of the available address space is in danger of running into machine constraints which
+make the application fail. </p>
+
+<hr>
+
+<p><a name="393"></a><strong>Q 3.9-3)</strong> How does Lisp start up, in terms of
+shared-library linking and loading?</p>
+
+<p><strong>A 3.9-3)</strong> This is a complicated answer. We start with some terminology:
+
+<ul>
+  <li><em>Shared-library</em>: A program unit that can be linked or loaded into a program,
+    which usually has a <em>.dll</em> extension for Windows, a <em>.sl</em> extension for
+    HP-UX, and a <em>.so</em> extension for all other UNIX systems. Shared libraries come in
+    three flavors: </li>
+</ul>
+
+<blockquote>
+  <ol>
+    <li><strong>The ACL shared library</strong>: This shared-library holds the base ACL system,
+      and is sometimes known by the term &quot;acldll&quot;. On Windows it is known as <em>aclxxx.dll</em>,
+      and on UNIX it is called <em>libaclxxx.ext</em> where <em>xxx</em> is a version number and
+      <em>.ext</em> is either .<em>sl</em> or <em>.so</em>.</li>
+    <li><strong>System libraries</strong>: shared-libraries that are pre-linked into either the
+      ACL shared-library or the executable that loads the ACL library, or any shared-library on
+      which a system library is dependent. This is a broad definition of system library, and can
+      include any user-supplied library that has been linked into the executable. </li>
+    <li><strong>User loaded libraries</strong>: These are libraries that are loaded with the
+      Common Lisp LOAD function, but not pre-linked as are system libraries.</li>
+  </ol>
+</blockquote>
+
+<ul>
+  <li><em>Executable</em>: a program that either links or loads and invokes the ACL shared
+    library. We supply several executables in the distribution, one called <em><strong>mlisp.exe</strong></em>
+    on Windows and <strong><em>mlisp</em></strong> on unix. However, any program can be built
+    that does the equivalent (see on Windows, for example, <a href="../dll.htm">dll.htm</a>).
+    The executable <em>loads</em> the ACL shared library, and <em>invokes</em> it by getting
+    and executing the<strong> lisp_init()</strong> function. (You can provide your own main()
+    that calls lisp_init(), see <a href="../main.htm">main.htm</a>.)</li>
+  <li><em>Heap file</em>: a file with a <em>.dxl</em> extension (also called an <em>image file</em>)
+    that holds the two Lisps heaps. One is the C heap, which is not directly C related, but
+    which holds non-Lisp data including C variable values and data allocated by <strong>aclmalloc</strong>.
+    The other heap is the Lisp heap, which holds all mutable Lisp data.</li>
+  <li><em>Pure Lisp library</em>: A file with a <em>.pll</em> extension, which may be
+    optionally loaded into a Lisp process and which contains read-only Lisp data.</li>
+  <li><em>Link</em>: A process of attaching shared-libraries by name to an executable, usually
+    by a linker program or by a compiler that automatically invokes a linker. Shared libraries
+    and their symbols are not usually actually included into a program when linked, but
+    references by name are made and the linked library is required to be available before the
+    executable can start. </li>
+  <li><em>Load</em>: A process by which a shared-library is dynamically mapped into the memory
+    space of an already-running executable. The functions to call to load a shared-library are
+    <strong>LoadLibrary()</strong> on Windows, <strong>shl_load()</strong> on HP-UX with
+    32-bit Lisps, and <strong>dlopen()</strong> on other unix systems. The <strong>load</strong>
+    Common Lisp function of Allegro CL calls one of these functions when it sees that the file
+    being loaded is a shared-library.</li>
+  <li><em>Bind</em>: Attaching functions within a shared-library to allow those functions to
+    be called. The <strong>ff:def-foreign-call</strong> function in Allegro CL creates a
+    binding location that is automatically updated when shared-libraries are loaded that
+    supply the functions. The executable must bind the symbol <strong>lisp_init</strong> in
+    the ACL shared library in order to call it. Binding is done by getting the address of the
+    function's code, by <strong>GetProcAddress()</strong> in Windows, <strong>shl_findsym()</strong>
+    on HP-UX, and <strong>dlsym()</strong> on other unix systems.</li>
+  <li><em>Invoke</em>: The process of calling a function which has been bound. C invokes a
+    function that has been bound by using a &quot;pointer-to-function&quot; construct. Lisp
+    uses <strong>ff:def-foreign-call</strong> to bind a C function in such a way that it looks
+    like a Lisp function.</li>
+  <li><em>Committed area</em>: An area of memory that is mapped in <em>and</em> which consumes
+    real memory, one page of real memory for each page of address space. The real memory might
+    be physical memory (RAM), or it can be swap memory on disk, or it might even be a specific
+    file, also on disk. The Committed area of the Lisp heap is usually the area bounded by the
+    &quot;Top&quot; address in the room display.</li>
+  <li><em>Reserved area</em>: An address range of memory is reserved when no other program
+    unit has the right to map anything into that range, but the address range is not committed
+    by actual swap space. This is the area that is desired by the<font face="Courier New">
+    :lisp-heap-size</font> argument to <a href="../operators/excl/build-lisp-image.htm">build-lisp-image</a>
+    (see <a href="../building-images.htm">building-images.htm</a>). It is carried through all
+    dumplisps (see <a href="../dumplisp.htm">dumplisp.htm</a>), although it may grow as the
+    committed area overflows this value, but the space for the reserved area is only allocated
+    if there is enough space for it. The <em>reason</em> for having a reserved area, instead
+    of simply allocating memory that the operating system will give, is because as the Lisp
+    heap grows, its addresses must grow monotonically increasing; new spaces must be always at
+    higher addresses. (Note: HP-UX, AIX, and Linux systems do not provide the concept of
+    reserved areas; instead, all memory that is mapped is immediately committed. On these
+    systems, one should estimate the lisp-heap-size more accurately, since more swap is
+    consumed for larger lisp-heap-sizes).</li>
+</ul>
+
+<h3>The Startup Process: </h3>
+
+<ol>
+  <li><strong>The operating system starts up the executable</strong>. Before the executable is
+    able to start running, all system libraries must be loaded into memory and available.
+    Various operating systems do this in various ways, using implementation dependent
+    algorithms to place the libraries into memory. Also, whether all symbols are bound at the
+    time of the library placement or whether the symbols are bound lazily (i.e., when needed
+    only) is OS dependent; some systems may provide both.</li>
+  <li><strong>The executable begins to run</strong>. It may perform any operations it wants to
+    do, including loading shared-libraries.</li>
+  <li><strong>The ACL shared-library is loaded if necessary and lisp_init is invoked</strong>.
+    The operating system ensures that all shared-libraries that were linked into the ACL
+    shared-library are loaded before lisp_init is allowed to start. If the ACL shared-library
+    was linked in, lisp_init can be called immediately. Step 1 above assured that all proper
+    links are done. See <a href="../main.htm">main.htm</a> for further details.</li>
+  <li><strong>lisp-init determines a heap (image) file</strong>, with extension typically
+    .dxl. The heap file contains state information about the image, including whether a Pure
+    Lisp Library will be used. The .dxl and .pll are loaded into memory in the following
+    manner: </li>
+  <li><strong>The C heap is mapped in, and C variables are set</strong>. If a .pll file is to
+    be used this fact becomes known at this time. The C heap can not be relocated from where
+    it was first built.</li>
+  <li><strong>The .pll file, if present, is mapped in read-only</strong>. If it can't be
+    mapped into the location it had been in a previous incarnation of Lisp, it is moved to
+    another location. (Except when an image is built with <a
+    href="../operators/excl/build-lisp-image.htm">build-lisp-image</a>, there is always
+    a previous incarnation of Lisp, perhaps the one that ran when the image was built.)</li>
+  <li><strong>The Lisp heap is mapped in</strong>. The best case is if the heap can be placed
+    at the address and size that were specified by the build parameters. If those can't be
+    satisfied, decreasing sizes are tried until either one is successful or the current commit
+    level is passed (at the same address), followed by an operating-system-selected space of
+    the built size, followed by decreasing sizes tried at OS selected locations until one is
+    successful or the current commit level is passed (at which time Lisp startup fails). If
+    the lisp-heap-size happens to be larger than the available swap, then only as much as can
+    be actually allocated is used, as long as it is at least as large as the commit
+    requirement. </li>
+  <li><strong>Pointers are adjusted if the Lisp heap or the .pll file had to be moved</strong>.
+    (The Lisp heap file might have to be moved because the Lisp heap start address is not
+    available, e.g. The .pll file might have to be moved if the address in the previous Lisp
+    invocation is unavailable.) All pointers to the expected locations of the Lisp heap file
+    and the pll file are moved to the new locations. This step is performed all at once, to
+    ensure proper pointer movement.</li>
+  <li><strong>The Lisp starts</strong>. The process by which the Lisp starts is documented by
+    the source file, <em>&lt;allegro directory&gt;/src/aclstart.cl</em>, which is provided in
+    your distribution, and described in <a href="../startup.htm">startup.htm</a>. As one of
+    the items in <em>aclstart.cl</em>, <strong>excl::reload-fix-entry-points</strong> (this
+    function is not further documented) is called, which ensures that all system and user
+    libraries are loaded if they are not already. This may involve performing a <strong>load</strong>
+    on any libraries that were not loaded.</li>
+</ol>
+
+<p>Now, there is a potential problem with the last step. If 
+
+<ul>
+  <li>there are user libraries that are to be loaded, and</li>
+  <li>the <em>lisp-heap-size</em> is specified as larger than the available swap space, and</li>
+  <li>a contiguous address space is found for the Lisp heap that is also larger than the
+    available swap,</li>
+</ul>
+
+<p>then it is conceivable that there will be no swap left for the loading of the user
+libraries. </p>
+
+<p>In this situation, it would be best for the executable to be programmed to pre-load the
+user librar(y/ies) so that the space is pre-allocated. (You do this by writing a
+customized main() that loads the needed libraries, see <a href="../main.htm">main.htm</a>.)
+But this presents the possibility that the user library might break up the contiguous
+address space for the Lisp heap, especially on Windows. The problem in intractable in
+general, but solvable in individual cases.</p>
+
+<hr>
+
+<p><a name="394"></a><strong>Q 3.9-4)</strong> What is the &quot;Old Sun4&quot; problem?</p>
+
+<p><strong>A 3.9-4)</strong> There are some Sun4 machines which, although they can run
+late versions of Solaris 2.x, cannot mmap addresses in higher memory than approximately
+0x10000000. It is problematic to build a Lisp image on one of these machines, because the
+Lisp and C heaps must be relatively small.</p>
+
+<p>You can build a Lisp image that will run on all Sparcs running the appropriate levels
+of Solaris 2, but which will be limited in address space, if you build your Lisp image
+(using <a href="../operators/excl/build-lisp-image.htm">build-lisp-image</a>, see <a
+href="../building-images.htm">building-images.htm</a>, or <a
+href="../operators/excl/generate-application.htm">generate-application</a>, see <a
+href="../delivery.htm">delivery.htm</a>) with the following parameters: </p>
+
+<blockquote>
+  <ul>
+    <li>:lisp-heap-start #x4000000 </li>
+    <li>:lisp-heap-size #xfa0000 ; 16 Mb </li>
+    <li>:c-heap-start #xc000000 </li>
+    <li>:c-heap-size #xfa000 ; 1 Mb </li>
+  </ul>
+</blockquote>
+
+<p>If you want to build your Lisp so that it can grow, the C heap must be higher; with the
+&quot;heap placement patch&quot; it defaults to #x54000000. But this will also preclude
+any use of the resulting images on old Sun4s. We have left you with the choice to make,
+instead of making it for you.</p>
+
+<hr>
+
+<p><a name="395"></a><strong>Q 3.9-5)</strong> How can I tell what addresses are being
+used in my process space?</p>
+
+<p><strong>A 3.9-5)</strong> There is a C function in the lisp:</p>
+
+<pre>  void memory_status_dump(char *file);</pre>
+
+<p>If you define a foreign call to this function and then call it while the lisp is
+running, it will give you a dump of every address in the process, and its status.</p>
+
+<p>For example, on Windows:</p>
+
+<pre>USER(1): (ff:def-foreign-call (memory-status-dump &quot;memory_status_dump&quot;) ())
+MEMORY-STATUS-DUMP
+USER(2): (memory-status-dump &quot;c:/tmp/mem.txt&quot;)</pre>
+
+<pre>Then, c:/tmp/mem.txt will contain:</pre>
+
+<pre>        0 -      ffff       65536     free            ----
+    10000 -     10fff        4096   commit private    rw--
+    11000 -     1ffff       61440     free            ----
+    20000 -     20fff        4096   commit private    rw--
+    21000 -    3fffff     4059136     free            ----
+   400000 -    400fff        4096   commit   image    r---
+   401000 -    405fff       20480   commit   image    r-x-
+   406000 -    406fff        4096   commit   image    r---
+   407000 -    414fff       57344   commit   image    rw--
+   415000 -    415fff        4096   commit   image    r---
+   416000 -    41ffff       40960     free            ----
+   420000 -   141bfff    16760832  reserve private        
+  141c000 -   141cfff        4096   commit private    rw-- (guard)
+  141d000 -   141ffff       12288   commit private    rw--
+  1420000 -   1426fff       28672   commit private    rw--
+  1427000 -   151ffff     1019904  reserve private        
+  1520000 -   1520fff        4096   commit  mapped    rw--
+  1521000 -   152ffff       61440  reserve  mapped        
+  1530000 -   1545fff       90112   commit  mapped    r---
+  1546000 -   154ffff       40960     free            ----
+  1550000 -   1573fff      147456   commit  mapped    r---
+  1574000 -   157ffff       49152     free            ----
+  1580000 -   15c0fff      266240   commit  mapped    r---
+  15c1000 -   15cffff       61440     free            ----
+  15d0000 -   15d2fff       12288   commit  mapped    r---
+  15d3000 -   15dffff       53248     free            ----
+  15e0000 -   15e7fff       32768   commit  mapped    r-x-
+  15e8000 -   169ffff      753664  reserve  mapped        
+  16a0000 -   16a0fff        4096   commit  mapped    r-x-
+  16a1000 -   16a7fff       28672  reserve  mapped        
+  16a8000 -   16affff       32768     free            ----
+  16b0000 -   16f2fff      274432   commit  mapped    r---
+  16f3000 -   170ffff      118784     free            ----
+  1710000 -   17eafff      897024   commit  mapped    r-x-
+  17eb000 -   1a0ffff     2248704  reserve  mapped        
+  1a10000 -   1a10fff        4096   commit private    rw--
+  1a11000 -   1a1ffff       61440     free            ----
+  1a20000 -   1a20fff        4096   commit private    rw--
+  1a21000 -   1a2ffff       61440     free            ----
+  1a30000 -   1a30fff        4096   commit private    rw--
+  1a31000 -   1a4ffff      126976  reserve private        
+  1a50000 -   1a57fff       32768   commit private    rw--
+  1a58000 -   1a5ffff       32768  reserve private        
+  1a60000 -   1a67fff       32768   commit private    rw--
+  1a68000 -   1b5ffff     1015808  reserve private        
+  1b60000 -   1b61fff        8192   commit  mapped    r---
+  1b62000 -   1b6ffff       57344     free            ----
+  1b70000 -   1b70fff        4096   commit private    rw--
+  1b71000 -   1beffff      520192  reserve private        
+  1bf0000 -   1bf2fff       12288   commit private    rw--
+  1bf3000 -   1bfffff       53248  reserve private        
+  1c00000 -   1c02fff       12288   commit private    rw--
+  1c03000 -   1c0ffff       53248  reserve private        
+  1c10000 -   2c07fff    16744448  reserve private        
+  2c08000 -   2c08fff        4096   commit private    rw-- (guard)
+  2c09000 -   2c0ffff       28672   commit private    rw--
+  2c10000 -  1fd0ffff   487587840     free            ----
+ 1fd10000 -  1fff1fff     3022848   commit  mapped    r---
+ 1fff2000 -  1fffffff       57344     free            ----
+ 20000000 -  20000fff        4096   commit  mapped    rw--
+ 20001000 -  20005fff       20480   commit  mapped    rw-c
+ 20006000 -  20006fff        4096   commit  mapped    rw--
+ 20007000 -  2000cfff       24576   commit  mapped    rw-c
+ 2000d000 -  2000dfff        4096   commit  mapped    rw--
+ 2000e000 -  20013fff       24576   commit  mapped    rw-c
+ 20014000 -  20014fff        4096   commit  mapped    rw--
+ 20015000 -  2001efff       40960   commit  mapped    rw-c
+ 2001f000 -  2001ffff        4096   commit  mapped    rw--
+ 20020000 -  20021fff        8192   commit  mapped    rw-c
+ 20022000 -  20026fff       20480   commit  mapped    rw--
+ 20027000 -  20029fff       12288   commit  mapped    rw-c
+ 2002a000 -  2002afff        4096   commit  mapped    rw--
+ 2002b000 -  2004bfff      135168   commit  mapped    rw-c
+ 2004c000 -  2004cfff        4096   commit  mapped    rw--
+ 2004d000 -  2004efff        8192   commit  mapped    rw-c
+ 2004f000 -  2004ffff        4096   commit  mapped    rw--
+ 20050000 -  20053fff       16384   commit  mapped    rw-c
+ 20054000 -  20054fff        4096   commit  mapped    rw--
+ 20055000 -  20059fff       20480   commit  mapped    rw-c
+ 2005a000 -  2005afff        4096   commit  mapped    rw--
+ 2005b000 -  20081fff      159744   commit  mapped    rw-c
+ 20082000 -  20082fff        4096   commit  mapped    rw--
+ 20083000 -  20083fff        4096   commit  mapped    rw-c
+ 20084000 -  20085fff        8192   commit  mapped    rw--
+ 20086000 -  20091fff       49152   commit  mapped    rw-c
+ 20092000 -  20092fff        4096   commit  mapped    rw--
+ 20093000 -  20098fff       24576   commit  mapped    rw-c
+ 20099000 -  20099fff        4096   commit  mapped    rw--
+ 2009a000 -  2009cfff       12288   commit  mapped    rw-c
+ 2009d000 -  2009dfff        4096   commit  mapped    rw--
+ 2009e000 -  2009efff        4096   commit  mapped    rw-c
+ 2009f000 -  200a0fff        8192   commit  mapped    rw--
+ 200a1000 -  200aafff       40960   commit  mapped    rw-c
+ 200ab000 -  200abfff        4096   commit  mapped    rw--
+ 200ac000 -  200d7fff      180224   commit  mapped    rw-c
+ 200d8000 -  200d8fff        4096   commit  mapped    rw--
+ 200d9000 -  200dffff       28672   commit  mapped    rw-c
+ 200e0000 -  202dffff     2097152   commit private    rwx-
+ 202e0000 -  202f5fff       90112   commit  mapped    rw-c
+ 202f6000 -  202f6fff        4096   commit  mapped    rw--
+ 202f7000 -  2030afff       81920   commit  mapped    rw-c
+ 2030b000 -  2030cfff        8192   commit  mapped    rw--
+ 2030d000 -  2030dfff        4096   commit  mapped    rw-c
+ 2030e000 -  2030efff        4096   commit  mapped    rw--
+ 2030f000 -  2032afff      114688   commit  mapped    rw-c
+ 2032b000 -  2032bfff        4096   commit  mapped    rw--
+ 2032c000 -  2033dfff       73728   commit  mapped    rw-c
+ 2033e000 -  2033efff        4096   commit  mapped    rw--
+ 2033f000 -  2036ffff      200704   commit  mapped    rw-c
+ 20370000 -  20371fff        8192   commit  mapped    rw--
+ 20372000 -  20372fff        4096   commit  mapped    rw-c
+ 20373000 -  20373fff        4096   commit  mapped    rw--
+ 20374000 -  20374fff        4096   commit  mapped    rw-c
+ 20375000 -  20375fff        4096   commit  mapped    rw--
+ 20376000 -  20376fff        4096   commit  mapped    rw-c
+ 20377000 -  20383fff       53248   commit  mapped    rw--
+ 20384000 -  20384fff        4096   commit  mapped    rw-c
+ 20385000 -  20386fff        8192   commit  mapped    rw--
+ 20387000 -  20387fff        4096   commit  mapped    rw-c
+ 20388000 -  2038dfff       24576   commit  mapped    rw--
+ 2038e000 -  20391fff       16384   commit  mapped    rw-c
+ 20392000 -  2039dfff       49152   commit  mapped    rw--
+ 2039e000 -  2039ffff        8192   commit  mapped    rw-c
+ 203a0000 -  204bffff     1179648   commit private    rwx-
+ 204c0000 -  204c0fff        4096   commit  mapped    rw--
+ 204c1000 -  204cefff       57344   commit  mapped    rw-c
+ 204cf000 -  204dcfff       57344   commit  mapped    rw--
+ 204dd000 -  204dffff       12288   commit  mapped    rw-c
+ 204e0000 -  205cffff      983040   commit private    rwx-
+ 205d0000 -  205d7fff       32768   commit  mapped    rw-c
+ 205d8000 -  205d8fff        4096   commit  mapped    rw--
+ 205d9000 -  205d9fff        4096   commit  mapped    rw-c
+ 205da000 -  205dcfff       12288   commit  mapped    rw--
+ 205dd000 -  205dffff       12288   commit  mapped    rw-c
+ 205e0000 -  2effffff   245497856  reserve private        
+ 2f000000 -  53ffffff   620756992     free            ----
+ 54000000 -  54003fff       16384   commit  mapped    rw-c
+ 54004000 -  54004fff        4096   commit  mapped    rw--
+ 54005000 -  5400ffff       45056   commit  mapped    rw-c
+ 54010000 -  54ffffff    16711680  reserve private        
+ 55000000 -  6384ffff   243597312     free            ----
+ 63850000 -  63850fff        4096   commit   image    r---
+ 63851000 -  6388afff      237568   commit   image    r-x-
+ 6388b000 -  6388cfff        8192   commit   image    r---
+ 6388d000 -  63890fff       16384   commit   image    rw--
+ 63891000 -  63891fff        4096   commit   image    rw-c
+ 63892000 -  63894fff       12288   commit   image    rw--
+ 63895000 -  63898fff       16384   commit   image    rw-c
+ 63899000 -  63899fff        4096   commit   image    rw--
+ 6389a000 -  6389cfff       12288   commit   image    rw-c
+ 6389d000 -  6389efff        8192   commit   image    rw--
+ 6389f000 -  6389ffff        4096   commit   image    rw-c
+ 638a0000 -  638b0fff       69632   commit   image    r---
+ 638b1000 -  6bbfffff   137687040     free            ----
+ 6bc00000 -  6bc00fff        4096   commit   image    r---
+ 6bc01000 -  6bc08fff       32768   commit   image    r-x-
+ 6bc09000 -  6bc09fff        4096   commit   image    rw--
+ 6bc0a000 -  6bc0afff        4096   commit   image    rw-c
+ 6bc0b000 -  6bc0bfff        4096   commit   image    rw--
+ 6bc0c000 -  6bc0dfff        8192   commit   image    rw-c
+ 6bc0e000 -  6bc14fff       28672   commit   image    r---
+ 6bc15000 -  7096ffff    81113088     free            ----
+ 70970000 -  70970fff        4096   commit   image    r---
+ 70971000 -  70a12fff      663552   commit   image    r-x-
+ 70a13000 -  70a13fff        4096   commit   image    rw--
+ 70a14000 -  70a15fff        8192   commit   image    rw-c
+ 70a16000 -  70a16fff        4096   commit   image    rw--
+ 70a17000 -  70b17fff     1052672   commit   image    r---
+ 70b18000 -  70bcffff      753664     free            ----
+ 70bd0000 -  70bd0fff        4096   commit   image    r---
+ 70bd1000 -  70c0efff      253952   commit   image    r-x-
+ 70c0f000 -  70c0ffff        4096   commit   image    rw--
+ 70c10000 -  70c13fff       16384   commit   image    r---
+ 70c14000 -  7118ffff     5750784     free            ----
+ 71190000 -  71191fff        8192   commit   image    r---
+ 71192000 -  71192fff        4096   commit   image    r-x-
+ 71193000 -  71194fff        8192   commit   image    rw--
+ 71195000 -  71196fff        8192   commit   image    r---
+ 71197000 -  7158ffff     4165632     free            ----
+ 71590000 -  71590fff        4096   commit   image    r---
+ 71591000 -  715f3fff      405504   commit   image    r-x-
+ 715f4000 -  715f4fff        4096   commit   image    rw--
+ 715f5000 -  71616fff      139264   commit   image    r---
+ 71617000 -  7769ffff   101224448     free            ----
+ 776a0000 -  776a0fff        4096   commit   image    r---
+ 776a1000 -  776a2fff        8192   commit   image    r-x-
+ 776a3000 -  776a3fff        4096   commit   image    r---
+ 776a4000 -  776a4fff        4096   commit   image    rw--
+ 776a5000 -  776a6fff        8192   commit   image    r---
+ 776a7000 -  776affff       36864     free            ----
+ 776b0000 -  776b0fff        4096   commit   image    r---
+ 776b1000 -  776bcfff       49152   commit   image    r-x-
+ 776bd000 -  776befff        8192   commit   image    r---
+ 776bf000 -  776bffff        4096   commit   image    rw--
+ 776c0000 -  776c3fff       16384   commit   image    r---
+ 776c4000 -  776cffff       49152     free            ----
+ 776d0000 -  776d0fff        4096   commit   image    r---
+ 776d1000 -  776d1fff        4096   commit   image    r-x-
+ 776d2000 -  776d7fff       24576   commit   image    r---
+ 776d8000 -  779bffff     3047424     free            ----
+ 779c0000 -  779c0fff        4096   commit   image    r---
+ 779c1000 -  779c2fff        8192   commit   image    r-x-
+ 779c3000 -  779c3fff        4096   commit   image    r---
+ 779c4000 -  779c4fff        4096   commit   image    rw--
+ 779c5000 -  779c7fff       12288   commit   image    r---
+ 779c8000 -  77a8ffff      819200     free            ----
+ 77a90000 -  77a90fff        4096   commit   image    r---
+ 77a91000 -  77a96fff       24576   commit   image    r-x-
+ 77a97000 -  77a97fff        4096   commit   image    r---
+ 77a98000 -  77a98fff        4096   commit   image    rw--
+ 77a99000 -  77a9afff        8192   commit   image    r---
+ 77a9b000 -  77d7ffff     3035136     free            ----
+ 77d80000 -  77d80fff        4096   commit   image    r---
+ 77d81000 -  77d9efff      122880   commit   image    r-x-
+ 77d9f000 -  77da1fff       12288   commit   image    r---
+ 77da2000 -  77da5fff       16384   commit   image    rw--
+ 77da6000 -  77db1fff       49152   commit   image    r---
+ 77db2000 -  77dbffff       57344     free            ----
+ 77dc0000 -  77dc0fff        4096   commit   image    r---
+ 77dc1000 -  77deafff      172032   commit   image    r-x-
+ 77deb000 -  77df4fff       40960   commit   image    r---
+ 77df5000 -  77df5fff        4096   commit   image    rw--
+ 77df6000 -  77df8fff       12288   commit   image    rw-c
+ 77df9000 -  77dfafff        8192   commit   image    rw--
+ 77dfb000 -  77dfefff       16384   commit   image    r---
+ 77dff000 -  77e0ffff       69632     free            ----
+ 77e10000 -  77e10fff        4096   commit   image    r---
+ 77e11000 -  77e56fff      286720   commit   image    r-x-
+ 77e57000 -  77e5cfff       24576   commit   image    r---
+ 77e5d000 -  77e5dfff        4096   commit   image    rw--
+ 77e5e000 -  77e66fff       36864   commit   image    r---
+ 77e67000 -  77e6ffff       36864     free            ----
+ 77e70000 -  77e70fff        4096   commit   image    r---
+ 77e71000 -  77eb1fff      266240   commit   image    r-x-
+ 77eb2000 -  77eb9fff       32768   commit   image    r---
+ 77eba000 -  77ebafff        4096   commit   image    rw--
+ 77ebb000 -  77ec3fff       36864   commit   image    r---
+ 77ec4000 -  77ecffff       49152     free            ----
+ 77ed0000 -  77ed0fff        4096   commit   image    r---
+ 77ed1000 -  77ef4fff      147456   commit   image    r-x-
+ 77ef5000 -  77ef5fff        4096   commit   image    r---
+ 77ef6000 -  77ef6fff        4096   commit   image    rw--
+ 77ef7000 -  77efbfff       20480   commit   image    r---
+ 77efc000 -  77efffff       16384     free            ----
+ 77f00000 -  77f00fff        4096   commit   image    r---
+ 77f01000 -  77f3bfff      241664   commit   image    r-x-
+ 77f3c000 -  77f44fff       36864   commit   image    r---
+ 77f45000 -  77f46fff        8192   commit   image    rw--
+ 77f47000 -  77f5dfff       94208   commit   image    r---
+ 77f5e000 -  77f5ffff        8192     free            ----
+ 77f60000 -  77f60fff        4096   commit   image    r---
+ 77f61000 -  77f9cfff      245760   commit   image    r-x-
+ 77f9d000 -  77fa4fff       32768   commit   image    r---
+ 77fa5000 -  77fa8fff       16384   commit   image    rw--
+ 77fa9000 -  77fa9fff        4096   commit   image    rw-c
+ 77faa000 -  77fbdfff       81920   commit   image    r---
+ 77fbe000 -  77fbffff        8192     free            ----
+ 77fc0000 -  77fc0fff        4096   commit   image    r---
+ 77fc1000 -  77fc3fff       12288   commit   image    r-x-
+ 77fc4000 -  77fc4fff        4096   commit   image    r---
+ 77fc5000 -  77fc5fff        4096   commit   image    rw--
+ 77fc6000 -  77fc7fff        8192   commit   image    r---
+ 77fc8000 -  77fcffff       32768     free            ----
+ 77fd0000 -  77fd0fff        4096   commit   image    r---
+ 77fd1000 -  77fe6fff       90112   commit   image    r-x-
+ 77fe7000 -  77fe9fff       12288   commit   image    r---
+ 77fea000 -  77fedfff       16384   commit   image    rw--
+ 77fee000 -  77feefff        4096   commit   image    r-x-
+ 77fef000 -  77ff9fff       45056   commit   image    r---
+ 77ffa000 -  77ffffff       24576     free            ----
+ 78000000 -  78000fff        4096   commit   image    r---
+ 78001000 -  7802dfff      184320   commit   image    r-x-
+ 7802e000 -  78034fff       28672   commit   image    r---
+ 78035000 -  78035fff        4096   commit   image    rw--
+ 78036000 -  78036fff        4096   commit   image    rw-c
+ 78037000 -  78039fff       12288   commit   image    rw--
+ 7803a000 -  7803afff        4096   commit   image    rw-c
+ 7803b000 -  7803bfff        4096   commit   image    rw--
+ 7803c000 -  7803ffff       16384   commit   image    r---
+ 78040000 -  7f5effff   123404288     free            ----
+ 7f5f0000 -  7f6effff     1048576  reserve  mapped        
+ 7f6f0000 -  7f6f6fff       28672   commit  mapped    r-x-
+ 7f6f7000 -  7f7effff     1019904  reserve  mapped        
+ 7f7f0000 -  7ffaffff     8126464     free            ----
+ 7ffb0000 -  7ffd3fff      147456   commit  mapped    r---
+ 7ffd4000 -  7ffdcfff       36864     free            ----
+ 7ffdd000 -  7ffddfff        4096   commit private    rwx-
+ 7ffde000 -  7ffdefff        4096   commit private    rwx-
+ 7ffdf000 -  7ffdffff        4096   commit private    rwx-
+ 7ffe0000 -  7ffe0fff        4096   commit private    r---
+ 7ffe1000 -  7ffeffff       61440  reserve private    ----</pre>
+
+<pre>Committed:
+  image:     5971968 (0x5b2000)
+  other:    11370496 (0xad8000)
+  Total:    17342464  (0x108a000)</pre>
+
+<p>Note that each section of memory is grouped by how it is currently mapped; the four
+characters at the end are flags, with a dash representing not available, and one of r, w,
+x, and c for read, write, execute and copy-on-write (shared until written, when it will
+get a private copy).</p>
+
+<p>On Solaris, the output would like look:</p>
+
+<pre>Mappings: 52, from struct prmap_t in sys/procfs.h:
+0x00000000 - 0x0000ffff      65536  free
+0x00010000 - 0x00017fff      32768  ---r-x offset = 0
+0x00018000 - 0x00025fff      57344  free
+0x00026000 - 0x00029fff      16384  ---rwx offset = 24576
+0x0002a000 - 0x00033fff      40960  -b-rwx offset = 0
+0x00034000 - 0x03ffffff   66895872  free
+0x04000000 - 0x04705fff    7364608  ---rwx offset = 24576
+0x04706000 - 0x04771fff     442368  ---rwx offset = 0
+0x04772000 - 0x04899fff    1212416  ---rwx offset = 7389184
+0x0489a000 - 0x04a49fff    1769472  ---rwx offset = 0
+0x04a4a000 - 0x53ffffff 1331388416  free
+0x54000000 - 0x54005fff      24576  ---rwx offset = 9093120
+0x54006000 - 0xfe6fffff 2859442176  free
+0xfe700000 - 0xfe7a7fff     688128  ---r-x offset = 0
+0xfe7a8000 - 0xfe7b5fff      57344  free
+0xfe7b6000 - 0xfe7bffff      40960  ---rwx offset = 679936
+0xfe7c0000 - 0xfe7d7fff      98304  ---rwx offset = 0
+0xfe7d8000 - 0xfe801fff     172032  free
+0xfe802000 - 0xfe803fff       8192  ---rwx offset = 0
+0xfe804000 - 0xfe903fff    1048576  free
+0xfe904000 - 0xfe905fff       8192  ---rwx offset = 0
+0xfe906000 - 0xfea05fff    1048576  free
+0xfea06000 - 0xfea07fff       8192  ---rwx offset = 0
+0xfea08000 - 0xfeb07fff    1048576  free
+0xfeb08000 - 0xfeb09fff       8192  ---rwx offset = 0
+0xfeb0a000 - 0xfec09fff    1048576  free
+0xfec0a000 - 0xfec0bfff       8192  ---rwx offset = 0
+0xfec0c000 - 0xfed0bfff    1048576  free
+0xfed0c000 - 0xfed0dfff       8192  ---rwx offset = 0
+0xfed0e000 - 0xfee0dfff    1048576  free
+0xfee0e000 - 0xfee0ffff       8192  ---rwx offset = 0
+0xfee10000 - 0xfef0bfff    1032192  free
+0xfef0c000 - 0xfef0dfff       8192  ---rwx offset = 0
+0xfef0e000 - 0xfef0ffff       8192  free
+0xfef10000 - 0xfef11fff       8192  ---rwx offset = 0
+0xfef12000 - 0xff00dfff    1032192  free
+0xff00e000 - 0xff00ffff       8192  ---rwx offset = 0
+0xff010000 - 0xff0bffff     720896  free
+0xff0c0000 - 0xff0ddfff     122880  ---r-x offset = 0
+0xff0de000 - 0xff0ebfff      57344  free
+0xff0ec000 - 0xff0effff      16384  ---rwx offset = 114688
+0xff0f0000 - 0xff0f9fff      40960  ---rwx offset = 0
+0xff0fa000 - 0xff0fffff      24576  free
+0xff100000 - 0xff1a3fff     671744  ---r-x offset = 0
+0xff1a4000 - 0xff1b1fff      57344  free
+0xff1b2000 - 0xff1b9fff      32768  ---rwx offset = 663552
+0xff1ba000 - 0xff1bbfff       8192  ---rwx offset = 0
+0xff1bc000 - 0xff1e3fff     163840  free
+0xff1e4000 - 0xff1e5fff       8192  ---rwx offset = 0
+0xff1e6000 - 0xff1effff      40960  free
+0xff1f0000 - 0xff1f3fff      16384  ---r-x offset = 0
+0xff1f4000 - 0xff1fffff      49152  free
+0xff200000 - 0xff27ffff     524288  ---r-x offset = 0
+0xff280000 - 0xff28dfff      57344  free
+0xff28e000 - 0xff297fff      40960  ---rwx offset = 516096
+0xff298000 - 0xff29ffff      32768  ---rwx offset = 0
+0xff2a0000 - 0xff2affff      65536  free
+0xff2b0000 - 0xff2b1fff       8192  ---rwx offset = 0
+0xff2b2000 - 0xff2bffff      57344  free
+0xff2c0000 - 0xff2c3fff      16384  ---r-x offset = 0
+0xff2c4000 - 0xff2d1fff      57344  free
+0xff2d2000 - 0xff2d3fff       8192  ---rwx offset = 8192
+0xff2d4000 - 0xff2dffff      49152  free
+0xff2e0000 - 0xff2e7fff      32768  ---r-x offset = 0
+0xff2e8000 - 0xff2f5fff      57344  free
+0xff2f6000 - 0xff2f7fff       8192  ---rwx offset = 24576
+0xff2f8000 - 0xff2fffff      32768  free
+0xff300000 - 0xff307fff      32768  ---r-x offset = 0
+0xff308000 - 0xff315fff      57344  free
+0xff316000 - 0xff319fff      16384  ---rwx offset = 24576
+0xff31a000 - 0xff31ffff      24576  free
+0xff320000 - 0xff321fff       8192  --srwx offset = 0
+0xff322000 - 0xff32ffff      57344  free
+0xff330000 - 0xff345fff      90112  ---r-x offset = 0
+0xff346000 - 0xff353fff      57344  free
+0xff354000 - 0xff355fff       8192  ---rwx offset = 81920
+0xff356000 - 0xff35ffff      40960  free
+0xff360000 - 0xff365fff      24576  ---r-x offset = 0
+0xff366000 - 0xff373fff      57344  free
+0xff374000 - 0xff375fff       8192  ---rwx offset = 16384
+0xff376000 - 0xff37ffff      40960  free
+0xff380000 - 0xff387fff      32768  ---r-x offset = 0
+0xff388000 - 0xff395fff      57344  free
+0xff396000 - 0xff397fff       8192  ---rwx offset = 24576
+0xff398000 - 0xff39ffff      32768  free
+0xff3a0000 - 0xff3a1fff       8192  ---r-x offset = 0
+0xff3a2000 - 0xff3affff      57344  free
+0xff3b0000 - 0xff3cdfff     122880  ---r-x offset = 0
+0xff3ce000 - 0xff3dbfff      57344  free
+0xff3dc000 - 0xff3ddfff       8192  ---rwx offset = 114688
+0xff3de000 - 0xff3dffff       8192  ---rwx offset = 0
+0xff3e0000 - 0xff443fff     409600  free
+0xff444000 - 0xff445fff       8192  ---rwx offset = 0
+0xff446000 - 0xffbe5fff    7995392  free
+0xffbe6000 - 0xffbeffff      40960  s--rwx offset = 4294942720</pre>
+
+<p>The problem with <strong>memory_status_dump</strong> is that it doesn't identify what
+object is being mapped into any particular address area.&nbsp; It seems reasonably
+intuitive what an &quot;object&quot; is by all of the maps on all architectures; each
+address range constitutes one mapping.&nbsp; However, it is impossible to tell what the
+objects actually are, and sometimes when two address ranges are exactly adjacent to each
+other, the higher address range is likely an extension of the lower address range. This is
+important in deciding what objects to try to identify when deciding how to move things
+around. For example, if the C heap starts at 0x54000000 and the map has two ranges next to
+each other, one from 0x54000000 to 0x54007fff and one from 0x54008000 (i.e 0x54007fff + 1)
+to 0x5401dfff, then it is likely that the C heap was extended once, and thus that if the C
+heap is moved it will take care of both address ranges.</p>
+
+<p>For x86 Windows, we make available on our FTP site a program called <em>psapiworkingsetdemo.exe</em>,
+from the Microsoft Win32 SDK: 
+
+<ul>
+  <li><a href="ftp://ftp.franz.com/pub/misc/windows-tools/psapiworkingsetdemo.exe">ftp://ftp.franz.com/pub/misc/windows-tools/psapiworkingsetdemo.exe</a></li>
+  <li><a href="ftp://ftp.franz.com/pub/misc/windows-tools/psapi.dll">ftp://ftp.franz.com/pub/misc/windows-tools/psapi.dll</a></li>
+</ul>
+
+<p>(If you are running Alpha Windows NT, it might be available on the CD-ROM for the Win32
+SDK for that platform.)&nbsp; Download these into the same directory (required so the .exe
+can find the .dll).&nbsp; Then, startup Allegro CL and run <em>psapiworkingsetdemo</em>. <em>psapiworkingsetdemo</em>
+will bring up a window showing the names of the programs currently running.&nbsp; Click on
+`allegro.exe' (or `mlisp.exe' or `alisp.exe'), and in the lower pane you will be shown
+what items are using the memory visible to allegro.exe/mlisp.exe/alisp.exe.</p>
+
+<p>For other platforms, the situation is more complicated, but there are usually operating
+system tools for interpreting the data.</p>
+
+<hr>
+
+<p><a name="396"></a><strong>Q 3-9.6)</strong> [Windows only] How do I move DLL in memory
+so that it doesn't conflict with the Lisp heap?</p>
+
+<p><strong>A 3.9-6)</strong> The preferred Lisp heap starting address is 0x20000000 on x86
+Windows and 0x30000000 on Alpha Windows (the heap grows to higher memory addresses).
+&nbsp; If, using the ``psapiworkingsetdemo.exe'' program (discussed above, an x86 Windows
+application), you find that the Lisp heap cannot grow to the size that you desire because
+of a DLL that is in the way, you can use the `editbin' program from Microsoft Visual C++
+to move the default base address of the DLL.&nbsp; For example, if foo.dll is in a bad
+location, according to psiworkingsetdemo, and you found foo.dll to live in the
+c:\winnt\system32 directory, then at a DOS prompt type (assuming 0x65000000 is the
+beginning of a free address range large enough to accomodate the DLL):</p>
+
+<pre>c: cd \winnt\system32
+editbin foo.dll /rebase:base=0x65000000</pre>
+
+<p>and the next time Lisp starts up, Windows will try to locate foo.dll at 0x65000000
+instead of the previous inconvenient address that interfered with the Lisp heap.</p>
+
+<p>Note that the base address for a DLL is only advisory; if the space is already used,
+Windows will locate it to some other location.&nbsp; By right-clicking on a DLL and
+selecting &quot;Quick View&quot; (if Quick View support is installed), you can see (among
+other things) the base address currently assigned to the DLL.</p>
+
+<hr>
+
+<p><a name="397"></a><strong>Q 3-9.7)</strong> What does the &quot;Temporarily scaling
+back lisp reserved region from XXX to YYY bytes.&quot; mean?</p>
+
+<p><strong>A 3-9.7)</strong> It means that some other program has grabbed part of the
+address space that Lisp intended to use. This message is much more common on Windows,
+where various programs can grab predefined address ranges in all running programs. The
+Iomega Zip/Jaz tools and PGP are two programs known to do this. There are four things that
+you can do to handle this situation: 
+
+<ol>
+  <li>Ignore the warning. This means that your lisp heap might be significantly smaller than
+    intended. You can tell just how big by dividing YYY above by 1048576, which will give you
+    the size of the heap in MB.</li>
+  <li>Uninstall the application. Sometimes the application isn't really needed. On Windows,
+    the Iomega tools on a SCSI system, for example, are not really needed--Windows has native
+    support for these SCSI devices.</li>
+  <li>[Windows only] &quot;Rebase&quot; the DLL to use another address.&nbsp; See the <a
+    href="#396">Q 3-9.6 How do I move DLL in memory so that it doesn't conflict with the Lisp
+    heap?</a> item for more information. Look around address 0x65000000 for a free slot to
+    which you can rebase the DLL. If addresses in that range are taken, find the Windows DLLs
+    (e.g., COMCTL32.dll) and pick a location around them for the DLL to live.</li>
+  <li>Rebuild your ACL images using a different range of addresses for the Lisp heap. On
+    Windows, see the <a href="#396">Q 3-9.6 How do I move DLL in memory so that it doesn't
+    conflict with the Lisp heap?</a> item above for more information. On UNIX, see the&nbsp; <a
+    href="#395">Q 3-9.5 How can I tell what addresses are being used in my process space?</a>
+    item above for more information.</li>
+</ol>
+
+<blockquote>
+  <p>The arguments to <a href="../operators/excl/build-lisp-image.htm">build-lisp-image</a>
+  that you will need to specify are <code>:lisp-heap-start</code>, <code>:lisp-heap-size</code>,
+  <code>:c-heap-size</code> and <code>:c-heap-start</code>. </p>
+</blockquote>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq4-1.htm">4.1. Emacs-Lisp interface</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq3-8.htm">3.8 Building images</a></p>
+
+<hr>
+
+<p><small>© Copyright 1998, 1999, 2000, 2002, 2004 Franz Inc., Berkeley, CA.&nbsp; All rights
+reserved.</small><br>
+<small>$Revision: 1.1.1.1 $</small></p>
+</body>
+</html>

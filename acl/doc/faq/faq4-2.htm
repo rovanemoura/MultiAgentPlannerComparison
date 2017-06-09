@@ -1,0 +1,115 @@
+<html>
+
+<head>
+<title>Allegro CL FAQ: 4.2: LEP Protocol</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<h3>4.2: LEP Protocol</h3>
+
+<blockquote>
+  <p><a href="#421">Q 4.2-1) How can I open a stream to an emacs buffer?</a><br>
+  <a href="#422">Q 4.2-2) How can another stream be used for background output instead of
+  creating the *background-interaction* buffer?</a><br>
+  <a href="#423">Q 4.2-3) How can arbitrary elisp code be run from lisp?</a><br>
+  <a href="#424">Q 4.2-4) Is there a way to programmatically determine if the emacs-lisp
+  interface connect has been established?</a><br>
+  <a href="#425">Q 4.2-5) How can I tell if lep had a problem?</a></p>
+</blockquote>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="421"><strong>Q 4.2-1)</strong> How can I open a stream to an emacs buffer?</a></p>
+
+<p><strong>A 4.2-1)</strong> Consider the following:</p>
+
+<pre>USER(25): (with-open-stream (*query-io*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lep:make-editor-listener-stream))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (y-or-n-p &quot;Is today Wednesday?? &quot;))
+T
+USER(26):</pre>
+
+<p>When this was evaluated, a *background-interaction* Emacs buffer popped up. I answered
+the question `y', so the form returned T. You may have to bind more or different stream
+variables to the stream object, of course, depending on what you actually do with the
+popup buffer.</p>
+
+<p>If you want to name the buffer, do this:</p>
+
+<pre>(setq s (lep:make-editor-listener-stream :name &quot;foo&quot;))</pre>
+
+<hr>
+
+<p><a name="422"><strong>Q 4.2-2)</strong> How can another stream be used for background
+output instead of creating the *background-interaction* buffer?</a></p>
+
+<p><strong>A 4.2-2)</strong> You can give the variable</p>
+
+<pre>lep::*stream-for-background-output*</pre>
+
+<p>a value which is the stream to which the output should go, excl:*initial-terminal-io*,
+for example. Doing so may also affect various emacs-lisp interface commands, of course.</p>
+
+<hr>
+
+<p><a name="423"><strong>Q 4.2-3)</strong> How can arbitrary elisp code be run from lisp?</a></p>
+
+<p><strong>A 4.2-3)</strong> The ACL function lep::eval-in-emacs takes a single string
+argument which is read and evaluated by the emacs elisp interpreter. For example,</p>
+
+<pre>(lep::eval-in-emacs &quot;(message \&quot;foo!\&quot;)&quot;)</pre>
+
+<p>prints ``foo!'' in the minibuffer. lep::eval-in-emacs is synchronous and reads/evals
+only one form from the string. In other words,</p>
+
+<pre>(lep::eval-in-emacs &quot;(foo)(bar)&quot;)</pre>
+
+<p>will not evaluate both forms, but just the first (foo). lep::eval-in-emacs returns one
+value, the value returned by the elisp form.</p>
+
+<hr>
+
+<p><a name="424"><strong>Q 4.2-4)</strong> Is there a way to programmatically determine if
+the emacs-lisp interface connect has been established?</a></p>
+
+<p><strong>A 4.2-4)</strong> Yes, the function <strong>lep:lep-is-running</strong> returns
+a non-nil value if the connection has been established. If you want to make sure lep is
+running, call (lep:ensure-lep).</p>
+
+<hr>
+
+<p><a name="425"><strong>Q 4.2-5)</strong> How can I tell if lep had a problem?</a></p>
+
+<p><strong>A 4.2-5)</strong> There are several lep conditions defined:</p>
+
+<p><strong>lep:lep-error</strong> inherits from <strong>simple-error</strong> and the root
+of the next two errors. If you just want to establish a handler for any lep problem, this
+is the thing to handle.</p>
+
+<p>More specifically:</p>
+
+<p><strong>lep:no-lep-connection</strong> is signalled when (and only when) code calls
+(lep:ensure-lep), and there is no connection with an emacs.</p>
+
+<p><strong>lep:lep-operation-aborted</strong> is signalled whenever lisp expects lep to
+return information from emacs and is disappointed.</p>
+
+<p>Unfortunately, several internal errors do not obey the condition protocol, and none of
+the above conditions have useful slots.</p>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq4-3.htm">4.3. CLIM</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq4-1.htm">4.1. Emacs-Lisp interface</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999, 2002, 2004, Franz Inc., Berkeley, CA.&nbsp; All rights reserved.</small><br>
+<small>$Revision: 1.1.1.1 $</small></p>
+</body>
+</html>

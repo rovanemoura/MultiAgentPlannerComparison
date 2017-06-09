@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Debugging ORBLink processes</title>
+  </head>
+
+  <body>
+    <h1>Debugging ORBLink processes</h1>
+<hr>
+<p>
+
+The following IDL pertains to debugging APIs:
+<p>
+<pre>
+module ORBLink {
+ pseudo interface ORB {
+    enum verbose_level_type {low, high};
+    attribute verbose_level_type verbose_level;
+    attribute boolean tracing;
+  }
+}
+</pre>
+<p>
+The <code>verbose_level</code> attribute of <code>corba:orb</code>, when
+set to <code>:high</code> outputs various information.
+<p>
+The <code>tracing</code> attribute of <code>corba:orb</code>, when <code>T</code>, prints a message, whose
+verboseness is governed by the <code>verbose_level</code>.
+<p>
+Setting the verbose_level to :high automatically turns on tracing.
+<p>
+These particular debugging APIs are somewhat crude, of course. For more sophisticated debugging issues, you should
+can use the usual reconfigurability properties of Lisp. 
+<p>
+For example, you can redefine a  server method on the fly, which can be used to insert print statements in server methods.
+<p>
+You can also use auxiliary methods to trace excecution of particular remote or local invocations.
+  </body>
+</html>

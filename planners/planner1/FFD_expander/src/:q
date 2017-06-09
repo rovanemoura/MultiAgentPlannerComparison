@@ -1,0 +1,427 @@
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+
+import logging
+import subprocess
+import sys
+#sys.path.append('.')
+from . import aliases
+from . import arguments
+from . import run_components
+import os
+import re
+import threading
+import queue
+#print (sys.argv)
+#print (sys.argc)
+
+def write_tofile(to_write, output_file):
+    file_ = open(output_file, 'w')
+    file_.write(to_write)
+    file_.close()
+
+class plannerThread(threading.Thread):
+    def __init__(self,id,pfile_path,domain_file,work_queue,output_queue):
+        threading.Thread.__init__(self)
+        self.id = str(id)
+        self.counter = 0
+        self.work_queue = work_queue
+        self.output_queue = output_queue # A priority queue
+        self.pfile_path = pfile_path
+        self.domain_file = domain_file
+
+    def run(self):
+        while True:            
+            pddl_string = self.work_queue.get()
+            pfile = os.path.join(self.pfile_path,"pfile_"+self.id+"_"+str(self.counter)+".pddl")
+            sfile = os.path.join(self.pfile_path,"pfile_"+self.id+"_"+str(self.counter)+".sol")
+            write_tofile(pddl_string, pfile)
+            status = run_components.run_planner(self.domain_file, pfile, sfile)
+            if status == 0:
+                new_plan_fd = open(sfile)
+                sub_plan = new_plan_fd.readlines()
+                self.output_queue.put((-1 * len(sub_plan),sub_plan))
+            #elif status == 137:
+            #    status = run_components.run_planner2(self.domain_file, pfile, sfile)
+            else:
+                self.output_queue.put((0,[]))
+            self.work_queue.task_done()
+            self.counter+=1 
+def apply_action(state,action):
+    #print ("applied action "+action.name+" effects "+str(action.del_effects))
+    #if action.name == "(lift depot0 hoist0 crate3 pallet7)":
+    #    print (state)
+
+    for cond,pred in action.del_effects:
+        try:
+        #if pred.negated:
+        #    pred = pred.negate()
+            state.remove(pred)
+        except:
+            print ("pred not present "+str(pred))
+            print (action.name)
+            #exit(0)
+    for cond,pred in action.add_effects:
+        if pred not in state:
+            state.append(pred)
+    return state
+
+def reverse_action(state,action):
+    #print ("applied action "+action.name+" effects "+str(action.del_effects))
+    #if action.name == "(lift depot0 hoist0 crate3 pallet7)":
+    #    print (state)
+
+    for cond,pred in action.add_effects:
+        try:
+        #if pred.negated:
+        #    pred = pred.negate()
+            state.remove(pred)
+        except:
+            print ("pred not present "+str(pred))
+            print (action.name)
+            #exit(0)
+    for cond,pred in action.del_effects:
+        if pred not in state:
+            state.append(pred)
+    return state
+
+
+def main():
+    args = arguments.parse_args()
+    logging.basicConfig(level=getattr(logging, args.log_level.upper()),
+                        format="%(levelname)-8s %(message)s",
+                        stream=sys.stdout)
+    logging.debug("processed args: %s" % args)
+    #print (args.translate_inputs)
+    import copy
+        #exit(0)
+#    if args.show_aliases:
+ #       aliases.show_aliases()
+ #       sys.exit()
+    orig_args = copy.deepcopy(args)
+    sys.argv = sys.argv[:2]
+    #args = []
+    IGNORE_ACTIONS = []
+    #REPLACEABLE_ACTIONS = ['communicate_image_data','communicate_soil_data','communicate_rock_data']
+    REPLACEABLE_ACTIONS_FLAG = True
+    action_args = re.compile('\((.*)\)')
+    try:
+        ### TBD - MAKE THESE ARGUMENTS ###############
+        PACKAGE_PARENT = '../translate/'
+        #PACKAGE_PARENT2 = '../translate/pddl/'
+        SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+        sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
+        #sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT2)))
+        sys.path.append('translate')
+        #exit(0)
+        import timers
+        with timers.timing("PLAN EXPANSION", block=True):
+            import translate
+            import normalize
+            import pddl
+            import json
+            def dump_pddl(task,goals):
+                #file_ = open(output_file, 'w')
+                to_write = "(define (problem tiny_problem) "
+                to_write += "(:domain " + task.domain_name + ")\n"
+                #Objects
+                to_write += "(:objects\n"
+                for obj in task.objects:
+                    to_write += "\t"+obj.name+" - "+obj.type_name+"\n"
+                to_write += ")"
+                to_write += "(:init\n"
+                for pred in task.init:
+                    if not isinstance(pred,pddl.Assign): 
+                        if pred.predicate != '=' :
+                            if not pred.negated:
+                                to_write += "\t("+pred.predicate+" "+ ' '.join(pred.args)+")\n"
+                            else:
+                                to_write += "\t(not ("+pred.predicate+" "+ ' '.join(pred.args)+"))\n"
+                    else:
+                        to_write +=  "\t(= ("+pred.fluent.symbol +" "+ ", ".join(map(str, pred.fluent.args))+") "+str(pred.expression.value)+")\n"
+                        #exit(0)
+                to_write += ")"
+                to_write += "(:goal (and \n"
+                for goal in goals:
+                    if not goal.negated:
+                        to_write += "\t("+goal.predicate+" "+ ' '.join(goal.args)+")\n"
+                    else:
+                        to_write += "\t(not ("+goal.predicate+" "+ ' '.join(goal.args)+"))\n"
+                to_write += "))"
+                if task.use_min_cost_metric:
+                  to_write += "(:metric minimize (total-cost))\n"
+                #Endmatter
+                to_write += ")"
+                return to_write
+#                file_.write(to_write)
+#                file_.close()
+              
+
+            #ta_agent = "agex"
+            output_file = "final_plan.sol"
+            small_plan_dir = "/home/ssreedharan/small_problems/" 
+            op_fd = open(output_file,'w')
+            domain_file = args.translate_inputs[0]
+            plan_file = args.translate_inputs[2]
+            agent_file = args.translate_inputs[3]
+            private_pred_file = args.translate_inputs[4]
+            ta_file = args.translate_inputs[5]
+            private_map_file = args.translate_inputs[6]
+            agent_goals = args.translate_inputs[7]
+            ###########################
+            with open(plan_file) as plan_fd:
+                plan = list(map(str.lower,plan_fd.readlines()))
+            with open(agent_file) as ag_fd:
+                agent_list = list(map(str.strip,ag_fd.readlines()))
+            with open(private_pred_file) as pr_fd:
+                private_preds = pr_fd.readlines()
+            with open(ta_file) as pr_fd:
+                ta_agent = pr_fd.readline().strip()
+            with open(private_map_file) as pr_fd:
+                private_map = json.load(pr_fd)
+            with open(agent_goals) as ag_fd:
+                agent_goals = list(map(str.strip,ag_fd.readlines()))
+            task,inst_actions,IGNORE_ACTIONS,relaxed_reachable, atoms,axioms,reachable_action_params,strips_to_sas, ranges, translation_key,mutex_dict, mutex_ranges, mutex_key,implied_facts, operators = translate.get_task_actions(args.translate_inputs[0],args.translate_inputs[1],agent_list)
+            # Create an action map
+            #print (IGNORE_ACTIONS)
+            #exit(0)
+            #IGNORE_ACTIONS = []
+            inst_action_map = {}
+            action_map = {}
+            inst_action_name_map = {}
+            #orig_init = copy.deepcopy(task.init)
+            for act in inst_actions:
+                inst_action_map[act.name] = act
+                pred_name = action_args.findall(act.name)[0].split()[0]
+                inst_action_name_map.setdefault(pred_name, []).append(act.name)
+            for act in task.actions:
+                action_map[act.name] = act
+            original_goal_set = set(task.goal.parts)
+            #exit(0)
+            agent_plan = []
+            small_count = 0
+            solved_goals = []
+            #################
+            ### Start threads 
+            thread_count = 5 ### could try other values
+            t_id = 0
+            work_queue = queue.Queue()
+            output_queue = queue.PriorityQueue()
+            while t_id < thread_count:
+                p_thread = plannerThread(t_id,small_plan_dir,domain_file,work_queue,output_queue) 
+                p_thread.daemon = True
+                p_thread.start()
+                print ("Started planning Thread with id "+str(t_id))
+                t_id+=1
+            #################
+            ignored_actions = []
+            goal_step = {}
+            goal_map = {}
+            for goal in original_goal_set:
+                goal_map[goal.__str__()] = goal
+                if len(set(goal.args)&set(agent_list)) == 0:
+                    goal_step[goal.__str__()] = 0
+                    p_index = 1
+                    for action in plan:
+                        orig_arg_list = action_args.findall(action)[0].split()
+                        var_map = dict([(par.name, arg) for par, arg in zip(action_map[orig_arg_list[0]].parameters,orig_arg_list[1:])])
+                        result = []
+                        action_map[orig_arg_list[0]].instantiate_mini(var_map,result)
+                        #print(dir(result[0]))
+                        #exit(0)
+                        for cond,pred in result :
+                            if goal.__str__() == pred.__str__():
+                                goal_step[goal.__str__()] = p_index
+                        p_index+=1
+            #print(goal_step)
+            #exit(0)
+            plan_step = 0 
+            for action in plan:
+               plan_step+=1
+               action_name = action_args.findall(action)[0].split()[0]
+               #print ("ACTION INDEX is  "+str(plan.index(action)))
+               inst_set = set(task.init)
+               solved_goals = list(inst_set & original_goal_set)
+               #remaining_goal_set = original_goal_set -  set(solved_goals)
+
+               if  action_name not in IGNORE_ACTIONS:
+                    agent_actions = []
+                    for agent in agent_list:
+                        new_action = action.replace(ta_agent,agent).strip()
+                        #if agent != ta_agent:
+                        obj_map = private_map[agent]
+                        for ta_obj in obj_map.keys():
+                            new_action = new_action.replace(ta_obj,obj_map[ta_obj])
+                        #new_action = new_action.replace(ta_agent+')',agent+')')
+                        #print (new_action)
+                        if new_action not in agent_actions:
+                            agent_actions.append(new_action)
+                    #check if we can directly use one of the actions
+                    applicable_action = False
+                    inst_set = set(task.init)
+                    for ag_action in agent_actions:
+                        if not applicable_action and ag_action in inst_action_map.keys() and set(inst_action_map[ag_action].precondition) <=inst_set:
+                            op_fd.write(ag_action+"\n")
+                            print("Expanded action with precond "+ag_action)
+                            applicable_action = True
+                            task.init = apply_action(task.init,inst_action_map[ag_action])
+                    work_queue.queue.clear()
+                    output_queue.queue.clear()
+                    if not applicable_action:
+                    # If we were unable to apply the action directly we need to plan to reach for the preconditions of one of the actions
+                        plan_found = False
+                        possible_plan = []
+                        REPLACEABLE_ACTION_FLAG =  True
+                        index = 0
+                        action_queue = [] 
+                        #while plan_found == False: # and index < len(agent_actions):
+                        #action_queue.extend(agent_actions)
+                        #for ag_action in action_queue:
+                        small_problem_list = []
+                        while index < len(agent_actions):
+                            ag_action = agent_actions[index]
+                            curr_ag = agent_list[index]
+                            possible_action_list = [] #ag_action]
+                            goal_list = []
+                            poss_action = None
+                            if REPLACEABLE_ACTION_FLAG:
+                                orig_arg_list = action_args.findall(ag_action)[0].split()[1:]
+                                var_map = dict([(par.name, arg) for par, arg in zip(action_map[action_name].parameters,orig_arg_list)])
+                                result = []
+                                action_map[action_name].instantiate_mini(var_map,result)
+                                orig_arg_set = set()
+                                for ind in range(len(orig_arg_list)):
+                                        orig_arg_set.add((orig_arg_list[ind],ind))
+                                goal_found = False
+                                object_list = set()
+                                pred_list = []
+                                ag_pred_list = []
+                                for cond,pred in result:
+                                    if len(set(pred.args) & set(agent_list)) == 0:# and not pred.negated:
+                                        pred_list.append(pred)
+                                print ("Goals for "+ag_action)
+                                print (pred_list)
+                                goal_list = pred_list
+                                poss_action = ag_action
+                            else:
+                                if ag_action  in inst_action_map.keys():
+                                    poss_action = ag_action
+                            if poss_action:
+                               print ("Expanded action planning for "+poss_action)
+                               if  not REPLACEABLE_ACTION_FLAG:
+                                   goal_list = inst_action_map[poss_action].precondition
+                               #goal_list = goal_list + solved_goals
+                               #exit(0)
+                               for g in goal_step.keys():
+                                  if goal_step[g] < plan_step:
+                                      goal_list.append(goal_map[g])
+                               positive_goal = set()
+                               neg_goal = set()
+                               if len(goal_list) > 0:
+                                   for g in goal_list:
+                                       if g.negated:
+                                           neg_goal.add(g.negate())
+                                       else:
+                                           positive_goal.add(g)
+                               inst_set = set(task.init)
+                               if len(goal_list) > 0 and positive_goal <=inst_set and len(neg_goal & inst_set)==0:
+                                    print ("Action "+poss_action +" Skipped with goals "+str(goal_list))
+                                    plan_found = True
+                               else:
+                                    #run preprocess
+                                    goal_list.sort()
+                                    pddl_string = dump_pddl(task,goal_list)
+                                    print ("Adding the action "+poss_action)
+                                    if pddl_string not in small_problem_list:
+                                        small_problem_list.append(pddl_string)
+                                    #work_queue.put(pddl_string)
+                            else:
+                                print ("Ag action "+ag_action)
+                            index = index + 1
+                        print ("Here "+str(work_queue.qsize()))
+                        for prob in small_problem_list:
+                            work_queue.put(prob)
+                        work_queue.join()
+                        print ("Queue size "+str(output_queue.qsize()))
+                        #    pass
+                        if not plan_found:
+                            if output_queue.qsize() > 0: 
+                                best_plan_length,best_plan = output_queue.get()
+                                output_queue.task_done()
+                                output_queue.queue.clear()
+                            else:
+                                best_plan_length = 0
+                            if best_plan_length == 0:
+                                if not REPLACEABLE_ACTION_FLAG:
+                                    REPLACEABLE_ACTION_FLAG = True
+                                    index = 0
+                                else:
+                                    print ("unable to expand to this action "+action)
+                                    #exit(0)
+                            else:
+                                for p_action in best_plan:
+                                    print ("Expanded action : @ written "+p_action)
+                                    #print (p_action)
+                                    op_fd.write(p_action)
+                                    task.init = apply_action(task.init,inst_action_map[p_action.strip().lower()])
+                                #if (len(set(task.init) & original_goal_set) < len(solved_goals)):
+                                #    for p_action in best_plan[-1:]:
+                                #        print ("Reverting action : @ written "+p_action)
+                                        #op_fd.write(p_action)
+                                        #print (p_action)
+                                #        task.init = reverse_action(task.init,inst_action_map[p_action.strip().lower()])
+                                #    if len(ignored_actions) > 0:
+                                #        print ("Ignored actions "+str(ignored_actions))
+                                #        action_queue = ignored_actions
+                                #        plan_found = True
+                                #    else:
+                                #        print ("Inconsistent state for action "+action)
+                                #        exit(0)
+                                #else:
+                                #    for p_action in best_plan:
+                                #        op_fd.write(p_action)
+                                ignored_actions = []
+               else:
+                    print ("Adding ignore actions "+action)
+                    ignored_actions.append(action)
+
+            inst_set = set(task.init)
+            solved_goals = solved_goals + list(inst_set & original_goal_set)
+            #original_goal_set = original_goal_set -  set(solved_goals)
+            print (original_goal_set - set(solved_goals))
+            plan_found = False
+            if len(original_goal_set - set(solved_goals) ) >=1:
+               goal_list = list(original_goal_set) # - set(solved_goals))
+               #for goal_str in agent_goals:
+               #    goal_args = action_args.findall(goal_str)[0].split()
+               #    goal_pred = pddl.Atom(goal_args[0],goal_args[1:])
+               #    goal_list.append(goal_pred)
+               #print ("Expanded action planning for "+poss_action)
+               pddl_string =dump_pddl(task,goal_list)
+               write_tofile(pddl_string,small_plan_dir+"small_prob_"+str(small_count)+".pddl")
+               pfile_name = small_plan_dir+"small_prob_"+str(small_count)+".pddl"
+               print (pfile_name)
+               status = run_components.run_planner(domain_file,pfile_name,small_plan_dir+"small_prob_"+str(small_count)+".sol")
+               #run search
+               
+               if status : #and os.path.exists('/home/ssreedh3/FFD_test/src/sas_plan'):
+                   #read the plan to sub plan
+                   new_plan_file = small_plan_dir+"small_prob_"+str(small_count)+".sol"
+                   new_plan_fd = open(new_plan_file)
+                   sub_plan = new_plan_fd.readlines()
+                   new_plan_fd.close()
+                   #os.remove('/home/ssreedh3/FFD_test/src/sas_plan')
+                   print ("Expanded action : @ "+str(sub_plan))
+                   if len(sub_plan) >= 1:
+                       for p_action in sub_plan:
+                        #print ("Expanded action : @ written "+p_action)
+                        op_fd.write(p_action)
+            op_fd.close()        
+            #exit(0) 
+    except subprocess.CalledProcessError as err:
+        print(err)
+        sys.exit(err.returncode)
+
+
+if __name__ == "__main__":
+    main()

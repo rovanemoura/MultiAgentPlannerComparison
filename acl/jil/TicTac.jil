@@ -1,0 +1,312 @@
+;; tictactoe program from the jdk demo/applet dir
+
+(import "java.awt.*")
+(import "java.awt.event.*")
+(import "java.awt.image.*")
+(import "java.net.*")
+(import "java.applet.*")
+
+
+;; for debugging
+(def-java-macro msg (lisp:&rest forms)
+  `(progn ,@(lisp:mapcar #'(lisp:lambda (form)
+			       `(System.out.print ,form))
+			   forms)
+	    (System.out.println "")))
+
+  
+
+(def-java-class TicTac (Applet MouseListener)
+  :public :synchronized
+  
+  ((white :type int)
+   (black :type int)
+   
+   ; the original source has an initiform for this but we
+   ; can't support that yet.
+   (moves :type (array int *)
+	  :initform (new (array int 9))
+	  :flags (:final :static))
+   
+   
+   (won :type (array boolean *)
+	:initform (new (array boolean #.(lisp:ash 1 9)))
+	:flags (:static))
+   
+   (DONE :type int
+	 :initform #.(lisp:1- (lisp:ash 1 9))
+	 :flags (:static :final))
+   
+   (OK  :type int
+	:initform 0
+	:flags (:static :final))
+   
+   (WIN :type int
+	:initform 1
+	:flags (:static :final))
+   
+   (LOSE :type int
+	 :initform 2
+	 :flags (:static :final))
+   
+   (STALEMATE :type int
+	      :initform 3
+	      :flags (:static :final))
+
+   ; who goes first next game
+   (first :type boolean :initform t)
+   
+   (notImage :type Image)	; white (not = naught = zero)
+   
+   (crossImage :type Image)	; black
+   
+   
+	  
+   ))
+
+(static
+ 
+ ;; initialize moves since we can't do the initform thing yet
+ 
+ (setf (aref moves 0) 4)
+ (setf (aref moves 1) 0)
+ (setf (aref moves 2) 2)
+ (setf (aref moves 3) 6)
+ (setf (aref moves 4) 8)
+ (setf (aref moves 5) 1)
+ (setf (aref moves 6) 3)
+ (setf (aref moves 7) 5)
+ (setf (aref moves 8) 7)
+ 
+
+ (isWon #.(lisp:logior (lisp:ash 1 0) (lisp:ash 1 1) (lisp:ash 1 2)))
+ (isWon #.(lisp:logior (lisp:ash 1 3) (lisp:ash 1 4) (lisp:ash 1 5)))
+ (isWon #.(lisp:logior (lisp:ash 1 6) (lisp:ash 1 7) (lisp:ash 1 8)))
+ (isWon #.(lisp:logior (lisp:ash 1 0) (lisp:ash 1 3) (lisp:ash 1 6)))
+ (isWon #.(lisp:logior (lisp:ash 1 1) (lisp:ash 1 4) (lisp:ash 1 7)))
+ (isWon #.(lisp:logior (lisp:ash 1 2) (lisp:ash 1 5) (lisp:ash 1 8)))
+ (isWon #.(lisp:logior (lisp:ash 1 0) (lisp:ash 1 4) (lisp:ash 1 8)))
+ (isWon #.(lisp:logior (lisp:ash 1 2) (lisp:ash 1 4) (lisp:ash 1 6)))
+ 
+ )
+
+
+(def-java-method isWon((pos int)) void
+  :static
+  (dotimes (i DONE)
+    (if* (= (logand i pos) pos)
+       then (setf (aref won i) t))))
+
+
+(def-java-method bestMove((white int) (black int)) int
+  (let ((bestMove -1))
+       
+    (dotimes (i 9)
+      (let ((mw (aref moves i)))
+	
+	(if* (not (or (logand white (<< 1 mw))
+		      (logand black (<< 1 mw))))
+	   then ; this move hasn't been made by black or white
+		(let ((pw (logior white (<< 1 mw))))
+		  (if* (aref won pw)
+		     then ; white wins,,,,, take the move
+			  (return-from bestMove mw))
+		  ; now assume white took that move, see if 
+		  ; black can win on the next move
+		  (if* (dotimes (mb 9 t)
+			 (if* (not (or (logand pw (<< 1 mb))
+				       (logand black (<< 1 mb))))
+			    then ; it's a valid move for black
+				 (let ((pb (logior black (<< 1 mb))))
+				   (if* (aref won pb)
+				      then ; black wins, forget this move
+					   (return nil)))))
+		     then ; black won't win immediately so we'll
+			  ; choose this move
+			  (if* (= bestMove -1)
+			     then (setq bestMove mw)))))))
+    
+    (if* (not (= bestMove -1))
+       then ; found a move that won't mean we lose
+	    (return-from  bestMove bestMove))
+    
+    ; can't find a move where black won't win, but we have to 
+    ; choose something (and hope black doesn't see the winning move)
+    
+    (dotimes (i 9)
+      (let ((mw (aref moves i)))
+	(if* (not (or (logand white (<< 1 mw))
+		      (logand black (<< 1 mw))))
+	   then ; this move is open
+		(return-from bestMove mw))))
+    
+    ; no moves left
+    -1))
+
+
+(def-java-method yourMove ((m int)) boolean
+  ;; return true if the given move is legal
+  (if* (or (< m 0) (> m 8))
+     then nil
+   elseif (logand (<< 1 m) (logior black white))
+     then nil
+     else (setf black (logior black (<< 1 m)))
+	  t))
+
+(def-java-method myMove () boolean
+  ;; computure does a move, return true if legal move made
+  (if* (= (logior black white) DONE)
+     then nil
+     else (let ((best (bestMove white black)))
+	    (setq white (logior white (<< 1 best)))
+	    t)))
+
+(def-java-method status () int
+  ;; return the status of thegame
+  (if* (aref won white)
+     then WIN
+   elseif (aref won black)
+     then LOSE
+   elseif (= DONE (logior black white))
+     then STALEMATE
+     else OK))
+
+		   
+(def-java-method init () void
+  :public
+  (setq notImage   (getImage (getCodeBase) "images/not.gif")
+	crossImage (getImage (getCodeBase) "images/cross.gif"))
+  
+  (addMouseListener this))
+
+
+(def-java-method destroy () void
+  :public
+  (removeMouseListener this))
+
+
+(def-java-method paint ((g Graphics)) void
+  :public
+  
+  (let ((d (getSize)))
+    (g.setColor Color.black)
+    
+    (let ((xoff (/ d.width 3) int)
+	  (yoff (/ d.height 3) int))
+      
+      (g.drawLine xoff 0 xoff d.height)
+      (g.drawLine (* 2 xoff) 0 (* 2 xoff) d.height)
+      (g.drawLine 0 yoff d.width yoff)
+      (g.drawLine 0 (* 2 yoff) d.width (* 2 yoff))
+      
+      (let ((i 0))
+	(dotimes (r 3)
+	  (dotimes (c 3)
+	    (if* (logand white (<< 1 i))
+	       then (g.drawImage notImage 
+				 (1+ (* c xoff)) 
+				 (1+ (* r yoff))
+				 this)
+	     elseif (logand black (<< 1 i))
+	       then (g.drawImage crossImage
+				 (1+ (* c xoff))
+				 (1+ (* r yoff))
+				 this))
+	    (setq i (+ i 1))))))))
+
+(def-java-method mouseReleased((e MouseEvent)) void
+  :public
+  
+  (let ((x (e.getX))
+	(y (e.getY)))
+    
+    (let ((stat (status)))
+      (if* (or (= stat WIN)
+	       (= stat LOSE)
+	       (= stat STALEMATE))
+	 then (play (getCodeBase) "audio/return.au")
+	      (setq white 0   black 0)
+	      (if* first
+		 then (setq white (logior white
+					  (<< 1 (the int 5)
+					      #+ignore ; can't handle cast
+					      (* (Math.random) 9)))))
+	      
+	      (setq first (not first))
+	      
+	      (repaint)
+	      (return-from mouseReleased)))
+    
+    (let* ((d (getSize))
+	   (c (/ (* x 3) d.width))
+	   (r (/ (* y 3) d.height)))
+      
+      (if* (yourMove (+ c (* r 3)))
+	 then (repaint)
+	      (let ((stat (status)))
+		(if* (= stat WIN)
+		   then (play (getCodeBase) "audio/yahoo1.au")
+		 elseif (= stat LOSE)
+		   then (play (getCodeBase) "audio/yahoo2.au")
+		 elseif (not (= stat STALEMATE))
+		   then (if* (myMove)
+			   then (repaint)
+				(setq stat (status))
+				(if* (= stat WIN)
+				   then (play (getCodeBase) 
+					      "audio/yahoo1.au")
+				 elseif (= stat LOSE)
+				   then (play (getCodeBase) 
+					      "audio/yahoo2.au")
+				 elseif (not (= stat STALEMATE))
+				   then (play (getCodeBase) 
+					      "audio/ding.au"))
+			   else (play (getCodeBase) 
+				      "audio/beep.au"))))
+	 else (play (getCodeBase) "audio/beep.au")))))	
+
+
+(def-java-method mousePressed ((e MouseEvent)) void
+  :public
+  ; we need a function body to prevent this function from looking abstract
+  ; to jcl (and thus not compiling it).  This is a bug we will fix.
+  0  
+  )
+
+(def-java-method mouseClicked ((e MouseEvent)) void
+  :public
+  0
+  )
+
+(def-java-method mouseEntered ((e MouseEvent)) void
+  :public
+  0
+  )
+		   
+
+(def-java-method mouseExited ((e MouseEvent)) void
+  :public
+  0
+  )
+    
+
+(def-java-method getAppletInfo () String
+  :public
+  "TicTac in jcl by jkf from AvH's TicTacToe")
+
+
+
+
+
+	
+	    
+    
+			  
+		  
+		
+
+
+
+
+   
+   

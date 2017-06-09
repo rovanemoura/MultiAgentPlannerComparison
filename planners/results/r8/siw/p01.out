@@ -1,0 +1,163 @@
+timeout: failed to run command ‘./plan.sh’: Permission denied
+
+real	0m0.001s
+user	0m0.000s
+sys	0m0.000s
+
+Traceback (most recent call last):
+  File "map_lapkt.py", line 7, in <module>
+    from ma_to_pddl import PlanningProblem
+ValueError: bad marshal data (unknown type code)
+
+real	0m0.009s
+user	0m0.004s
+sys	0m0.000s
+
+Traceback (most recent call last):
+  File "map_lapkt.py", line 7, in <module>
+    from ma_to_pddl import PlanningProblem
+ValueError: bad marshal data (unknown type code)
+
+real	0m0.010s
+user	0m0.004s
+sys	0m0.000s
+
+Traceback (most recent call last):
+  File "map_lapkt.py", line 7, in <module>
+    from ma_to_pddl import PlanningProblem
+ValueError: bad marshal data (unknown type code)
+
+real	0m0.010s
+user	0m0.004s
+sys	0m0.004s
+
+Traceback (most recent call last):
+  File "map_lapkt.py", line 7, in <module>
+    from ma_to_pddl import PlanningProblem
+ValueError: bad marshal data (unknown type code)
+
+real	0m0.010s
+user	0m0.008s
+sys	0m0.000s
+
+Domain: k-domain.pddl Problem: k-problem.pddl
+Generating Datalog program... [0.000s CPU, 0.003s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.020s CPU, 0.017s wall-clock]
+Preparing model... [0.020s CPU, 0.017s wall-clock]
+Generated 166 rules.
+Computing model... [0.110s CPU, 0.114s wall-clock]
+2360 relevant atoms
+4356 auxiliary atoms
+6716 final queue length
+7896 total queue pushes
+Completing instantiation... [0.060s CPU, 0.063s wall-clock]
+goal relaxed reachable: True
+265 atoms
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.000s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.002s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+116 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.001s wall-clock]
+Computing fact groups: [0.010s CPU, 0.011s wall-clock]
+Deterministic 1242 actions
+0 negated fluents created
+Invariants 135
+
+ Match tree built with 1242 nodes.
+
+rel_plan size: 37
+#RP_fluents 45
+Caption
+{#goals, #UNnachieved,  #Achieved} -> IW(max_w)
+
+{9/9/0}:IW(1) -> [2][3][4]rel_plan size: 34
+#RP_fluents 42
+{9/8/1}:IW(1) -> [2][3][4]rel_plan size: 31
+#RP_fluents 39
+{9/7/2}:IW(1) -> [2][3][4][5][6][7][8]rel_plan size: 26
+#RP_fluents 32
+{9/6/3}:IW(1) -> [2][3][4][5][6]rel_plan size: 21
+#RP_fluents 26
+{9/5/4}:IW(1) -> [2][3][4][5][6][7]rel_plan size: 15
+#RP_fluents 19
+{9/4/5}:IW(1) -> [2][3][4][5][6][7][8][9]rel_plan size: 11
+#RP_fluents 14
+{9/3/6}:IW(1) -> [2][3][4][5]rel_plan size: 7
+#RP_fluents 9
+{9/2/7}:IW(1) -> [2][3][4][5][6][7]rel_plan size: 3
+#RP_fluents 4
+{9/1/8}:IW(1) -> [2][3][4]rel_plan size: 0
+#RP_fluents 0Plan found with cost: 45
+Total time: 0.164
+Nodes generated during search: 1
+Nodes expanded during search: 0
+Nodes pruned by bound: 221535
+Average ef. width: 1
+Max ef. width: 1
+
+SIW+ search completed in 0.164 secs, found plan cost = 45
+
+Private Objects: {'usv2': ['usv2'], 'usv3': ['usv3'], 'usv1': ['usv1'], 'ugv2': ['ugv2'], 'ugv3': ['ugv3'], 'ugv1': ['ugv1'], 'uav1': ['uav1'], 'uav2': ['uav2'], 'uav3': ['uav3']}
+
+Public Objects: ['cdm1', 'cdm2', 'ugv1Store', 'ugv2Store', 'ugv3Store', 'usv1Store', 'usv2Store', 'usv3Store', 'area1', 'area2', 'area3', 'area4', 'area5', 'area6', 'area7', 'area8', 'area9', 'area10', 'area11', 'area12', 'area13', 'area14', 'area15', 'disaster1', 'disaster2', 'disaster3', 'disaster4', 'disaster5', 'box1', 'box2']
+
+Private Predicates: {('?agent', '-', 'robot'): [(at ?r - robot ?a - area), (store_of ?s - store ?r - robot), (have_picture ?r - robot ?d - disaster), (box_at ?b - box ?r - ugv), (have_water_sample ?r - usv ?a - area)]}
+
+
+real	0m0.505s
+user	0m0.472s
+sys	0m0.024s
+
+(navigate_uav uav3 area13 area3)
+(take_picture uav3 area3 disaster5)
+(communicate_data uav3 cdm1 disaster5 area3 area1)
+(navigate_uav uav3 area3 area10)
+(take_picture uav3 area10 disaster3)
+(communicate_data uav3 cdm2 disaster3 area10 area13)
+(navigate_uav uav1 area1 area8)
+(navigate_usv usv3 area13 area9)
+(take_picture uav1 area8 disaster1)
+(pickup_box ugv3 ugv3store cdm2 area13 box2)
+(pickup_box ugv1 ugv1store cdm1 area1 box1)
+(navigate_uav uav1 area8 area13)
+(communicate_data uav1 cdm2 disaster1 area13 area13)
+(navigate_ugv ugv1 area1 area3)
+(navigate_ugv ugv1 area3 area5)
+(navigate_ugv ugv1 area5 area11)
+(navigate_ugv ugv1 area11 area9)
+(drop_box ugv1 ugv1store area9 box1)
+(navigate_ugv ugv3 area13 area10)
+(navigate_ugv ugv3 area10 area4)
+(navigate_ugv ugv3 area4 area3)
+(navigate_ugv ugv3 area3 area5)
+(navigate_ugv ugv3 area5 area11)
+(drop_box ugv3 ugv3store area11 box2)
+(navigate_uav uav2 area1 area12)
+(navigate_usv usv1 area1 area2)
+(navigate_usv usv1 area2 area4)
+(navigate_usv usv1 area4 area9)
+(sample_water usv1 usv1store area9)
+(take_picture uav2 area12 disaster2)
+(navigate_uav uav2 area12 area10)
+(communicate_data uav2 cdm2 disaster2 area10 area13)
+(navigate_usv usv1 area9 area4)
+(navigate_usv usv1 area4 area2)
+(navigate_usv usv1 area2 area1)
+(drop_sample usv1 usv1store area1 area9 cdm1)
+(navigate_uav uav3 area10 area7)
+(take_picture uav3 area7 disaster4)
+(navigate_usv usv3 area9 area8)
+(sample_water usv3 usv3store area8)
+(navigate_uav uav3 area7 area2)
+(communicate_data uav3 cdm1 disaster4 area2 area1)
+(navigate_usv usv3 area8 area9)
+(navigate_usv usv3 area9 area13)
+(drop_sample usv3 usv3store area13 area8 cdm2)
+

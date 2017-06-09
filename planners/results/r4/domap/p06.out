@@ -1,0 +1,847 @@
+JaCaMo home is /home/rovane/jacamo
+JaCaMo.jar is not properly set!
+Value is /home/rovane/jacamo/libs/jacamo-0.7.jar
+New value is /home/rovane/jacamo/libs/jacamo-0.7-SNAPSHOT.jar
+JDK_HOME is not properly set!
+----------------------------------------------------------------
+JaCaMo is not configured in your System
+run the following command to create a default configuration:
+java -cp /home/rovane/jacamo/libs/jacamo-0.7-SNAPSHOT.jar jacamo.util.Config
+----------------------------------------------------------------
+reading from file ../workspace/floodsp06/floods.jcm ...
+JaCaMo is not configured, creating a default configuration.
+Wrong configuration for jacamo, current is null
+found at /home/rovane/jacamo/libs/jacamo-0.7-SNAPSHOT.jar by classpath
+Wrong configuration for jason, current is null
+found at /home/rovane/jacamo/libs/jason-2.1.jar by classpath
+Wrong configuration for jade, current is null
+found at /home/rovane/jacamo/libs/jade-4.3.jar by jason.jar directory
+file ../workspace/floodsp06/floods.jcm parsed successfully!
+
+Executing /usr/lib/jvm/java-8-openjdk-amd64/jre/../bin/java -classpath /home/rovane/jacamo/libs/ant-launcher-1.9.7.jar org.apache.tools.ant.launch.Launcher -e -f bin/floods.xml run
+Buildfile: /home/rovane/workspace/floodsp06/bin/floods.xml
+
+init:
+
+user-init:
+
+compile:
+
+run:
+Running project floods
+JaCaMo is not configured, creating a default configuration.
+Wrong configuration for jacamo, current is null
+found at /home/rovane/jacamo/libs/jacamo-0.7-SNAPSHOT.jar by classpath
+Wrong configuration for jason, current is null
+found at /home/rovane/jacamo/libs/jason-2.1.jar by classpath
+Wrong configuration for jade, current is null
+found at /home/rovane/jacamo/libs/jade-4.3.jar by classpath
+java.rmi.server.ExportException: Port already in use: 20100; nested exception is: 
+	java.net.BindException: Address already in use (Bind failed)
+	at sun.rmi.transport.tcp.TCPTransport.listen(TCPTransport.java:341)
+	at sun.rmi.transport.tcp.TCPTransport.exportObject(TCPTransport.java:249)
+	at sun.rmi.transport.tcp.TCPEndpoint.exportObject(TCPEndpoint.java:411)
+CArtAgO Http Server running on http://127.0.1.1:3276
+Jason Http Server running on http://127.0.1.1:3277
+	at sun.rmi.transport.LiveRef.exportObject(LiveRef.java:147)
+	at sun.rmi.server.UnicastServerRef.exportObject(UnicastServerRef.java:234)
+	at sun.rmi.registry.RegistryImpl.setup(RegistryImpl.java:195)
+	at sun.rmi.registry.RegistryImpl.<init>(RegistryImpl.java:180)
+	at java.rmi.registry.LocateRegistry.createRegistry(LocateRegistry.java:203)
+	at cartago.infrastructure.rmi.CartagoNodeRemote.install(CartagoNodeRemote.java:60)
+	at cartago.infrastructure.rmi.CartagoInfrastructureLayer.startService(CartagoInfrastructureLayer.java:160)
+	at cartago.CartagoService.startInfrastructureService(CartagoService.java:199)
+	at cartago.CartagoService.startInfrastructureService(CartagoService.java:218)
+	at jaca.CartagoEnvironment.init(CartagoEnvironment.java:115)
+	at jacamo.infra.JaCaMoLauncher.createEnvironment(JaCaMoLauncher.java:234)
+	at jacamo.infra.JaCaMoLauncher.create(JaCaMoLauncher.java:222)
+	at jacamo.infra.JaCaMoLauncher.main(JaCaMoLauncher.java:76)
+Caused by: java.net.BindException: Address already in use (Bind failed)
+	at java.net.PlainSocketImpl.socketBind(Native Method)
+	at java.net.AbstractPlainSocketImpl.bind(AbstractPlainSocketImpl.java:387)
+	at java.net.ServerSocket.bind(ServerSocket.java:375)
+	at java.net.ServerSocket.<init>(ServerSocket.java:237)
+	at java.net.ServerSocket.<init>(ServerSocket.java:128)
+	at sun.rmi.transport.proxy.RMIDirectSocketFactory.createServerSocket(RMIDirectSocketFactory.java:45)
+	at sun.rmi.transport.proxy.RMIMasterSocketFactory.createServerSocket(RMIMasterSocketFactory.java:345)
+	at sun.rmi.transport.tcp.TCPEndpoint.newServerSocket(TCPEndpoint.java:666)
+	at sun.rmi.transport.tcp.TCPTransport.listen(TCPTransport.java:330)
+	... 15 more
+[CartagoEnvironment] CArtAgO Environment - infrastructure setup failed.
+cartago.CartagoException: Infrastructure layer service failure: rmi
+	at cartago.CartagoService.startInfrastructureService(CartagoService.java:201)
+	at cartago.CartagoService.startInfrastructureService(CartagoService.java:218)
+	at jaca.CartagoEnvironment.init(CartagoEnvironment.java:115)
+	at jacamo.infra.JaCaMoLauncher.createEnvironment(JaCaMoLauncher.java:234)
+	at jacamo.infra.JaCaMoLauncher.create(JaCaMoLauncher.java:222)
+	at jacamo.infra.JaCaMoLauncher.main(JaCaMoLauncher.java:76)
+[JaCaMoLauncher] Workspace cnp created.
+[JaCaMoLauncher] artifact task_board: cnp.TaskBoard() at cnp created.
+[org_agent] Elapsed time goal allocation round 0: 0.790199923
+[org_agent] Elapsed time individual planning round 0: 2.789547153
+[org_agent] Elapsed time goal allocation round 1: 0.112305914
+[org_agent] Elapsed time individual planning round 1: 0.541169175
+[org_agent] Total elapsed time: 4.233222165
+java.lang.InterruptedException
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireInterruptibly(AbstractQueuedSynchronizer.java:1220)
+	at java.util.concurrent.locks.ReentrantLock.lockInterruptibly(ReentrantLock.java:335)
+	at java.util.concurrent.ArrayBlockingQueue.put(ArrayBlockingQueue.java:350)
+	at cartago.WorkspaceKernel.execOp(WorkspaceKernel.java:759)
+	at cartago.WorkspaceKernel.execOp(WorkspaceKernel.java:600)
+	at cartago.AgentBody.doAction(AgentBody.java:72)
+	at cartago.CartagoSession.doAction(CartagoSession.java:86)
+	at jacamo.infra.JaCaMoAgArch.stop(JaCaMoAgArch.java:198)
+	at jason.infra.centralised.CentralisedAgArch.stopAg(CentralisedAgArch.java:113)
+	at jason.infra.centralised.RunCentralisedMAS.stopAgs(RunCentralisedMAS.java:722)
+	at jason.infra.centralised.RunCentralisedMAS.finish(RunCentralisedMAS.java:820)
+	at jason.infra.centralised.CentralisedRuntimeServices.stopMAS(CentralisedRuntimeServices.java:111)
+	at jason.stdlib.stopMAS.execute(stopMAS.java:35)
+	at jason.asSemantics.TransitionSystem.applyExecInt(TransitionSystem.java:709)
+	at jason.asSemantics.TransitionSystem.applySemanticRuleAct(TransitionSystem.java:217)
+	at jason.asSemantics.TransitionSystem.act(TransitionSystem.java:1479)
+	at jason.infra.centralised.CentralisedAgArch.act(CentralisedAgArch.java:203)
+	at jason.infra.centralised.CentralisedAgArch.reasoningCycle(CentralisedAgArch.java:212)
+	at jason.infra.centralised.CentralisedAgArch.run(CentralisedAgArch.java:231)
+	at java.lang.Thread.run(Thread.java:748)
+cartago.CartagoException: exec op exception.
+	at cartago.WorkspaceKernel.execOp(WorkspaceKernel.java:763)
+	at cartago.WorkspaceKernel.execOp(WorkspaceKernel.java:600)
+	at cartago.AgentBody.doAction(AgentBody.java:72)
+	at cartago.CartagoSession.doAction(CartagoSession.java:86)
+	at jacamo.infra.JaCaMoAgArch.stop(JaCaMoAgArch.java:198)
+	at jason.infra.centralised.CentralisedAgArch.stopAg(CentralisedAgArch.java:113)
+	at jason.infra.centralised.RunCentralisedMAS.stopAgs(RunCentralisedMAS.java:722)
+	at jason.infra.centralised.RunCentralisedMAS.finish(RunCentralisedMAS.java:820)
+	at jason.infra.centralised.CentralisedRuntimeServices.stopMAS(CentralisedRuntimeServices.java:111)
+	at jason.stdlib.stopMAS.execute(stopMAS.java:35)
+	at jason.asSemantics.TransitionSystem.applyExecInt(TransitionSystem.java:709)
+	at jason.asSemantics.TransitionSystem.applySemanticRuleAct(TransitionSystem.java:217)
+	at jason.asSemantics.TransitionSystem.act(TransitionSystem.java:1479)
+	at jason.infra.centralised.CentralisedAgArch.act(CentralisedAgArch.java:203)
+	at jason.infra.centralised.CentralisedAgArch.reasoningCycle(CentralisedAgArch.java:212)
+	at jason.infra.centralised.CentralisedAgArch.run(CentralisedAgArch.java:231)
+	at java.lang.Thread.run(Thread.java:748)
+
+user-end:
+
+BUILD SUCCESSFUL
+Total time: 5 seconds
+
+real	0m6.024s
+user	0m28.408s
+sys	0m0.876s
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV1 ...
+
+---------------------------------------------------------------------------
+Problem UAV1 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     4.0     4.0         55        135     0.020      0.016
+
+Plans:
+(((!NAVIGATE_UAV UAV1 AREA1 AREA32)
+  (!TAKE_PICTURE UAV1 AREA32 DISASTER2)
+  (!NAVIGATE_UAV UAV1 AREA32 AREA2)
+  (!COMMUNICATE_DATA UAV1 CDM1 DISASTER2 AREA2 AREA1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV2 ...
+
+---------------------------------------------------------------------------
+Problem UAV2 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     3.0     3.0          8         39     0.000      0.009
+
+Plans:
+(((!NAVIGATE_UAV UAV2 AREA1 AREA9) (!TAKE_PICTURE UAV2 AREA9 DISASTER9)
+  (!COMMUNICATE_DATA UAV2 CDM2 DISASTER9 AREA9 AREA13)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV3 ...
+
+---------------------------------------------------------------------------
+Problem UAV3 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     6.0     6.0        375       1162     0.020      0.023
+
+Plans:
+(((!NAVIGATE_UAV UAV3 AREA13 AREA31)
+  (!TAKE_PICTURE UAV3 AREA31 DISASTER1)
+  (!NAVIGATE_UAV UAV3 AREA31 AREA21)
+  (!COMMUNICATE_DATA UAV3 CDM3 DISASTER1 AREA21 AREA21)
+  (!TAKE_PICTURE UAV3 AREA21 DISASTER10)
+  (!COMMUNICATE_DATA UAV3 CDM3 DISASTER10 AREA21 AREA21)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV4 ...
+
+---------------------------------------------------------------------------
+Problem UAV4 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     3.0     3.0          8         39     0.020      0.023
+
+Plans:
+(((!NAVIGATE_UAV UAV4 AREA13 AREA3)
+  (!TAKE_PICTURE UAV4 AREA3 DISASTER5)
+  (!COMMUNICATE_DATA UAV4 CDM1 DISASTER5 AREA3 AREA1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV5 ...
+
+---------------------------------------------------------------------------
+Problem UAV5 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     3.0     3.0          8         39     0.000      0.040
+
+Plans:
+(((!NAVIGATE_UAV UAV5 AREA21 AREA10)
+  (!TAKE_PICTURE UAV5 AREA10 DISASTER3)
+  (!COMMUNICATE_DATA UAV5 CDM2 DISASTER3 AREA10 AREA13)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV6 ...
+
+---------------------------------------------------------------------------
+Problem UAV6 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     4.0     4.0         55        135     0.000      0.033
+
+Plans:
+(((!NAVIGATE_UAV UAV6 AREA21 AREA40)
+  (!TAKE_PICTURE UAV6 AREA40 DISASTER7)
+  (!NAVIGATE_UAV UAV6 AREA40 AREA2)
+  (!COMMUNICATE_DATA UAV6 CDM1 DISASTER7 AREA2 AREA1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV7 ...
+
+---------------------------------------------------------------------------
+Problem UAV7 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     4.0     4.0         55        135     0.020      0.028
+
+Plans:
+(((!NAVIGATE_UAV UAV7 AREA33 AREA17)
+  (!TAKE_PICTURE UAV7 AREA17 DISASTER6)
+  (!NAVIGATE_UAV UAV7 AREA17 AREA2)
+  (!COMMUNICATE_DATA UAV7 CDM1 DISASTER6 AREA2 AREA1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UAV...
+
+Defining problem UAV8 ...
+
+---------------------------------------------------------------------------
+Problem UAV8 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1     4.0     4.0         55        135     0.000      0.043
+
+Plans:
+(((!NAVIGATE_UAV UAV8 AREA33 AREA28)
+  (!TAKE_PICTURE UAV8 AREA28 DISASTER4)
+  (!NAVIGATE_UAV UAV8 AREA28 AREA2)
+  (!COMMUNICATE_DATA UAV8 CDM1 DISASTER4 AREA2 AREA1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV1 ...
+
+---------------------------------------------------------------------------
+Problem UGV1 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    47.0    47.0       1042       3698     0.120      0.118
+
+Plans:
+(((!NAVIGATE_UGV UGV1 AREA1 AREA3) (!NAVIGATE_UGV UGV1 AREA3 AREA4)
+  (!NAVIGATE_UGV UGV1 AREA4 AREA10) (!NAVIGATE_UGV UGV1 AREA10 AREA7)
+  (!NAVIGATE_UGV UGV1 AREA7 AREA28) (!NAVIGATE_UGV UGV1 AREA28 AREA27)
+  (!NAVIGATE_UGV UGV1 AREA27 AREA30) (!NAVIGATE_UGV UGV1 AREA30 AREA33)
+  (!PICKUP_BOX UGV1 UGV1STORE CDM4 AREA33 BOX6)
+  (!NAVIGATE_UGV UGV1 AREA33 AREA30) (!NAVIGATE_UGV UGV1 AREA30 AREA27)
+  (!NAVIGATE_UGV UGV1 AREA27 AREA28) (!NAVIGATE_UGV UGV1 AREA28 AREA7)
+  (!NAVIGATE_UGV UGV1 AREA7 AREA10) (!NAVIGATE_UGV UGV1 AREA10 AREA4)
+  (!NAVIGATE_UGV UGV1 AREA4 AREA6)
+  (!DROP_BOX UGV1 UGV1STORE AREA6 BOX6)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV2 ...
+
+---------------------------------------------------------------------------
+Problem UGV2 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    32.0    32.0        377       1275     0.040      0.077
+
+Plans:
+(((!NAVIGATE_UGV UGV2 AREA1 AREA3) (!NAVIGATE_UGV UGV2 AREA3 AREA4)
+  (!NAVIGATE_UGV UGV2 AREA4 AREA10) (!NAVIGATE_UGV UGV2 AREA10 AREA7)
+  (!NAVIGATE_UGV UGV2 AREA7 AREA28) (!NAVIGATE_UGV UGV2 AREA28 AREA27)
+  (!NAVIGATE_UGV UGV2 AREA27 AREA30) (!NAVIGATE_UGV UGV2 AREA30 AREA33)
+  (!PICKUP_BOX UGV2 UGV2STORE CDM4 AREA33 BOX4)
+  (!NAVIGATE_UGV UGV2 AREA33 AREA30) (!NAVIGATE_UGV UGV2 AREA30 AREA24)
+  (!DROP_BOX UGV2 UGV2STORE AREA24 BOX4)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV3 ...
+
+---------------------------------------------------------------------------
+Problem UGV3 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    16.0    16.0        319       1043     0.060      0.050
+
+Plans:
+(((!PICKUP_BOX UGV3 UGV3STORE CDM2 AREA13 BOX2)
+  (!NAVIGATE_UGV UGV3 AREA13 AREA10) (!NAVIGATE_UGV UGV3 AREA10 AREA7)
+  (!NAVIGATE_UGV UGV3 AREA7 AREA28) (!NAVIGATE_UGV UGV3 AREA28 AREA27)
+  (!DROP_BOX UGV3 UGV3STORE AREA27 BOX2)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV4 ...
+
+---------------------------------------------------------------------------
+Problem UGV4 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    32.0    32.0        329       1191     0.040      0.045
+
+Plans:
+(((!NAVIGATE_UGV UGV4 AREA13 AREA10) (!NAVIGATE_UGV UGV4 AREA10 AREA4)
+  (!NAVIGATE_UGV UGV4 AREA4 AREA3) (!NAVIGATE_UGV UGV4 AREA3 AREA1)
+  (!PICKUP_BOX UGV4 UGV4STORE CDM1 AREA1 BOX1)
+  (!NAVIGATE_UGV UGV4 AREA1 AREA3) (!NAVIGATE_UGV UGV4 AREA3 AREA15)
+  (!NAVIGATE_UGV UGV4 AREA15 AREA18) (!NAVIGATE_UGV UGV4 AREA18 AREA37)
+  (!NAVIGATE_UGV UGV4 AREA37 AREA36) (!NAVIGATE_UGV UGV4 AREA36 AREA21)
+  (!DROP_BOX UGV4 UGV4STORE AREA21 BOX1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV5 ...
+
+---------------------------------------------------------------------------
+Problem UGV5 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    47.0    47.0       2757       9976     0.400      0.616
+
+Plans:
+(((!NAVIGATE_UGV UGV5 AREA21 AREA36) (!NAVIGATE_UGV UGV5 AREA36 AREA37)
+  (!NAVIGATE_UGV UGV5 AREA37 AREA18) (!NAVIGATE_UGV UGV5 AREA18 AREA15)
+  (!NAVIGATE_UGV UGV5 AREA15 AREA3) (!NAVIGATE_UGV UGV5 AREA3 AREA1)
+  (!PICKUP_BOX UGV5 UGV5STORE CDM1 AREA1 BOX3)
+  (!NAVIGATE_UGV UGV5 AREA1 AREA3) (!NAVIGATE_UGV UGV5 AREA3 AREA15)
+  (!NAVIGATE_UGV UGV5 AREA15 AREA18) (!NAVIGATE_UGV UGV5 AREA18 AREA37)
+  (!NAVIGATE_UGV UGV5 AREA37 AREA36) (!NAVIGATE_UGV UGV5 AREA36 AREA35)
+  (!NAVIGATE_UGV UGV5 AREA35 AREA38) (!NAVIGATE_UGV UGV5 AREA38 AREA40)
+  (!NAVIGATE_UGV UGV5 AREA40 AREA39)
+  (!DROP_BOX UGV5 UGV5STORE AREA39 BOX3)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV6 ...
+
+---------------------------------------------------------------------------
+Problem UGV6 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    23.0    23.0       1003       3720     0.120      0.126
+
+Plans:
+(((!NAVIGATE_UGV UGV6 AREA21 AREA23) (!NAVIGATE_UGV UGV6 AREA23 AREA24)
+  (!NAVIGATE_UGV UGV6 AREA24 AREA30) (!NAVIGATE_UGV UGV6 AREA30 AREA27)
+  (!NAVIGATE_UGV UGV6 AREA27 AREA28) (!NAVIGATE_UGV UGV6 AREA28 AREA7)
+  (!TAKE_PICTURE UGV6 AREA7 DISASTER8)
+  (!NAVIGATE_UGV UGV6 AREA7 AREA10)
+  (!COMMUNICATE_DATA UGV6 CDM2 DISASTER8 AREA10 AREA13)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV7 ...
+
+---------------------------------------------------------------------------
+Problem UGV7 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    20.0    20.0         80        279     0.020      0.036
+
+Plans:
+(((!NAVIGATE_UGV UGV7 AREA33 AREA30) (!NAVIGATE_UGV UGV7 AREA30 AREA24)
+  (!NAVIGATE_UGV UGV7 AREA24 AREA23) (!NAVIGATE_UGV UGV7 AREA23 AREA21)
+  (!PICKUP_BOX UGV7 UGV7STORE CDM3 AREA21 BOX7)
+  (!NAVIGATE_UGV UGV7 AREA21 AREA23) (!NAVIGATE_UGV UGV7 AREA23 AREA35)
+  (!DROP_BOX UGV7 UGV7STORE AREA35 BOX7)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-UGV...
+
+Defining problem UGV8 ...
+
+---------------------------------------------------------------------------
+Problem UGV8 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    26.0    26.0        336       1161     0.040      0.149
+
+Plans:
+(((!NAVIGATE_UGV UGV8 AREA33 AREA30) (!NAVIGATE_UGV UGV8 AREA30 AREA24)
+  (!NAVIGATE_UGV UGV8 AREA24 AREA23) (!NAVIGATE_UGV UGV8 AREA23 AREA21)
+  (!PICKUP_BOX UGV8 UGV8STORE CDM3 AREA21 BOX5)
+  (!NAVIGATE_UGV UGV8 AREA21 AREA36) (!NAVIGATE_UGV UGV8 AREA36 AREA37)
+  (!NAVIGATE_UGV UGV8 AREA37 AREA18) (!NAVIGATE_UGV UGV8 AREA18 AREA20)
+  (!DROP_BOX UGV8 UGV8STORE AREA20 BOX5)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV1 ...
+
+---------------------------------------------------------------------------
+Problem USV1 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           0       -       -        616       2500     0.120      0.323
+
+Plans:
+NIL
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV2 ...
+
+---------------------------------------------------------------------------
+Problem USV2 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    26.0    26.0        228        766     0.040      0.093
+
+Plans:
+(((!NAVIGATE_USV USV2 AREA1 AREA2) (!SAMPLE_WATER USV2 USV2STORE AREA2)
+  (!NAVIGATE_USV USV2 AREA2 AREA4) (!NAVIGATE_USV USV2 AREA4 AREA9)
+  (!NAVIGATE_USV USV2 AREA9 AREA8) (!NAVIGATE_USV USV2 AREA8 AREA27)
+  (!NAVIGATE_USV USV2 AREA27 AREA28) (!NAVIGATE_USV USV2 AREA28 AREA29)
+  (!NAVIGATE_USV USV2 AREA29 AREA33)
+  (!DROP_SAMPLE USV2 USV2STORE AREA33 AREA2 CDM4)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV3 ...
+
+---------------------------------------------------------------------------
+Problem USV3 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    32.0    32.0        742       2486     0.120      0.335
+
+Plans:
+(((!NAVIGATE_USV USV3 AREA13 AREA9) (!NAVIGATE_USV USV3 AREA9 AREA8)
+  (!NAVIGATE_USV USV3 AREA8 AREA27) (!NAVIGATE_USV USV3 AREA27 AREA28)
+  (!NAVIGATE_USV USV3 AREA28 AREA29) (!NAVIGATE_USV USV3 AREA29 AREA24)
+  (!NAVIGATE_USV USV3 AREA24 AREA22)
+  (!SAMPLE_WATER USV3 USV3STORE AREA22)
+  (!NAVIGATE_USV USV3 AREA22 AREA24) (!NAVIGATE_USV USV3 AREA24 AREA29)
+  (!NAVIGATE_USV USV3 AREA29 AREA33)
+  (!DROP_SAMPLE USV3 USV3STORE AREA33 AREA22 CDM4)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV4 ...
+
+---------------------------------------------------------------------------
+Problem USV4 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    20.0    20.0        469       1462     0.080      0.133
+
+Plans:
+(((!NAVIGATE_USV USV4 AREA13 AREA9) (!NAVIGATE_USV USV4 AREA9 AREA8)
+  (!NAVIGATE_USV USV4 AREA8 AREA7) (!SAMPLE_WATER USV4 USV4STORE AREA7)
+  (!NAVIGATE_USV USV4 AREA7 AREA8) (!NAVIGATE_USV USV4 AREA8 AREA9)
+  (!NAVIGATE_USV USV4 AREA9 AREA13)
+  (!DROP_SAMPLE USV4 USV4STORE AREA13 AREA7 CDM2)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV5 ...
+
+---------------------------------------------------------------------------
+Problem USV5 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    44.0    44.0        923       3459     0.120      0.376
+
+Plans:
+(((!NAVIGATE_USV USV5 AREA21 AREA22) (!NAVIGATE_USV USV5 AREA22 AREA26)
+  (!NAVIGATE_USV USV5 AREA26 AREA32)
+  (!SAMPLE_WATER USV5 USV5STORE AREA32)
+  (!NAVIGATE_USV USV5 AREA32 AREA26) (!NAVIGATE_USV USV5 AREA26 AREA22)
+  (!NAVIGATE_USV USV5 AREA22 AREA21) (!NAVIGATE_USV USV5 AREA21 AREA36)
+  (!NAVIGATE_USV USV5 AREA36 AREA38) (!NAVIGATE_USV USV5 AREA38 AREA17)
+  (!NAVIGATE_USV USV5 AREA17 AREA19) (!NAVIGATE_USV USV5 AREA19 AREA20)
+  (!NAVIGATE_USV USV5 AREA20 AREA18) (!NAVIGATE_USV USV5 AREA18 AREA16)
+  (!NAVIGATE_USV USV5 AREA16 AREA1)
+  (!DROP_SAMPLE USV5 USV5STORE AREA1 AREA32 CDM1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV6 ...
+
+---------------------------------------------------------------------------
+Problem USV6 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    26.0    26.0        269        965     0.040      0.099
+
+Plans:
+(((!NAVIGATE_USV USV6 AREA21 AREA22) (!NAVIGATE_USV USV6 AREA22 AREA24)
+  (!NAVIGATE_USV USV6 AREA24 AREA29) (!NAVIGATE_USV USV6 AREA29 AREA28)
+  (!SAMPLE_WATER USV6 USV6STORE AREA28)
+  (!NAVIGATE_USV USV6 AREA28 AREA29) (!NAVIGATE_USV USV6 AREA29 AREA24)
+  (!NAVIGATE_USV USV6 AREA24 AREA22) (!NAVIGATE_USV USV6 AREA22 AREA21)
+  (!DROP_SAMPLE USV6 USV6STORE AREA21 AREA28 CDM3)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV7 ...
+
+---------------------------------------------------------------------------
+Problem USV7 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    32.0    32.0        218        785     0.020      0.073
+
+Plans:
+(((!NAVIGATE_USV USV7 AREA33 AREA29) (!NAVIGATE_USV USV7 AREA29 AREA24)
+  (!NAVIGATE_USV USV7 AREA24 AREA22) (!NAVIGATE_USV USV7 AREA22 AREA21)
+  (!NAVIGATE_USV USV7 AREA21 AREA36) (!NAVIGATE_USV USV7 AREA36 AREA38)
+  (!NAVIGATE_USV USV7 AREA38 AREA40)
+  (!SAMPLE_WATER USV7 USV7STORE AREA40)
+  (!NAVIGATE_USV USV7 AREA40 AREA38) (!NAVIGATE_USV USV7 AREA38 AREA36)
+  (!NAVIGATE_USV USV7 AREA36 AREA21)
+  (!DROP_SAMPLE USV7 USV7STORE AREA21 AREA40 CDM3)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+
+<OUTPUT>
+
+
+SHOP2 version 2.9.0
+Copyright (C) 2002  University of Maryland.
+Modifications by SIFT, LLC personnel Copyright (C) 2004-2008 SIFT, LLC.
+This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+KIND, either express or implied.  This software is distributed under an
+MPL/GPL/LGPL triple license.  For details, see the software source file.
+
+Defining domain FLOODS-USV...
+
+Defining problem USV8 ...
+
+---------------------------------------------------------------------------
+Problem USV8 with :WHICH = :SHALLOWEST, :VERBOSE = :PLANS
+Totals: Plans Mincost Maxcost Expansions Inferences  CPU time  Real time
+           1    44.0    44.0        362       1222     0.060      0.180
+
+Plans:
+(((!NAVIGATE_USV USV8 AREA33 AREA29) (!NAVIGATE_USV USV8 AREA29 AREA24)
+  (!NAVIGATE_USV USV8 AREA24 AREA22) (!NAVIGATE_USV USV8 AREA22 AREA26)
+  (!SAMPLE_WATER USV8 USV8STORE AREA26)
+  (!NAVIGATE_USV USV8 AREA26 AREA22) (!NAVIGATE_USV USV8 AREA22 AREA21)
+  (!NAVIGATE_USV USV8 AREA21 AREA36) (!NAVIGATE_USV USV8 AREA36 AREA38)
+  (!NAVIGATE_USV USV8 AREA38 AREA17) (!NAVIGATE_USV USV8 AREA17 AREA19)
+  (!NAVIGATE_USV USV8 AREA19 AREA20) (!NAVIGATE_USV USV8 AREA20 AREA18)
+  (!NAVIGATE_USV USV8 AREA18 AREA16) (!NAVIGATE_USV USV8 AREA16 AREA1)
+  (!DROP_SAMPLE USV8 USV8STORE AREA1 AREA26 CDM1)))
+
+Error: Illegal sharp character #\Space [file position = 274]
+</OUTPUT>
+

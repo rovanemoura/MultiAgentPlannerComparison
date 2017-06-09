@@ -1,0 +1,53 @@
+<HTML>
+<HEAD><TITLE>Listing 3</TITLE>
+</HEAD>
+<BODY BGCOLOR="FFFFFF">
+<BR>
+<TABLE BORDER=0 BORDERCOLOR="000000" WIDTH=330 cellpadding=0>
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD>
+<IMG SRC="ldlist3.gif" width=620>
+<TR ALIGN=LEFT VALIGN=TOP>
+<TD ALIGN=LEFT BGCOLOR="CCFFFF">
+<PRE><CODE>
+import java.util.*;
+import org.omg.CORBA.*;
+import chat.*;
+
+
+public class ChatServer extends _ChatServerIImplBase {
+    private Vector listeners;
+
+    public ChatServer(String name) {
+        super(name);
+        listeners = new Vector();
+    }
+
+    public void addListener(ChatListenerI listener) {
+        listeners.addElement(listener);
+    }
+
+    public void sendMessage(String message) {
+        System.out.println("sending message: "+message);
+        for(int i=0; i&lt;listeners.size(); i++) {
+            ((ChatListenerI)listeners.elementAt(i)).messageReceived(message);
+        }
+    }
+
+    public static void main(String args[]) {
+        ORB orb = ORB.init();
+        BOA boa = orb.BOA_init();
+        ChatServerI server = new ChatServer(args[0]);
+        boa.obj_is_ready(server);
+        System.out.println(server+" is ready");
+        boa.impl_is_ready();
+    }
+}
+</PRE>
+</CODE>
+</TABLE>
+
+<BR><BR>
+</BODY>
+</HTML>
+

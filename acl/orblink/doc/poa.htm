@@ -1,0 +1,147 @@
+<html>
+
+<head>
+<title>Portable Object Adaptor in Allegro CL 7.0</title>
+</head>
+
+<body>
+
+<h2>Portable Object Adaptor in Allegro CL</h2>
+
+<p id="511">We make no attempt to explain POA here. We only mention aspects of our
+implementation that affect an application's use of ORBLink with POA. </p>
+
+<h3 id="512">User-visible changes: </h3>
+
+<ul>
+  <li id="513">The _mark attribute of servant objects is no longer used to provide an object
+    id. User-supplied object ids are mediated by the POA system. </li>
+  <li id="514">A reference unmartialed from an incoming request that refers to a servant in
+    the processing ORBLink is no longer unmartialed as a servant object. It is unmartialed as
+    a proxy, so operations on it will satisfy the POA rules. </li>
+  <li id="515">There is a new package containing the POA components, per the mapping rules: <ul>
+      <li id="516">package name: omg.org/PortableServer </li>
+      <li id="517">package nicknames: PortableServer, poa, omg.poa, orblink.poa </li>
+    </ul>
+  </li>
+  <li id="518">(op:resolve_initial_references corba:orb &quot;RootPOA&quot;) returns the root
+    POA. This POA can be used to register objects, but is not the default POA. </li>
+  <li id="519">(op:resolve_initial_references corba:orb &quot;POACurrent&quot;) returns an
+    instance of the poa:current class to use in context operations. </li>
+  <li id="520">There are three predefined POA's in ORBLink, sharing a single poamanager. See
+    the poa:default-poa function for more information. </li>
+</ul>
+
+<h3 id="521">New conditions, as defined by POA spec. </h3>
+
+<ul>
+  <li id="522"><code>poa:poa-exception</code> -- superclass of all the poa exceptions </li>
+  <li id="523"><code>poa:forwardrequest</code> </li>
+  <li id="524"><code>poa:current/nocontext</code> </li>
+  <li id="525"><code>poa:poamanager/adapterinactive</code> </li>
+  <li id="526"><code>poa:adapteralreadyexists</code> </li>
+  <li id="527"><code>poa:adapternonexistent</code> </li>
+  <li id="528"><code>poa:invalidpolicy</code> </li>
+  <li id="529"><code>poa:noservant</code> </li>
+  <li id="530"><code>poa:objectalreadyactive</code> </li>
+  <li id="531"><code>poa:objectnotactive</code> </li>
+  <li id="532"><code>poa:servantalreadyactive</code> </li>
+  <li id="533"><code>poa:servantnotactive</code> </li>
+  <li id="534"><code>poa:wrongadapter</code> </li>
+  <li id="535"><code>poa:wrongpolicy</code> </li>
+</ul>
+
+<h3 id="536">New classes </h3>
+
+<p id="537"><b>Policy classes:</b> 
+
+<ul>
+  <li id="538"><code>poa:threadpolicy</code> </li>
+  <li id="539"><code>poa:lifespanpolicy</code> </li>
+  <li id="540"><code>poa:iduniquenesspolicy</code> </li>
+  <li id="541"><code>poa:idassignmentpolicy</code> </li>
+  <li id="542"><code>poa:implicitactivationpolicy</code> </li>
+  <li id="543"><code>poa:servantretentionpolicy</code> </li>
+  <li id="544"><code>poa:requestprocessingpolicy</code> </li>
+</ul>
+
+<p id="545"><b>Other classes</b> 
+
+<ul>
+  <li id="546"><code>poa:poa</code> </li>
+  <li id="547"><code>poa:userid</code> -- a mixin class. A method for poa:default-poa is
+    specialized on this class returns a particular (predefined) poa that supports
+    user-specified object id's. See the discussion of the default-poa function. </li>
+  <li id="548"><code>poa:poamanager</code> </li>
+  <li id="549"><code>poa:adapteractivater</code> -- to be subclassed to provide for method
+    specialization </li>
+  <li id="550"><code>poa:servantmanager</code> -- superclass of poa:servantactivator and
+    poa:servantlocator </li>
+  <li id="551"><code>poa:servantactivator</code> -- to be subclassed to provide for method
+    specialization </li>
+  <li id="552"><code>poa:servantlocator</code> -- to be subclassed to provide for method
+    specialization </li>
+  <li id="553"><code>poa:current</code> </li>
+</ul>
+
+<h3 id="554"><b>New type names</b> </h3>
+
+<ul>
+  <li id="555"><code>poa:threadpolicyvalue-type</code> = <code>(member :orb_ctrl_model
+    :single_thread_model)</code> </li>
+  <li id="556"><code>poa:lifespanpolicyvalue-type</code> = <code>(member :transient
+    :persistent)</code> </li>
+  <li id="557"><code>poa:iduniquenesspolicyvalue-type</code> = <code>(member :unique_id
+    :multiple_id)</code> </li>
+  <li id="558"><code>poa:idassignmentpolicyvalue-type</code> = <code>(member :user_id
+    :system_id)</code> </li>
+  <li id="559"><code>poa:implicitactivationpolicyvalue-type</code> = <code>(member
+    :implicit_activation :no_implicit_activation)</code> </li>
+  <li id="560"><code>poa:servantretentionpolicyvalue-type</code> = <code>(member :retain
+    :non_retain)</code> </li>
+  <li id="561"><code>poa:requestprocessingpolicyvalue-type</code> = <code>(member
+    :use_active_object_map_only :use_default_servant :use_servant_manager)</code> </li>
+</ul>
+
+<h3 id="562">New functions </h3>
+
+<ul>
+  <li id="563"><b>(poa:default-poa object)</b> <p id="564">A generic function. A method
+    specialized on corba:servant returns a particular :retain :system_id :transient
+    :implicit_activation :use_active_object_map_only POA that approximates the semantics of
+    pre-POA ORBLink. </p>
+    <p id="565">A second POA, with :no_implicit_activation and :user_id policies, is returned
+    by a method specialized on poa:user-id. This allows an application to mix the poa:user-id
+    class in to an implementation to get a default user_id POA for instances of that class. </p>
+    <p id="566">Applications can provide methods specialized on any implementation classes to
+    use specific POAs. </p>
+  </li>
+  <li id="567"><b>Predicates to test policy values</b> <ul>
+      <li id="568"><b>(poa:threadpolicyvalue-type-predicate x)</b> == <code>(typep x
+        'poa:threadpolicyvalue-type)</code> </li>
+      <li id="569"><b>(poa:lifespanpolicyvalue-type-predicate x)</b> == <code>(typep x
+        'poa:lifespanpolicyvalue-type)</code> </li>
+      <li id="570"><b>(poa:iduniquenesspolicyvalue-type-predicate x)</b> == <code>(typep x
+        'poa:iduniquenesspolicyvalue-type)</code> </li>
+      <li id="571"><b>(poa:idassignmentpolicyvalue-type-predicate x)</b> == <code>(typep x
+        'poa:idassignmentpolicyvalue-type)</code> </li>
+      <li id="572"><b>(poa:implicitactivationpolicyvalue-type-predicate x)</b> == <code>(typep x
+        'poa:implicitactivationpolicyvalue-type)</code> </li>
+      <li id="573"><b>(poa:servantretentionpolicyvalue-type-predicate x)</b> == <code>(typep x
+        'poa:servantretentionpolicyvalue-type)</code> </li>
+      <li id="574"><b>(poa:requestprocessingpolicyvalue-type-predicate x)</b> == <code>(typep x
+        'poa:requestprocessingpolicyvalue-type)</code> </li>
+    </ul>
+  </li>
+  <li id="575"><b>Other functions</b> <ul>
+      <li id="576"><b>(poa:proxy-from-reference reference)</b> -- returns a proxy object (of the
+        correct type) to allow access to the object reference. </li>
+      <li id="577"><b>(poa:poa-has-policy poa keyword)</b> -- returns true if and only if the
+        keyword is a POA policy value and the POA has a policy with that value. </li>
+      <li id="578"><b>(poa:poa-policies &amp;rest keys)</b> -- useful for generating a sequence of
+        policy objects with the specified values. Such a sequence is needed when creating POAs. </li>
+    </ul>
+  </li>
+</ul>
+</body>
+</html>

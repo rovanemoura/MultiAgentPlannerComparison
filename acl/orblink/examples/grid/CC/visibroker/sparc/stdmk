@@ -1,0 +1,31 @@
+### Multi-threaded Solaris Makefile definitions
+### This was copied from the Visigenic 3.1 solaris make file
+### Platform specific compiler definitions (multi-threaded)
+CC         = CC -mt -DSOLARIS
+DEBUG      = -g -xs 
+STDCC_LIBS = -lsocket -lnsl -ldl -lposix4
+
+### VisiBroker directory locations
+VBROKERDIR = /net/corba/b/visibroker
+ORBCC      = $(VBROKERDIR)/bin/idl2cpp
+LIBPATH    = -L$(VBROKERDIR)/lib
+CCINCLUDES = -I. -I$(VBROKERDIR)/include -I$(VBROKERDIR)/include/dispatch
+
+### Multi-threaded ORB library
+LIBORB     = -lorb_r
+
+### Compiler flags for debug
+CCFLAGS    = $(CCINCLUDES) $(DEBUG)
+
+
+### Standard build rules for .C (user code) and .cc (generated code) files
+
+.SUFFIXES: .C .o .h .hh .cc
+
+.C.o:
+	$(CC) $(CCFLAGS) -c -o $@ $<
+ 
+.cc.o:
+	$(CC) $(CCFLAGS) -c -o $@ $<
+
+

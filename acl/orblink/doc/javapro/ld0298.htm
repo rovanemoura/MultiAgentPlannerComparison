@@ -1,0 +1,91 @@
+<HTML>
+
+<HEAD>
+<TITLE>Actually, You Need CORBA to Run Anywhere</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"> <CENTER><font size="1" face=arial>Republished with permission<BR>from February/March 1998</font><BR><IMG SRC="jpro_sm.gif" WIDTH=107 HEIGHT=33 BORDER=0></CENTER><BR>
+<IMG SRC="smcorba.gif" WIDTH=216 HEIGHT=216 BORDER=0 ALIGN="LEFT">
+<CENTER> 
+<B><FONT COLOR="000000" FACE="Univers, Arial" SIZE=7>Actually, You Need <BR> <FONT COLOR="006699"> CORBA</font><BR>to Run Anywhere</b></font>
+<P>
+<CENTER><FONT FACE="Helvetica, Univers, Arial" COLOR="000000" SIZE=4><B>Forge a Java connection to <BR>CORBA objects in just a few lines of code
+</B></FONT>
+</CENTER>
+</CENTER>
+<P><FONT FACE="Arial">
+<TABLE BORDER=0>
+<TR ALIGN=LEFT>
+<TD WIDTH=10>&nbsp;</TD>
+<TD>
+
+<b>by Luke Andrew Cassady-Dorian</B>
+<P>
+<FONT SIZE=+3 COLOR="006699"><b>T</b></font>he way Java's RMI seamlessly extends Java's object model into the 
+
+distributed realm is a thing of beauty.  But for getting the job done you may find yourself using the less elgant, more practical Common Object Request Broker Architecture (CORBA). 
+<P>	Randy Kahle's article on page 22 clarifies some RMI advantages over CORBA, but it glosses over CORBA's big plus: CORBA extends Java to the rest of the world.  
+<P>
+Java programs can connect to CORBA objects without knowing what platform they run on, where they exist in the network, or what language they were written in (even if they were written in non-OO languages like COBOL). Developers can simply model such legacy components using the same Interface Definition Language (IDL) they use for creating new objects, then write "wrapper" code that translates between the standardized CORBA bus interface and the legacy interfaces. And not only is CORBA a practical gateway from Java to all manner of legacy applications, this month's cover story shows the key role CORBA plays in many middleware architectures designed to scale Java applications up to enterprise levels.
+<P>
+	Yet developing distributed applications using a CORBA ORB (Object Request Broker) is simple because remote CORBA objects appear to the programmer as first-class Java objects. By "first-class" I mean that you can invoke methods on remote objects as if they were local objects, that remote objects maintain state, and that you can pass remote objects as parameters in method invocations. 
+<P>
+	You will see some differences between local objects and remote objects. For example, you cannot simply instantiate a remote object reference as you would to a local object. To obtain a remote reference, you must either bind to an existing remote reference or bind to a remote factory object and ask that factory object to instantiate another object for you. (A factory object is an object that creates other objects. For example, a BankAccountFactory object might exist to create BankAccount objects when prompted.)  
+<P>
+	This article examines the process of creating a CORBA ORB-based chat environment in Java. Our chat environment will allow a series of users to log in and to send messages to each other. Our environment will not support sending private messages, password-protected logins, and user registration. Nor will we look at such advanced CORBA topics as the Interface Repository (IR), Dynamic Interface Invocation (DII), or some of the IDL features. However, we will give you enough knowledge of CORBA to begin implementing your own solutions.
+<P>
+
+<B>Designing a CORBA Solution</B><BR>
+
+The first stages of a CORBA solution are the design of the application, not the writing of code. Figure 1 shows the general architecture of our CORBA solution. One of the two principal classes defines a server and the other defines a listener. In the production environment, a singleton server object manages all connections, and n client objects represent each user in the chat environment. When a client sends a message to the server, the client will invoke the server's sendMessage() method, and when a client receives a message from the server, the server will invoke the client's messageReceived() method. In addition, when the client object is instantiated, it will first bind to the server singleton and then register as a listener using the server's addListener() method.<P>
+<IMG SRC="ld0298f1.gif" WIDTH=332 HEIGHT=340 BORDER=0 ALIGN="Left" ALT="Figure 1">
+When an object is to be exposed as a remote object in a CORBA environment, it is necessary to describe its interface in CORBA IDL. Similar in syntax to C++ and Java, CORBA IDL is a contract between two objects that specifies which methods can be invoked remotely. <A HREF="ldlist1.htm" TARGET="_new">Listing 1</A> specifies the IDL for our environment; as you can see, it mirrors the model diagrammed in Figure 1.
+<P>
+
+<B>Implementation</B><BR>
+Now that we have specified the interfaces to our remote objects, we need to implement the interfaces and then wire our chat environment together. <A HREF="ldlist2.htm" TARGET="_new">Listing 2</A> is the implementation of the ChatListenerI interface, and <A HREF="ldlist3.htm" TARGET="_new">Listing 3</A> is the implementation of the ChatServerI interface.
+<P>
+	In examining the implementations, be aware of a few important points. A class written to be the implementation of a particular interface extends interface_nameImplBase. By extending interface_nameImplBase, the class inherits methods used by the ORB for marshaling data. Forcing developers to inherit from a base class in a language without multiple inheritance is a potential problem, but inner classes offer design alternatives (<A HREF="ldlist2.htm" TARGET="_new">see Listing 2</A>). The TIE mechanism, which allows objects to extend something other than interface_nameImplBase, could also be used to expose methods as part of a remote CORBA object but is beyond the scope of this discussion. 
+<P>
+	Let's examine the main() method in the ChatServer class (<A HREF="ldlist3.htm" TARGET="_new">Listing 3</a>). In this method we first bind to the ORB pseudo-object and then obtain a reference to the Base Object Adapter (BOA) pseudo-object. Having completed this step, we instantiate the ChatServer singleton and ask the BOA to tell the ORB that the object is ready. We finish the method by calling boa.impl_is_ready() which tells the ORB that we are ready to begin receiving connections. This method--necessary in servers without a GUI--keeps the server from immediately exiting upon object instantiation.
+<P>
+	With a concrete understanding of the server under your belt, look at the doConnect() and doSend() methods in the client implementation. Note that the listing ignores GUI issues and focuses only on connection to a remote object. The doConnect() method is called by the client when the user clicks on the Connect button. This method--like the main() method in the server--first connects to the ORB and BOA. After connecting to the middleware, the client binds to the remote ChatServerI object and then instantiates a Listener object (Listener is the implementation of the ChatListenerI interface), asks the BOA to tell the ORB about the ChatListenerI object, and finally registers the Listener object as a listener of the ChatServerI.
+<P>
+<TABLE BORDER=3 CELLPADDING=5 CELLSPACING=5 WIDTH=300 ALIGN=RIGHT>
+<TR ALIGN=CENTER>
+<TD BGCOLOR="009999">
+<FONT COLOR="FFFFFF" face="arial"><B>Download On Demand <br>With Java IDL</TD>
+</TR>
+<TR ALIGN=LEFT>
+<TD BGCOLOR="FFFFCC"><FONT COLOR="009999" SIZE=+2 FACE="ARIAL">J</FONT><FONT FACE="Arial" size=2>ava IDL is now part of JavaSoft's standard enterprise APIs. Coupled with JavaSoft's decision to let RMI requests travel over CORBA's Internet InterOrb Protocol (IIOP), the IDL tools allow Java programmers to easily take advantage of CORBA infrastructure that may already be installed within their organizations. Programmers working with Enterprise JavaBeans can freely link to CORBA objects in the same application. 
+<P>
+	The JavaSoft idltojava tool automatically generates ORB-independent stub code for interfacing with remote CORBA objects. Fleshing out the interoperability is a portable Java ORB core and the nameserv tool, which implements the CORBA name service via the Java Naming Service (JNS) API.
+<P>
+	Java IDL enhances CORBA object access with one of the best aspects of the RMI world: No client code needs to be preinstalled for a computer to access a remote CORBA object via Java IDL.  All necessary Java IDL components will download on demand.
+</tr></td>
+</table>
+In the doSend() method--called by the client when the Send button is clicked--the client sends a message to the server by invoking the server's sendMessage() method. The server, in turn, receives this message and passes it to all clients using each client's messageReceived() method. Upon receiving the message, the client adds it to the screen.
+<P>
+
+<B>Running the Solution</B><BR>
+To run your CORBA solution, you must obtain the Visigenic ORB (<A HREF="http://www.visigenic.com">http://www.visigenic.com</A>). Compile the IDL by typing "idl2java chat.idl", and compile the Java source files by typing "javac "*.java". Start the server by typing "java ChatServer", and start each client by typing "java ChatClient". If you are working on a LAN, try running the clients, server, and ORB on different machines; if you are not on a LAN, you should be able to run everything on your own machine.
+<P>
+
+<B>Conclusion</B><BR>
+Although, this short discussion glosses over some of the nuances of implementing a CORBA solution, it explains a simple solution thoroughly. Type in the code, play around with it for a while, and see what you can do with it. Once you get the code up and running, try to add some of the chat features we left out of our example.
+<P>
+	Additionally, if you are already using another language supported by an IDL, try writing either the client or server in that language. You'll see that CORBA works just as well across different languages as it does in our Java-only example.  
+
+<P>
+<BR><HR><BR>
+<FONT SIZE=-1><I>Luke Andrew Cassady-Dorion is a software engineer at Metis LLC (<A HREF="http://www.metisllc.com">http://www.metisllc.com</A>), a firm that develops software for the health-care industry. With the aid of CORBA and other distributed-object technologies, Luke has deployed a series of enterprise-wide solutions written entirely in Java. Luke is the author of numerous articles on distributed computing and the recently published book Industrial Strength Java (New Riders Publishing,1997). Luke can be reached at <A HREF="mailto:luke@luke.org">luke@luke.org</A>.
+</I></FONT>
+<BR><HR><BR><CENTER><FONT SIZE="-3" FACE="Arial, Helvetica, sans-serif">(C) 1998 Fawcette Technical Publications. &nbsp;&nbsp;Contact us at <a href="mailto:java-pro@fawcette.com">java-pro@fawcette.com</a>
+</FONT></CENTER>
+</TD></TR></table>
+<BR><BR>
+
+</FONT>
+</BODY>
+</HTML>
+

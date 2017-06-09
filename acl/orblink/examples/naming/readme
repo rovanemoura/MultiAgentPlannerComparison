@@ -1,0 +1,90 @@
+This directory introduces a simple naming service. It is intended
+mostly to illustrate how to start up persistent servers; it can be
+difficult to use a naming service with some other ORBs (even though
+this is the "official" way they are supposed to interoperate) due to
+lack of standards compliance among some ORBs; also the IDL for
+CosNaming itself might seem too complicated for simple bootstrap
+applications.
+
+Thus, if you do want to use the COS naming service, an alternative
+would be to use another vendor's and publish the IOR of that naming
+service.
+
+At any rate, in order to start up this naming service you must not yet
+have started a a listener.
+
+After loading orblink.fasl, you should load the file naming-invoke.cl
+and evaluate (load-naming) .
+
+This will define the class orblink/naming:NamingContext, which
+implements the IDL interface CosNaming::NamingContext defined in the
+file CosNaming.idl. You can instantiate an instant of
+orblink/naming:NamingContext via (make-instance
+'orblink/naming:NamingContext). You can then publish and re-use this
+IOR however you want.
+
+However, in many situations the naming service is used expressly to
+avoid, or at any rate to minimize the complexity of, publishing the
+IOR. In certain such situations it can be convenient for the IOR to be
+persistent, which means that the server will always listen on the same
+port and on the same host (with the same marker).
+
+The function (orblink/naming:start-nameserver) will create an instance
+of orblink/naming:NamingContext [which, of course, is something
+different from the IDL compiler generated class
+COSNaming:NamingContext] whose IOR is persistent over invocations. In
+this case, this should be the first object published; normally you
+will want a single Lisp world dedicated to running the nameserver.
+
+Any other ORBLink invocation can then get the IOR of this
+NamingContext by invoking the (orblink/naming:nameservice-ior)
+function with appropriate host keyword argument.
+
+The (start-nameserver) invocation can feel normally in two
+ways. First, it will signal an error if a server has already been
+started on a same or different port in that Lisp world. Second, it
+will signal an error if a nameserver on the designated port of that
+host already exists. The default port number is given by
+orblink/naming:*default-naming-port*.
+
+It is worthwhile to study the code in naming-administration.cl as it
+illustrates the process of creating a persistent IOR.
+
+Of course, the code in the other cl files can be used to study the
+implementation of a nontrivial IDL interface.
+
+Here are the files used in this directory:
+
+	CosNaming.idl contains the IDL for the CORBA Services Name
+Service.
+
+	naming-invoke.cl is intended to be loaded by the user. It
+defines the orblink/naming package and the (user::load-naming)
+function.
+
+	naming.cl contains the implementation of the
+CosNaming::NamingContext interface as the class
+orblink/naming:NamingContext. This class has a single slot entries
+that holds an alist encoding the bindings managed by that naming
+context.  This file contains implementations for all of the
+IDL-defined operations in that interface.
+
+	naming-utility.cl contains helper functions that do the work
+of looking up names; the operation implementations just dispatch to
+appropriate helper functions. The only tricky thing here is that
+exactly the right exceptions must be signalled and a local
+namingcontext implementation, that is an instance of class
+orblink/naming:NamingContext, may contain bindings that point to
+proxies for CosNaming::NamingContext. Thus, the utility functions
+cannot normally be invoked iteratively.
+
+	naming-administration.cl contains functions that actually
+start a name service on a specified port. The invocation protocol is
+described above.
+
+	naming-accessors.cl contains accessors for managing the alist
+of entries.
+
+	binding-iterator.cl contains the implementation of the
+CosNaming::BindingIterator interface; it is implemented by a class
+named orblink/naming:BindingIterator.

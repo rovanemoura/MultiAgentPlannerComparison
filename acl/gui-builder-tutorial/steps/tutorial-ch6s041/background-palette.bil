@@ -1,0 +1,62 @@
+;; -*- lisp-version: "6.0.pre-final.9 [Windows] (Oct 18, 2000 13:49)"; common-graphics: "1.389.2.34"; form: background-palette; -*-
+;;;
+;;; Define :background-palette
+ 
+(in-package :common-graphics-user)
+
+;; The finder-function, which returns the window if it already
+;; exists, and otherwise creates and returns it.
+;; Call this function if you need only one copy of this window,
+;; and that window is a non-owned top-level window.
+(defun background-palette ()
+  (find-or-make-application-window :background-palette
+    'make-background-palette))
+ 
+;; The maker-function, which always creates a new window.
+;; Call this function if you need more than one copy,
+;; or the single copy should have a parent or owner window.
+;; (Pass :owner to this function; :parent is for compatibility.)
+(defun make-background-palette
+    (&key parent (owner (or parent (screen *system*)))
+     (exterior (make-box 485 129 623 299)) (name :background-palette)
+     (title "Background") (border :palette) (child-p nil) form-p)
+  (let ((owner
+         (make-window name :owner owner
+           :class 'dialog
+           :exterior exterior
+           :border border
+           :child-p child-p
+           :close-button nil
+           :cursor-name :arrow-cursor
+           :font (make-font-ex :swiss "MS Sans Serif / ANSI" 11 nil)
+           :form-state :normal
+           :maximize-button nil
+           :minimize-button nil
+           :name :background-palette
+           :package-name :common-graphics-user
+           :pop-up nil
+           :resizable nil
+           :scrollbars nil
+           :state :normal
+           :status-bar nil
+           :system-menu t
+           :title title
+           :title-bar t
+           :toolbar nil
+           :form-p form-p
+           :help-string nil
+           :package-name :common-graphics-user)))
+    owner))
+
+(defun make-background-palette-widgets () nil)
+
+(defparameter background-palette-widgets
+    (make-background-palette-widgets))
+
+(defun background-palette-widgets ()
+  (let (window)
+    (if* (dolist (dialog-item background-palette-widgets)
+           (and (setq window (window dialog-item)) (windowp window)
+                (return t)))
+       then (make-background-palette-widgets)
+       else background-palette-widgets)))

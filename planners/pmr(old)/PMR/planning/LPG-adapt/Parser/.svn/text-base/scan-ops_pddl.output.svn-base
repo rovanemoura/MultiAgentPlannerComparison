@@ -1,0 +1,4363 @@
+No terminales inútiles en gramática
+
+   variable_star
+   timed_adl_effect_plus
+
+
+Reglas inútiles en gramática
+
+  172 variable_star: /* vacío */
+  173              | VARIABLE variable_star
+
+  174 timed_adl_effect_plus: timed_adl_effect
+  175                      | timed_adl_effect timed_adl_effect_plus
+
+
+Reglas inútiles en el analizador debido a conflictos
+
+  152 binary_op: MINUS_TOK
+
+  168 d_value: num_exp
+
+
+Estado 102 conflictos: 1 reducción(ones)/reducción(ones)
+Estado 137 conflictos: 1 desplazamiento(s)/reducción(ones)
+Estado 149 conflictos: 7 reducción(ones)/reducción(ones)
+Estado 212 conflictos: 2 desplazamiento(s)/reducción(ones)
+Estado 213 conflictos: 2 desplazamiento(s)/reducción(ones)
+Estado 236 conflictos: 3 desplazamiento(s)/reducción(ones)
+Estado 238 conflictos: 4 desplazamiento(s)/reducción(ones)
+Estado 240 conflictos: 3 desplazamiento(s)/reducción(ones)
+Estado 242 conflictos: 3 desplazamiento(s)/reducción(ones)
+Estado 309 conflictos: 1 reducción(ones)/reducción(ones)
+Estado 356 conflictos: 4 desplazamiento(s)/reducción(ones)
+Estado 357 conflictos: 5 desplazamiento(s)/reducción(ones)
+Estado 358 conflictos: 4 desplazamiento(s)/reducción(ones)
+Estado 359 conflictos: 4 desplazamiento(s)/reducción(ones)
+Estado 369 conflictos: 1 desplazamiento(s)/reducción(ones)
+Estado 374 conflictos: 1 desplazamiento(s)/reducción(ones)
+
+
+Gramática
+
+    0 $accept: file $end
+
+    1 $@1: /* vacío */
+
+    2 file: $@1 domain_definition
+
+    3 $@2: /* vacío */
+
+    4 domain_definition: OPEN_PAREN DEFINE_TOK domain_name $@2 optional_domain_defs
+
+    5 domain_name: OPEN_PAREN DOMAIN_TOK NAME CLOSE_PAREN
+
+    6 optional_domain_defs: CLOSE_PAREN
+    7                     | require_def optional_domain_defs
+    8                     | constants_def optional_domain_defs
+    9                     | types_def optional_domain_defs
+   10                     | action_def optional_domain_defs
+   11                     | predicates_def optional_domain_defs
+   12                     | durative_action_def optional_domain_defs
+   13                     | functions_def optional_domain_defs
+   14                     | derived_def optional_domain_defs
+
+   15 $@3: /* vacío */
+
+   16 predicates_def: OPEN_PAREN PREDICATES_TOK predicates_list $@3 CLOSE_PAREN
+
+   17 predicates_list: /* vacío */
+
+   18 $@4: /* vacío */
+
+   19 predicates_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN $@4 predicates_list
+
+   20 $@5: /* vacío */
+
+   21 functions_def: OPEN_PAREN FUNCTIONS_TOK functions_list $@5 CLOSE_PAREN
+
+   22 functions_list: /* vacío */
+
+   23 $@6: /* vacío */
+
+   24 functions_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN $@6 functions_list
+
+   25 $@7: /* vacío */
+
+   26 $@8: /* vacío */
+
+   27 require_def: OPEN_PAREN REQUIREMENTS_TOK $@7 NAME $@8 require_key_star CLOSE_PAREN
+
+   28 require_key_star: /* vacío */
+
+   29 $@9: /* vacío */
+
+   30 require_key_star: NAME $@9 require_key_star
+
+   31 $@10: /* vacío */
+
+   32 types_def: OPEN_PAREN TYPES_TOK $@10 typed_list_name CLOSE_PAREN
+
+   33 $@11: /* vacío */
+
+   34 constants_def: OPEN_PAREN CONSTANTS_TOK $@11 typed_list_name CLOSE_PAREN
+
+   35 $@12: /* vacío */
+
+   36 $@13: /* vacío */
+
+   37 action_def: OPEN_PAREN ACTION_TOK $@12 NAME $@13 param_def action_def_body CLOSE_PAREN
+
+   38 param_def: /* vacío */
+   39          | PARAMETERS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN
+
+   40 action_def_body: /* vacío */
+   41                | VARS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN action_def_body
+
+   42 $@14: /* vacío */
+
+   43 action_def_body: PRECONDITION_TOK adl_goal_description $@14 action_def_body
+
+   44 $@15: /* vacío */
+
+   45 action_def_body: EFFECT_TOK adl_effect $@15 action_def_body
+
+   46 adl_goal_description: literal_term
+   47                     | OPEN_PAREN AND_TOK adl_goal_description_star CLOSE_PAREN
+   48                     | OPEN_PAREN OR_TOK adl_goal_description_star CLOSE_PAREN
+   49                     | OPEN_PAREN NOT_TOK adl_goal_description CLOSE_PAREN
+   50                     | OPEN_PAREN IMPLY_TOK adl_goal_description adl_goal_description CLOSE_PAREN
+   51                     | OPEN_PAREN EXISTS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+   52                     | OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+   53                     | f_comp
+
+   54 f_comp: OPEN_PAREN binary_comp f_exp f_exp CLOSE_PAREN
+
+   55 f_exp: num_exp
+   56      | OPEN_PAREN MINUS_TOK f_exp CLOSE_PAREN
+   57      | OPEN_PAREN MINUS_TOK f_exp f_exp CLOSE_PAREN
+   58      | OPEN_PAREN PLUS_TOK f_exp f_exp CLOSE_PAREN
+   59      | OPEN_PAREN MUL_TOK f_exp f_exp CLOSE_PAREN
+   60      | OPEN_PAREN DIV_TOK f_exp f_exp CLOSE_PAREN
+   61      | f_head
+   62      | number
+
+   63 f_head: OPEN_PAREN function_symbol term_star CLOSE_PAREN
+   64       | function_symbol
+
+   65 binary_comp: GREATER_TOK
+   66            | LESS_THAN_TOK
+   67            | EQUAL_TOK
+   68            | GREATER_OR_EQUAL_TOK
+   69            | LESS_THAN_OR_EQUAL_TOK
+
+   70 num_exp: OPEN_PAREN MINUS_TOK num_exp CLOSE_PAREN
+   71        | OPEN_PAREN MINUS_TOK num_exp num_exp CLOSE_PAREN
+   72        | OPEN_PAREN PLUS_TOK num_exp num_exp CLOSE_PAREN
+   73        | OPEN_PAREN MUL_TOK num_exp num_exp CLOSE_PAREN
+   74        | OPEN_PAREN DIV_TOK num_exp num_exp CLOSE_PAREN
+   75        | number
+
+   76 number: INTVAL
+   77       | FLOATVAL
+
+   78 function_symbol: NAME
+
+   79 assign_op: ASSIGN_TOK
+   80          | SCALE_UP_TOK
+   81          | SCALE_DOWN_TOK
+   82          | INCREASE_TOK
+   83          | DECREASE_TOK
+
+   84 adl_goal_description_star: /* vacío */
+   85                          | adl_goal_description adl_goal_description_star
+
+   86 adl_effect: literal_term
+   87           | OPEN_PAREN AND_TOK adl_effect_star CLOSE_PAREN
+   88           | OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_effect CLOSE_PAREN
+   89           | OPEN_PAREN WHEN_TOK adl_goal_description adl_effect CLOSE_PAREN
+   90           | OPEN_PAREN assign_op f_head f_exp CLOSE_PAREN
+
+   91 adl_effect_star: /* vacío */
+   92                | adl_effect adl_effect_star
+
+   93 literal_term: OPEN_PAREN NOT_TOK atomic_formula_term CLOSE_PAREN
+   94             | atomic_formula_term
+
+   95 atomic_formula_term: OPEN_PAREN predicate term_star CLOSE_PAREN
+
+   96 term_star: /* vacío */
+   97          | term term_star
+
+   98 term: NAME
+   99     | VARIABLE
+
+  100 name_plus: NAME
+  101          | NAME name_plus
+
+  102 predicate: NAME
+  103          | EQUAL_TOK
+
+  104 typed_list_name: /* vacío */
+  105                | NAME either name_plus CLOSE_PAREN typed_list_name
+  106                | NAME type typed_list_name
+  107                | NAME typed_list_name
+
+  108 typed_list_variable: /* vacío */
+  109                    | VARIABLE either name_plus CLOSE_PAREN typed_list_variable
+  110                    | VARIABLE type typed_list_variable
+  111                    | VARIABLE typed_list_variable
+
+  112 $@16: /* vacío */
+
+  113 $@17: /* vacío */
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK $@16 NAME $@17 param_def durative_action_def_body CLOSE_PAREN
+
+  115 durative_action_def_body: /* vacío */
+  116                         | VARS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN durative_action_def_body
+
+  117 $@18: /* vacío */
+
+  118 durative_action_def_body: DURATION_TOK duration_constraint $@18 durative_action_def_body
+
+  119 $@19: /* vacío */
+
+  120 durative_action_def_body: CONDITION_TOK da_adl_goal_description $@19 durative_action_def_body
+
+  121 $@20: /* vacío */
+
+  122 durative_action_def_body: EFFECT_TOK da_adl_effect $@20 durative_action_def_body
+
+  123 $@21: /* vacío */
+
+  124 derived_def: OPEN_PAREN DERIVED_TOK $@21 derived_predicate_def adl_goal_description CLOSE_PAREN
+
+  125 derived_predicate_def: OPEN_PAREN predicate typed_list_variable CLOSE_PAREN
+
+  126 da_adl_goal_description: timed_adl_goal_description
+  127                        | OPEN_PAREN AND_TOK timed_adl_goal_description_plus CLOSE_PAREN
+
+  128 timed_adl_goal_description_plus: timed_adl_goal_description
+  129                                | timed_adl_goal_description timed_adl_goal_description_plus
+
+  130 timed_adl_goal_description: OPEN_PAREN AT_START adl_goal_description CLOSE_PAREN
+  131                           | OPEN_PAREN AT_END adl_goal_description CLOSE_PAREN
+  132                           | OPEN_PAREN OVER_ALL adl_goal_description CLOSE_PAREN
+
+  133 da_adl_effect_star: /* vacío */
+  134                   | da_adl_effect da_adl_effect_star
+
+  135 da_adl_effect: OPEN_PAREN AND_TOK da_adl_effect_star CLOSE_PAREN
+  136              | timed_adl_effect
+  137              | OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN da_adl_effect CLOSE_PAREN
+  138              | OPEN_PAREN WHEN_TOK da_adl_goal_description da_adl_effect CLOSE_PAREN
+  139              | OPEN_PAREN assign_op f_head f_exp_da CLOSE_PAREN
+
+  140 timed_adl_effect: OPEN_PAREN AT_START adl_effect CLOSE_PAREN
+  141                 | OPEN_PAREN AT_END adl_effect CLOSE_PAREN
+  142                 | OPEN_PAREN AT_START f_assign_da CLOSE_PAREN
+  143                 | OPEN_PAREN AT_END f_assign_da CLOSE_PAREN
+  144                 | OPEN_PAREN INCREASE_TOK f_head f_exp_t CLOSE_PAREN
+  145                 | OPEN_PAREN DECREASE_TOK f_head f_exp_t CLOSE_PAREN
+
+  146 f_assign_da: OPEN_PAREN assign_op f_head f_exp_da CLOSE_PAREN
+
+  147 f_exp_da: OPEN_PAREN binary_op f_exp_da f_exp_da CLOSE_PAREN
+  148         | OPEN_PAREN MINUS_TOK f_exp_da CLOSE_PAREN
+  149         | DURATION_VAR_TOK
+  150         | f_exp
+
+  151 binary_op: PLUS_TOK
+  152          | MINUS_TOK
+  153          | MUL_TOK
+  154          | DIV_TOK
+
+  155 f_exp_t: OPEN_PAREN MUL_TOK f_exp TIME_TOK CLOSE_PAREN
+  156        | OPEN_PAREN MUL_TOK TIME_TOK f_exp CLOSE_PAREN
+  157        | TIME_TOK
+
+  158 duration_constraint: OPEN_PAREN AND_TOK simple_duration_constraint_plus CLOSE_PAREN
+  159                    | simple_duration_constraint
+
+  160 simple_duration_constraint_plus: simple_duration_constraint
+  161                                | simple_duration_constraint simple_duration_constraint_plus
+
+  162 simple_duration_constraint: OPEN_PAREN d_op DURATION_VAR_TOK d_value CLOSE_PAREN
+  163                           | OPEN_PAREN AT_START simple_duration_constraint CLOSE_PAREN
+  164                           | OPEN_PAREN AT_END simple_duration_constraint CLOSE_PAREN
+
+  165 d_op: LESS_THAN_OR_EQUAL_TOK
+  166     | GREATER_OR_EQUAL_TOK
+  167     | EQUAL_TOK
+
+  168 d_value: num_exp
+  169        | f_exp
+
+  170 type: MINUS_TOK NAME
+
+  171 either: MINUS_TOK OPEN_PAREN EITHER_TOK
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256)
+DEFINE_TOK (258) 4
+DOMAIN_TOK (259) 5
+REQUIREMENTS_TOK (260) 27
+TYPES_TOK (261) 32
+EITHER_TOK (262) 171
+CONSTANTS_TOK (263) 34
+PREDICATES_TOK (264) 16
+FUNCTIONS_TOK (265) 21
+DURATIVE_ACTION_TOK (266) 114
+CONDITION_TOK (267) 120
+DURATION_TOK (268) 118
+DURATION_VAR_TOK (269) 149 162
+AT_START (270) 130 140 142 163
+AT_END (271) 131 141 143 164
+OVER_ALL (272) 132
+INCREASE_TOK (273) 82 144
+DECREASE_TOK (274) 83 145
+TIME_TOK (275) 155 156 157
+GREATER_OR_EQUAL_TOK (276) 68 166
+LESS_THAN_OR_EQUAL_TOK (277) 69 165
+INTVAL (278) 76
+FLOATVAL (279) 77
+ASSIGN_TOK (280) 79
+SCALE_UP_TOK (281) 80
+SCALE_DOWN_TOK (282) 81
+PLUS_TOK (283) 58 72 151
+MINUS_TOK (284) 56 57 70 71 148 152 170 171
+MUL_TOK (285) 59 73 153 155 156
+DIV_TOK (286) 60 74 154
+EQUAL_TOK (287) 67 103 167
+GREATER_TOK (288) 65
+LESS_THAN_TOK (289) 66
+ACTION_TOK (290) 37
+VARS_TOK (291) 41 116
+DERIVED_TOK (292) 124
+PRECONDITION_TOK (293) 43
+PARAMETERS_TOK (294) 39
+EFFECT_TOK (295) 45 122
+AND_TOK (296) 47 87 127 135 158
+NOT_TOK (297) 49 93
+WHEN_TOK (298) 89 138
+FORALL_TOK (299) 52 88 137
+IMPLY_TOK (300) 50
+OR_TOK (301) 48
+EXISTS_TOK (302) 51
+NAME (303) 5 19 24 27 30 37 78 98 100 101 102 105 106 107 114 170
+VARIABLE (304) 99 109 110 111
+OPEN_PAREN (305) 4 5 16 19 21 24 27 32 34 37 39 41 47 48 49 50 51 52
+    54 56 57 58 59 60 63 70 71 72 73 74 87 88 89 90 93 95 114 116 124
+    125 127 130 131 132 135 137 138 139 140 141 142 143 144 145 146
+    147 148 155 156 158 162 163 164 171
+CLOSE_PAREN (306) 5 6 16 19 21 24 27 32 34 37 39 41 47 48 49 50 51
+    52 54 56 57 58 59 60 63 70 71 72 73 74 87 88 89 90 93 95 105 109
+    114 116 124 125 127 130 131 132 135 137 138 139 140 141 142 143
+    144 145 146 147 148 155 156 158 162 163 164
+UMINUS (307)
+
+
+No terminales con las reglas donde aparecen
+
+$accept (53)
+    en la izquierda: 0
+file (54)
+    en la izquierda: 2, en la derecha: 0
+$@1 (55)
+    en la izquierda: 1, en la derecha: 2
+domain_definition (56)
+    en la izquierda: 4, en la derecha: 2
+$@2 (57)
+    en la izquierda: 3, en la derecha: 4
+domain_name (58)
+    en la izquierda: 5, en la derecha: 4
+optional_domain_defs (59)
+    en la izquierda: 6 7 8 9 10 11 12 13 14, en la derecha: 4 7 8 9
+    10 11 12 13 14
+predicates_def (60)
+    en la izquierda: 16, en la derecha: 11
+$@3 (61)
+    en la izquierda: 15, en la derecha: 16
+predicates_list (62)
+    en la izquierda: 17 19, en la derecha: 16 19
+$@4 (63)
+    en la izquierda: 18, en la derecha: 19
+functions_def (64)
+    en la izquierda: 21, en la derecha: 13
+$@5 (65)
+    en la izquierda: 20, en la derecha: 21
+functions_list (66)
+    en la izquierda: 22 24, en la derecha: 21 24
+$@6 (67)
+    en la izquierda: 23, en la derecha: 24
+require_def (68)
+    en la izquierda: 27, en la derecha: 7
+$@7 (69)
+    en la izquierda: 25, en la derecha: 27
+$@8 (70)
+    en la izquierda: 26, en la derecha: 27
+require_key_star (71)
+    en la izquierda: 28 30, en la derecha: 27 30
+$@9 (72)
+    en la izquierda: 29, en la derecha: 30
+types_def (73)
+    en la izquierda: 32, en la derecha: 9
+$@10 (74)
+    en la izquierda: 31, en la derecha: 32
+constants_def (75)
+    en la izquierda: 34, en la derecha: 8
+$@11 (76)
+    en la izquierda: 33, en la derecha: 34
+action_def (77)
+    en la izquierda: 37, en la derecha: 10
+$@12 (78)
+    en la izquierda: 35, en la derecha: 37
+$@13 (79)
+    en la izquierda: 36, en la derecha: 37
+param_def (80)
+    en la izquierda: 38 39, en la derecha: 37 114
+action_def_body (81)
+    en la izquierda: 40 41 43 45, en la derecha: 37 41 43 45
+$@14 (82)
+    en la izquierda: 42, en la derecha: 43
+$@15 (83)
+    en la izquierda: 44, en la derecha: 45
+adl_goal_description (84)
+    en la izquierda: 46 47 48 49 50 51 52 53, en la derecha: 43 49
+    50 51 52 85 89 124 130 131 132
+f_comp (85)
+    en la izquierda: 54, en la derecha: 53
+f_exp (86)
+    en la izquierda: 55 56 57 58 59 60 61 62, en la derecha: 54 56
+    57 58 59 60 90 150 155 156 169
+f_head (87)
+    en la izquierda: 63 64, en la derecha: 61 90 139 144 145 146
+binary_comp (88)
+    en la izquierda: 65 66 67 68 69, en la derecha: 54
+num_exp (89)
+    en la izquierda: 70 71 72 73 74 75, en la derecha: 55 70 71 72
+    73 74 168
+number (90)
+    en la izquierda: 76 77, en la derecha: 62 75
+function_symbol (91)
+    en la izquierda: 78, en la derecha: 63 64
+assign_op (92)
+    en la izquierda: 79 80 81 82 83, en la derecha: 90 139 146
+adl_goal_description_star (93)
+    en la izquierda: 84 85, en la derecha: 47 48 85
+adl_effect (94)
+    en la izquierda: 86 87 88 89 90, en la derecha: 45 88 89 92 140
+    141
+adl_effect_star (95)
+    en la izquierda: 91 92, en la derecha: 87 92
+literal_term (96)
+    en la izquierda: 93 94, en la derecha: 46 86
+atomic_formula_term (97)
+    en la izquierda: 95, en la derecha: 93 94
+term_star (98)
+    en la izquierda: 96 97, en la derecha: 63 95 97
+term (99)
+    en la izquierda: 98 99, en la derecha: 97
+name_plus (100)
+    en la izquierda: 100 101, en la derecha: 101 105 109
+predicate (101)
+    en la izquierda: 102 103, en la derecha: 95 125
+typed_list_name (102)
+    en la izquierda: 104 105 106 107, en la derecha: 32 34 105 106
+    107
+typed_list_variable (103)
+    en la izquierda: 108 109 110 111, en la derecha: 19 24 39 41 51
+    52 88 109 110 111 116 125 137
+durative_action_def (104)
+    en la izquierda: 114, en la derecha: 12
+$@16 (105)
+    en la izquierda: 112, en la derecha: 114
+$@17 (106)
+    en la izquierda: 113, en la derecha: 114
+durative_action_def_body (107)
+    en la izquierda: 115 116 118 120 122, en la derecha: 114 116 118
+    120 122
+$@18 (108)
+    en la izquierda: 117, en la derecha: 118
+$@19 (109)
+    en la izquierda: 119, en la derecha: 120
+$@20 (110)
+    en la izquierda: 121, en la derecha: 122
+derived_def (111)
+    en la izquierda: 124, en la derecha: 14
+$@21 (112)
+    en la izquierda: 123, en la derecha: 124
+derived_predicate_def (113)
+    en la izquierda: 125, en la derecha: 124
+da_adl_goal_description (114)
+    en la izquierda: 126 127, en la derecha: 120 138
+timed_adl_goal_description_plus (115)
+    en la izquierda: 128 129, en la derecha: 127 129
+timed_adl_goal_description (116)
+    en la izquierda: 130 131 132, en la derecha: 126 128 129
+da_adl_effect_star (117)
+    en la izquierda: 133 134, en la derecha: 134 135
+da_adl_effect (118)
+    en la izquierda: 135 136 137 138 139, en la derecha: 122 134 137
+    138
+timed_adl_effect (119)
+    en la izquierda: 140 141 142 143 144 145, en la derecha: 136
+f_assign_da (120)
+    en la izquierda: 146, en la derecha: 142 143
+f_exp_da (121)
+    en la izquierda: 147 148 149 150, en la derecha: 139 146 147 148
+binary_op (122)
+    en la izquierda: 151 152 153 154, en la derecha: 147
+f_exp_t (123)
+    en la izquierda: 155 156 157, en la derecha: 144 145
+duration_constraint (124)
+    en la izquierda: 158 159, en la derecha: 118
+simple_duration_constraint_plus (125)
+    en la izquierda: 160 161, en la derecha: 158 161
+simple_duration_constraint (126)
+    en la izquierda: 162 163 164, en la derecha: 159 160 161 163 164
+d_op (127)
+    en la izquierda: 165 166 167, en la derecha: 162
+d_value (128)
+    en la izquierda: 168 169, en la derecha: 162
+type (129)
+    en la izquierda: 170, en la derecha: 106 110
+either (130)
+    en la izquierda: 171, en la derecha: 105 109
+
+
+estado 0
+
+    0 $accept: . file $end
+
+    $default  reduce usando la regla 1 ($@1)
+
+    file  ir al estado 1
+    $@1   ir al estado 2
+
+
+estado 1
+
+    0 $accept: file . $end
+
+    $end  desplazar e ir al estado 3
+
+
+estado 2
+
+    2 file: $@1 . domain_definition
+
+    OPEN_PAREN  desplazar e ir al estado 4
+
+    domain_definition  ir al estado 5
+
+
+estado 3
+
+    0 $accept: file $end .
+
+    $default  aceptar
+
+
+estado 4
+
+    4 domain_definition: OPEN_PAREN . DEFINE_TOK domain_name $@2 optional_domain_defs
+
+    DEFINE_TOK  desplazar e ir al estado 6
+
+
+estado 5
+
+    2 file: $@1 domain_definition .
+
+    $default  reduce usando la regla 2 (file)
+
+
+estado 6
+
+    4 domain_definition: OPEN_PAREN DEFINE_TOK . domain_name $@2 optional_domain_defs
+
+    OPEN_PAREN  desplazar e ir al estado 7
+
+    domain_name  ir al estado 8
+
+
+estado 7
+
+    5 domain_name: OPEN_PAREN . DOMAIN_TOK NAME CLOSE_PAREN
+
+    DOMAIN_TOK  desplazar e ir al estado 9
+
+
+estado 8
+
+    4 domain_definition: OPEN_PAREN DEFINE_TOK domain_name . $@2 optional_domain_defs
+
+    $default  reduce usando la regla 3 ($@2)
+
+    $@2  ir al estado 10
+
+
+estado 9
+
+    5 domain_name: OPEN_PAREN DOMAIN_TOK . NAME CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 11
+
+
+estado 10
+
+    4 domain_definition: OPEN_PAREN DEFINE_TOK domain_name $@2 . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 14
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 11
+
+    5 domain_name: OPEN_PAREN DOMAIN_TOK NAME . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 23
+
+
+estado 12
+
+   16 predicates_def: OPEN_PAREN . PREDICATES_TOK predicates_list $@3 CLOSE_PAREN
+   21 functions_def: OPEN_PAREN . FUNCTIONS_TOK functions_list $@5 CLOSE_PAREN
+   27 require_def: OPEN_PAREN . REQUIREMENTS_TOK $@7 NAME $@8 require_key_star CLOSE_PAREN
+   32 types_def: OPEN_PAREN . TYPES_TOK $@10 typed_list_name CLOSE_PAREN
+   34 constants_def: OPEN_PAREN . CONSTANTS_TOK $@11 typed_list_name CLOSE_PAREN
+   37 action_def: OPEN_PAREN . ACTION_TOK $@12 NAME $@13 param_def action_def_body CLOSE_PAREN
+  114 durative_action_def: OPEN_PAREN . DURATIVE_ACTION_TOK $@16 NAME $@17 param_def durative_action_def_body CLOSE_PAREN
+  124 derived_def: OPEN_PAREN . DERIVED_TOK $@21 derived_predicate_def adl_goal_description CLOSE_PAREN
+
+    REQUIREMENTS_TOK     desplazar e ir al estado 24
+    TYPES_TOK            desplazar e ir al estado 25
+    CONSTANTS_TOK        desplazar e ir al estado 26
+    PREDICATES_TOK       desplazar e ir al estado 27
+    FUNCTIONS_TOK        desplazar e ir al estado 28
+    DURATIVE_ACTION_TOK  desplazar e ir al estado 29
+    ACTION_TOK           desplazar e ir al estado 30
+    DERIVED_TOK          desplazar e ir al estado 31
+
+
+estado 13
+
+    6 optional_domain_defs: CLOSE_PAREN .
+
+    $default  reduce usando la regla 6 (optional_domain_defs)
+
+
+estado 14
+
+    4 domain_definition: OPEN_PAREN DEFINE_TOK domain_name $@2 optional_domain_defs .
+
+    $default  reduce usando la regla 4 (domain_definition)
+
+
+estado 15
+
+   11 optional_domain_defs: predicates_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 32
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 16
+
+   13 optional_domain_defs: functions_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 33
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 17
+
+    7 optional_domain_defs: require_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 34
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 18
+
+    9 optional_domain_defs: types_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 35
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 19
+
+    8 optional_domain_defs: constants_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 36
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 20
+
+   10 optional_domain_defs: action_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 37
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 21
+
+   12 optional_domain_defs: durative_action_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 38
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 22
+
+   14 optional_domain_defs: derived_def . optional_domain_defs
+
+    OPEN_PAREN   desplazar e ir al estado 12
+    CLOSE_PAREN  desplazar e ir al estado 13
+
+    optional_domain_defs  ir al estado 39
+    predicates_def        ir al estado 15
+    functions_def         ir al estado 16
+    require_def           ir al estado 17
+    types_def             ir al estado 18
+    constants_def         ir al estado 19
+    action_def            ir al estado 20
+    durative_action_def   ir al estado 21
+    derived_def           ir al estado 22
+
+
+estado 23
+
+    5 domain_name: OPEN_PAREN DOMAIN_TOK NAME CLOSE_PAREN .
+
+    $default  reduce usando la regla 5 (domain_name)
+
+
+estado 24
+
+   27 require_def: OPEN_PAREN REQUIREMENTS_TOK . $@7 NAME $@8 require_key_star CLOSE_PAREN
+
+    $default  reduce usando la regla 25 ($@7)
+
+    $@7  ir al estado 40
+
+
+estado 25
+
+   32 types_def: OPEN_PAREN TYPES_TOK . $@10 typed_list_name CLOSE_PAREN
+
+    $default  reduce usando la regla 31 ($@10)
+
+    $@10  ir al estado 41
+
+
+estado 26
+
+   34 constants_def: OPEN_PAREN CONSTANTS_TOK . $@11 typed_list_name CLOSE_PAREN
+
+    $default  reduce usando la regla 33 ($@11)
+
+    $@11  ir al estado 42
+
+
+estado 27
+
+   16 predicates_def: OPEN_PAREN PREDICATES_TOK . predicates_list $@3 CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 43
+
+    $default  reduce usando la regla 17 (predicates_list)
+
+    predicates_list  ir al estado 44
+
+
+estado 28
+
+   21 functions_def: OPEN_PAREN FUNCTIONS_TOK . functions_list $@5 CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 45
+
+    $default  reduce usando la regla 22 (functions_list)
+
+    functions_list  ir al estado 46
+
+
+estado 29
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK . $@16 NAME $@17 param_def durative_action_def_body CLOSE_PAREN
+
+    $default  reduce usando la regla 112 ($@16)
+
+    $@16  ir al estado 47
+
+
+estado 30
+
+   37 action_def: OPEN_PAREN ACTION_TOK . $@12 NAME $@13 param_def action_def_body CLOSE_PAREN
+
+    $default  reduce usando la regla 35 ($@12)
+
+    $@12  ir al estado 48
+
+
+estado 31
+
+  124 derived_def: OPEN_PAREN DERIVED_TOK . $@21 derived_predicate_def adl_goal_description CLOSE_PAREN
+
+    $default  reduce usando la regla 123 ($@21)
+
+    $@21  ir al estado 49
+
+
+estado 32
+
+   11 optional_domain_defs: predicates_def optional_domain_defs .
+
+    $default  reduce usando la regla 11 (optional_domain_defs)
+
+
+estado 33
+
+   13 optional_domain_defs: functions_def optional_domain_defs .
+
+    $default  reduce usando la regla 13 (optional_domain_defs)
+
+
+estado 34
+
+    7 optional_domain_defs: require_def optional_domain_defs .
+
+    $default  reduce usando la regla 7 (optional_domain_defs)
+
+
+estado 35
+
+    9 optional_domain_defs: types_def optional_domain_defs .
+
+    $default  reduce usando la regla 9 (optional_domain_defs)
+
+
+estado 36
+
+    8 optional_domain_defs: constants_def optional_domain_defs .
+
+    $default  reduce usando la regla 8 (optional_domain_defs)
+
+
+estado 37
+
+   10 optional_domain_defs: action_def optional_domain_defs .
+
+    $default  reduce usando la regla 10 (optional_domain_defs)
+
+
+estado 38
+
+   12 optional_domain_defs: durative_action_def optional_domain_defs .
+
+    $default  reduce usando la regla 12 (optional_domain_defs)
+
+
+estado 39
+
+   14 optional_domain_defs: derived_def optional_domain_defs .
+
+    $default  reduce usando la regla 14 (optional_domain_defs)
+
+
+estado 40
+
+   27 require_def: OPEN_PAREN REQUIREMENTS_TOK $@7 . NAME $@8 require_key_star CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 50
+
+
+estado 41
+
+   32 types_def: OPEN_PAREN TYPES_TOK $@10 . typed_list_name CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 104 (typed_list_name)
+
+    typed_list_name  ir al estado 52
+
+
+estado 42
+
+   34 constants_def: OPEN_PAREN CONSTANTS_TOK $@11 . typed_list_name CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 104 (typed_list_name)
+
+    typed_list_name  ir al estado 53
+
+
+estado 43
+
+   19 predicates_list: OPEN_PAREN . NAME typed_list_variable CLOSE_PAREN $@4 predicates_list
+
+    NAME  desplazar e ir al estado 54
+
+
+estado 44
+
+   16 predicates_def: OPEN_PAREN PREDICATES_TOK predicates_list . $@3 CLOSE_PAREN
+
+    $default  reduce usando la regla 15 ($@3)
+
+    $@3  ir al estado 55
+
+
+estado 45
+
+   24 functions_list: OPEN_PAREN . NAME typed_list_variable CLOSE_PAREN $@6 functions_list
+
+    NAME  desplazar e ir al estado 56
+
+
+estado 46
+
+   21 functions_def: OPEN_PAREN FUNCTIONS_TOK functions_list . $@5 CLOSE_PAREN
+
+    $default  reduce usando la regla 20 ($@5)
+
+    $@5  ir al estado 57
+
+
+estado 47
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK $@16 . NAME $@17 param_def durative_action_def_body CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 58
+
+
+estado 48
+
+   37 action_def: OPEN_PAREN ACTION_TOK $@12 . NAME $@13 param_def action_def_body CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 59
+
+
+estado 49
+
+  124 derived_def: OPEN_PAREN DERIVED_TOK $@21 . derived_predicate_def adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 60
+
+    derived_predicate_def  ir al estado 61
+
+
+estado 50
+
+   27 require_def: OPEN_PAREN REQUIREMENTS_TOK $@7 NAME . $@8 require_key_star CLOSE_PAREN
+
+    $default  reduce usando la regla 26 ($@8)
+
+    $@8  ir al estado 62
+
+
+estado 51
+
+  105 typed_list_name: NAME . either name_plus CLOSE_PAREN typed_list_name
+  106                | NAME . type typed_list_name
+  107                | NAME . typed_list_name
+
+    MINUS_TOK  desplazar e ir al estado 63
+    NAME       desplazar e ir al estado 51
+
+    $default  reduce usando la regla 104 (typed_list_name)
+
+    typed_list_name  ir al estado 64
+    type             ir al estado 65
+    either           ir al estado 66
+
+
+estado 52
+
+   32 types_def: OPEN_PAREN TYPES_TOK $@10 typed_list_name . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 67
+
+
+estado 53
+
+   34 constants_def: OPEN_PAREN CONSTANTS_TOK $@11 typed_list_name . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 68
+
+
+estado 54
+
+   19 predicates_list: OPEN_PAREN NAME . typed_list_variable CLOSE_PAREN $@4 predicates_list
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 70
+
+
+estado 55
+
+   16 predicates_def: OPEN_PAREN PREDICATES_TOK predicates_list $@3 . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 71
+
+
+estado 56
+
+   24 functions_list: OPEN_PAREN NAME . typed_list_variable CLOSE_PAREN $@6 functions_list
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 72
+
+
+estado 57
+
+   21 functions_def: OPEN_PAREN FUNCTIONS_TOK functions_list $@5 . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 73
+
+
+estado 58
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK $@16 NAME . $@17 param_def durative_action_def_body CLOSE_PAREN
+
+    $default  reduce usando la regla 113 ($@17)
+
+    $@17  ir al estado 74
+
+
+estado 59
+
+   37 action_def: OPEN_PAREN ACTION_TOK $@12 NAME . $@13 param_def action_def_body CLOSE_PAREN
+
+    $default  reduce usando la regla 36 ($@13)
+
+    $@13  ir al estado 75
+
+
+estado 60
+
+  125 derived_predicate_def: OPEN_PAREN . predicate typed_list_variable CLOSE_PAREN
+
+    EQUAL_TOK  desplazar e ir al estado 76
+    NAME       desplazar e ir al estado 77
+
+    predicate  ir al estado 78
+
+
+estado 61
+
+  124 derived_def: OPEN_PAREN DERIVED_TOK $@21 derived_predicate_def . adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 80
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 62
+
+   27 require_def: OPEN_PAREN REQUIREMENTS_TOK $@7 NAME $@8 . require_key_star CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 28 (require_key_star)
+
+    require_key_star  ir al estado 85
+
+
+estado 63
+
+  170 type: MINUS_TOK . NAME
+  171 either: MINUS_TOK . OPEN_PAREN EITHER_TOK
+
+    NAME        desplazar e ir al estado 86
+    OPEN_PAREN  desplazar e ir al estado 87
+
+
+estado 64
+
+  107 typed_list_name: NAME typed_list_name .
+
+    $default  reduce usando la regla 107 (typed_list_name)
+
+
+estado 65
+
+  106 typed_list_name: NAME type . typed_list_name
+
+    NAME  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 104 (typed_list_name)
+
+    typed_list_name  ir al estado 88
+
+
+estado 66
+
+  105 typed_list_name: NAME either . name_plus CLOSE_PAREN typed_list_name
+
+    NAME  desplazar e ir al estado 89
+
+    name_plus  ir al estado 90
+
+
+estado 67
+
+   32 types_def: OPEN_PAREN TYPES_TOK $@10 typed_list_name CLOSE_PAREN .
+
+    $default  reduce usando la regla 32 (types_def)
+
+
+estado 68
+
+   34 constants_def: OPEN_PAREN CONSTANTS_TOK $@11 typed_list_name CLOSE_PAREN .
+
+    $default  reduce usando la regla 34 (constants_def)
+
+
+estado 69
+
+  109 typed_list_variable: VARIABLE . either name_plus CLOSE_PAREN typed_list_variable
+  110                    | VARIABLE . type typed_list_variable
+  111                    | VARIABLE . typed_list_variable
+
+    MINUS_TOK  desplazar e ir al estado 63
+    VARIABLE   desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 91
+    type                 ir al estado 92
+    either               ir al estado 93
+
+
+estado 70
+
+   19 predicates_list: OPEN_PAREN NAME typed_list_variable . CLOSE_PAREN $@4 predicates_list
+
+    CLOSE_PAREN  desplazar e ir al estado 94
+
+
+estado 71
+
+   16 predicates_def: OPEN_PAREN PREDICATES_TOK predicates_list $@3 CLOSE_PAREN .
+
+    $default  reduce usando la regla 16 (predicates_def)
+
+
+estado 72
+
+   24 functions_list: OPEN_PAREN NAME typed_list_variable . CLOSE_PAREN $@6 functions_list
+
+    CLOSE_PAREN  desplazar e ir al estado 95
+
+
+estado 73
+
+   21 functions_def: OPEN_PAREN FUNCTIONS_TOK functions_list $@5 CLOSE_PAREN .
+
+    $default  reduce usando la regla 21 (functions_def)
+
+
+estado 74
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK $@16 NAME $@17 . param_def durative_action_def_body CLOSE_PAREN
+
+    PARAMETERS_TOK  desplazar e ir al estado 96
+
+    $default  reduce usando la regla 38 (param_def)
+
+    param_def  ir al estado 97
+
+
+estado 75
+
+   37 action_def: OPEN_PAREN ACTION_TOK $@12 NAME $@13 . param_def action_def_body CLOSE_PAREN
+
+    PARAMETERS_TOK  desplazar e ir al estado 96
+
+    $default  reduce usando la regla 38 (param_def)
+
+    param_def  ir al estado 98
+
+
+estado 76
+
+  103 predicate: EQUAL_TOK .
+
+    $default  reduce usando la regla 103 (predicate)
+
+
+estado 77
+
+  102 predicate: NAME .
+
+    $default  reduce usando la regla 102 (predicate)
+
+
+estado 78
+
+  125 derived_predicate_def: OPEN_PAREN predicate . typed_list_variable CLOSE_PAREN
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 99
+
+
+estado 79
+
+   47 adl_goal_description: OPEN_PAREN . AND_TOK adl_goal_description_star CLOSE_PAREN
+   48                     | OPEN_PAREN . OR_TOK adl_goal_description_star CLOSE_PAREN
+   49                     | OPEN_PAREN . NOT_TOK adl_goal_description CLOSE_PAREN
+   50                     | OPEN_PAREN . IMPLY_TOK adl_goal_description adl_goal_description CLOSE_PAREN
+   51                     | OPEN_PAREN . EXISTS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+   52                     | OPEN_PAREN . FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+   54 f_comp: OPEN_PAREN . binary_comp f_exp f_exp CLOSE_PAREN
+   93 literal_term: OPEN_PAREN . NOT_TOK atomic_formula_term CLOSE_PAREN
+   95 atomic_formula_term: OPEN_PAREN . predicate term_star CLOSE_PAREN
+
+    GREATER_OR_EQUAL_TOK    desplazar e ir al estado 100
+    LESS_THAN_OR_EQUAL_TOK  desplazar e ir al estado 101
+    EQUAL_TOK               desplazar e ir al estado 102
+    GREATER_TOK             desplazar e ir al estado 103
+    LESS_THAN_TOK           desplazar e ir al estado 104
+    AND_TOK                 desplazar e ir al estado 105
+    NOT_TOK                 desplazar e ir al estado 106
+    FORALL_TOK              desplazar e ir al estado 107
+    IMPLY_TOK               desplazar e ir al estado 108
+    OR_TOK                  desplazar e ir al estado 109
+    EXISTS_TOK              desplazar e ir al estado 110
+    NAME                    desplazar e ir al estado 77
+
+    binary_comp  ir al estado 111
+    predicate    ir al estado 112
+
+
+estado 80
+
+  124 derived_def: OPEN_PAREN DERIVED_TOK $@21 derived_predicate_def adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 113
+
+
+estado 81
+
+   53 adl_goal_description: f_comp .
+
+    $default  reduce usando la regla 53 (adl_goal_description)
+
+
+estado 82
+
+   46 adl_goal_description: literal_term .
+
+    $default  reduce usando la regla 46 (adl_goal_description)
+
+
+estado 83
+
+   94 literal_term: atomic_formula_term .
+
+    $default  reduce usando la regla 94 (literal_term)
+
+
+estado 84
+
+   30 require_key_star: NAME . $@9 require_key_star
+
+    $default  reduce usando la regla 29 ($@9)
+
+    $@9  ir al estado 114
+
+
+estado 85
+
+   27 require_def: OPEN_PAREN REQUIREMENTS_TOK $@7 NAME $@8 require_key_star . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 115
+
+
+estado 86
+
+  170 type: MINUS_TOK NAME .
+
+    $default  reduce usando la regla 170 (type)
+
+
+estado 87
+
+  171 either: MINUS_TOK OPEN_PAREN . EITHER_TOK
+
+    EITHER_TOK  desplazar e ir al estado 116
+
+
+estado 88
+
+  106 typed_list_name: NAME type typed_list_name .
+
+    $default  reduce usando la regla 106 (typed_list_name)
+
+
+estado 89
+
+  100 name_plus: NAME .
+  101          | NAME . name_plus
+
+    NAME  desplazar e ir al estado 89
+
+    $default  reduce usando la regla 100 (name_plus)
+
+    name_plus  ir al estado 117
+
+
+estado 90
+
+  105 typed_list_name: NAME either name_plus . CLOSE_PAREN typed_list_name
+
+    CLOSE_PAREN  desplazar e ir al estado 118
+
+
+estado 91
+
+  111 typed_list_variable: VARIABLE typed_list_variable .
+
+    $default  reduce usando la regla 111 (typed_list_variable)
+
+
+estado 92
+
+  110 typed_list_variable: VARIABLE type . typed_list_variable
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 119
+
+
+estado 93
+
+  109 typed_list_variable: VARIABLE either . name_plus CLOSE_PAREN typed_list_variable
+
+    NAME  desplazar e ir al estado 89
+
+    name_plus  ir al estado 120
+
+
+estado 94
+
+   19 predicates_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN . $@4 predicates_list
+
+    $default  reduce usando la regla 18 ($@4)
+
+    $@4  ir al estado 121
+
+
+estado 95
+
+   24 functions_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN . $@6 functions_list
+
+    $default  reduce usando la regla 23 ($@6)
+
+    $@6  ir al estado 122
+
+
+estado 96
+
+   39 param_def: PARAMETERS_TOK . OPEN_PAREN typed_list_variable CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 123
+
+
+estado 97
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK $@16 NAME $@17 param_def . durative_action_def_body CLOSE_PAREN
+
+    CONDITION_TOK  desplazar e ir al estado 124
+    DURATION_TOK   desplazar e ir al estado 125
+    VARS_TOK       desplazar e ir al estado 126
+    EFFECT_TOK     desplazar e ir al estado 127
+
+    $default  reduce usando la regla 115 (durative_action_def_body)
+
+    durative_action_def_body  ir al estado 128
+
+
+estado 98
+
+   37 action_def: OPEN_PAREN ACTION_TOK $@12 NAME $@13 param_def . action_def_body CLOSE_PAREN
+
+    VARS_TOK          desplazar e ir al estado 129
+    PRECONDITION_TOK  desplazar e ir al estado 130
+    EFFECT_TOK        desplazar e ir al estado 131
+
+    $default  reduce usando la regla 40 (action_def_body)
+
+    action_def_body  ir al estado 132
+
+
+estado 99
+
+  125 derived_predicate_def: OPEN_PAREN predicate typed_list_variable . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 133
+
+
+estado 100
+
+   68 binary_comp: GREATER_OR_EQUAL_TOK .
+
+    $default  reduce usando la regla 68 (binary_comp)
+
+
+estado 101
+
+   69 binary_comp: LESS_THAN_OR_EQUAL_TOK .
+
+    $default  reduce usando la regla 69 (binary_comp)
+
+
+estado 102
+
+   67 binary_comp: EQUAL_TOK .
+  103 predicate: EQUAL_TOK .
+
+    NAME         reduce usando la regla 67 (binary_comp)
+    NAME         [reduce usando la regla 103 (predicate)]
+    VARIABLE     reduce usando la regla 103 (predicate)
+    CLOSE_PAREN  reduce usando la regla 103 (predicate)
+    $default     reduce usando la regla 67 (binary_comp)
+
+
+estado 103
+
+   65 binary_comp: GREATER_TOK .
+
+    $default  reduce usando la regla 65 (binary_comp)
+
+
+estado 104
+
+   66 binary_comp: LESS_THAN_TOK .
+
+    $default  reduce usando la regla 66 (binary_comp)
+
+
+estado 105
+
+   47 adl_goal_description: OPEN_PAREN AND_TOK . adl_goal_description_star CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    $default  reduce usando la regla 84 (adl_goal_description_star)
+
+    adl_goal_description       ir al estado 134
+    f_comp                     ir al estado 81
+    adl_goal_description_star  ir al estado 135
+    literal_term               ir al estado 82
+    atomic_formula_term        ir al estado 83
+
+
+estado 106
+
+   49 adl_goal_description: OPEN_PAREN NOT_TOK . adl_goal_description CLOSE_PAREN
+   93 literal_term: OPEN_PAREN NOT_TOK . atomic_formula_term CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 136
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 137
+
+
+estado 107
+
+   52 adl_goal_description: OPEN_PAREN FORALL_TOK . OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 138
+
+
+estado 108
+
+   50 adl_goal_description: OPEN_PAREN IMPLY_TOK . adl_goal_description adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 139
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 109
+
+   48 adl_goal_description: OPEN_PAREN OR_TOK . adl_goal_description_star CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    $default  reduce usando la regla 84 (adl_goal_description_star)
+
+    adl_goal_description       ir al estado 134
+    f_comp                     ir al estado 81
+    adl_goal_description_star  ir al estado 140
+    literal_term               ir al estado 82
+    atomic_formula_term        ir al estado 83
+
+
+estado 110
+
+   51 adl_goal_description: OPEN_PAREN EXISTS_TOK . OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 141
+
+
+estado 111
+
+   54 f_comp: OPEN_PAREN binary_comp . f_exp f_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 146
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 112
+
+   95 atomic_formula_term: OPEN_PAREN predicate . term_star CLOSE_PAREN
+
+    NAME      desplazar e ir al estado 151
+    VARIABLE  desplazar e ir al estado 152
+
+    $default  reduce usando la regla 96 (term_star)
+
+    term_star  ir al estado 153
+    term       ir al estado 154
+
+
+estado 113
+
+  124 derived_def: OPEN_PAREN DERIVED_TOK $@21 derived_predicate_def adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 124 (derived_def)
+
+
+estado 114
+
+   30 require_key_star: NAME $@9 . require_key_star
+
+    NAME  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 28 (require_key_star)
+
+    require_key_star  ir al estado 155
+
+
+estado 115
+
+   27 require_def: OPEN_PAREN REQUIREMENTS_TOK $@7 NAME $@8 require_key_star CLOSE_PAREN .
+
+    $default  reduce usando la regla 27 (require_def)
+
+
+estado 116
+
+  171 either: MINUS_TOK OPEN_PAREN EITHER_TOK .
+
+    $default  reduce usando la regla 171 (either)
+
+
+estado 117
+
+  101 name_plus: NAME name_plus .
+
+    $default  reduce usando la regla 101 (name_plus)
+
+
+estado 118
+
+  105 typed_list_name: NAME either name_plus CLOSE_PAREN . typed_list_name
+
+    NAME  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 104 (typed_list_name)
+
+    typed_list_name  ir al estado 156
+
+
+estado 119
+
+  110 typed_list_variable: VARIABLE type typed_list_variable .
+
+    $default  reduce usando la regla 110 (typed_list_variable)
+
+
+estado 120
+
+  109 typed_list_variable: VARIABLE either name_plus . CLOSE_PAREN typed_list_variable
+
+    CLOSE_PAREN  desplazar e ir al estado 157
+
+
+estado 121
+
+   19 predicates_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN $@4 . predicates_list
+
+    OPEN_PAREN  desplazar e ir al estado 43
+
+    $default  reduce usando la regla 17 (predicates_list)
+
+    predicates_list  ir al estado 158
+
+
+estado 122
+
+   24 functions_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN $@6 . functions_list
+
+    OPEN_PAREN  desplazar e ir al estado 45
+
+    $default  reduce usando la regla 22 (functions_list)
+
+    functions_list  ir al estado 159
+
+
+estado 123
+
+   39 param_def: PARAMETERS_TOK OPEN_PAREN . typed_list_variable CLOSE_PAREN
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 160
+
+
+estado 124
+
+  120 durative_action_def_body: CONDITION_TOK . da_adl_goal_description $@19 durative_action_def_body
+
+    OPEN_PAREN  desplazar e ir al estado 161
+
+    da_adl_goal_description     ir al estado 162
+    timed_adl_goal_description  ir al estado 163
+
+
+estado 125
+
+  118 durative_action_def_body: DURATION_TOK . duration_constraint $@18 durative_action_def_body
+
+    OPEN_PAREN  desplazar e ir al estado 164
+
+    duration_constraint         ir al estado 165
+    simple_duration_constraint  ir al estado 166
+
+
+estado 126
+
+  116 durative_action_def_body: VARS_TOK . OPEN_PAREN typed_list_variable CLOSE_PAREN durative_action_def_body
+
+    OPEN_PAREN  desplazar e ir al estado 167
+
+
+estado 127
+
+  122 durative_action_def_body: EFFECT_TOK . da_adl_effect $@20 durative_action_def_body
+
+    OPEN_PAREN  desplazar e ir al estado 168
+
+    da_adl_effect     ir al estado 169
+    timed_adl_effect  ir al estado 170
+
+
+estado 128
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK $@16 NAME $@17 param_def durative_action_def_body . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 171
+
+
+estado 129
+
+   41 action_def_body: VARS_TOK . OPEN_PAREN typed_list_variable CLOSE_PAREN action_def_body
+
+    OPEN_PAREN  desplazar e ir al estado 172
+
+
+estado 130
+
+   43 action_def_body: PRECONDITION_TOK . adl_goal_description $@14 action_def_body
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 173
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 131
+
+   45 action_def_body: EFFECT_TOK . adl_effect $@15 action_def_body
+
+    OPEN_PAREN  desplazar e ir al estado 174
+
+    adl_effect           ir al estado 175
+    literal_term         ir al estado 176
+    atomic_formula_term  ir al estado 83
+
+
+estado 132
+
+   37 action_def: OPEN_PAREN ACTION_TOK $@12 NAME $@13 param_def action_def_body . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 177
+
+
+estado 133
+
+  125 derived_predicate_def: OPEN_PAREN predicate typed_list_variable CLOSE_PAREN .
+
+    $default  reduce usando la regla 125 (derived_predicate_def)
+
+
+estado 134
+
+   85 adl_goal_description_star: adl_goal_description . adl_goal_description_star
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    $default  reduce usando la regla 84 (adl_goal_description_star)
+
+    adl_goal_description       ir al estado 134
+    f_comp                     ir al estado 81
+    adl_goal_description_star  ir al estado 178
+    literal_term               ir al estado 82
+    atomic_formula_term        ir al estado 83
+
+
+estado 135
+
+   47 adl_goal_description: OPEN_PAREN AND_TOK adl_goal_description_star . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 179
+
+
+estado 136
+
+   49 adl_goal_description: OPEN_PAREN NOT_TOK adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 180
+
+
+estado 137
+
+   93 literal_term: OPEN_PAREN NOT_TOK atomic_formula_term . CLOSE_PAREN
+   94             | atomic_formula_term .
+
+    CLOSE_PAREN  desplazar e ir al estado 181
+
+    CLOSE_PAREN  [reduce usando la regla 94 (literal_term)]
+
+
+estado 138
+
+   52 adl_goal_description: OPEN_PAREN FORALL_TOK OPEN_PAREN . typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 182
+
+
+estado 139
+
+   50 adl_goal_description: OPEN_PAREN IMPLY_TOK adl_goal_description . adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 183
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 140
+
+   48 adl_goal_description: OPEN_PAREN OR_TOK adl_goal_description_star . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 184
+
+
+estado 141
+
+   51 adl_goal_description: OPEN_PAREN EXISTS_TOK OPEN_PAREN . typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 185
+
+
+estado 142
+
+   76 number: INTVAL .
+
+    $default  reduce usando la regla 76 (number)
+
+
+estado 143
+
+   77 number: FLOATVAL .
+
+    $default  reduce usando la regla 77 (number)
+
+
+estado 144
+
+   78 function_symbol: NAME .
+
+    $default  reduce usando la regla 78 (function_symbol)
+
+
+estado 145
+
+   56 f_exp: OPEN_PAREN . MINUS_TOK f_exp CLOSE_PAREN
+   57      | OPEN_PAREN . MINUS_TOK f_exp f_exp CLOSE_PAREN
+   58      | OPEN_PAREN . PLUS_TOK f_exp f_exp CLOSE_PAREN
+   59      | OPEN_PAREN . MUL_TOK f_exp f_exp CLOSE_PAREN
+   60      | OPEN_PAREN . DIV_TOK f_exp f_exp CLOSE_PAREN
+   63 f_head: OPEN_PAREN . function_symbol term_star CLOSE_PAREN
+   70 num_exp: OPEN_PAREN . MINUS_TOK num_exp CLOSE_PAREN
+   71        | OPEN_PAREN . MINUS_TOK num_exp num_exp CLOSE_PAREN
+   72        | OPEN_PAREN . PLUS_TOK num_exp num_exp CLOSE_PAREN
+   73        | OPEN_PAREN . MUL_TOK num_exp num_exp CLOSE_PAREN
+   74        | OPEN_PAREN . DIV_TOK num_exp num_exp CLOSE_PAREN
+
+    PLUS_TOK   desplazar e ir al estado 186
+    MINUS_TOK  desplazar e ir al estado 187
+    MUL_TOK    desplazar e ir al estado 188
+    DIV_TOK    desplazar e ir al estado 189
+    NAME       desplazar e ir al estado 144
+
+    function_symbol  ir al estado 190
+
+
+estado 146
+
+   54 f_comp: OPEN_PAREN binary_comp f_exp . f_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 191
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 147
+
+   61 f_exp: f_head .
+
+    $default  reduce usando la regla 61 (f_exp)
+
+
+estado 148
+
+   55 f_exp: num_exp .
+
+    $default  reduce usando la regla 55 (f_exp)
+
+
+estado 149
+
+   62 f_exp: number .
+   75 num_exp: number .
+
+    DURATION_VAR_TOK  reduce usando la regla 62 (f_exp)
+    DURATION_VAR_TOK  [reduce usando la regla 75 (num_exp)]
+    TIME_TOK          reduce usando la regla 62 (f_exp)
+    TIME_TOK          [reduce usando la regla 75 (num_exp)]
+    INTVAL            reduce usando la regla 62 (f_exp)
+    INTVAL            [reduce usando la regla 75 (num_exp)]
+    FLOATVAL          reduce usando la regla 62 (f_exp)
+    FLOATVAL          [reduce usando la regla 75 (num_exp)]
+    NAME              reduce usando la regla 62 (f_exp)
+    NAME              [reduce usando la regla 75 (num_exp)]
+    OPEN_PAREN        reduce usando la regla 62 (f_exp)
+    OPEN_PAREN        [reduce usando la regla 75 (num_exp)]
+    CLOSE_PAREN       reduce usando la regla 62 (f_exp)
+    CLOSE_PAREN       [reduce usando la regla 75 (num_exp)]
+    $default          reduce usando la regla 62 (f_exp)
+
+
+estado 150
+
+   64 f_head: function_symbol .
+
+    $default  reduce usando la regla 64 (f_head)
+
+
+estado 151
+
+   98 term: NAME .
+
+    $default  reduce usando la regla 98 (term)
+
+
+estado 152
+
+   99 term: VARIABLE .
+
+    $default  reduce usando la regla 99 (term)
+
+
+estado 153
+
+   95 atomic_formula_term: OPEN_PAREN predicate term_star . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 192
+
+
+estado 154
+
+   97 term_star: term . term_star
+
+    NAME      desplazar e ir al estado 151
+    VARIABLE  desplazar e ir al estado 152
+
+    $default  reduce usando la regla 96 (term_star)
+
+    term_star  ir al estado 193
+    term       ir al estado 154
+
+
+estado 155
+
+   30 require_key_star: NAME $@9 require_key_star .
+
+    $default  reduce usando la regla 30 (require_key_star)
+
+
+estado 156
+
+  105 typed_list_name: NAME either name_plus CLOSE_PAREN typed_list_name .
+
+    $default  reduce usando la regla 105 (typed_list_name)
+
+
+estado 157
+
+  109 typed_list_variable: VARIABLE either name_plus CLOSE_PAREN . typed_list_variable
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 194
+
+
+estado 158
+
+   19 predicates_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN $@4 predicates_list .
+
+    $default  reduce usando la regla 19 (predicates_list)
+
+
+estado 159
+
+   24 functions_list: OPEN_PAREN NAME typed_list_variable CLOSE_PAREN $@6 functions_list .
+
+    $default  reduce usando la regla 24 (functions_list)
+
+
+estado 160
+
+   39 param_def: PARAMETERS_TOK OPEN_PAREN typed_list_variable . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 195
+
+
+estado 161
+
+  127 da_adl_goal_description: OPEN_PAREN . AND_TOK timed_adl_goal_description_plus CLOSE_PAREN
+  130 timed_adl_goal_description: OPEN_PAREN . AT_START adl_goal_description CLOSE_PAREN
+  131                           | OPEN_PAREN . AT_END adl_goal_description CLOSE_PAREN
+  132                           | OPEN_PAREN . OVER_ALL adl_goal_description CLOSE_PAREN
+
+    AT_START  desplazar e ir al estado 196
+    AT_END    desplazar e ir al estado 197
+    OVER_ALL  desplazar e ir al estado 198
+    AND_TOK   desplazar e ir al estado 199
+
+
+estado 162
+
+  120 durative_action_def_body: CONDITION_TOK da_adl_goal_description . $@19 durative_action_def_body
+
+    $default  reduce usando la regla 119 ($@19)
+
+    $@19  ir al estado 200
+
+
+estado 163
+
+  126 da_adl_goal_description: timed_adl_goal_description .
+
+    $default  reduce usando la regla 126 (da_adl_goal_description)
+
+
+estado 164
+
+  158 duration_constraint: OPEN_PAREN . AND_TOK simple_duration_constraint_plus CLOSE_PAREN
+  162 simple_duration_constraint: OPEN_PAREN . d_op DURATION_VAR_TOK d_value CLOSE_PAREN
+  163                           | OPEN_PAREN . AT_START simple_duration_constraint CLOSE_PAREN
+  164                           | OPEN_PAREN . AT_END simple_duration_constraint CLOSE_PAREN
+
+    AT_START                desplazar e ir al estado 201
+    AT_END                  desplazar e ir al estado 202
+    GREATER_OR_EQUAL_TOK    desplazar e ir al estado 203
+    LESS_THAN_OR_EQUAL_TOK  desplazar e ir al estado 204
+    EQUAL_TOK               desplazar e ir al estado 205
+    AND_TOK                 desplazar e ir al estado 206
+
+    d_op  ir al estado 207
+
+
+estado 165
+
+  118 durative_action_def_body: DURATION_TOK duration_constraint . $@18 durative_action_def_body
+
+    $default  reduce usando la regla 117 ($@18)
+
+    $@18  ir al estado 208
+
+
+estado 166
+
+  159 duration_constraint: simple_duration_constraint .
+
+    $default  reduce usando la regla 159 (duration_constraint)
+
+
+estado 167
+
+  116 durative_action_def_body: VARS_TOK OPEN_PAREN . typed_list_variable CLOSE_PAREN durative_action_def_body
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 209
+
+
+estado 168
+
+  135 da_adl_effect: OPEN_PAREN . AND_TOK da_adl_effect_star CLOSE_PAREN
+  137              | OPEN_PAREN . FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN da_adl_effect CLOSE_PAREN
+  138              | OPEN_PAREN . WHEN_TOK da_adl_goal_description da_adl_effect CLOSE_PAREN
+  139              | OPEN_PAREN . assign_op f_head f_exp_da CLOSE_PAREN
+  140 timed_adl_effect: OPEN_PAREN . AT_START adl_effect CLOSE_PAREN
+  141                 | OPEN_PAREN . AT_END adl_effect CLOSE_PAREN
+  142                 | OPEN_PAREN . AT_START f_assign_da CLOSE_PAREN
+  143                 | OPEN_PAREN . AT_END f_assign_da CLOSE_PAREN
+  144                 | OPEN_PAREN . INCREASE_TOK f_head f_exp_t CLOSE_PAREN
+  145                 | OPEN_PAREN . DECREASE_TOK f_head f_exp_t CLOSE_PAREN
+
+    AT_START        desplazar e ir al estado 210
+    AT_END          desplazar e ir al estado 211
+    INCREASE_TOK    desplazar e ir al estado 212
+    DECREASE_TOK    desplazar e ir al estado 213
+    ASSIGN_TOK      desplazar e ir al estado 214
+    SCALE_UP_TOK    desplazar e ir al estado 215
+    SCALE_DOWN_TOK  desplazar e ir al estado 216
+    AND_TOK         desplazar e ir al estado 217
+    WHEN_TOK        desplazar e ir al estado 218
+    FORALL_TOK      desplazar e ir al estado 219
+
+    assign_op  ir al estado 220
+
+
+estado 169
+
+  122 durative_action_def_body: EFFECT_TOK da_adl_effect . $@20 durative_action_def_body
+
+    $default  reduce usando la regla 121 ($@20)
+
+    $@20  ir al estado 221
+
+
+estado 170
+
+  136 da_adl_effect: timed_adl_effect .
+
+    $default  reduce usando la regla 136 (da_adl_effect)
+
+
+estado 171
+
+  114 durative_action_def: OPEN_PAREN DURATIVE_ACTION_TOK $@16 NAME $@17 param_def durative_action_def_body CLOSE_PAREN .
+
+    $default  reduce usando la regla 114 (durative_action_def)
+
+
+estado 172
+
+   41 action_def_body: VARS_TOK OPEN_PAREN . typed_list_variable CLOSE_PAREN action_def_body
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 222
+
+
+estado 173
+
+   43 action_def_body: PRECONDITION_TOK adl_goal_description . $@14 action_def_body
+
+    $default  reduce usando la regla 42 ($@14)
+
+    $@14  ir al estado 223
+
+
+estado 174
+
+   87 adl_effect: OPEN_PAREN . AND_TOK adl_effect_star CLOSE_PAREN
+   88           | OPEN_PAREN . FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_effect CLOSE_PAREN
+   89           | OPEN_PAREN . WHEN_TOK adl_goal_description adl_effect CLOSE_PAREN
+   90           | OPEN_PAREN . assign_op f_head f_exp CLOSE_PAREN
+   93 literal_term: OPEN_PAREN . NOT_TOK atomic_formula_term CLOSE_PAREN
+   95 atomic_formula_term: OPEN_PAREN . predicate term_star CLOSE_PAREN
+
+    INCREASE_TOK    desplazar e ir al estado 224
+    DECREASE_TOK    desplazar e ir al estado 225
+    ASSIGN_TOK      desplazar e ir al estado 214
+    SCALE_UP_TOK    desplazar e ir al estado 215
+    SCALE_DOWN_TOK  desplazar e ir al estado 216
+    EQUAL_TOK       desplazar e ir al estado 76
+    AND_TOK         desplazar e ir al estado 226
+    NOT_TOK         desplazar e ir al estado 227
+    WHEN_TOK        desplazar e ir al estado 228
+    FORALL_TOK      desplazar e ir al estado 229
+    NAME            desplazar e ir al estado 77
+
+    assign_op  ir al estado 230
+    predicate  ir al estado 112
+
+
+estado 175
+
+   45 action_def_body: EFFECT_TOK adl_effect . $@15 action_def_body
+
+    $default  reduce usando la regla 44 ($@15)
+
+    $@15  ir al estado 231
+
+
+estado 176
+
+   86 adl_effect: literal_term .
+
+    $default  reduce usando la regla 86 (adl_effect)
+
+
+estado 177
+
+   37 action_def: OPEN_PAREN ACTION_TOK $@12 NAME $@13 param_def action_def_body CLOSE_PAREN .
+
+    $default  reduce usando la regla 37 (action_def)
+
+
+estado 178
+
+   85 adl_goal_description_star: adl_goal_description adl_goal_description_star .
+
+    $default  reduce usando la regla 85 (adl_goal_description_star)
+
+
+estado 179
+
+   47 adl_goal_description: OPEN_PAREN AND_TOK adl_goal_description_star CLOSE_PAREN .
+
+    $default  reduce usando la regla 47 (adl_goal_description)
+
+
+estado 180
+
+   49 adl_goal_description: OPEN_PAREN NOT_TOK adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 49 (adl_goal_description)
+
+
+estado 181
+
+   93 literal_term: OPEN_PAREN NOT_TOK atomic_formula_term CLOSE_PAREN .
+
+    $default  reduce usando la regla 93 (literal_term)
+
+
+estado 182
+
+   52 adl_goal_description: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable . CLOSE_PAREN adl_goal_description CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 232
+
+
+estado 183
+
+   50 adl_goal_description: OPEN_PAREN IMPLY_TOK adl_goal_description adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 233
+
+
+estado 184
+
+   48 adl_goal_description: OPEN_PAREN OR_TOK adl_goal_description_star CLOSE_PAREN .
+
+    $default  reduce usando la regla 48 (adl_goal_description)
+
+
+estado 185
+
+   51 adl_goal_description: OPEN_PAREN EXISTS_TOK OPEN_PAREN typed_list_variable . CLOSE_PAREN adl_goal_description CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 234
+
+
+estado 186
+
+   58 f_exp: OPEN_PAREN PLUS_TOK . f_exp f_exp CLOSE_PAREN
+   72 num_exp: OPEN_PAREN PLUS_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 235
+    f_head           ir al estado 147
+    num_exp          ir al estado 236
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 187
+
+   56 f_exp: OPEN_PAREN MINUS_TOK . f_exp CLOSE_PAREN
+   57      | OPEN_PAREN MINUS_TOK . f_exp f_exp CLOSE_PAREN
+   70 num_exp: OPEN_PAREN MINUS_TOK . num_exp CLOSE_PAREN
+   71        | OPEN_PAREN MINUS_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 237
+    f_head           ir al estado 147
+    num_exp          ir al estado 238
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 188
+
+   59 f_exp: OPEN_PAREN MUL_TOK . f_exp f_exp CLOSE_PAREN
+   73 num_exp: OPEN_PAREN MUL_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 239
+    f_head           ir al estado 147
+    num_exp          ir al estado 240
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 189
+
+   60 f_exp: OPEN_PAREN DIV_TOK . f_exp f_exp CLOSE_PAREN
+   74 num_exp: OPEN_PAREN DIV_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 241
+    f_head           ir al estado 147
+    num_exp          ir al estado 242
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 190
+
+   63 f_head: OPEN_PAREN function_symbol . term_star CLOSE_PAREN
+
+    NAME      desplazar e ir al estado 151
+    VARIABLE  desplazar e ir al estado 152
+
+    $default  reduce usando la regla 96 (term_star)
+
+    term_star  ir al estado 243
+    term       ir al estado 154
+
+
+estado 191
+
+   54 f_comp: OPEN_PAREN binary_comp f_exp f_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 244
+
+
+estado 192
+
+   95 atomic_formula_term: OPEN_PAREN predicate term_star CLOSE_PAREN .
+
+    $default  reduce usando la regla 95 (atomic_formula_term)
+
+
+estado 193
+
+   97 term_star: term term_star .
+
+    $default  reduce usando la regla 97 (term_star)
+
+
+estado 194
+
+  109 typed_list_variable: VARIABLE either name_plus CLOSE_PAREN typed_list_variable .
+
+    $default  reduce usando la regla 109 (typed_list_variable)
+
+
+estado 195
+
+   39 param_def: PARAMETERS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN .
+
+    $default  reduce usando la regla 39 (param_def)
+
+
+estado 196
+
+  130 timed_adl_goal_description: OPEN_PAREN AT_START . adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 245
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 197
+
+  131 timed_adl_goal_description: OPEN_PAREN AT_END . adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 246
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 198
+
+  132 timed_adl_goal_description: OPEN_PAREN OVER_ALL . adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 247
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 199
+
+  127 da_adl_goal_description: OPEN_PAREN AND_TOK . timed_adl_goal_description_plus CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 248
+
+    timed_adl_goal_description_plus  ir al estado 249
+    timed_adl_goal_description       ir al estado 250
+
+
+estado 200
+
+  120 durative_action_def_body: CONDITION_TOK da_adl_goal_description $@19 . durative_action_def_body
+
+    CONDITION_TOK  desplazar e ir al estado 124
+    DURATION_TOK   desplazar e ir al estado 125
+    VARS_TOK       desplazar e ir al estado 126
+    EFFECT_TOK     desplazar e ir al estado 127
+
+    $default  reduce usando la regla 115 (durative_action_def_body)
+
+    durative_action_def_body  ir al estado 251
+
+
+estado 201
+
+  163 simple_duration_constraint: OPEN_PAREN AT_START . simple_duration_constraint CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 252
+
+    simple_duration_constraint  ir al estado 253
+
+
+estado 202
+
+  164 simple_duration_constraint: OPEN_PAREN AT_END . simple_duration_constraint CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 252
+
+    simple_duration_constraint  ir al estado 254
+
+
+estado 203
+
+  166 d_op: GREATER_OR_EQUAL_TOK .
+
+    $default  reduce usando la regla 166 (d_op)
+
+
+estado 204
+
+  165 d_op: LESS_THAN_OR_EQUAL_TOK .
+
+    $default  reduce usando la regla 165 (d_op)
+
+
+estado 205
+
+  167 d_op: EQUAL_TOK .
+
+    $default  reduce usando la regla 167 (d_op)
+
+
+estado 206
+
+  158 duration_constraint: OPEN_PAREN AND_TOK . simple_duration_constraint_plus CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 252
+
+    simple_duration_constraint_plus  ir al estado 255
+    simple_duration_constraint       ir al estado 256
+
+
+estado 207
+
+  162 simple_duration_constraint: OPEN_PAREN d_op . DURATION_VAR_TOK d_value CLOSE_PAREN
+
+    DURATION_VAR_TOK  desplazar e ir al estado 257
+
+
+estado 208
+
+  118 durative_action_def_body: DURATION_TOK duration_constraint $@18 . durative_action_def_body
+
+    CONDITION_TOK  desplazar e ir al estado 124
+    DURATION_TOK   desplazar e ir al estado 125
+    VARS_TOK       desplazar e ir al estado 126
+    EFFECT_TOK     desplazar e ir al estado 127
+
+    $default  reduce usando la regla 115 (durative_action_def_body)
+
+    durative_action_def_body  ir al estado 258
+
+
+estado 209
+
+  116 durative_action_def_body: VARS_TOK OPEN_PAREN typed_list_variable . CLOSE_PAREN durative_action_def_body
+
+    CLOSE_PAREN  desplazar e ir al estado 259
+
+
+estado 210
+
+  140 timed_adl_effect: OPEN_PAREN AT_START . adl_effect CLOSE_PAREN
+  142                 | OPEN_PAREN AT_START . f_assign_da CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 260
+
+    adl_effect           ir al estado 261
+    literal_term         ir al estado 176
+    atomic_formula_term  ir al estado 83
+    f_assign_da          ir al estado 262
+
+
+estado 211
+
+  141 timed_adl_effect: OPEN_PAREN AT_END . adl_effect CLOSE_PAREN
+  143                 | OPEN_PAREN AT_END . f_assign_da CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 260
+
+    adl_effect           ir al estado 263
+    literal_term         ir al estado 176
+    atomic_formula_term  ir al estado 83
+    f_assign_da          ir al estado 264
+
+
+estado 212
+
+   82 assign_op: INCREASE_TOK .
+  144 timed_adl_effect: OPEN_PAREN INCREASE_TOK . f_head f_exp_t CLOSE_PAREN
+
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 265
+
+    NAME        [reduce usando la regla 82 (assign_op)]
+    OPEN_PAREN  [reduce usando la regla 82 (assign_op)]
+
+    f_head           ir al estado 266
+    function_symbol  ir al estado 150
+
+
+estado 213
+
+   83 assign_op: DECREASE_TOK .
+  145 timed_adl_effect: OPEN_PAREN DECREASE_TOK . f_head f_exp_t CLOSE_PAREN
+
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 265
+
+    NAME        [reduce usando la regla 83 (assign_op)]
+    OPEN_PAREN  [reduce usando la regla 83 (assign_op)]
+
+    f_head           ir al estado 267
+    function_symbol  ir al estado 150
+
+
+estado 214
+
+   79 assign_op: ASSIGN_TOK .
+
+    $default  reduce usando la regla 79 (assign_op)
+
+
+estado 215
+
+   80 assign_op: SCALE_UP_TOK .
+
+    $default  reduce usando la regla 80 (assign_op)
+
+
+estado 216
+
+   81 assign_op: SCALE_DOWN_TOK .
+
+    $default  reduce usando la regla 81 (assign_op)
+
+
+estado 217
+
+  135 da_adl_effect: OPEN_PAREN AND_TOK . da_adl_effect_star CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 168
+
+    $default  reduce usando la regla 133 (da_adl_effect_star)
+
+    da_adl_effect_star  ir al estado 268
+    da_adl_effect       ir al estado 269
+    timed_adl_effect    ir al estado 170
+
+
+estado 218
+
+  138 da_adl_effect: OPEN_PAREN WHEN_TOK . da_adl_goal_description da_adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 161
+
+    da_adl_goal_description     ir al estado 270
+    timed_adl_goal_description  ir al estado 163
+
+
+estado 219
+
+  137 da_adl_effect: OPEN_PAREN FORALL_TOK . OPEN_PAREN typed_list_variable CLOSE_PAREN da_adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 271
+
+
+estado 220
+
+  139 da_adl_effect: OPEN_PAREN assign_op . f_head f_exp_da CLOSE_PAREN
+
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 265
+
+    f_head           ir al estado 272
+    function_symbol  ir al estado 150
+
+
+estado 221
+
+  122 durative_action_def_body: EFFECT_TOK da_adl_effect $@20 . durative_action_def_body
+
+    CONDITION_TOK  desplazar e ir al estado 124
+    DURATION_TOK   desplazar e ir al estado 125
+    VARS_TOK       desplazar e ir al estado 126
+    EFFECT_TOK     desplazar e ir al estado 127
+
+    $default  reduce usando la regla 115 (durative_action_def_body)
+
+    durative_action_def_body  ir al estado 273
+
+
+estado 222
+
+   41 action_def_body: VARS_TOK OPEN_PAREN typed_list_variable . CLOSE_PAREN action_def_body
+
+    CLOSE_PAREN  desplazar e ir al estado 274
+
+
+estado 223
+
+   43 action_def_body: PRECONDITION_TOK adl_goal_description $@14 . action_def_body
+
+    VARS_TOK          desplazar e ir al estado 129
+    PRECONDITION_TOK  desplazar e ir al estado 130
+    EFFECT_TOK        desplazar e ir al estado 131
+
+    $default  reduce usando la regla 40 (action_def_body)
+
+    action_def_body  ir al estado 275
+
+
+estado 224
+
+   82 assign_op: INCREASE_TOK .
+
+    $default  reduce usando la regla 82 (assign_op)
+
+
+estado 225
+
+   83 assign_op: DECREASE_TOK .
+
+    $default  reduce usando la regla 83 (assign_op)
+
+
+estado 226
+
+   87 adl_effect: OPEN_PAREN AND_TOK . adl_effect_star CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 174
+
+    $default  reduce usando la regla 91 (adl_effect_star)
+
+    adl_effect           ir al estado 276
+    adl_effect_star      ir al estado 277
+    literal_term         ir al estado 176
+    atomic_formula_term  ir al estado 83
+
+
+estado 227
+
+   93 literal_term: OPEN_PAREN NOT_TOK . atomic_formula_term CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 278
+
+    atomic_formula_term  ir al estado 279
+
+
+estado 228
+
+   89 adl_effect: OPEN_PAREN WHEN_TOK . adl_goal_description adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 280
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 229
+
+   88 adl_effect: OPEN_PAREN FORALL_TOK . OPEN_PAREN typed_list_variable CLOSE_PAREN adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 281
+
+
+estado 230
+
+   90 adl_effect: OPEN_PAREN assign_op . f_head f_exp CLOSE_PAREN
+
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 265
+
+    f_head           ir al estado 282
+    function_symbol  ir al estado 150
+
+
+estado 231
+
+   45 action_def_body: EFFECT_TOK adl_effect $@15 . action_def_body
+
+    VARS_TOK          desplazar e ir al estado 129
+    PRECONDITION_TOK  desplazar e ir al estado 130
+    EFFECT_TOK        desplazar e ir al estado 131
+
+    $default  reduce usando la regla 40 (action_def_body)
+
+    action_def_body  ir al estado 283
+
+
+estado 232
+
+   52 adl_goal_description: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN . adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 284
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 233
+
+   50 adl_goal_description: OPEN_PAREN IMPLY_TOK adl_goal_description adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 50 (adl_goal_description)
+
+
+estado 234
+
+   51 adl_goal_description: OPEN_PAREN EXISTS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN . adl_goal_description CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 79
+
+    adl_goal_description  ir al estado 285
+    f_comp                ir al estado 81
+    literal_term          ir al estado 82
+    atomic_formula_term   ir al estado 83
+
+
+estado 235
+
+   58 f_exp: OPEN_PAREN PLUS_TOK f_exp . f_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 286
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 236
+
+   55 f_exp: num_exp .
+   72 num_exp: OPEN_PAREN PLUS_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    INTVAL      [reduce usando la regla 55 (f_exp)]
+    FLOATVAL    [reduce usando la regla 55 (f_exp)]
+    OPEN_PAREN  [reduce usando la regla 55 (f_exp)]
+    $default    reduce usando la regla 55 (f_exp)
+
+    num_exp  ir al estado 288
+    number   ir al estado 289
+
+
+estado 237
+
+   56 f_exp: OPEN_PAREN MINUS_TOK f_exp . CLOSE_PAREN
+   57      | OPEN_PAREN MINUS_TOK f_exp . f_exp CLOSE_PAREN
+
+    INTVAL       desplazar e ir al estado 142
+    FLOATVAL     desplazar e ir al estado 143
+    NAME         desplazar e ir al estado 144
+    OPEN_PAREN   desplazar e ir al estado 145
+    CLOSE_PAREN  desplazar e ir al estado 290
+
+    f_exp            ir al estado 291
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 238
+
+   55 f_exp: num_exp .
+   70 num_exp: OPEN_PAREN MINUS_TOK num_exp . CLOSE_PAREN
+   71        | OPEN_PAREN MINUS_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL       desplazar e ir al estado 142
+    FLOATVAL     desplazar e ir al estado 143
+    OPEN_PAREN   desplazar e ir al estado 287
+    CLOSE_PAREN  desplazar e ir al estado 292
+
+    INTVAL       [reduce usando la regla 55 (f_exp)]
+    FLOATVAL     [reduce usando la regla 55 (f_exp)]
+    OPEN_PAREN   [reduce usando la regla 55 (f_exp)]
+    CLOSE_PAREN  [reduce usando la regla 55 (f_exp)]
+    $default     reduce usando la regla 55 (f_exp)
+
+    num_exp  ir al estado 293
+    number   ir al estado 289
+
+
+estado 239
+
+   59 f_exp: OPEN_PAREN MUL_TOK f_exp . f_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 294
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 240
+
+   55 f_exp: num_exp .
+   73 num_exp: OPEN_PAREN MUL_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    INTVAL      [reduce usando la regla 55 (f_exp)]
+    FLOATVAL    [reduce usando la regla 55 (f_exp)]
+    OPEN_PAREN  [reduce usando la regla 55 (f_exp)]
+    $default    reduce usando la regla 55 (f_exp)
+
+    num_exp  ir al estado 295
+    number   ir al estado 289
+
+
+estado 241
+
+   60 f_exp: OPEN_PAREN DIV_TOK f_exp . f_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 296
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 242
+
+   55 f_exp: num_exp .
+   74 num_exp: OPEN_PAREN DIV_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    INTVAL      [reduce usando la regla 55 (f_exp)]
+    FLOATVAL    [reduce usando la regla 55 (f_exp)]
+    OPEN_PAREN  [reduce usando la regla 55 (f_exp)]
+    $default    reduce usando la regla 55 (f_exp)
+
+    num_exp  ir al estado 297
+    number   ir al estado 289
+
+
+estado 243
+
+   63 f_head: OPEN_PAREN function_symbol term_star . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 298
+
+
+estado 244
+
+   54 f_comp: OPEN_PAREN binary_comp f_exp f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 54 (f_comp)
+
+
+estado 245
+
+  130 timed_adl_goal_description: OPEN_PAREN AT_START adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 299
+
+
+estado 246
+
+  131 timed_adl_goal_description: OPEN_PAREN AT_END adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 300
+
+
+estado 247
+
+  132 timed_adl_goal_description: OPEN_PAREN OVER_ALL adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 301
+
+
+estado 248
+
+  130 timed_adl_goal_description: OPEN_PAREN . AT_START adl_goal_description CLOSE_PAREN
+  131                           | OPEN_PAREN . AT_END adl_goal_description CLOSE_PAREN
+  132                           | OPEN_PAREN . OVER_ALL adl_goal_description CLOSE_PAREN
+
+    AT_START  desplazar e ir al estado 196
+    AT_END    desplazar e ir al estado 197
+    OVER_ALL  desplazar e ir al estado 198
+
+
+estado 249
+
+  127 da_adl_goal_description: OPEN_PAREN AND_TOK timed_adl_goal_description_plus . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 302
+
+
+estado 250
+
+  128 timed_adl_goal_description_plus: timed_adl_goal_description .
+  129                                | timed_adl_goal_description . timed_adl_goal_description_plus
+
+    OPEN_PAREN  desplazar e ir al estado 248
+
+    $default  reduce usando la regla 128 (timed_adl_goal_description_plus)
+
+    timed_adl_goal_description_plus  ir al estado 303
+    timed_adl_goal_description       ir al estado 250
+
+
+estado 251
+
+  120 durative_action_def_body: CONDITION_TOK da_adl_goal_description $@19 durative_action_def_body .
+
+    $default  reduce usando la regla 120 (durative_action_def_body)
+
+
+estado 252
+
+  162 simple_duration_constraint: OPEN_PAREN . d_op DURATION_VAR_TOK d_value CLOSE_PAREN
+  163                           | OPEN_PAREN . AT_START simple_duration_constraint CLOSE_PAREN
+  164                           | OPEN_PAREN . AT_END simple_duration_constraint CLOSE_PAREN
+
+    AT_START                desplazar e ir al estado 201
+    AT_END                  desplazar e ir al estado 202
+    GREATER_OR_EQUAL_TOK    desplazar e ir al estado 203
+    LESS_THAN_OR_EQUAL_TOK  desplazar e ir al estado 204
+    EQUAL_TOK               desplazar e ir al estado 205
+
+    d_op  ir al estado 207
+
+
+estado 253
+
+  163 simple_duration_constraint: OPEN_PAREN AT_START simple_duration_constraint . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 304
+
+
+estado 254
+
+  164 simple_duration_constraint: OPEN_PAREN AT_END simple_duration_constraint . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 305
+
+
+estado 255
+
+  158 duration_constraint: OPEN_PAREN AND_TOK simple_duration_constraint_plus . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 306
+
+
+estado 256
+
+  160 simple_duration_constraint_plus: simple_duration_constraint .
+  161                                | simple_duration_constraint . simple_duration_constraint_plus
+
+    OPEN_PAREN  desplazar e ir al estado 252
+
+    $default  reduce usando la regla 160 (simple_duration_constraint_plus)
+
+    simple_duration_constraint_plus  ir al estado 307
+    simple_duration_constraint       ir al estado 256
+
+
+estado 257
+
+  162 simple_duration_constraint: OPEN_PAREN d_op DURATION_VAR_TOK . d_value CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 308
+    f_head           ir al estado 147
+    num_exp          ir al estado 309
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+    d_value          ir al estado 310
+
+
+estado 258
+
+  118 durative_action_def_body: DURATION_TOK duration_constraint $@18 durative_action_def_body .
+
+    $default  reduce usando la regla 118 (durative_action_def_body)
+
+
+estado 259
+
+  116 durative_action_def_body: VARS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN . durative_action_def_body
+
+    CONDITION_TOK  desplazar e ir al estado 124
+    DURATION_TOK   desplazar e ir al estado 125
+    VARS_TOK       desplazar e ir al estado 126
+    EFFECT_TOK     desplazar e ir al estado 127
+
+    $default  reduce usando la regla 115 (durative_action_def_body)
+
+    durative_action_def_body  ir al estado 311
+
+
+estado 260
+
+   87 adl_effect: OPEN_PAREN . AND_TOK adl_effect_star CLOSE_PAREN
+   88           | OPEN_PAREN . FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_effect CLOSE_PAREN
+   89           | OPEN_PAREN . WHEN_TOK adl_goal_description adl_effect CLOSE_PAREN
+   90           | OPEN_PAREN . assign_op f_head f_exp CLOSE_PAREN
+   93 literal_term: OPEN_PAREN . NOT_TOK atomic_formula_term CLOSE_PAREN
+   95 atomic_formula_term: OPEN_PAREN . predicate term_star CLOSE_PAREN
+  146 f_assign_da: OPEN_PAREN . assign_op f_head f_exp_da CLOSE_PAREN
+
+    INCREASE_TOK    desplazar e ir al estado 224
+    DECREASE_TOK    desplazar e ir al estado 225
+    ASSIGN_TOK      desplazar e ir al estado 214
+    SCALE_UP_TOK    desplazar e ir al estado 215
+    SCALE_DOWN_TOK  desplazar e ir al estado 216
+    EQUAL_TOK       desplazar e ir al estado 76
+    AND_TOK         desplazar e ir al estado 226
+    NOT_TOK         desplazar e ir al estado 227
+    WHEN_TOK        desplazar e ir al estado 228
+    FORALL_TOK      desplazar e ir al estado 229
+    NAME            desplazar e ir al estado 77
+
+    assign_op  ir al estado 312
+    predicate  ir al estado 112
+
+
+estado 261
+
+  140 timed_adl_effect: OPEN_PAREN AT_START adl_effect . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 313
+
+
+estado 262
+
+  142 timed_adl_effect: OPEN_PAREN AT_START f_assign_da . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 314
+
+
+estado 263
+
+  141 timed_adl_effect: OPEN_PAREN AT_END adl_effect . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 315
+
+
+estado 264
+
+  143 timed_adl_effect: OPEN_PAREN AT_END f_assign_da . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 316
+
+
+estado 265
+
+   63 f_head: OPEN_PAREN . function_symbol term_star CLOSE_PAREN
+
+    NAME  desplazar e ir al estado 144
+
+    function_symbol  ir al estado 190
+
+
+estado 266
+
+  144 timed_adl_effect: OPEN_PAREN INCREASE_TOK f_head . f_exp_t CLOSE_PAREN
+
+    TIME_TOK    desplazar e ir al estado 317
+    OPEN_PAREN  desplazar e ir al estado 318
+
+    f_exp_t  ir al estado 319
+
+
+estado 267
+
+  145 timed_adl_effect: OPEN_PAREN DECREASE_TOK f_head . f_exp_t CLOSE_PAREN
+
+    TIME_TOK    desplazar e ir al estado 317
+    OPEN_PAREN  desplazar e ir al estado 318
+
+    f_exp_t  ir al estado 320
+
+
+estado 268
+
+  135 da_adl_effect: OPEN_PAREN AND_TOK da_adl_effect_star . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 321
+
+
+estado 269
+
+  134 da_adl_effect_star: da_adl_effect . da_adl_effect_star
+
+    OPEN_PAREN  desplazar e ir al estado 168
+
+    $default  reduce usando la regla 133 (da_adl_effect_star)
+
+    da_adl_effect_star  ir al estado 322
+    da_adl_effect       ir al estado 269
+    timed_adl_effect    ir al estado 170
+
+
+estado 270
+
+  138 da_adl_effect: OPEN_PAREN WHEN_TOK da_adl_goal_description . da_adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 168
+
+    da_adl_effect     ir al estado 323
+    timed_adl_effect  ir al estado 170
+
+
+estado 271
+
+  137 da_adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN . typed_list_variable CLOSE_PAREN da_adl_effect CLOSE_PAREN
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 324
+
+
+estado 272
+
+  139 da_adl_effect: OPEN_PAREN assign_op f_head . f_exp_da CLOSE_PAREN
+
+    DURATION_VAR_TOK  desplazar e ir al estado 325
+    INTVAL            desplazar e ir al estado 142
+    FLOATVAL          desplazar e ir al estado 143
+    NAME              desplazar e ir al estado 144
+    OPEN_PAREN        desplazar e ir al estado 326
+
+    f_exp            ir al estado 327
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+    f_exp_da         ir al estado 328
+
+
+estado 273
+
+  122 durative_action_def_body: EFFECT_TOK da_adl_effect $@20 durative_action_def_body .
+
+    $default  reduce usando la regla 122 (durative_action_def_body)
+
+
+estado 274
+
+   41 action_def_body: VARS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN . action_def_body
+
+    VARS_TOK          desplazar e ir al estado 129
+    PRECONDITION_TOK  desplazar e ir al estado 130
+    EFFECT_TOK        desplazar e ir al estado 131
+
+    $default  reduce usando la regla 40 (action_def_body)
+
+    action_def_body  ir al estado 329
+
+
+estado 275
+
+   43 action_def_body: PRECONDITION_TOK adl_goal_description $@14 action_def_body .
+
+    $default  reduce usando la regla 43 (action_def_body)
+
+
+estado 276
+
+   92 adl_effect_star: adl_effect . adl_effect_star
+
+    OPEN_PAREN  desplazar e ir al estado 174
+
+    $default  reduce usando la regla 91 (adl_effect_star)
+
+    adl_effect           ir al estado 276
+    adl_effect_star      ir al estado 330
+    literal_term         ir al estado 176
+    atomic_formula_term  ir al estado 83
+
+
+estado 277
+
+   87 adl_effect: OPEN_PAREN AND_TOK adl_effect_star . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 331
+
+
+estado 278
+
+   95 atomic_formula_term: OPEN_PAREN . predicate term_star CLOSE_PAREN
+
+    EQUAL_TOK  desplazar e ir al estado 76
+    NAME       desplazar e ir al estado 77
+
+    predicate  ir al estado 112
+
+
+estado 279
+
+   93 literal_term: OPEN_PAREN NOT_TOK atomic_formula_term . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 181
+
+
+estado 280
+
+   89 adl_effect: OPEN_PAREN WHEN_TOK adl_goal_description . adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 174
+
+    adl_effect           ir al estado 332
+    literal_term         ir al estado 176
+    atomic_formula_term  ir al estado 83
+
+
+estado 281
+
+   88 adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN . typed_list_variable CLOSE_PAREN adl_effect CLOSE_PAREN
+
+    VARIABLE  desplazar e ir al estado 69
+
+    $default  reduce usando la regla 108 (typed_list_variable)
+
+    typed_list_variable  ir al estado 333
+
+
+estado 282
+
+   90 adl_effect: OPEN_PAREN assign_op f_head . f_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 334
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 283
+
+   45 action_def_body: EFFECT_TOK adl_effect $@15 action_def_body .
+
+    $default  reduce usando la regla 45 (action_def_body)
+
+
+estado 284
+
+   52 adl_goal_description: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 335
+
+
+estado 285
+
+   51 adl_goal_description: OPEN_PAREN EXISTS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 336
+
+
+estado 286
+
+   58 f_exp: OPEN_PAREN PLUS_TOK f_exp f_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 337
+
+
+estado 287
+
+   70 num_exp: OPEN_PAREN . MINUS_TOK num_exp CLOSE_PAREN
+   71        | OPEN_PAREN . MINUS_TOK num_exp num_exp CLOSE_PAREN
+   72        | OPEN_PAREN . PLUS_TOK num_exp num_exp CLOSE_PAREN
+   73        | OPEN_PAREN . MUL_TOK num_exp num_exp CLOSE_PAREN
+   74        | OPEN_PAREN . DIV_TOK num_exp num_exp CLOSE_PAREN
+
+    PLUS_TOK   desplazar e ir al estado 338
+    MINUS_TOK  desplazar e ir al estado 339
+    MUL_TOK    desplazar e ir al estado 340
+    DIV_TOK    desplazar e ir al estado 341
+
+
+estado 288
+
+   72 num_exp: OPEN_PAREN PLUS_TOK num_exp num_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 342
+
+
+estado 289
+
+   75 num_exp: number .
+
+    $default  reduce usando la regla 75 (num_exp)
+
+
+estado 290
+
+   56 f_exp: OPEN_PAREN MINUS_TOK f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 56 (f_exp)
+
+
+estado 291
+
+   57 f_exp: OPEN_PAREN MINUS_TOK f_exp f_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 343
+
+
+estado 292
+
+   70 num_exp: OPEN_PAREN MINUS_TOK num_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 70 (num_exp)
+
+
+estado 293
+
+   71 num_exp: OPEN_PAREN MINUS_TOK num_exp num_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 344
+
+
+estado 294
+
+   59 f_exp: OPEN_PAREN MUL_TOK f_exp f_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 345
+
+
+estado 295
+
+   73 num_exp: OPEN_PAREN MUL_TOK num_exp num_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 346
+
+
+estado 296
+
+   60 f_exp: OPEN_PAREN DIV_TOK f_exp f_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 347
+
+
+estado 297
+
+   74 num_exp: OPEN_PAREN DIV_TOK num_exp num_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 348
+
+
+estado 298
+
+   63 f_head: OPEN_PAREN function_symbol term_star CLOSE_PAREN .
+
+    $default  reduce usando la regla 63 (f_head)
+
+
+estado 299
+
+  130 timed_adl_goal_description: OPEN_PAREN AT_START adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 130 (timed_adl_goal_description)
+
+
+estado 300
+
+  131 timed_adl_goal_description: OPEN_PAREN AT_END adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 131 (timed_adl_goal_description)
+
+
+estado 301
+
+  132 timed_adl_goal_description: OPEN_PAREN OVER_ALL adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 132 (timed_adl_goal_description)
+
+
+estado 302
+
+  127 da_adl_goal_description: OPEN_PAREN AND_TOK timed_adl_goal_description_plus CLOSE_PAREN .
+
+    $default  reduce usando la regla 127 (da_adl_goal_description)
+
+
+estado 303
+
+  129 timed_adl_goal_description_plus: timed_adl_goal_description timed_adl_goal_description_plus .
+
+    $default  reduce usando la regla 129 (timed_adl_goal_description_plus)
+
+
+estado 304
+
+  163 simple_duration_constraint: OPEN_PAREN AT_START simple_duration_constraint CLOSE_PAREN .
+
+    $default  reduce usando la regla 163 (simple_duration_constraint)
+
+
+estado 305
+
+  164 simple_duration_constraint: OPEN_PAREN AT_END simple_duration_constraint CLOSE_PAREN .
+
+    $default  reduce usando la regla 164 (simple_duration_constraint)
+
+
+estado 306
+
+  158 duration_constraint: OPEN_PAREN AND_TOK simple_duration_constraint_plus CLOSE_PAREN .
+
+    $default  reduce usando la regla 158 (duration_constraint)
+
+
+estado 307
+
+  161 simple_duration_constraint_plus: simple_duration_constraint simple_duration_constraint_plus .
+
+    $default  reduce usando la regla 161 (simple_duration_constraint_plus)
+
+
+estado 308
+
+  169 d_value: f_exp .
+
+    $default  reduce usando la regla 169 (d_value)
+
+
+estado 309
+
+   55 f_exp: num_exp .
+  168 d_value: num_exp .
+
+    CLOSE_PAREN  reduce usando la regla 55 (f_exp)
+    CLOSE_PAREN  [reduce usando la regla 168 (d_value)]
+    $default     reduce usando la regla 55 (f_exp)
+
+
+estado 310
+
+  162 simple_duration_constraint: OPEN_PAREN d_op DURATION_VAR_TOK d_value . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 349
+
+
+estado 311
+
+  116 durative_action_def_body: VARS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN durative_action_def_body .
+
+    $default  reduce usando la regla 116 (durative_action_def_body)
+
+
+estado 312
+
+   90 adl_effect: OPEN_PAREN assign_op . f_head f_exp CLOSE_PAREN
+  146 f_assign_da: OPEN_PAREN assign_op . f_head f_exp_da CLOSE_PAREN
+
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 265
+
+    f_head           ir al estado 350
+    function_symbol  ir al estado 150
+
+
+estado 313
+
+  140 timed_adl_effect: OPEN_PAREN AT_START adl_effect CLOSE_PAREN .
+
+    $default  reduce usando la regla 140 (timed_adl_effect)
+
+
+estado 314
+
+  142 timed_adl_effect: OPEN_PAREN AT_START f_assign_da CLOSE_PAREN .
+
+    $default  reduce usando la regla 142 (timed_adl_effect)
+
+
+estado 315
+
+  141 timed_adl_effect: OPEN_PAREN AT_END adl_effect CLOSE_PAREN .
+
+    $default  reduce usando la regla 141 (timed_adl_effect)
+
+
+estado 316
+
+  143 timed_adl_effect: OPEN_PAREN AT_END f_assign_da CLOSE_PAREN .
+
+    $default  reduce usando la regla 143 (timed_adl_effect)
+
+
+estado 317
+
+  157 f_exp_t: TIME_TOK .
+
+    $default  reduce usando la regla 157 (f_exp_t)
+
+
+estado 318
+
+  155 f_exp_t: OPEN_PAREN . MUL_TOK f_exp TIME_TOK CLOSE_PAREN
+  156        | OPEN_PAREN . MUL_TOK TIME_TOK f_exp CLOSE_PAREN
+
+    MUL_TOK  desplazar e ir al estado 351
+
+
+estado 319
+
+  144 timed_adl_effect: OPEN_PAREN INCREASE_TOK f_head f_exp_t . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 352
+
+
+estado 320
+
+  145 timed_adl_effect: OPEN_PAREN DECREASE_TOK f_head f_exp_t . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 353
+
+
+estado 321
+
+  135 da_adl_effect: OPEN_PAREN AND_TOK da_adl_effect_star CLOSE_PAREN .
+
+    $default  reduce usando la regla 135 (da_adl_effect)
+
+
+estado 322
+
+  134 da_adl_effect_star: da_adl_effect da_adl_effect_star .
+
+    $default  reduce usando la regla 134 (da_adl_effect_star)
+
+
+estado 323
+
+  138 da_adl_effect: OPEN_PAREN WHEN_TOK da_adl_goal_description da_adl_effect . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 354
+
+
+estado 324
+
+  137 da_adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable . CLOSE_PAREN da_adl_effect CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 355
+
+
+estado 325
+
+  149 f_exp_da: DURATION_VAR_TOK .
+
+    $default  reduce usando la regla 149 (f_exp_da)
+
+
+estado 326
+
+   56 f_exp: OPEN_PAREN . MINUS_TOK f_exp CLOSE_PAREN
+   57      | OPEN_PAREN . MINUS_TOK f_exp f_exp CLOSE_PAREN
+   58      | OPEN_PAREN . PLUS_TOK f_exp f_exp CLOSE_PAREN
+   59      | OPEN_PAREN . MUL_TOK f_exp f_exp CLOSE_PAREN
+   60      | OPEN_PAREN . DIV_TOK f_exp f_exp CLOSE_PAREN
+   63 f_head: OPEN_PAREN . function_symbol term_star CLOSE_PAREN
+   70 num_exp: OPEN_PAREN . MINUS_TOK num_exp CLOSE_PAREN
+   71        | OPEN_PAREN . MINUS_TOK num_exp num_exp CLOSE_PAREN
+   72        | OPEN_PAREN . PLUS_TOK num_exp num_exp CLOSE_PAREN
+   73        | OPEN_PAREN . MUL_TOK num_exp num_exp CLOSE_PAREN
+   74        | OPEN_PAREN . DIV_TOK num_exp num_exp CLOSE_PAREN
+  147 f_exp_da: OPEN_PAREN . binary_op f_exp_da f_exp_da CLOSE_PAREN
+  148         | OPEN_PAREN . MINUS_TOK f_exp_da CLOSE_PAREN
+
+    PLUS_TOK   desplazar e ir al estado 356
+    MINUS_TOK  desplazar e ir al estado 357
+    MUL_TOK    desplazar e ir al estado 358
+    DIV_TOK    desplazar e ir al estado 359
+    NAME       desplazar e ir al estado 144
+
+    function_symbol  ir al estado 190
+    binary_op        ir al estado 360
+
+
+estado 327
+
+  150 f_exp_da: f_exp .
+
+    $default  reduce usando la regla 150 (f_exp_da)
+
+
+estado 328
+
+  139 da_adl_effect: OPEN_PAREN assign_op f_head f_exp_da . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 361
+
+
+estado 329
+
+   41 action_def_body: VARS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN action_def_body .
+
+    $default  reduce usando la regla 41 (action_def_body)
+
+
+estado 330
+
+   92 adl_effect_star: adl_effect adl_effect_star .
+
+    $default  reduce usando la regla 92 (adl_effect_star)
+
+
+estado 331
+
+   87 adl_effect: OPEN_PAREN AND_TOK adl_effect_star CLOSE_PAREN .
+
+    $default  reduce usando la regla 87 (adl_effect)
+
+
+estado 332
+
+   89 adl_effect: OPEN_PAREN WHEN_TOK adl_goal_description adl_effect . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 362
+
+
+estado 333
+
+   88 adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable . CLOSE_PAREN adl_effect CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 363
+
+
+estado 334
+
+   90 adl_effect: OPEN_PAREN assign_op f_head f_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 364
+
+
+estado 335
+
+   52 adl_goal_description: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 52 (adl_goal_description)
+
+
+estado 336
+
+   51 adl_goal_description: OPEN_PAREN EXISTS_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_goal_description CLOSE_PAREN .
+
+    $default  reduce usando la regla 51 (adl_goal_description)
+
+
+estado 337
+
+   58 f_exp: OPEN_PAREN PLUS_TOK f_exp f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 58 (f_exp)
+
+
+estado 338
+
+   72 num_exp: OPEN_PAREN PLUS_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    num_exp  ir al estado 365
+    number   ir al estado 289
+
+
+estado 339
+
+   70 num_exp: OPEN_PAREN MINUS_TOK . num_exp CLOSE_PAREN
+   71        | OPEN_PAREN MINUS_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    num_exp  ir al estado 366
+    number   ir al estado 289
+
+
+estado 340
+
+   73 num_exp: OPEN_PAREN MUL_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    num_exp  ir al estado 367
+    number   ir al estado 289
+
+
+estado 341
+
+   74 num_exp: OPEN_PAREN DIV_TOK . num_exp num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    num_exp  ir al estado 368
+    number   ir al estado 289
+
+
+estado 342
+
+   72 num_exp: OPEN_PAREN PLUS_TOK num_exp num_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 72 (num_exp)
+
+
+estado 343
+
+   57 f_exp: OPEN_PAREN MINUS_TOK f_exp f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 57 (f_exp)
+
+
+estado 344
+
+   71 num_exp: OPEN_PAREN MINUS_TOK num_exp num_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 71 (num_exp)
+
+
+estado 345
+
+   59 f_exp: OPEN_PAREN MUL_TOK f_exp f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 59 (f_exp)
+
+
+estado 346
+
+   73 num_exp: OPEN_PAREN MUL_TOK num_exp num_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 73 (num_exp)
+
+
+estado 347
+
+   60 f_exp: OPEN_PAREN DIV_TOK f_exp f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 60 (f_exp)
+
+
+estado 348
+
+   74 num_exp: OPEN_PAREN DIV_TOK num_exp num_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 74 (num_exp)
+
+
+estado 349
+
+  162 simple_duration_constraint: OPEN_PAREN d_op DURATION_VAR_TOK d_value CLOSE_PAREN .
+
+    $default  reduce usando la regla 162 (simple_duration_constraint)
+
+
+estado 350
+
+   90 adl_effect: OPEN_PAREN assign_op f_head . f_exp CLOSE_PAREN
+  146 f_assign_da: OPEN_PAREN assign_op f_head . f_exp_da CLOSE_PAREN
+
+    DURATION_VAR_TOK  desplazar e ir al estado 325
+    INTVAL            desplazar e ir al estado 142
+    FLOATVAL          desplazar e ir al estado 143
+    NAME              desplazar e ir al estado 144
+    OPEN_PAREN        desplazar e ir al estado 326
+
+    f_exp            ir al estado 369
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+    f_exp_da         ir al estado 370
+
+
+estado 351
+
+  155 f_exp_t: OPEN_PAREN MUL_TOK . f_exp TIME_TOK CLOSE_PAREN
+  156        | OPEN_PAREN MUL_TOK . TIME_TOK f_exp CLOSE_PAREN
+
+    TIME_TOK    desplazar e ir al estado 371
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 372
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 352
+
+  144 timed_adl_effect: OPEN_PAREN INCREASE_TOK f_head f_exp_t CLOSE_PAREN .
+
+    $default  reduce usando la regla 144 (timed_adl_effect)
+
+
+estado 353
+
+  145 timed_adl_effect: OPEN_PAREN DECREASE_TOK f_head f_exp_t CLOSE_PAREN .
+
+    $default  reduce usando la regla 145 (timed_adl_effect)
+
+
+estado 354
+
+  138 da_adl_effect: OPEN_PAREN WHEN_TOK da_adl_goal_description da_adl_effect CLOSE_PAREN .
+
+    $default  reduce usando la regla 138 (da_adl_effect)
+
+
+estado 355
+
+  137 da_adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN . da_adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 168
+
+    da_adl_effect     ir al estado 373
+    timed_adl_effect  ir al estado 170
+
+
+estado 356
+
+   58 f_exp: OPEN_PAREN PLUS_TOK . f_exp f_exp CLOSE_PAREN
+   72 num_exp: OPEN_PAREN PLUS_TOK . num_exp num_exp CLOSE_PAREN
+  151 binary_op: PLUS_TOK .
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    INTVAL      [reduce usando la regla 151 (binary_op)]
+    FLOATVAL    [reduce usando la regla 151 (binary_op)]
+    NAME        [reduce usando la regla 151 (binary_op)]
+    OPEN_PAREN  [reduce usando la regla 151 (binary_op)]
+    $default    reduce usando la regla 151 (binary_op)
+
+    f_exp            ir al estado 235
+    f_head           ir al estado 147
+    num_exp          ir al estado 236
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 357
+
+   56 f_exp: OPEN_PAREN MINUS_TOK . f_exp CLOSE_PAREN
+   57      | OPEN_PAREN MINUS_TOK . f_exp f_exp CLOSE_PAREN
+   70 num_exp: OPEN_PAREN MINUS_TOK . num_exp CLOSE_PAREN
+   71        | OPEN_PAREN MINUS_TOK . num_exp num_exp CLOSE_PAREN
+  148 f_exp_da: OPEN_PAREN MINUS_TOK . f_exp_da CLOSE_PAREN
+  152 binary_op: MINUS_TOK .
+
+    DURATION_VAR_TOK  desplazar e ir al estado 325
+    INTVAL            desplazar e ir al estado 142
+    FLOATVAL          desplazar e ir al estado 143
+    NAME              desplazar e ir al estado 144
+    OPEN_PAREN        desplazar e ir al estado 326
+
+    DURATION_VAR_TOK  [reduce usando la regla 152 (binary_op)]
+    INTVAL            [reduce usando la regla 152 (binary_op)]
+    FLOATVAL          [reduce usando la regla 152 (binary_op)]
+    NAME              [reduce usando la regla 152 (binary_op)]
+    OPEN_PAREN        [reduce usando la regla 152 (binary_op)]
+
+    f_exp            ir al estado 374
+    f_head           ir al estado 147
+    num_exp          ir al estado 238
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+    f_exp_da         ir al estado 375
+
+
+estado 358
+
+   59 f_exp: OPEN_PAREN MUL_TOK . f_exp f_exp CLOSE_PAREN
+   73 num_exp: OPEN_PAREN MUL_TOK . num_exp num_exp CLOSE_PAREN
+  153 binary_op: MUL_TOK .
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    INTVAL      [reduce usando la regla 153 (binary_op)]
+    FLOATVAL    [reduce usando la regla 153 (binary_op)]
+    NAME        [reduce usando la regla 153 (binary_op)]
+    OPEN_PAREN  [reduce usando la regla 153 (binary_op)]
+    $default    reduce usando la regla 153 (binary_op)
+
+    f_exp            ir al estado 239
+    f_head           ir al estado 147
+    num_exp          ir al estado 240
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 359
+
+   60 f_exp: OPEN_PAREN DIV_TOK . f_exp f_exp CLOSE_PAREN
+   74 num_exp: OPEN_PAREN DIV_TOK . num_exp num_exp CLOSE_PAREN
+  154 binary_op: DIV_TOK .
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    INTVAL      [reduce usando la regla 154 (binary_op)]
+    FLOATVAL    [reduce usando la regla 154 (binary_op)]
+    NAME        [reduce usando la regla 154 (binary_op)]
+    OPEN_PAREN  [reduce usando la regla 154 (binary_op)]
+    $default    reduce usando la regla 154 (binary_op)
+
+    f_exp            ir al estado 241
+    f_head           ir al estado 147
+    num_exp          ir al estado 242
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 360
+
+  147 f_exp_da: OPEN_PAREN binary_op . f_exp_da f_exp_da CLOSE_PAREN
+
+    DURATION_VAR_TOK  desplazar e ir al estado 325
+    INTVAL            desplazar e ir al estado 142
+    FLOATVAL          desplazar e ir al estado 143
+    NAME              desplazar e ir al estado 144
+    OPEN_PAREN        desplazar e ir al estado 326
+
+    f_exp            ir al estado 327
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+    f_exp_da         ir al estado 376
+
+
+estado 361
+
+  139 da_adl_effect: OPEN_PAREN assign_op f_head f_exp_da CLOSE_PAREN .
+
+    $default  reduce usando la regla 139 (da_adl_effect)
+
+
+estado 362
+
+   89 adl_effect: OPEN_PAREN WHEN_TOK adl_goal_description adl_effect CLOSE_PAREN .
+
+    $default  reduce usando la regla 89 (adl_effect)
+
+
+estado 363
+
+   88 adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN . adl_effect CLOSE_PAREN
+
+    OPEN_PAREN  desplazar e ir al estado 174
+
+    adl_effect           ir al estado 377
+    literal_term         ir al estado 176
+    atomic_formula_term  ir al estado 83
+
+
+estado 364
+
+   90 adl_effect: OPEN_PAREN assign_op f_head f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 90 (adl_effect)
+
+
+estado 365
+
+   72 num_exp: OPEN_PAREN PLUS_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    num_exp  ir al estado 288
+    number   ir al estado 289
+
+
+estado 366
+
+   70 num_exp: OPEN_PAREN MINUS_TOK num_exp . CLOSE_PAREN
+   71        | OPEN_PAREN MINUS_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL       desplazar e ir al estado 142
+    FLOATVAL     desplazar e ir al estado 143
+    OPEN_PAREN   desplazar e ir al estado 287
+    CLOSE_PAREN  desplazar e ir al estado 292
+
+    num_exp  ir al estado 293
+    number   ir al estado 289
+
+
+estado 367
+
+   73 num_exp: OPEN_PAREN MUL_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    num_exp  ir al estado 295
+    number   ir al estado 289
+
+
+estado 368
+
+   74 num_exp: OPEN_PAREN DIV_TOK num_exp . num_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    OPEN_PAREN  desplazar e ir al estado 287
+
+    num_exp  ir al estado 297
+    number   ir al estado 289
+
+
+estado 369
+
+   90 adl_effect: OPEN_PAREN assign_op f_head f_exp . CLOSE_PAREN
+  150 f_exp_da: f_exp .
+
+    CLOSE_PAREN  desplazar e ir al estado 364
+
+    CLOSE_PAREN  [reduce usando la regla 150 (f_exp_da)]
+
+
+estado 370
+
+  146 f_assign_da: OPEN_PAREN assign_op f_head f_exp_da . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 378
+
+
+estado 371
+
+  156 f_exp_t: OPEN_PAREN MUL_TOK TIME_TOK . f_exp CLOSE_PAREN
+
+    INTVAL      desplazar e ir al estado 142
+    FLOATVAL    desplazar e ir al estado 143
+    NAME        desplazar e ir al estado 144
+    OPEN_PAREN  desplazar e ir al estado 145
+
+    f_exp            ir al estado 379
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 372
+
+  155 f_exp_t: OPEN_PAREN MUL_TOK f_exp . TIME_TOK CLOSE_PAREN
+
+    TIME_TOK  desplazar e ir al estado 380
+
+
+estado 373
+
+  137 da_adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN da_adl_effect . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 381
+
+
+estado 374
+
+   56 f_exp: OPEN_PAREN MINUS_TOK f_exp . CLOSE_PAREN
+   57      | OPEN_PAREN MINUS_TOK f_exp . f_exp CLOSE_PAREN
+  150 f_exp_da: f_exp .
+
+    INTVAL       desplazar e ir al estado 142
+    FLOATVAL     desplazar e ir al estado 143
+    NAME         desplazar e ir al estado 144
+    OPEN_PAREN   desplazar e ir al estado 145
+    CLOSE_PAREN  desplazar e ir al estado 290
+
+    CLOSE_PAREN  [reduce usando la regla 150 (f_exp_da)]
+
+    f_exp            ir al estado 291
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+
+
+estado 375
+
+  148 f_exp_da: OPEN_PAREN MINUS_TOK f_exp_da . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 382
+
+
+estado 376
+
+  147 f_exp_da: OPEN_PAREN binary_op f_exp_da . f_exp_da CLOSE_PAREN
+
+    DURATION_VAR_TOK  desplazar e ir al estado 325
+    INTVAL            desplazar e ir al estado 142
+    FLOATVAL          desplazar e ir al estado 143
+    NAME              desplazar e ir al estado 144
+    OPEN_PAREN        desplazar e ir al estado 326
+
+    f_exp            ir al estado 327
+    f_head           ir al estado 147
+    num_exp          ir al estado 148
+    number           ir al estado 149
+    function_symbol  ir al estado 150
+    f_exp_da         ir al estado 383
+
+
+estado 377
+
+   88 adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_effect . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 384
+
+
+estado 378
+
+  146 f_assign_da: OPEN_PAREN assign_op f_head f_exp_da CLOSE_PAREN .
+
+    $default  reduce usando la regla 146 (f_assign_da)
+
+
+estado 379
+
+  156 f_exp_t: OPEN_PAREN MUL_TOK TIME_TOK f_exp . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 385
+
+
+estado 380
+
+  155 f_exp_t: OPEN_PAREN MUL_TOK f_exp TIME_TOK . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 386
+
+
+estado 381
+
+  137 da_adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN da_adl_effect CLOSE_PAREN .
+
+    $default  reduce usando la regla 137 (da_adl_effect)
+
+
+estado 382
+
+  148 f_exp_da: OPEN_PAREN MINUS_TOK f_exp_da CLOSE_PAREN .
+
+    $default  reduce usando la regla 148 (f_exp_da)
+
+
+estado 383
+
+  147 f_exp_da: OPEN_PAREN binary_op f_exp_da f_exp_da . CLOSE_PAREN
+
+    CLOSE_PAREN  desplazar e ir al estado 387
+
+
+estado 384
+
+   88 adl_effect: OPEN_PAREN FORALL_TOK OPEN_PAREN typed_list_variable CLOSE_PAREN adl_effect CLOSE_PAREN .
+
+    $default  reduce usando la regla 88 (adl_effect)
+
+
+estado 385
+
+  156 f_exp_t: OPEN_PAREN MUL_TOK TIME_TOK f_exp CLOSE_PAREN .
+
+    $default  reduce usando la regla 156 (f_exp_t)
+
+
+estado 386
+
+  155 f_exp_t: OPEN_PAREN MUL_TOK f_exp TIME_TOK CLOSE_PAREN .
+
+    $default  reduce usando la regla 155 (f_exp_t)
+
+
+estado 387
+
+  147 f_exp_da: OPEN_PAREN binary_op f_exp_da f_exp_da CLOSE_PAREN .
+
+    $default  reduce usando la regla 147 (f_exp_da)

@@ -1,0 +1,347 @@
+<html>
+
+<head>
+<title>Chapter 1: Create the Application</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 1</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+
+<h2>Chapter 1: Create the Application</h2>
+
+<h3>
+Do not start the tutorial after the final version has been loaded
+</h3>
+<p>
+Before proceeding through the tutorial, make sure that you have not
+opened or loaded the final version of the tutorial in the current IDE
+session (as you might have done, say, to see how the final project
+works).  If the final tutorial has been loaded, you will get lot of
+redefinition warnings and there will be other problems. If you have
+loaded the final version (or indeed any version beyond where you are),
+simple restart the IDE (without reopening the tutorial project), and
+then proceed through the tutorial.
+</p>
+
+<h3>Starting steps </h3>
+
+<ol>
+  <li>Open a new project using the <strong>File | New Project</strong> command. You will be
+    prompted for a directory in which to store the project files (and perhaps a directory in
+    which to place project directories). Here is the dialog which prompts you to choose a
+    directory:</li>
+</ol>
+
+<blockquote>
+  <p><img src="new-proj-gui.jpg" width="508" height="427"
+  alt="new-proj-gui.bmp (650802 bytes)"></p>
+</blockquote>
+
+<blockquote>
+<p>
+We suggest naming the directory <strong>gui-builder-tutorial</strong>,
+as shown, a subdirectory of the <b>C:\allegro-projects\</b> on Windows
+and <b>allegro-projects/</b> on Linux. (Choose any name and location
+you like, of course) In the documentation, we will assume you have
+chosen <b>C:\allegro-projects\gui-builder-tutorial\</b> on Windows and
+<b>allegro-projects/gui-builder-tutorial/</b> on Linux. A new project
+will be created and become the current project.
+</p>
+</blockquote>
+
+<ol start="2">
+  <li>View the Project Manager dialog using the <strong>View | Project Manager</strong>
+    command. In the Project Manager dialog, click on the <strong>Options</strong> tab. The
+    project name should be <b>gui-builder-tutorial</b> (same as the directory name). The
+    project manager title should be &quot;Gui-builder-tutorial&quot; and the title of the
+    Project Window, the window across the top with the menus and toolbars, should be
+    &quot;Gui-builder-tutorial - International Allegro CL &#133;&quot;.</li>
+  <li>If there is no form, click on <strong>File | New Form</strong>. This dialog will appear
+    asking for the class (i.e. type) of the form. Accept the default <strong>dialog</strong>
+    by clicking <strong>OK</strong>.</li>
+</ol>
+
+<blockquote>
+  <p><img src="new-form.jpg" width="528" height="347" alt="new-form.bmp (549702 bytes)"></p>
+  <p>Because this is the first form we have created in this Lisp session, its initial name
+  is <strong>form1</strong>. The form you create may have that name or perhaps form2 or form<em>N</em>
+  for some other <em>N</em>. We will soon change its name so its initial name is not
+  important.<br>
+  </p>
+</blockquote>
+
+<ol start="4">
+  <li>Click on the Save All button on the standard toolbar (or click <strong>File | Save All</strong>).
+  </li>
+</ol>
+
+<blockquote>
+  <p><img src="ch1-1-sa.jpg" width="128" height="37" alt="ch1-1-sa.bmp (14262 bytes)"></p>
+</blockquote>
+
+<blockquote>
+  <p>The project file will be automatically saved to <strong>gui-builder-tutorial.lpr</strong>
+  in the project directory. Save the form to <strong>doodler.cl</strong> (rather than <em>form1.cl</em>).
+  </p>
+</blockquote>
+
+<ol start="5">
+  <li>In the Project Manager, switch back to General tab. <br>
+  </li>
+<li>
+Click on the Add button in the Project Manager toolbar (it looks like
+a big <strong>+</strong>).  Choose <strong>CODE</strong> from the
+<strong>Specify the type of module(s)...</strong> dialog that appears
+(meaning that you are adding source files). In the File Choice dialog,
+navigate back to the Allegro directory, and the <em>[Allegro
+directory]\gui-builder-tutorial\</em> subdirectory (the path is
+usually <b>C:\Program Files\acl80\gui-builder-tutorial\</b> on Windows or <b>[Allegro dir]/gui-builder-tutorial/</b> on Linux) Add the
+file <strong>util.cl</strong>. You will be asked if you want to copy
+it to the project directory. Answer `yes'. Repeat for
+<strong>cycloid.cl</strong>. Now add three additional files, again
+from <em>[Allegro directory]\gui-builder-tutorial\</em>:
+<strong>center.bmp</strong>, <strong>curve.bmp</strong>, and
+<strong>erase.bmp</strong>. These are distributed files rather than
+code files (meaning they are not Lisp source files), so choose
+<strong>DISTRIBUTED FILE</strong> from the <strong>Specify the type of
+module(s)...</strong> dialog rather than <strong>CODE</strong> and
+again copy the files.
+</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h4>Note that order is Important in the Project Manager</h4>
+  </blockquote>
+  <blockquote>
+    <p>The order you list files on the General tab is the load order for the files Lisp will
+    use when running your project. The arrow keys on the Project Manager toolbar can help you
+    change the order if you add them to the project incorrectly or want to rearrange them
+    later.<ul>
+      <li><strong>util.cl</strong> contains code for several utility functions for the application
+        you are building. You&#146;ll need some of these functions soon.<br>
+      </li>
+      <li><strong>cycloid.cl</strong> contains the code for drawing the cycloidal curves in the
+        application. Cycloidal curves are the multi-looped figures shown in the illustration of
+        the final application in the Introduction</li>
+    </ul>
+  </blockquote>
+  <blockquote>
+    <p>Here is what the Project Manager general tab should look like now:</p>
+    <p><img src="ch1-pm-notsav.jpg" width="496" height="295"
+    alt="ch1-pm-notsav.bmp (439014 bytes)"></p>
+    <p>You can inspect these files using the Project Manager. Click on a file name to select
+    it and click the View Selected Code button</p>
+    <p><img src="ch1-2-vsc.jpg" width="169" height="32" alt="ch1-2-vsc.bmp (16310 bytes)"></p>
+    <p>The file will be opened in the Editor.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="7">
+  <li>Inspect <strong>form1</strong> (or whatever number form you have) by double clicking
+    anywhere on the form's body (the gray grid of dots). You can also select the form and use
+    the <strong>Tools | Inspect Selected Object</strong> command. </li>
+</ol>
+
+<ol start="8">
+  <li>In the inspector, change <strong>name</strong> to :<em>doodler</em>. Change the <strong>scrollbars</strong>
+    to t and the <strong>title</strong> to <em>Doodler</em>. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h4>Naming Objects</h4>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>All windows and controls have names. As you begin to write the event handling code for
+    these objects, you will use their names to refer to them.</p>
+    <h4>Making Changes in the Inspector</h4>
+    <p>The right-hand column of the inspector contains values. The left-hand column contains
+    symbols, (in this case, names of properties). Make the changes requested in this step by
+    clicking on each property's value field and typing a new value in its place. In some
+    cases, you'll be offered a drop-down menu of choices when you click on the value, and you
+    will be able to choose one from the menu.</p>
+    <p>The changes will commit when you hit ENTER or move the focus to a new location in the
+    inspector. Notice that the title of the form changes. From here on we call it the Doodler
+    form.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="9">
+  <li>Switch to the Project Manager Dialog (the General tab should be visible; change to it if
+    it is not). Select the doodler form and click on the View Selected Code button on the
+    Project Manager's toolbar.<br>
+    <br>
+    <img src="ch1-2-vsc.jpg" width="169" height="32" alt="ch1-2-vsc.bmp (16310 bytes)"></li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h4>Package Statements</h4>
+    <p>You&#146;ll see an (in-package :common-graphics-user) statement in the buffer.
+    In-package statements need to be included in every form you build for Common Lisp
+    applications. common-graphics-user is the default package for a project, and is the one
+    that we are using for this tutorial. Projects in general may use that package or a custom
+    package.</p>
+    <h4>Working with Editor Buffers in the Workbook</h4>
+    <p>Whenever you choose the View Selected Code button, you are placed in the Editor
+    Workbook in a buffer named after the component you've selected from the Project Manager
+    Dialog. </p>
+    <p>In this case, doodler is the buffer to display. The buffers all have names displayed on
+    their tabs in the Workbook. Clicking on a tab displays the current code for the named
+    component in a buffer. Once you've opened the Editor Workbook, you don't need to keep
+    using the Project Manager dialog to display the current code.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="10">
+  <li>In the doodler.cl editor, type in.</li>
+</ol>
+
+<blockquote>
+  <pre>(defclass doodler (non-refreshing-window)
+   ())</pre>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h4>Creating a New Class: doodler</h4>
+    <p>This new <strong>doodler</strong> class inherits from non<strong>-refreshing-window</strong>,
+    a class supplied with Allegro CL. <strong>non-refreshing-window</strong> determines the
+    behavior of doodler. As the tutorial progresses you will add behaviors to doodler that
+    distinguish it from <strong>non-refreshing-window</strong>. </p>
+    <p>You&#146;ve chosen a parent class for doodler that supports certain types of graphic
+    displays. We&#146;ll explain later on why there is an even better choice of a parent class
+    for doodler, and show you how to revise it.</p>
+    <h4><a name="ch1-1-dcpc"></a>Don&#146;t Change Pre-Supplied Classes</h4>
+    <p>First create a new class that inherits its behavior from a class which you&#146;d like
+    to model, then change the behavior of the new class. You rely on the pre-supplied classes
+    for certain standard behaviors; you don&#146;t want to change those. Changing pre-supplied
+    classes is not supported. </p>
+    <p>There is a brief discussion of creating new classes and inheritance in Paul
+    Graham&#146;s <a href="ansi-common-lisp-on-clos.htm">Chapter 11 of ANSI Common Lisp</a>.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="11">
+  <li>Evaluate the <strong>defclass</strong> expression by moving the Editor's text cursor so
+    that it is somewhere inside the <strong>defclass</strong> expression (typically by
+    clicking there). Then invoke the <strong>Tools | Incremental Evaluation</strong> command
+    to evaluate the expression pointed to by the text cursor. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h4>Mistake-proof Evaluations</h4>
+    <p>The text cursor can also be placed after the last parenthesis. Putting it just after
+    the expression makes the result completely unambiguous; you&#146;ll never get a mistaken
+    evaluation if you choose that location for your request.</p>
+    <h4>The History List</h4>
+    <p>If it evaluates properly, you will see the following display in the history list (the
+    topmost frame, a drop-down combo box) of the Debug Window.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><img src="ch1-3-dbw.jpg" width="717" height="84" alt="ch1-3-dbw.bmp (180822 bytes)"></p>
+</blockquote>
+
+<ol start="12">
+  <li>&nbsp;&nbsp;&nbsp; In the doodler inspector, change the <strong>class</strong> property
+    from dialog to doodler. </li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <h4>Protecting the dialog Class: changing the class property</h4>
+    <p>Changing the <strong>class</strong> property is part of standard preparation for
+    writing events and methods on doodler. We don&#146;t want changes we make to doodler to
+    also be made to its parent class, dialog. </p>
+    <p>The <strong>class</strong> property prevents that. Once the doodler&#146;s class is
+    changed from <font face="Courier New">dialog</font> to <font face="Courier New">doodler</font>,
+    <font face="Courier New">dialog</font> is protected from changes.</p>
+    <p>See <a href="#ch1-1-dcpc">Don't Change Pre-Supplied Classes</a> above.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="13">
+  <li>&nbsp;&nbsp;&nbsp; Click on the <strong>Save All</strong> button or choose <strong>File
+    | Save All</strong> to save all changes. <br>
+  </li>
+  <li>&nbsp;&nbsp;&nbsp; Click on the <strong>Run Project</strong> button (or choose <strong>Run
+    | Run Project</strong>) or choose <strong>Run | Run Form</strong> after first clicking the
+    <em>Doodler</em> form first to give it focus.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p><img src="ch1-4-rb.jpg" width="148" height="32" alt="ch1-4-rb.bmp (14262 bytes)"></p>
+    <p>Notice that you now have an empty window containing scrollbars as well as Maximize,
+    Minimize, and Close buttons. The running form will have no grid pattern on it.</p>
+  </blockquote>
+</blockquote>
+
+<ol start="15">
+  <li>&nbsp;&nbsp;&nbsp; Close the running <em>Doodler</em> window. You can click on the <strong>Close</strong>
+    button on the running form, click on the <strong>Stop</strong> button, or choose the <strong>Run
+    | Stop</strong> command.</li>
+</ol>
+
+<blockquote>
+  <blockquote>
+    <p><img src="ch1-5-sb.jpg" width="119" height="35" alt="ch1-5-sb.bmp (12654 bytes)"></p>
+  </blockquote>
+</blockquote>
+
+<ol start="16">
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Go to <a href="doodler-ch2.htm">chapter 2</a>.
+    If you wish to, you can stop working on the tutorial now and return to it later. All the
+    work you have done has been saved. </li>
+</ol>
+
+<p><small><small>Copyright © 2001-2004 Franz Inc. All rights reserved.</small></small></p>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+  <tr>
+    <td bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3">
+      <tr>
+        <td align="left" bgcolor="#00FFFF"><a href="../doodler.htm"><b>Introduction</b></a></td>
+        <td align="left" bgcolor="#FFFF00"><b>Chapter 1</b></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch2.htm"><b>Chapter 2</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch3.htm"><b>Chapter 3</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch4.htm"><b>Chapter 4</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch5.htm"><b>Chapter 5</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="doodler-ch6.htm"><b>Chapter 6</b></a></td>
+        <td align="left" bgcolor="#00FFFF"><a href="ansi-common-lisp-on-clos.htm"><b>CLOS Intro</b></a></td>
+      </tr>
+    </table>
+    </td>
+    <td align="right"><b>Allegro CL version 8.0</b><br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

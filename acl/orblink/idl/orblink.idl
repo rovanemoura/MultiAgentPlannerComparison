@@ -1,0 +1,81 @@
+module ORBLink { // Types that are not defined by the CORBA standard
+  native value;  // Any  Lisp value
+  native Condition; // Any Lisp condition
+
+  exception Forward { //exception signalled when a LOCATION_FORWARD reply is requested. This 
+    //    exception is normally not visible tou ser code
+    Object location; //The new location
+  }
+  exception orblink_servant_exception { //Exception signalled by ORB when a servant implementation
+                                        //has signalled an unexpected error
+    any original_condition;
+    string message;}
+
+  pseudo interface message{ //An IIOP message
+    enum MessageDirection {incoming,outgoing,unknown}; //Message directions
+    readonly attribute MessageDirection direction;     // What direction is this message going in?
+    enum MessageType {Request,Reply,CancelRequest,LocateRequest,
+		       LocateReply,CloseConnection,MessageError,Fragment}; //Allowed message types
+    readonly attribute MessageType type;      // Type of this message
+    readonly attribute junction ForwardingJunction; //junction whence message was received
+  }
+
+  pseudo interface Junction {
+    readonly attribute value socket; //Socket associated with this junction
+    unsigned long SecondsIdle();     //Number of seconds this junction has been idle
+    boolean isOpen();
+};
+  pseudo interface ActiveJunction : Junction { 
+    readonly attribute unsigned long MessagesReceived;
+    readonly attribute string RemoteHost;
+    readonly attribute unsigned long RemotePort;
+    void close(); //Close this junction;
+    };
+  pseudo interface PassiveJunction : Junction {;};
+  pseudo interface ClientJunction : ActiveJunction {;};
+  pseudo interface ServerJunction : ActiveJunction {};
+  typedef sequence<ServerJunction> ServerJunctionList;
+  typedef sequence<ClientJunction> ClientJunctionList;
+  typedef sequence<PassiveJunction> PassiveJunctionList;
+  pseudo interface ORB : CORBA::ORB {
+    Object _narrow(in Object obj, in Symbol class_name);
+    void HandleJunctionError (in Junction j, in Condition c);
+    void HandleJunctionClose (in Junction j);
+
+    readonly attribute ServerJunctionList ServerJunctions;
+    readonly attribute ClientJunctionList ClientJunctions;
+    readonly attribute PassiveJunctionList PassiveJunctions;
+    enum ServerJunctionErrorPolicyType {continue, debug, handle};
+    attribute ServerJunctionErrorPolicyType ServerJunctionErrorPolicy;
+    attribute boolean HandleJunctionClosePolicy;
+ 
+    enum break_policy_type {return,break};
+    attribute break_policy_type break_policy;
+    enum thread_policy_type {singly_threaded, thread_per_request}
+    enum verbose_level_type {low, high};
+    attribute verbose_level_type verbose_level;
+    attribute thread_policy_type thread_policy;
+    attribute boolean tracing;
+    attribute boolean verbose_tracing;//not yet implemented
+    attribute unsigned long port;
+    attribute string domain;
+    attribute string host;
+    readonly attribute string version; // The ORB version 
+ };
+
+};
+
+module CORBA {
+  pseudo interface Object {
+    // In addition to the standard Object methods
+    readonly attribute string _marker; // Only apples to servants
+  };
+
+  pseudo interface Proxy (Object) {
+    readonly attribute _junction; //The junction associated with this proxy
+  }
+
+  pseudo interface servant (Object) {
+    void _forward (in Object location) raises (ORBLink::Forward);
+  }
+}

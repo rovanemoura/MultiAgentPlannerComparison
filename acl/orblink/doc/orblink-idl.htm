@@ -1,0 +1,107 @@
+<html>
+ <head>
+  <title>IDL for ORBLink administrative interfaces</title>
+ </head>
+<body>
+<h1>/*</h1>
+<h1>IDL for ORBLink administrative interfaces</h1>
+<hr>
+The IDL source in this file, which is in the <code>code</code> font, encapsulates
+pseudointerfaces to ORB functionality in excess of what is required by the CORBA IDL/Lisp <a href="mapping.htm">mapping</a>.
+
+In order to understand the way in which this file describes Lisp functions, you should
+be familiar with that mapping. The functionality described in this document, thus, is only necessary for advanced
+CORBA applications.
+
+Each IDL definition in this file is linked to a text description of the semantics of that definition.
+
+<h1>*/</h1>
+
+
+<pre>
+module <a name="moduleorblink"></a><a href="administration.htm#moduleorblink"> ORBLink </a>{ 
+  native value;  
+  native Condition; 
+
+  exception <a href="forwarding.htm"> Forward </a>;
+    Object location;
+  }
+  exception <a href="exceptions.htm">orblink_servant_exception</a> 
+    any original_condition;
+    string message;}
+
+  pseudo interface <a href="connection.htm">Junction</a> {
+    readonly attribute value socket;
+    unsigned long SecondsIdle();     
+    boolean isOpen();
+};
+  pseudo interface <a href="connection.htm">ActiveJunction</a> : Junction { 
+    readonly attribute unsigned long MessagesReceived;
+    readonly attribute string RemoteHost;
+    readonly attribute unsigned long RemotePort;
+    void close();
+    };
+  pseudo interface <a href="connection.htm">PassiveJunction</a>: Junction {;};
+  pseudo interface <a href="connection.htm">ClientJunction</a> : ActiveJunction {;};
+  pseudo interface <a href="connection.htm">ServerJunction</a> : ActiveJunction {};
+  typedef sequence &lt ServerJunction> ServerJunctionList;
+  typedef sequence &lt ClientJunction> ClientJunctionList;
+  typedef sequence &lt PassiveJunction> PassiveJunctionList;
+
+  pseudo interface <a href="message.htm">Message</a>{
+    enum MessageDirection {incoming,outgoing,unknown}; 
+    readonly attribute MessageDirection direction;     
+    enum MessageType {Request,Reply,CancelRequest,LocateRequest,
+		       LocateReply,CloseConnection,MessageError,Fragment}; 
+    readonly attribute MessageType type;
+    readonly attribute junction ForwardingJunction;
+  }
+
+  pseudo interface ORB : CORBA::ORB {
+    Object _narrow(in Object obj, in Symbol class_name);
+    void <a href="connection.htm">HandleJunctionError</a> (in Junction j, in Condition c);
+    void <a href="connection.htm">HandleJunctionClose</a> (in Junction j);
+
+    readonly attribute ServerJunctionList <a href="connection.htm">ServerJunctions</a>;
+    readonly attribute ClientJunctionList <a href="connection.htm">ClientJunctions</a>;
+    readonly attribute PassiveJunctionList <a href="connection.htm">PassiveJunctions</a>;
+    enum <a href="connection.htm">ServerJunctionErrorPolicyType</a> {continue, debug, handle};
+    attribute ServerJunctionErrorPolicyType <a href="connection.htm">ServerJunctionErrorPolicy</a>;
+    attribute boolean <a href="connection.htm">HandleJunctionClosePolicy</a>;
+ 
+    enum <a href="exceptions.htm">break_policy_type</a> {return,break};
+    attribute <a href="exceptions.htm">break_policy_type break_policy</a>;
+    enum <a href="threading.htm">thread_policy_type</a> {singly_threaded, thread_per_request}
+    enum <a href="debugging.htm">verbose_level_type</a> {low, high};
+    attribute <a href="debugging.htm">verbose_level_type verbose_level</a>;
+    attribute <a href="threading.htm">thread_policy_type thread_policy</a>;
+    attribute boolean <a href="debugging.htm">tracing</a>;
+    attribute unsigned long <a href="naming.htm">port</a>;
+    attribute string  <a href="installation.htm">domain </a>;
+    attribute string <a href="naming.htm">host</a>;
+    readonly attribute string <a href="orb.htm">version</a>; 
+ };
+
+};
+
+module CORBA {
+  const ORB <a href="administration.htm">orb</a>;
+pseudo interface ORB {
+  String <a href="naming.htm">object_to_string</a> (in Object obj);
+  Object <a href="naming.htm">string_to_object</a> (in String str);
+{;
+
+  pseudo interface Object {
+  };
+
+  pseudo interface Proxy (Object) {
+    readonly attribute <a href="connection.htm">_junction</a>;
+  }
+
+  pseudo interface Servant (Object) {
+    readonly attribute string <a href="naming.htm">_marker</a>;
+    void <a href="forwarding.htm">_forward</a> (in Object location) raises (ORBLink::Forward);
+  }
+}
+</body>
+</html>

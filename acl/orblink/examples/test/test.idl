@@ -1,0 +1,161 @@
+module a{ module z {interface b{};};};
+module a{ module z {interface c {b foo();};};};
+module a{ module z {interface d {b fum();};};};
+
+
+module idltest
+{
+  module testor {
+    interface WidgetContainer {
+      const short SMALL  = 0x01;
+      const short MEDIUM = 0x02;
+      const short LARGE  = 0x04;
+    };
+  };
+
+  module v{
+    const string vstringconstant="stringconstanttest";
+      const long vfoo = 4;
+      const long long vlonglong = 20000000000000;
+      const unsigned long long vulonglong = 40000000000000;
+      const long vfum = 4+3;
+      const long vbar = 2 * vfoo;
+      const long vor = 15 | 1;
+      const long vor2 = 15 | 32;
+      const long vor2 = 15 | 32 | 3;
+      const long vxor = 8 ^ 15;
+      const long vshiftright = 15 >> 1;
+      const long vshiftleft = 15 << 2;
+      const long vshiftleft2 = 15 << 2 << 2;
+      const long vte = 2 + (3 * 4);
+      const long vtte = vfoo + (vor * vfum);
+      const long nn = ~3;
+      const short h = vxor % 7; 
+      const float z = 3.5;
+      typedef long a[vxor];
+    };
+
+
+    union outerunionexample
+      switch(short) {
+      case 1 : string stringmember;
+      case 2 : long longmember;
+      case 4: case 5: boolean booleanmember;
+      case 6: long long longlongmember;
+      default: float floatmember;
+};
+
+  struct outerstructexample {
+    string str;
+    char c;};
+
+  interface anytest{
+    any testany (in any value);
+  };
+
+    typedef string array2[2][5];
+    typedef string array3[2][3][4];
+    typedef long array4[2][3][4][5];
+
+    typedef sequence<long> longseq;
+    typedef sequence<short> shortseq;
+    struct structexample{
+      long foo;
+      longseq seq;};
+
+    struct recursivestruct {
+      string membera;
+      sequence<recursivestruct> memberb;};
+      
+
+    exception exceptionexample{
+      long member1;
+    };
+      
+    enum enumexample{
+      hello, goodbye,farewell};
+
+    union unionenumexample switch(enumexample)
+      {
+      case hello: string stringmember;
+      case goodbye: short shortmember;
+      case farewell: float floatmember;};
+
+    union unionexample
+      switch(short) {
+      case 1 : string stringmember;
+      case 2 : long longmember;
+      case 3 : enumexample enummember;
+      case 4: case 5: boolean booleanmember;
+      case 6: long long longlongmember;
+      case 7: unsigned long long unsignedlonglongmember;
+      default: float floatmember;
+};
+    interface locfor;
+  interface test{
+    attribute long testattribute;
+
+    struct innerexample {
+      long member1;
+      string member2;};
+
+    locfor create_locfor (in long id);
+    void testout1 (out long argument);
+    long testout2 (out long argument);
+    void testout3 (in boolean arg0, out char arg1);
+    void testout4 (inout boolean arg0, out char arg);
+    long testout5 (inout float arg0, out string arg);
+    void testveryvoid ();
+    string testout6 (inout string a, out string b, in string c, inout string d, in string e, inout string f, out string g);
+    
+    array2 testarray2 (in array2 a);
+    array3 testarray3 (in array3 a);
+    array4 testarray4 (in array4 a);
+    Object testreturningobject (in long foo);
+    void testmarshallingobject (in Object bar);
+    test testobject (in test argument);
+    short testobjectshort (in test argument);
+    oneway void testmessage (in unsigned short delay);
+    oneway void onewaytestvoid (in short delay);
+    void testvoid (in short n, in short m);
+    typedef long longarray[3];
+    float testfloat (in float a);
+    double testdouble (in double a);
+    long testexception (in long a) raises (exceptionexample);
+
+    string teststring (in string a);
+    short testshort (in short a);
+    long long testlonglong(in long long a);
+    unsigned long long testunsignedlonglong (in unsigned long long a);
+    unsigned short testunsignedshort (in unsigned short a);
+    long testlong (in long a);
+    unsigned long testunsignedlong (in unsigned long a);
+    structexample teststructexample (in structexample a);
+    recursivestruct testrecursivestruct (in recursivestruct a);
+    enumexample testenum(in enumexample a);
+    longarray testlongarray(in longarray a);
+    char testchar (in char a);
+    octet testoctet (in octet o);
+    boolean testboolean (in boolean a);
+    longseq testsequence (in longseq a);
+    unionexample testunionexample (in unionexample a);
+    unionenumexample testunionenumexample (in unionenumexample a);
+    
+  };
+
+  interface locfor{
+    attribute long id;
+    long test_location_forward (in locfor location);
+    long forward_to_id (in long id);
+  };
+    
+  interface a { string op_for_a(in string arg);
+  };
+  interface b :a { long op_for_b();};
+  interface c : a { char op_for_c();};
+  interface d : b, c {boolean op_for_d();};
+
+};
+
+struct rootstructexample { long root;};
+    

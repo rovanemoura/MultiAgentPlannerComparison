@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>Dynamic reconfiguration</title>
+  </head>
+
+  <body>
+    <h1>Dynamic reconfiguration of ORBLink servers</h1>
+<hr><p>
+
+An ORBLink server may be dynamically reconfigured in a number of ways.
+
+<h2>Redefinition of implementation methods</h2>
+
+A <code>corba:define-method</code> form may be reevaluated at any time. The most recent definition will be used.
+<p>
+One common such usage occurs when an implementation has signalled an exception for with the ORB is configured
+to enter a debug loop. From the debug loop, the implementation may be re-invoked; if the implementation has been modified, the most
+recent implementation definition will be used.
+<h2>Recompilation of IDL files</h2>
+An IDL file may be edited and recompiled using <code>corba:idl</code>. The semantics are analogous to the semantics of
+normal Lisp redefinition of types.
+<p>
+This is most useful when a server interface has been modified to accept <em>additional</em> operations. 
+Existing clients will continue to work unchanged and new clients can take advantage of the new operations.
+<p>
+However, if the signature of 
+an existing operation was altered, care must be taken to avoid clients using the old operation definition.
+<p>The <a href="tutorial.htm">tutorial</a> works though an example of dynamically adding an attribute to an existing server.
+<h2>Reconfiguration of clients</h2>
+Of course, clients can also be reconfigured simply by recompiling the IDL. Care must be taken to ensure that the
+client is not using an old operation with an incompatible signature.
+
+That is, in order to modify an operation to an incompatible signature, the IDL in both the server and the client must be recompiled.
+
+<h2>Other means for server configuration</h2>
+Sometimes <a href="connection.htm">handlers</a> for certain server events, like errors and junction closure can be defined.
+<p>
+The <a href="orb.htm">ORB</a> itself offers a few additional run-time configuration options.
+
+  </body>
+</html>

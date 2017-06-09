@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>The ORBLink ORB</title>
+  </head>
+
+  <body>
+    <h1>The ORBLink ORB</h1>
+<hr>
+<p>
+
+The global special variable CORBA:ORB is always set to the singleton instance
+of the ORBLink ORB. 
+<p>
+The ORBLink ORB is encapsulated in the pseudointerface:
+<pre>
+  pseudo interface ORB : CORBA::ORB {
+    Object _narrow(in Object obj, in Symbol class_name);
+    void <a href="connection.htm">HandleJunctionError</a> (in Junction j, in Condition c);
+    void <a href="connection.htm">HandleJunctionClose</a> (in Junction j);
+
+    readonly attribute ServerJunctionList <a href="connection.htm">ServerJunctions</a>;
+    readonly attribute ClientJunctionList <a href="connection.htm">ClientJunctions</a>;
+    readonly attribute PassiveJunctionList <a href="connection.htm">PassiveJunctions</a>;
+    enum <a href="connection.htm">ServerJunctionErrorPolicyType</a> {continue, debug, handle};
+    attribute ServerJunctionErrorPolicyType <a href="connection.htm">ServerJunctionErrorPolicy</a>;
+    attribute boolean <a href="connection.htm">HandleJunctionClosePolicy</a>;
+ 
+    enum <a href="exceptions.htm">break_policy_type</a> {return,break};
+    attribute <a href="exceptions.htm">break_policy_type break_policy</a>;
+    enum <a href="threading.htm">thread_policy_type</a> {singly_threaded, thread_per_request}
+    enum <a href="debugging.htm">verbose_level_type</a> {low, high};
+    attribute <a href="debugging.htm">verbose_level_type verbose_level</a>;
+    attribute <a href="threading.htm">thread_policy_type thread_policy</a>;
+    attribute boolean <a href="debugging.htm">tracing</a>;
+    attribute unsigned long <a href="naming.htm">port</a>;
+    attribute string  <a href="installation.htm">domain </a>;
+    attribute string <a href="naming.htm">host</a>;
+    readonly attribute string <a href="debugging.htm">version</a>; 
+ };
+</pre>
+<p>
+Most of these attributes and operations are defined in other sections, hyperlinked to their name.
+<p>
+The <code>version</code> attribute is bound to a string that denotes the current ORB.
+<p>
+Simply printing the value of <code>corba:orb</code> will give version, host, and other useful information.
+<p>
+<h2>Stringification</h2>
+Note that the CORBA pseudo-interface itself defines certain functions on the ORB.
+By far the most important of these are <code>object_to_string</code> and
+<code>string_to_object</code>. See the section on <a href="naming.htm">naming</a> for more information on these.
+
+
+  </body>
+</html>

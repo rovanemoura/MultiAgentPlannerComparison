@@ -1,0 +1,29 @@
+This file contains sample code and invocation for starting a client or a server
+using Visibroker for Java 3.1.
+
+	The files:
+
+	Makefile: compiles and runs the example.
+	Client.java	Java client code
+	Server.java	Java server code
+	gridImpl.java	Implementation of the interface in the file ../../idl/grid.idl	
+
+You must be using Visibroker for Java 3.2 or later.
+
+The vbj and vbjc utilities in visibroker must be in your path. The
+com.franz.orblink package must be accessible from your CLASSPATH (see
+orblink java installation notes).
+
+To compile the IDL: (create Java stubs and skeletons for the file
+		../../idl/grid.idl)
+
+	make idl
+
+To compile the Java code
+	make classes
+
+To run the client: (Uses the SimpleNameServer to store the IOR of the implementation in a file)
+	make run-client
+
+To run the server: (publishes the IOR of the server to a file using SimpleNameServer)
+	make run-server

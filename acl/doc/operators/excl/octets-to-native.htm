@@ -1,0 +1,42 @@
+<html><head><meta http-equiv="content-type" name="description" content="text/html; charset=UTF-8"> <title>octets-to-native</title><link rel="stylesheet" href="../../acldoc-styles.css" type="text/css"></head><body><table border="0" width="100%" cellpadding="1" cellspacing="0"><tr><td colspan="2" bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3"><tr><td align="left" bgcolor="#00FFFF"><b>Function</b></td><td align="left" bgcolor="#00FFFF"><b>Package: excl</b></td><td align="center" bgcolor="#00FFFF"><a href="../../contents.htm"><b>ToC</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../introduction.htm"><b>DocOverview</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../cgide.htm"><b>CGDoc</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../release-notes.htm"><b>RelNotes</b></a></td><td align="center" bgcolor="#00FFFF"><a href="http://www.franz.com/support/faq/"><b>FAQ</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../index.htm"><b>Index</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../permuted-index.htm"><b>PermutedIndex</b></a></td></tr></table></td><td align="right"><b>Allegro CL version 10.0</b><br><small><a href="../../introduction.htm#updates-s">Unrevised from 9.0 to 10.0.</a></small><br><a href="http://www.franz.com/support/documentation/9.0/doc/operators/excl/octets-to-native.htm">9.0 version</a></td></tr></table><h2 id="2">octets-to-native</h2>
+
+<p id="3"><b>Arguments: </b><i>vector8 </i>&amp;key <i>address aligned</i> (<i>length</i> (position 0 vector8))<i>
+</i></p>
+
+<p id="4">This function returns an address.</p>
+
+<p id="5">This function copies the 8-bit bytes from
+<i>vector8</i>, a (simple-array (unsigned-byte 8) (*))
+array, into static (i.e., non-lisp heap) memory and returns an address
+to the first character of that data.</p>
+
+<p id="6">If the <i>address</i> argument is specified, then its
+value will be used (and returned) as the destination address and new
+memory will not be allocated. If the <i>address</i>
+argument is not specified, then the resulting memory must be passed to
+<a href="aclfree.htm"><b>aclfree</b></a> to be reclaimed.</p>
+
+<p id="7">
+If the <i>aligned</i> keyword argument is true, then
+<i>address</i> is an aligned address. Aligned addresses
+are returned by functions like <a href="lispval-to-aligned-malloc-address.htm"><b>lispval-to-aligned-malloc-address</b></a>.
+</p>
+
+
+<p id="8">If the <i>length</i> argument is specified, then it
+specifies the number of elements to copy.</p>
+
+<p id="9">
+In earlier releases, this function was called
+<code>mb-to-native</code>. That name is preserved for backward
+compatibility, but new code should use the new name.
+</p>
+
+<p id="10">
+See also <a href="../../iacl.htm">iacl.htm</a> for general information on
+international character set support in Allegro CL and see <a href="native-to-octets.htm"><b>native-to-octets</b></a>.
+</p>
+
+<hr><p id="11"><small>Copyright (c) 1998-2015, Franz Inc. Oakland, CA., USA. All rights reserved.</small><br>
+<small>Documentation for Allegro CL version 10.0. This page was not revised from the 9.0 page.</small><br><small>Created 2015.5.21.</small><br>
+</p><table border="0" width="100%" cellpadding="1" cellspacing="0"><tr><td colspan="2" bgcolor="#00FFFF"><table border="0" cellpadding="5" cellspacing="3"><tr><td align="left" bgcolor="#00FFFF"></td><td align="left" bgcolor="#00FFFF"></td><td align="center" bgcolor="#00FFFF"><a href="../../contents.htm"><b>ToC</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../introduction.htm"><b>DocOverview</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../cgide.htm"><b>CGDoc</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../release-notes.htm"><b>RelNotes</b></a></td><td align="center" bgcolor="#00FFFF"><a href="http://www.franz.com/support/faq/"><b>FAQ</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../index.htm"><b>Index</b></a></td><td align="center" bgcolor="#00FFFF"><a href="../../permuted-index.htm"><b>PermutedIndex</b></a></td></tr></table></td><td align="right"><b>Allegro CL version 10.0</b><br><small><a href="../../introduction.htm#updates-s">Unrevised from 9.0 to 10.0.</a></small><br><a href="http://www.franz.com/support/documentation/9.0/doc/operators/excl/octets-to-native.htm">9.0 version</a></td></tr></table></body></html>

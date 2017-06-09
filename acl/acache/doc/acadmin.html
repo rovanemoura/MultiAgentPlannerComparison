@@ -1,0 +1,474 @@
+<html><head><title>AllegroCache Administrator's Guide</title></head><body>
+<center><h1>AllegroCache Administrator's Guide</h1></center>
+<small>copyright (c) 2012 Franz Inc</small>
+
+<p>
+&nbsp;&nbsp;<font size="+0"><a href="#2711">The Files in an AllegroCache Database</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2712">Standalone vrs Client/Server</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2713">Starting and Stopping an AC database</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2714">Log Files</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2715">Upgrading AllegroCache</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2716">Upgrading a Database</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2717">Log Compression</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2718">Backups</a></font><br>
+<p>
+<span id="2711"></span><h2>The Files in an AllegroCache Database</h2>
+<p>
+All AllegroCache files for a database are stored in a directory.
+The name of the directory is not stored in the database so you can
+rename or move or copy the directory at will.  Those operations should not,
+however, be done while the database is open.
+<p>
+<p>
+Here is a sample AC database:
+<p>
+<pre>  5136 -rw-r--r-- 1 jkf jkf   5242890 Nov 13 09:42 ac000000.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242889 Nov 13 09:42 ac000001.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242898 Nov 13 09:43 ac000002.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000003.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000004.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242887 Nov 13 09:45 ac000005.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242881 Nov 13 09:46 ac000006.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242884 Nov 13 09:46 ac000007.dat
+  4924 -rw-r--r-- 1 jkf jkf   5026128 Nov 13 09:48 ac000008.dat
+     4 -rw-r--r-- 1 jkf jkf         5 Nov 13 09:41 acache-params.cl
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:47 admin.bt
+116972 -rw-r--r-- 1 jkf jkf 119668736 Nov 13 09:47 class12.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 class1.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 index10.bt
+ 46468 -rw-r--r-- 1 jkf jkf  47529984 Nov 13 09:47 index11.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 itab.bt
+</pre>
+<p>
+<p>
+The presence of the file <b>acache-params.cl</b> indicates that this directory
+contains an AC database.
+<p>
+The <b>acNNNNNN.dat</b> files are <i>log files</i>.  A detailed description
+of log files is below.
+<p>
+The <b>*.bt</b> files are b-trees, which are used to store key/value
+pairs on disk.  The API for the b-tree package is in a separate document.
+The AllegroCache programmer or administrator need never work
+directly with the b-trees.
+<p>
+<b>admin.bt</b> and <b>itab.bt</b> contain information about the database.
+<b>classN.bt</b> maps object id and transaction number to a location in a
+log file.
+<b>indexN.bt</b> maps a value and a transaction number to an oid.
+<p>
+<span id="2712"></span><h2>Standalone vrs Client/Server</h2>
+The file format for a standalone database is identical to
+that of a client/server database.
+In fact you can open a database in standalone mode, close it,
+and then open it it client/server mode.
+<p>
+A database can only be opened by one process at a time.
+Opening a database  by two processes will result in the log files
+being scrambled.
+The Windows operating system enforces the rules that a database
+is only opened once.  Unix does not enforce this on its own but we
+intend to use locks in a future version of AC to prevent this problem
+from occurring.
+<p>
+If you need to have multiple clients access the database then use
+the client/server version.  In this version the server opens the
+database and the clients contact the server to access the database.
+<p>
+<p>
+<span id="2713"></span><h2>Starting and Stopping an AC database</h2>
+In standalone mode the database is opened with <b>open-file-database</b> or
+<b>create-file-database</b> and closed with <b>close-database</b>.   The database
+files are not modified except when a <b>commit</b> is done (except that the
+admin.bt btree is modified occasionally in the middle of a transaction).
+When a commit is not in progress the database on disk is in a consistent
+state.  The <b>close-database</b> function merely closes file descriptors.
+It does not modify the database.
+<p>
+<p>
+In client/server mode the <b>start-server</b> function opens the database.
+The server then accepts connections from clients when they
+call <b>open-network-database</b>. When a client is finished accessing
+the database it calls <b>close-database</b>.  This only closes the client
+connection to the database and not the database itself.
+There are two ways to close the server's connection to the database
+<ul><li>on the server run <b>stop-server</b>.
+</li><li>have a client connect to the server using <b>open-network-connection</b> and
+then have the client call <b>(close-database :stop-server t)</b>.
+</li></ul><p>
+When the server shuts down all clients currently connected to it will
+get an error message the next time they try to contact the server.
+<p>
+<p>
+When an existing database is opened in standalone
+mode (<b>open-file-database</b>) or in client/server mode (<b>start-server</b>)
+the program can specify a <b>:verify</b> argument.
+This argument allows the program to tell AC how hard it should check to see if
+the the files on disk that comprise the database are error free.
+There are four choices
+<ul><li>nil  - don't check at all
+</li><li>:quick - check the end of the last log file and if it looks good then
+assume that AC was shut down cleanly.  If it doesn't look good then scan
+the last log file from the beginning to find where it starts to go bad
+and truncate the log file at that point.
+</li><li>t - omit the quick scan of the last log file.  Start with a scan
+of the last log file.
+</li><li>:full - do a scan of the last log file and then scan all of the b-trees
+for errors. If errors are found signal an error and suggest that the
+database be rebuilt from the log files.
+</li></ul><p>
+Here are some factors to determine what kind of verification you should use:
+<ul><li>If you're not sure if the database was shut down cleanly then
+do a <b>:full</b> verification if time permits.
+</li><li>Never specify no verification at all.  Due to buffered output to the
+log file it's very easy for the end of the log file to be a partial
+record which must be removed before the log file can be used.   A quick
+verify can detect this and fix it.
+</li><li>The cost to scan last log file is a function of its length.  This argues
+against specifying a very very large log file size when the database
+is opened.
+</li></ul><p>
+In order to konw what kind of verification should
+be done we suggest  that you keep a marker in the
+filesystem that allows you tell if the database was shut down cleanly.
+This would then allow you to choose the appropriate argument to
+<b>:verify</b>.
+<p>
+<p>
+<p>
+<p>
+<span id="2714"></span><h2>Log Files</h2>
+The log files contain
+everything needed to recreate the database again
+using the <b>recover-from-log</b> function.
+The log files are the sole repository for the objects in the database
+and therefore cannot be deleted.
+<p>
+The log files are numbered beginning with  ac000000.dat.
+Only the newest log file is ever modified and information
+is only added at the end of this file.
+This means that for database backup purposes
+you need only save each log file once after that log file is no longer the
+newest log file.
+<p>
+You can specify the maximum size of each log file when you open
+the database.  It's best to choose a very large size as that means
+that fewer log files need to be open.  In the example above we chose a
+very small size (5Mb) for log files just so we could demonstrate
+a multi-log file database.
+<p>
+Because log files contain the whole history of the database they will
+take up more and more space on the disk.  At some point you will
+may want to reduce the size of the database.  There are three
+ways to do this.
+Two methods require
+that you stop the database and then rebuild it and then open it:
+<ul><li><b>save-database</b>/<b>restore-database</b> -  the database is written out in
+an xml format and then read back in.  This is time consuming but you are
+left with a text version of your database you can archive.
+Be sure to specify <b>:verbose nil</b> to save-database to make this operation
+faster.
+</li><li><b>recover-from-log</b> -  build a new database using only the current
+objects in the database.  The resulting database has smaller log files
+and smaller b-trees as well.  This will usually be much faster
+than save-database/restore-database.
+</li></ul><p>
+The third possibility is compressing the log files.  This is done
+while the database is still running.
+There is more on this below.
+<p>
+<p>
+<span id="2715"></span><h2>Upgrading AllegroCache</h2>
+New versions of AllegroCache are released periodically.  You can
+receive notification of these new versions by viewing the
+<a href="http://www.franz.com/rss.lhtml">AllegroCache RSS feed</a>
+
+or you can periodically check the
+<a href="http://www.franz.com/products/allegrocache/download/dist/download">AllegroCache Download Page</a>
+
+<p>
+The AC Download page describes how to get the latest version of AC downloaded
+to your machine.  Unlike other patch downloads, when you download
+AC it will intentionally not replace the version of AC you're now using.
+This is because the new AC may be incompatible with your current AC
+and simply replacing your current AC could make your data inaccessible.
+<p>
+Before upgrading you'll first want to check out the compatibility
+chart at the bottom of the AC download page.
+If there are any <b>no</b>'s in the column labeled <i>read one version older db</i> between the latest version and the version you're currently running then you must upgrade your database.  If there are any <b>yes</b>'s in the third
+column labeled <i>must rebuild</i> then even upgrading is impossible
+and you must build your database again from scratch.
+We'll discuss upgrading the database below.
+<p>
+When you upgrade your AllegroCache you'll want to recompile all your
+source code that uses AC.   This will ensure that any macro definition
+changes in AC are used by your code.  If you're using the client/server
+version then all clients and and the server should be recompiled
+and rebuilt.  Generally older clients will work with newer servers
+as very rarely does the existing AC network protocol change
+incompatibly.  However to be safe it's best to keep the client
+and server versions in sync.
+<p>
+<span id="2716"></span><h2>Upgrading a Database</h2>
+You can use either of two techniques to upgrade a database from
+one version to another (assuming the the compatibility matrix
+at the end of the AC download page says that such an upgrade is legal):
+<p>
+<ul><li>run <b>save-database</b> in the application running the old version of AC and
+then run <b>restore-database</b> in the application running the new version
+of AC
+</li><li>close the old database and then start a lisp with the new AC loaded
+and run <b>recover-from-log</b>.  It will create a new database based on
+those logs.
+</li></ul><p>
+Using <b>recover-from-log</b> is usually the fastest and easiest way to
+upgrade.  That's what we show in the example below.
+<p>
+<p>
+These are the steps for upgrading a  database
+<ol><li>In standalone mode just close the database.  In client/server mode
+shut down all the clients and then shut down the server.
+See &quot;Starting and Stopping an AC database&quot; above.
+</li><li>Move the current database to a new location so the new database
+can be built where our application still expects to find it.
+<pre>tiger :: <b>mv /paw/cl8/src/acache/bigac.db /paw/cl8/src/acache/save-bigac.db</b>
+tiger ::
+</pre>
+</li><li>Start lisp and load in the new version of AllegroCache.  Suppose
+the newest version is 1.2.1.
+<pre>cl-user(1): <b>(require :acache &quot;acache-1.2.1.fasl&quot;)</b>
+; Fast loading /paw/cust-acl80/code/acache-1.2.1.fasl
+AllegroCache version 1.2.1
+;   Fast loading /paw/cust-acl80/code/sax.001
+;;; Installing sax patch, version 1
+t
+cl-user(2):
+</pre>
+</li><li>Run the <b>recover-from-log</b> function.  The log files will come from the
+directory <tt>/paw/cl8/src/acache/save-bigac.db</tt> and the other files in that
+directory will be ignored.   None of the files in that directory
+will be modified.  The database will be rebuilt in
+the directory <tt>/paw/cl8/sc/acache/bigac.db</tt>.
+<pre>cl-user(4): <b>(db.ac:recover-from-log &quot;/paw/cl8/src/acache/save-bigac.db&quot; &quot;/paw/cl8/src/acache/bigac.db&quot;)</b>
+; Fast loading /paw/cust-acl80/code/regexp2.fasl
+;   Fast loading /paw/cust-acl80/code/yacc.fasl
+Log Files will used for recovery:
+  /paw/cl8/src/acache/save-bigac.db/ac000008.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000007.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000006.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000005.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000004.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000003.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000002.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000001.dat
+  /paw/cl8/src/acache/save-bigac.db/ac000000.dat
+; Fast loading /paw/cust-acl80/code/fileutil.001
+;;; Installing fileutil patch, version 1
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000008.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000007.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000006.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000005.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000004.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000003.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000002.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000001.dat&quot;
+Recover from log &quot;/paw/cl8/src/acache/save-bigac.db/ac000000.dat&quot;
+Rebuilding indexes
+17086992 bytes have been tenured, next gc will be global.
+See the documentation for variable *global-gc-behavior* for more information.
+18221168 bytes have been tenured, next gc will be global.
+See the documentation for variable *global-gc-behavior* for more information.
+17113616 bytes have been tenured, next gc will be global.
+See the documentation for variable *global-gc-behavior* for more information.
+17508240 bytes have been tenured, next gc will be global.
+See the documentation for variable *global-gc-behavior* for more information.
+database recovered
+#&lt;AllegroCache db &quot;/paw/cl8/src/acache/bigac.db&quot; -closed- @ #x1000f90cc2&gt;
+cl-user(5):
+</pre>
+</li><li>Optionally open the newly upgraded database and verify that there
+are no errors:
+<pre>cl-user(7): <b>(db.ac:open-file-database &quot;/paw/cl8/src/acache/bigac.db&quot; :verify :full)</b>
+Check tree: /paw/cl8/src/acache/bigac.db/admin.bt
+Check tree: /paw/cl8/src/acache/bigac.db/itab.bt
+Check tree: /paw/cl8/src/acache/bigac.db/class12.bt
+Check tree: /paw/cl8/src/acache/bigac.db/index11.bt
+Check tree: /paw/cl8/src/acache/bigac.db/index10.bt
+Check tree: /paw/cl8/src/acache/bigac.db/class1.bt
+#&lt;AllegroCache db &quot;/paw/cl8/src/acache/bigac.db&quot; @ #x1006605442&gt;
+cl-user(8): <b>(db.ac:close-database)</b>
+#&lt;AllegroCache db &quot;/paw/cl8/src/acache/bigac.db&quot; -closed- @ #x1006605442&gt;
+cl-user(9):
+</pre>
+</li><li>Rebuild your application: remove all fasl files and, using
+the latest allegrocache fasl file,
+rebuild all applications that call any AllegroCache functions
+or use any macros from AllegroCache.
+</li><li>Restart you application.  In client/server mode start the server
+before starting the clients.
+</li></ol><p>
+<p>
+<span id="2717"></span><h2>Log Compression</h2>
+Over time log files contain more and more information that will never
+be accessed.  One way to remove this unused information is to compress
+the log files.   Compression is done much like a copying garbage collector:
+the parts of the log file still in use are copied to new files
+and then the new files replace the old files.
+<p>
+Log compression is done while the database is open (unlike
+ save-database/restore-database and recover-from-log).
+In the client/server version you can even do log compression  while
+other clients are accessing the database.
+<p>
+Let's compress this database:
+<p>
+<pre>  5136 -rw-r--r-- 1 jkf jkf   5242890 Nov 13 09:42 ac000000.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242889 Nov 13 09:42 ac000001.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242898 Nov 13 09:43 ac000002.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000003.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000004.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242887 Nov 13 09:45 ac000005.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242881 Nov 13 09:46 ac000006.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242884 Nov 13 09:46 ac000007.dat
+  4924 -rw-r--r-- 1 jkf jkf   5026128 Nov 13 09:48 ac000008.dat
+     4 -rw-r--r-- 1 jkf jkf         5 Nov 13 09:41 acache-params.cl
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:47 admin.bt
+116972 -rw-r--r-- 1 jkf jkf 119668736 Nov 13 09:47 class12.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 class1.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 index10.bt
+ 46468 -rw-r--r-- 1 jkf jkf  47529984 Nov 13 09:47 index11.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 itab.bt
+</pre>
+<p>
+<p>
+We open the database and call <b>compress-log-files</b>:
+<p>
+<pre>cl-user(4): <b>(open-file-database &quot;test&quot;)</b>
+#&lt;AllegroCache db &quot;/paw/cl8/src/acache/test&quot; @ #x1001c3ebf2&gt;
+cl-user(5): <b>(compress-log-files)</b>
+Number of full Commits: 180
+Commit in progress at the end: 185
+Processing log file /paw/cl8/src/acache/test/ac000000.dat
+111025 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000001.dat
+113975 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000002.dat
+110000 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000003.dat
+110022 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000004.dat
+114018 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000005.dat
+110960 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000006.dat
+110000 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000007.dat
+113029 changes in log file
+nil
+cl-user(6):
+</pre>
+<p>
+Now let's examine the database directory:
+<p>
+<pre>  3188 -rw-r--r-- 1 jkf jkf   3257198 Nov 13 14:20 ac000000.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242890 Nov 13 09:42 ac000000.dat.b00001
+  3124 -rw-r--r-- 1 jkf jkf   3191339 Nov 13 14:20 ac000001.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242889 Nov 13 09:42 ac000001.dat.b00001
+  3192 -rw-r--r-- 1 jkf jkf   3262898 Nov 13 14:21 ac000002.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242898 Nov 13 09:43 ac000002.dat.b00001
+  3192 -rw-r--r-- 1 jkf jkf   3262498 Nov 13 14:21 ac000003.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000003.dat.b00001
+  3120 -rw-r--r-- 1 jkf jkf   3190570 Nov 13 14:21 ac000004.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000004.dat.b00001
+  3176 -rw-r--r-- 1 jkf jkf   3245607 Nov 13 14:21 ac000005.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242887 Nov 13 09:45 ac000005.dat.b00001
+  3192 -rw-r--r-- 1 jkf jkf   3262881 Nov 13 14:21 ac000006.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242881 Nov 13 09:46 ac000006.dat.b00001
+  3140 -rw-r--r-- 1 jkf jkf   3208362 Nov 13 14:21 ac000007.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242884 Nov 13 09:46 ac000007.dat.b00001
+  4924 -rw-r--r-- 1 jkf jkf   5026155 Nov 13 14:20 ac000008.dat
+     4 -rw-r--r-- 1 jkf jkf         5 Nov 13 09:41 acache-params.cl
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 14:20 admin.bt
+116984 -rw-r--r-- 1 jkf jkf 119668736 Nov 13 14:20 class12.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 14:20 class1.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 index10.bt
+ 46468 -rw-r--r-- 1 jkf jkf  47529984 Nov 13 09:47 index11.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 14:20 itab.bt
+</pre>
+<p>
+What we see is that the log files (the files <b>acNNNNNN.dat</b>) are
+now smaller.  We see additional files ending in ''.b00001'.   These
+are the original log files. Our policy is to never remove or
+modify the older log files.  However you can delete these files
+if wish to recover the space.  AC will never reference them.
+<p>
+<p>
+Now suppose we run for a while longer and do the compression
+operation again.
+<p>
+<pre>cl-user(8): <b>(compress-log-files)</b>
+Number of full Commits: 180
+Commit in progress at the end: 185
+Processing log file /paw/cl8/src/acache/test/ac000000.dat
+15001 changes in log file
+Processing log file /paw/cl8/src/acache/test/ac000001.dat
+No changes to log file
+Processing log file /paw/cl8/src/acache/test/ac000002.dat
+No changes to log file
+Processing log file /paw/cl8/src/acache/test/ac000003.dat
+No changes to log file
+Processing log file /paw/cl8/src/acache/test/ac000004.dat
+No changes to log file
+Processing log file /paw/cl8/src/acache/test/ac000005.dat
+No changes to log file
+Processing log file /paw/cl8/src/acache/test/ac000006.dat
+No changes to log file
+Processing log file /paw/cl8/src/acache/test/ac000007.dat
+No changes to log file
+nil
+cl-user(9):
+</pre>
+<p>
+We can see that the changes this time happened to be all
+in the first log file.
+<p>
+The contents of the database directory is now:
+<p>
+<pre>  2944 -rw-r--r-- 1 jkf jkf   3007422 Nov 13 14:28 ac000000.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242890 Nov 13 09:42 ac000000.dat.b00001
+  3188 -rw-r--r-- 1 jkf jkf   3257198 Nov 13 14:20 ac000000.dat.b00002
+  3124 -rw-r--r-- 1 jkf jkf   3191339 Nov 13 14:20 ac000001.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242889 Nov 13 09:42 ac000001.dat.b00001
+  3192 -rw-r--r-- 1 jkf jkf   3262898 Nov 13 14:21 ac000002.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242898 Nov 13 09:43 ac000002.dat.b00001
+  3192 -rw-r--r-- 1 jkf jkf   3262498 Nov 13 14:21 ac000003.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000003.dat.b00001
+  3120 -rw-r--r-- 1 jkf jkf   3190570 Nov 13 14:21 ac000004.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242894 Nov 13 09:44 ac000004.dat.b00001
+  3176 -rw-r--r-- 1 jkf jkf   3245607 Nov 13 14:21 ac000005.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242887 Nov 13 09:45 ac000005.dat.b00001
+  3192 -rw-r--r-- 1 jkf jkf   3262881 Nov 13 14:21 ac000006.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242881 Nov 13 09:46 ac000006.dat.b00001
+  3140 -rw-r--r-- 1 jkf jkf   3208362 Nov 13 14:21 ac000007.dat
+  5136 -rw-r--r-- 1 jkf jkf   5242884 Nov 13 09:46 ac000007.dat.b00001
+  5072 -rw-r--r-- 1 jkf jkf   5181078 Nov 13 14:28 ac000008.dat
+     4 -rw-r--r-- 1 jkf jkf         5 Nov 13 09:41 acache-params.cl
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 14:28 admin.bt
+117892 -rw-r--r-- 1 jkf jkf 120602624 Nov 13 14:28 class12.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 14:28 class1.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 09:41 index10.bt
+ 46468 -rw-r--r-- 1 jkf jkf  47529984 Nov 13 14:28 index11.bt
+     8 -rw-r--r-- 1 jkf jkf      8192 Nov 13 14:20 itab.bt
+</pre>
+<p>
+<p>
+Now we can see that we've just added one file <b>ac000000.dat.b00002</b> which
+is the log file <b>ac000000.dat</b> just before the second
+call to <b>compress-log-files</b> started.  Again this file can be deleted.
+<p>
+<p>
+<p>
+<span id="2718"></span><h2>Backups</h2>
+To backup an AC database you must, at minimum, save the log files
+(the files named <b>acNNNNNN.dat</b>).  If you wish to save the whole
+directory then you should ensure that no database operations
+are being done while you're saving the b-tree files or the resulting
+file on the backup tape could be garbage.
+<p>
+Doing an incremental dump of the log files can save a lot
+of backup tape as the old log files are never changed.
+<p>
+</body></html>

@@ -1,0 +1,74 @@
+package floods;
+
+import cartago.*;
+
+public class VehicleUsv extends Artifact {
+	public static final int ACTION_TIME = 100;
+	
+	void init(String area, String store) {
+		defineObsProperty("at",area);
+		defineObsProperty("storage",store);
+	}
+	
+	@OPERATION void navigate(String from, String to, String areas) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		if (cond1.stringValue().equals(from) && areas.contains(to)) {
+			Thread.sleep(100);
+			getObsProperty("at").updateValue(to);
+		} else {
+		failed("Action navigate has failed.");
+    }
+	}
+	
+	@OPERATION void take_picture(String area, String disaster, String areas) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		if (cond1.stringValue().equals(area) && areas.contains(area)) {
+			Thread.sleep(100);
+			defineObsProperty("have_picture", disaster);
+		} else {
+			failed("Action take_picture has failed.");
+	    }
+	}
+	
+	@OPERATION void communicate_data(String at, String to, String cdmAt, String disaster, String areas) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		ObsProperty cond2 = getObsPropertyByTemplate("have_picture", disaster);
+		if (cond1.stringValue().equals(at) && cond2.stringValue().equals(disaster) && to.equals(cdmAt) && areas.contains(to)) {
+			Thread.sleep(100);
+			defineObsProperty("communicated_data", disaster);
+			removeObsPropertyByTemplate("have_picture", disaster);
+		} else {
+			failed("Action communicate_data has failed.");
+	    }
+	}	
+	
+	@OPERATION void sample_water(String area) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		ObsProperty cond2 = getObsProperty("storage");
+		if ( (cond1.stringValue().equals(area)) && (cond2.stringValue().equals("empty")) )
+		{
+			Thread.sleep(100);
+			getObsProperty("storage").updateValue("full");
+			defineObsProperty("have_water_sample", area);
+		} else {
+			failed("Action sample_water has failed.");
+	    }
+	}
+	
+	@OPERATION void drop_sample(String areaTo, String areaFrom, String cdmAt) throws InterruptedException {
+		ObsProperty cond1 = getObsProperty("at");
+		ObsProperty cond2 = getObsProperty("storage");
+		ObsProperty cond3 = getObsPropertyByTemplate("have_water_sample", areaFrom);
+		if (cond1.stringValue().equals(areaTo) && cond2.stringValue().equals("full") && cond3.stringValue().equals(areaFrom) && areaTo.equals(cdmAt))
+		{
+			Thread.sleep(100);
+			getObsProperty("storage").updateValue("empty");
+			removeObsPropertyByTemplate("have_water_sample", areaFrom);
+			defineObsProperty("delivered_water_sample", areaFrom);
+		} else {
+			failed("Action drop_sample has failed.");
+	    }
+	}
+	
+}
+

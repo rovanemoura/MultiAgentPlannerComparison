@@ -1,0 +1,137 @@
+<html>
+
+<head>
+<title>Allegro CL FAQ: 4.3: CLIM</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+</head>
+
+<body>
+
+<h3>4.3: CLIM</h3>
+
+<p><a href="#431">Q 4.3-1) How do I provide scrollable popup menus in Allegro CLIM 2.x?</a><br>
+<a href="#432">Q 4.3-2) Why do I need an XNLSPATH environment variable?</a><br>
+<a href="#433">Q 4.3-3) What should I do to avoid getting palette-full error messages?</a>
+<br>
+<a href="#434">Q 4.3-4) CLIM does not work on RedHat 9 with OpenMotif 2.2.2. Why not?</a></p>
+
+<p><a href="index.htm">Go to main FAQ page.</a></p>
+
+<hr>
+
+<p><a name="431"></a><strong>Q 4.3-1)</strong> How do I provide scrollable popup menus in
+Allegro CLIM 2.x?</p>
+
+<p><strong>A 4.3-1)</strong> Motif doesn't support scrollable popup menus. CLIM 2.2
+supports :scroll-bars t but by using an old CLIM 1 presentation style menu rather than a
+native Motif widget based menu. </p>
+
+<p>However, a better solution may be to use a a popup dialog with a scrollable list-pane.
+This can be done with the following code. In a real application you might want to avoid
+recreating a new application frame for each popup. However, this code is presented here to
+be as simple as possible.</p>
+
+<pre>(in-package :clim-user)</pre>
+
+<pre>(define-application-frame selection-frame ()
+&nbsp; ((items :initarg :items)
+&nbsp;&nbsp; (select-callback :initarg :select-callback))
+&nbsp; (:panes
+&nbsp;&nbsp; (menu
+&nbsp;&nbsp;&nbsp; (with-slots (items select-callback) *application-frame*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (make-pane 'list-pane
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :items items
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :visible-items (min 10 (length items))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :value-changed-callback select-callback))))
+&nbsp; (:layouts
+&nbsp;&nbsp; (default
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (scrolling (:scroll-bars :dynamic)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; menu)))
+&nbsp; (:menu-bar nil))</pre>
+
+<pre>(defun popup-selection-frame (items)
+&nbsp; (flet ((select-callback (gadget value)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (declare (ignore gadget))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (return-from popup-selection-frame value)))
+&nbsp;&nbsp;&nbsp; (run-frame-top-level
+&nbsp;&nbsp;&nbsp;&nbsp; (make-application-frame 'selection-frame
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :items items
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :select-callback #'select-callback))))</pre>
+
+<hr>
+
+<p><a name="432"></a><strong>Q 4.3-2)</strong> Why do I need an XNLSPATH environment
+variable?</p>
+
+<p><strong>A 4.3-2)</strong> In order for CLIM to work, it must be able to find the xnls
+directory and it tries to do so via the XNLSPATH environment variable. See 3 paragraphs
+below for the standard location.</p>
+
+<p>You need to supply an nls directory for Motif to work properly. </p>
+
+<p>The error mode is unfortunate since the toolkit calls exit() directly rather than
+signaling an Xlib error. In post-CLIM2.0 versions CLIM will test for the Locale Database
+directly and will give a Lisp (hence recoverable) error message prior to startup.</p>
+
+<p>If you have a standard X11R5 distribution you should find the nls directory in
+/usr/lib/X11 and you should set XNLSPATH to point to it. If you don't have a standard
+X11R5 distribution we can mail you a tar file of the directory which you should install
+and set XNLSPATH to point to. You can distribute the directory freely as it's part of the
+standard X11R5 distribution. Let us know if you would like us to send you this tar file.</p>
+
+<hr>
+
+<p><a name="433"></a><strong>Q 4.3-3)</strong> What should I do to avoid getting
+palette-full error messages?</p>
+
+<p><strong>A 4.3-3)</strong> CLIM's palettes are associated with X colormaps. The size of
+X colormaps is small, often 256 colors. To make matters worse, the default colormap is
+shared by all applications on your desktop. Applications such as Netscape may use up most
+of the colormap and leave CLIM with little to work with.</p>
+
+<p>If you encounter problems, you should consider allocating your own private colormap for
+CLIM. CLIM allows you to create a new palette associated with a new colormap so that your
+application gets exclusive use of that colormap. The downside of this is that because
+typical display servers only have one hardware colormap, all windows of other applications
+will appear in &quot;technicolor&quot; while your CLIM app has the focus.</p>
+
+<p>Here is how you change CLIM's default color palette.</p>
+
+<pre>(setq port (clim:find-port))
+(setq framem (clim:find-frame-manager :port port))
+(setq palette (clim:make-palette port))
+(setf (clim:frame-manager-palette framem) palette)
+(setf (slot-value port 'silica::default-palette) palette)</pre>
+
+<p>Nevertheless, if the palette becomes full, CLIM normally does not signal an error but
+instead uses the &quot;nearest&quot; color that already exists in the colormap. It may not
+look quite right, but execution will continue.</p>
+
+<p>This is not true for &quot;dynamic&quot; colors. Dynamic colors have special properties
+and should only be used when those special properties are required. You can change the rgb
+values of a dynamic color and cause all renderings of that color to change dynamically
+without redrawing. Attempting to allocate a dynamic color when the palette is full will
+signal an error because the &quot;nearest&quot; color will not be a dynamic color.</p>
+
+<hr>
+
+<p><a name="434"></a><strong>Q 4.3-4)</strong> CLIM does not work on RedHat 9 with
+OpenMotif 2.2.2. Why not?</p>
+
+<p><strong>A 4.3-4)</strong> You need to install runtime support for it. Install the
+package (on the RedHat 9 CD's) <strong>openmotif21-2.1.3--8.i386.rpm</strong>.</p>
+
+<hr>
+
+<p><strong>Next FAQ topic</strong>: <a href="faq4-4.htm">4.4. Common Graphics and the
+Integrated Development Environment</a></p>
+
+<p><strong>Previous FAQ topic</strong>: <a href="faq4-2.htm">4.2. Lisp-Editor Protocol
+(LEP)</a></p>
+
+<hr>
+
+<p><small>© Copyright 1999, 2002, 2004, Franz Inc., Berkeley, CA.&nbsp; All rights reserved.</small><br>
+<small>$Revision: 1.1.1.1 $</small></p>
+</body>
+</html>

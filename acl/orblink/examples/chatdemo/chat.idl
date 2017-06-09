@@ -1,0 +1,10 @@
+module chat{
+  interface ChatListenerI{
+    void messageReceived (in string message);
+  };
+
+  interface ChatServerI{
+    void addListener (in ChatListenerI listener);
+    void sendMessage(in string message);
+  };
+};

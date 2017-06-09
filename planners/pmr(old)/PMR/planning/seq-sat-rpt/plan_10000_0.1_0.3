@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Paths to planner components
+
+BASEDIR="$(dirname "$0")"
+
+TRANSLATE="./$BASEDIR/translate/translate.py"
+PREPROCESS="./$BASEDIR/preprocess/preprocess"
+SEARCH="./$BASEDIR/search/downward"
+
+run_planner() {
+    python2.7 "$TRANSLATE" "$1" "$2"
+    "$PREPROCESS" < output.sas
+
+    tr '[:upper:]' '[:lower:]' < $4 > output.txt
+
+    "$SEARCH" --heuristic "hff=ff(cost_type=1)" \
+        --search "rpt([lazy_greedy(hff,preferred=hff,cost_type=1)],nodes=10000,p=0.01,r=0.3,planr="output.txt")" \
+        --plan-file $3 < output > $5
+# | grep "Plan length: \\|Plan cost: \\|Generated [0-9]* state\\|Total time:\\|^(" | sed -e "s/step(s).//" | sed -e "s/state(s).//" | sed -e "s/Plan length: / /" | sed -e "s/Plan cost: / /" | sed -e "s/Generated //" | sed -e "s/state(s)./ /" | sed -e "s/Total time: //" | sed -e "s/s//" 
+
+#lo que sale en $5 es plan length plan cost y total time
+}
+
+run_planner "$1" "$2" "$3" "$4" "$5"

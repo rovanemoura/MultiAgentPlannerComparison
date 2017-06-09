@@ -1,0 +1,35 @@
+typedef sequence<long> longseq;
+
+module anytest
+{
+  enum enumexample{
+    hello, goodbye,farewell};
+
+  union unionexample
+    switch(short) {
+    case 1 : string stringmember;
+    case 2 : long longmember;
+    case 3 : enumexample enummember;
+    case 4: case 5: boolean booleanmember;
+    default: float floatmember;
+    };
+
+
+  struct recursivestruct {
+    sequence<recursivestruct> recursivemember;};
+
+  struct r1struct{
+    long key;
+    sequence<r1struct> r1s;};
+
+  struct structexample{
+    long foo;
+  };
+
+  interface test{
+    any testany(in any value);
+  };
+  
+};
+
+    

@@ -1,0 +1,60 @@
+;; -*- lisp-version: "6.0.pre-final.9 [Windows] (Oct 18, 2000 13:49)"; common-graphics: "1.389.2.34"; form: doodler; -*-
+;;;
+;;; Define :doodler
+ 
+(in-package :common-graphics-user)
+
+;; The finder-function, which returns the window if it already
+;; exists, and otherwise creates and returns it.
+;; Call this function if you need only one copy of this window,
+;; and that window is a non-owned top-level window.
+(defun doodler ()
+  (find-or-make-application-window :doodler 'make-doodler))
+ 
+;; The maker-function, which always creates a new window.
+;; Call this function if you need more than one copy,
+;; or the single copy should have a parent or owner window.
+;; (Pass :owner to this function; :parent is for compatibility.)
+(defun make-doodler
+    (&key parent (owner (or parent (screen *system*)))
+     (exterior (make-box 160 149 576 375)) (name :doodler)
+     (title "Doodler") (border :frame) (child-p nil) form-p)
+  (let ((owner
+         (make-window name :owner owner
+           :class 'doodler
+           :exterior exterior
+           :border border
+           :child-p child-p
+           :close-button t
+           :cursor-name :arrow-cursor
+           :font (make-font-ex :swiss "MS Sans Serif / ANSI" 11 nil)
+           :form-state :normal
+           :maximize-button t
+           :minimize-button t
+           :name :doodler
+           :package-name :common-graphics-user
+           :pop-up nil
+           :resizable t
+           :scrollbars t
+           :state :normal
+           :status-bar nil
+           :system-menu t
+           :title title
+           :title-bar t
+           :toolbar nil
+           :form-p form-p
+           :help-string nil
+           :package-name :common-graphics-user)))
+    owner))
+
+(defun make-doodler-widgets () nil)
+
+(defparameter doodler-widgets (make-doodler-widgets))
+
+(defun doodler-widgets ()
+  (let (window)
+    (if* (dolist (dialog-item doodler-widgets)
+           (and (setq window (window dialog-item)) (windowp window)
+                (return t)))
+       then (make-doodler-widgets)
+       else doodler-widgets)))

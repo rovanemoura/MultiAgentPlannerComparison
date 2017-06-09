@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Glossary</title>
+  </head>
+  <body>
+    <h1>Glossary</h1>
+<hr>
+<p>
+    CORBA has a lingo all its own. Here are some of the commonly used terms we mention in this document.
+    These definitions are not complete and contain inaccuracies for the sake of simplicity.
+    For more detailed information, see a text on CORBA.
+    <dl>
+      <p><dt> Attribute
+      <dd> Technically an attribute is a shorthand for two operations, a setter and a getter, unless it is readonly, in which case it is shorthand only for the getter. 
+      <p><dt> Client
+      <dd> A process that makes requests on a CORBA object. 
+      <p><dt>exception
+      <dd>IDL data type similar to exceptions in C++ or Java and conditions in Lisp.
+      <p><dt>Forwarding
+      <dd>Instead of responding to a request a CORBA object may designate another object to which this request, and all future requests, are to be forwarded.
+	<p><dt>Pseudo-interface
+      <dd>A pseudo-interface is specified in IDL but does not obey all the mapping rules. Typically a pseudo-objects (instance of pseudo-interfaces) must be local to the process. Thus, a pseudo-interface has no corresponding stubs or servant classes generated.
+      <p><dt>IDL
+      <dd>Interface Definition Language. Simple language for specifying data types that can be exchanged by CORBA compliant programs. IDL files
+	by default have the extension  .idl.
+      <p><dt>IDL Compilation
+      <dd> Conversion of an IDL file into a set of Lisp definitions. Normally refers by default to the loading of these definitions into the current Lisp world.
+      <p><dt>IIOP
+      <dd>Internet Interoperability Object Protocol. The TCP/IP protocol by which IDL data types are exchanged.
+	
+      <p><dt> Implementation
+      <dd>In Lisp, a Lisp class that can respond meaningfully to the methods corresponding to the operations defined in the interface.
+      <p><dt> Interface
+      <dd> An interface is an IDL construct that denotes a set of operation signatures to which an object that implements that interface must respond.
+	Similar to abstract class.
+      <p><dt>Interface Repository
+      <dd>CORBA Object that holds type definitions.
+      <p><dt>IOR
+      <dd>IOR stands for Interoperable Object Reference. It is a data structure associated with a CORBA object that contains 
+	enough information to locate that object from anywhere on the network. IOR is often used informally to mean <em>stringified IOR</em>.
+      <p><dt>Mapping
+      <dd> The correspondence between IDL and the native data types in some language.
+      <p><dt>Marshalling
+      <dd>Conversion of a CORBA value into a stream of bytes, typically to be sent over TCP/IP.
+      <p><dt>Message
+      <dd>IIOP communicates via IIOP messages. The most usual are Request and Reply.
+      <p><dt>module
+      <dd>top-level scoping construct in IDL, corresponds to packages in Lisp. Modules may be nested.
+      <p><dt>Naming
+      <dd>The assocation of a human readable or logical name with an IOR.
+      <p><dt> Object
+      <dd> A reference to an implementation of an interface
+      <p><dt>OMG
+      <dd>Object Management Group. Consortium of industry, government and academic entities responsible for standardization of CORBA.
+      <p><dt> Operation
+      <dd> The IDL notion of a method is called an operation.
+	<p><dt>ORB
+      <dd> Object Request Broker. Program component that handles communication from a process to other processes using IIOP or other CORBA protocols. An ORB is usually used to refer to the complex of library functionality that supports CORBA for a language, such as debugging tools and IDL compilation.
+      <p><dt>ORBLink
+      <dd>ORB for Allegro Common Lisp
+	<p><dt>Persistent IOR
+      <dd>An IOR which is valid beyond the lifetime of any particular server process (i.e, Lisp World)
+      <p><dt>Proxy
+      <dd>A placeholder for a remote object implementation. When requests are received by the proxy they are forwarded to the remote object that it reprepresents via IIOP.
+      <p><dt>Servant
+      <dd> In Lisp, the instance of a class that implements an interface.
+      <p><dt>Skeleton
+      <dd> Same as Servant
+      <p><dt>Server
+      <dd> Process that maintains one or more servant objects that are invoked by a client. Sometimes the servant object itself is called a server.
+      <p><dt>Socket
+      <dd> Low-level programming interface to TCP/IP. Sockets are abstracted away by the junction interface in ORBLink.
+      <p><dt> Stringified IOR
+      <dd> A standardized string representation of an IOR. Any stringified IOR may be interpreted by any CORBA ORB in any language, on any machine.
+      <p><dt> TCP/IP
+      <dd>Low-level protocol used to communicate between machines; normally supported directly by the operating system.
+      <p><dt>Smart proxy
+      <dd> A proxy that only forwards some requests over IIOP and computes others using local information.
+      <p><dt>struct
+      <dd> IDL data type similar to C struct
+      <p><dt>thread
+      <dd>Lightweight autonomous concurrent execution context. In Lisp these are called "processes" which is distinct from the Unix meaning of the term.
+      <p><dt> union
+      <dd> IDL data type similar to C union
+      <p><dt>Unmarshalling
+      <dd>Conversion of a stream of bytes into the CORBA value that it represents.
+    </dl>
+  </body>
+</html>

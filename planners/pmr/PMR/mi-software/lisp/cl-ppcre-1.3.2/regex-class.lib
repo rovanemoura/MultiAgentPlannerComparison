@@ -1,0 +1,1153 @@
+#0Y_ #0Y |CHARSET|::|UTF-8|
+(|COMMON-LISP|::|SETQ| |COMMON-LISP|::|*PACKAGE*|
+ (|SYSTEM|::|%FIND-PACKAGE| "CL-PPCRE"))
+(|COMMON-LISP|::|LOCALLY|
+ (|COMMON-LISP|::|DECLARE|
+  (|COMMON-LISP|::|OPTIMIZE| |COMMON-LISP|::|SPEED|
+   (|COMMON-LISP|::|SAFETY| 0.) (|COMMON-LISP|::|SPACE| 0.)
+   (|COMMON-LISP|::|DEBUG| 1.) (|COMMON-LISP|::|COMPILATION-SPEED| 0.)))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|REGEX| |COMMON-LISP|::|NIL|
+  |COMMON-LISP|::|NIL|
+  (:|DOCUMENTATION|
+   "The REGEX base class. All other classes inherit\n
+from this one."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|SEQ| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|ELEMENTS| :|INITARG| :|ELEMENTS| :|ACCESSOR|
+    |CL-PPCRE|::|ELEMENTS| :|TYPE| |COMMON-LISP|::|CONS| :|DOCUMENTATION|
+    "A list of REGEX objects."))
+  (:|DOCUMENTATION|
+   "SEQ objects represents sequences of\n
+regexes. (Like \"ab\" is the sequence of \"a\" and \"b\".)"))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|ALTERNATION| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|CHOICES| :|INITARG| :|CHOICES| :|ACCESSOR|
+    |CL-PPCRE|::|CHOICES| :|TYPE| |COMMON-LISP|::|CONS| :|DOCUMENTATION|
+    "A list of REGEX objects"))
+  (:|DOCUMENTATION|
+   "ALTERNATION objects represent alternations of\n
+regexes. (Like \"a|b\" ist the alternation of \"a\" or \"b\".)"))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|LOOKAHEAD| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|REGEX| :|INITARG| :|REGEX| :|ACCESSOR| |CL-PPCRE|::|REGEX|
+    :|DOCUMENTATION| "The REGEX object we're checking.")
+   (|CL-PPCRE|::|POSITIVEP| :|INITARG| :|POSITIVEP| :|READER|
+    |CL-PPCRE|::|POSITIVEP| :|DOCUMENTATION|
+    "Whether this assertion is positive."))
+  (:|DOCUMENTATION| "LOOKAHEAD objects represent look-ahead assertions."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|LOOKBEHIND| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|REGEX| :|INITARG| :|REGEX| :|ACCESSOR| |CL-PPCRE|::|REGEX|
+    :|DOCUMENTATION| "The REGEX object we're checking.")
+   (|CL-PPCRE|::|POSITIVEP| :|INITARG| :|POSITIVEP| :|READER|
+    |CL-PPCRE|::|POSITIVEP| :|DOCUMENTATION|
+    "Whether this assertion is positive.")
+   (|CL-PPCRE|::|LEN| :|INITARG| :|LEN| :|ACCESSOR| |CL-PPCRE|::|LEN| :|TYPE|
+    |COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    "The (fixed) length of the enclosed regex."))
+  (:|DOCUMENTATION| "LOOKBEHIND objects represent look-behind assertions."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|REPETITION| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|REGEX| :|INITARG| :|REGEX| :|ACCESSOR| |CL-PPCRE|::|REGEX|
+    :|DOCUMENTATION| "The REGEX that's repeated.")
+   (|CL-PPCRE|::|GREEDYP| :|INITARG| :|GREEDYP| :|READER| |CL-PPCRE|::|GREEDYP|
+    :|DOCUMENTATION| "Whether the repetition is greedy.")
+   (|CL-PPCRE|::|MINIMUM| :|INITARG| :|MINIMUM| :|ACCESSOR|
+    |CL-PPCRE|::|MINIMUM| :|TYPE| |COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    "The minimal number of repetitions.")
+   (|CL-PPCRE|::|MAXIMUM| :|INITARG| :|MAXIMUM| :|ACCESSOR|
+    |CL-PPCRE|::|MAXIMUM| :|DOCUMENTATION|
+    "The maximal number of repetitions.\n
+Can be NIL for unbounded.")
+   (|CL-PPCRE|::|MIN-LEN| :|INITARG| :|MIN-LEN| :|READER| |CL-PPCRE|::|MIN-LEN|
+    :|DOCUMENTATION| "The minimal length of the enclosed regex.")
+   (|CL-PPCRE|::|LEN| :|INITARG| :|LEN| :|READER| |CL-PPCRE|::|LEN|
+    :|DOCUMENTATION|
+    "The length of the enclosed regex. NIL\n
+if unknown.")
+   (|CL-PPCRE|::|MIN-REST| :|INITFORM| 0. :|ACCESSOR| |CL-PPCRE|::|MIN-REST|
+    :|TYPE| |COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    "The minimal number of characters which must\n
+appear after this repetition.")
+   (|CL-PPCRE|::|CONTAINS-REGISTER-P| :|INITARG| :|CONTAINS-REGISTER-P|
+    :|READER| |CL-PPCRE|::|CONTAINS-REGISTER-P| :|DOCUMENTATION|
+    "If the regex contains a register."))
+  (:|DOCUMENTATION| "REPETITION objects represent repetitions of regexes."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|REGISTER| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|REGEX| :|INITARG| :|REGEX| :|ACCESSOR| |CL-PPCRE|::|REGEX|
+    :|DOCUMENTATION| "The inner regex.")
+   (|CL-PPCRE|::|NUM| :|INITARG| :|NUM| :|READER| |CL-PPCRE|::|NUM| :|TYPE|
+    |COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    "The number of this register, starting from 0.\n
+This is the index into *REGS-START* and *REGS-END*.")
+   (|CL-PPCRE|::|NAME| :|INITARG| :|NAME| :|READER| |CL-PPCRE|::|NAME|
+    :|DOCUMENTATION| "Name of this register or NIL."))
+  (:|DOCUMENTATION| "REGISTER objects represent register groups."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|STANDALONE| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|REGEX| :|INITARG| :|REGEX| :|ACCESSOR| |CL-PPCRE|::|REGEX|
+    :|DOCUMENTATION| "The inner regex."))
+  (:|DOCUMENTATION| "A standalone regular expression."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|BACK-REFERENCE| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|NUM| :|INITARG| :|NUM| :|ACCESSOR| |CL-PPCRE|::|NUM| :|TYPE|
+    |COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    "The number of the register this\n
+reference refers to.")
+   (|CL-PPCRE|::|NAME| :|INITARG| :|NAME| :|ACCESSOR| |CL-PPCRE|::|NAME|
+    :|DOCUMENTATION|
+    "The name of the register this\n
+reference refers to or NIL.")
+   (|CL-PPCRE|::|CASE-INSENSITIVE-P| :|INITARG| :|CASE-INSENSITIVE-P| :|READER|
+    |CL-PPCRE|::|CASE-INSENSITIVE-P| :|DOCUMENTATION|
+    "Whether we check\n
+case-insensitively."))
+  (:|DOCUMENTATION| "BACK-REFERENCE objects represent backreferences."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|CHAR-CLASS| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|HASH| :|INITARG| :|HASH| :|READER| |CL-PPCRE|::|HASH| :|TYPE|
+    (|COMMON-LISP|::|OR| |COMMON-LISP|::|HASH-TABLE| |COMMON-LISP|::|NULL|)
+    :|DOCUMENTATION|
+    "A hash table the keys of which are the\n
+characters; the values are always T.")
+   (|CL-PPCRE|::|CASE-INSENSITIVE-P| :|INITARG| :|CASE-INSENSITIVE-P| :|READER|
+    |CL-PPCRE|::|CASE-INSENSITIVE-P| :|DOCUMENTATION|
+    "If the char class\n
+case-insensitive.")
+   (|CL-PPCRE|::|INVERTEDP| :|INITARG| :|INVERTEDP| :|READER|
+    |CL-PPCRE|::|INVERTEDP| :|DOCUMENTATION|
+    "Whether we mean the inverse of\n
+the char class.")
+   (|CL-PPCRE|::|WORD-CHAR-CLASS-P| :|INITARG| :|WORD-CHAR-CLASS-P| :|READER|
+    |CL-PPCRE|::|WORD-CHAR-CLASS-P| :|DOCUMENTATION|
+    "Whether this CHAR CLASS\n
+represents the special class WORD-CHAR-CLASS."))
+  (:|DOCUMENTATION| "CHAR-CLASS objects represent character classes."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|STR| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|STR| :|INITARG| :|STR| :|ACCESSOR| |CL-PPCRE|::|STR| :|TYPE|
+    |COMMON-LISP|::|STRING| :|DOCUMENTATION| "The actual string.")
+   (|CL-PPCRE|::|LEN| :|INITFORM| 0. :|ACCESSOR| |CL-PPCRE|::|LEN| :|TYPE|
+    |COMMON-LISP|::|FIXNUM| :|DOCUMENTATION| "The length of the string.")
+   (|CL-PPCRE|::|CASE-INSENSITIVE-P| :|INITARG| :|CASE-INSENSITIVE-P| :|READER|
+    |CL-PPCRE|::|CASE-INSENSITIVE-P| :|DOCUMENTATION|
+    "If we match case-insensitively.")
+   (|CL-PPCRE|::|OFFSET| :|INITFORM| |COMMON-LISP|::|NIL| :|ACCESSOR|
+    |CL-PPCRE|::|OFFSET| :|DOCUMENTATION|
+    "Offset from the left of the whole\n
+parse tree. The first regex has offset 0. NIL if unknown, i.e. behind\n
+a variable-length regex.")
+   (|CL-PPCRE|::|SKIP| :|INITFORM| |COMMON-LISP|::|NIL| :|INITARG| :|SKIP|
+    :|ACCESSOR| |CL-PPCRE|::|SKIP| :|DOCUMENTATION|
+    "If we can avoid testing for this\n
+string because the SCAN function has done this already.")
+   (|CL-PPCRE|::|START-OF-END-STRING-P| :|INITFORM| |COMMON-LISP|::|NIL|
+    :|ACCESSOR| |CL-PPCRE|::|START-OF-END-STRING-P| :|DOCUMENTATION|
+    "If this is the unique\n
+STR which starts END-STRING (a slot of MATCHER)."))
+  (:|DOCUMENTATION| "STR objects represent string."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|ANCHOR| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|STARTP| :|INITARG| :|STARTP| :|READER| |CL-PPCRE|::|STARTP|
+    :|DOCUMENTATION| "Whether this is a \"start anchor\".")
+   (|CL-PPCRE|::|MULTI-LINE-P| :|INITARG| :|MULTI-LINE-P| :|READER|
+    |CL-PPCRE|::|MULTI-LINE-P| :|DOCUMENTATION|
+    "Whether we're in multi-line mode,\n
+i.e. whether each #\\Newline is surrounded by anchors.")
+   (|CL-PPCRE|::|NO-NEWLINE-P| :|INITARG| :|NO-NEWLINE-P| :|READER|
+    |CL-PPCRE|::|NO-NEWLINE-P| :|DOCUMENTATION|
+    "Whether we ignore #\\Newline at the end."))
+  (:|DOCUMENTATION| "ANCHOR objects represent anchors like \"^\" or \"$\"."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|EVERYTHING| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|SINGLE-LINE-P| :|INITARG| :|SINGLE-LINE-P| :|READER|
+    |CL-PPCRE|::|SINGLE-LINE-P| :|DOCUMENTATION|
+    "Whether we're in single-line mode,\n
+i.e. whether we also match #\\Newline."))
+  (:|DOCUMENTATION|
+   "EVERYTHING objects represent regexes matching\n
+\"everything\", i.e. dots."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|WORD-BOUNDARY| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|NEGATEDP| :|INITARG| :|NEGATEDP| :|READER|
+    |CL-PPCRE|::|NEGATEDP| :|DOCUMENTATION|
+    "Whether we mean the opposite,\n
+i.e. no word-boundary."))
+  (:|DOCUMENTATION|
+   "WORD-BOUNDARY objects represent word-boundary assertions."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|BRANCH| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|TEST| :|INITARG| :|TEST| :|ACCESSOR| |CL-PPCRE|::|TEST|
+    :|DOCUMENTATION|
+    "The test of this branch, one of\n
+LOOKAHEAD, LOOKBEHIND, or a number.")
+   (|CL-PPCRE|::|THEN-REGEX| :|INITARG| :|THEN-REGEX| :|ACCESSOR|
+    |CL-PPCRE|::|THEN-REGEX| :|DOCUMENTATION|
+    "The regex that's to be matched if the\n
+test succeeds.")
+   (|CL-PPCRE|::|ELSE-REGEX| :|INITARG| :|ELSE-REGEX| :|INITFORM|
+    (|CLOS|::|MAKE-INSTANCE| '|CL-PPCRE|::|VOID|) :|ACCESSOR|
+    |CL-PPCRE|::|ELSE-REGEX| :|DOCUMENTATION|
+    "The regex that's to be matched if the\n
+test fails."))
+  (:|DOCUMENTATION|
+   "BRANCH objects represent Perl's conditional regular\n
+expressions."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|FILTER| (|CL-PPCRE|::|REGEX|)
+  ((|CL-PPCRE|::|FN| :|INITARG| :|FN| :|ACCESSOR| |CL-PPCRE|::|FN| :|TYPE|
+    (|COMMON-LISP|::|OR| |COMMON-LISP|::|FUNCTION| |COMMON-LISP|::|SYMBOL|)
+    :|DOCUMENTATION| "The user-defined function.")
+   (|CL-PPCRE|::|LEN| :|INITARG| :|LEN| :|READER| |CL-PPCRE|::|LEN|
+    :|DOCUMENTATION| "The fixed length of this filter or NIL."))
+  (:|DOCUMENTATION|
+   "FILTER objects represent arbitrary functions\n
+defined by the user."))
+ (|CLOS|::|DEFCLASS| |CL-PPCRE|::|VOID| (|CL-PPCRE|::|REGEX|)
+  |COMMON-LISP|::|NIL|
+  (:|DOCUMENTATION| "VOID objects represent empty regular expressions.")))
+(|COMMON-LISP|::|LET*| ((#1=#:|G25063| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|REGEX|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST|) :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|) :|METACLASS| #1# :|DOCUMENTATION|
+  '"The REGEX base class. All other classes inherit\n
+from this one."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|COMMON-LISP|::|LET*| ((#1=#:|G25066| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|SEQ|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|ELEMENTS| :|READERS|
+    '(|CL-PPCRE|::|ELEMENTS|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|ELEMENTS|)) :|INITARGS|
+    '(:|ELEMENTS|) :|TYPE| '|COMMON-LISP|::|CONS| :|DOCUMENTATION|
+    '"A list of REGEX objects."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"SEQ objects represents sequences of\n
+regexes. (Like \"ab\" is the sequence of \"a\" and \"b\".)"
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|ELEMENTS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|ELEMENTS|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25076| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|ALTERNATION|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|CHOICES| :|READERS|
+    '(|CL-PPCRE|::|CHOICES|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|CHOICES|)) :|INITARGS| '(:|CHOICES|)
+    :|TYPE| '|COMMON-LISP|::|CONS| :|DOCUMENTATION|
+    '"A list of REGEX objects"))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"ALTERNATION objects represent alternations of\n
+regexes. (Like \"a|b\" ist the alternation of \"a\" or \"b\".)"
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CHOICES|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|CHOICES|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25086| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|LOOKAHEAD|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|REGEX| :|READERS|
+    '(|CL-PPCRE|::|REGEX|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)) :|INITARGS| '(:|REGEX|)
+    :|DOCUMENTATION| '"The REGEX object we're checking.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|POSITIVEP| :|READERS|
+    '(|CL-PPCRE|::|POSITIVEP|) :|INITARGS| '(:|POSITIVEP|) :|DOCUMENTATION|
+    '"Whether this assertion is positive."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"LOOKAHEAD objects represent look-ahead assertions."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|POSITIVEP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25099| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|LOOKBEHIND|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|REGEX| :|READERS|
+    '(|CL-PPCRE|::|REGEX|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)) :|INITARGS| '(:|REGEX|)
+    :|DOCUMENTATION| '"The REGEX object we're checking.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|POSITIVEP| :|READERS|
+    '(|CL-PPCRE|::|POSITIVEP|) :|INITARGS| '(:|POSITIVEP|) :|DOCUMENTATION|
+    '"Whether this assertion is positive.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|LEN| :|READERS|
+    '(|CL-PPCRE|::|LEN|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|LEN|)) :|INITARGS| '(:|LEN|) :|TYPE|
+    '|COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    '"The (fixed) length of the enclosed regex."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"LOOKBEHIND objects represent look-behind assertions."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|POSITIVEP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|LEN|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|LEN|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25119| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|REPETITION|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|REGEX| :|READERS|
+    '(|CL-PPCRE|::|REGEX|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)) :|INITARGS| '(:|REGEX|)
+    :|DOCUMENTATION| '"The REGEX that's repeated.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|GREEDYP| :|READERS|
+    '(|CL-PPCRE|::|GREEDYP|) :|INITARGS| '(:|GREEDYP|) :|DOCUMENTATION|
+    '"Whether the repetition is greedy.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|MINIMUM| :|READERS|
+    '(|CL-PPCRE|::|MINIMUM|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|MINIMUM|)) :|INITARGS| '(:|MINIMUM|)
+    :|TYPE| '|COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    '"The minimal number of repetitions.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|MAXIMUM| :|READERS|
+    '(|CL-PPCRE|::|MAXIMUM|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|MAXIMUM|)) :|INITARGS| '(:|MAXIMUM|)
+    :|DOCUMENTATION|
+    '"The maximal number of repetitions.\n
+Can be NIL for unbounded.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|MIN-LEN| :|READERS|
+    '(|CL-PPCRE|::|MIN-LEN|) :|INITARGS| '(:|MIN-LEN|) :|DOCUMENTATION|
+    '"The minimal length of the enclosed regex.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|LEN| :|READERS|
+    '(|CL-PPCRE|::|LEN|) :|INITARGS| '(:|LEN|) :|DOCUMENTATION|
+    '"The length of the enclosed regex. NIL\n
+if unknown.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|MIN-REST| :|READERS|
+    '(|CL-PPCRE|::|MIN-REST|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|MIN-REST|)) :|INITFORM| '0.
+    :|INITFUNCTION| (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| 0.) :|TYPE|
+    '|COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    '"The minimal number of characters which must\n
+appear after this repetition.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|CONTAINS-REGISTER-P| :|READERS|
+    '(|CL-PPCRE|::|CONTAINS-REGISTER-P|) :|INITARGS| '(:|CONTAINS-REGISTER-P|)
+    :|DOCUMENTATION| '"If the regex contains a register."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"REPETITION objects represent repetitions of regexes."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|GREEDYP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MINIMUM|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|MINIMUM|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MAXIMUM|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|MAXIMUM|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MIN-LEN|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|LEN|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MIN-REST|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|MIN-REST|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CONTAINS-REGISTER-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25162| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|REGISTER|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|REGEX| :|READERS|
+    '(|CL-PPCRE|::|REGEX|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)) :|INITARGS| '(:|REGEX|)
+    :|DOCUMENTATION| '"The inner regex.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|NUM| :|READERS|
+    '(|CL-PPCRE|::|NUM|) :|INITARGS| '(:|NUM|) :|TYPE| '|COMMON-LISP|::|FIXNUM|
+    :|DOCUMENTATION|
+    '"The number of this register, starting from 0.\n
+This is the index into *REGS-START* and *REGS-END*.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|NAME| :|READERS|
+    '(|CL-PPCRE|::|NAME|) :|INITARGS| '(:|NAME|) :|DOCUMENTATION|
+    '"Name of this register or NIL."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"REGISTER objects represent register groups."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NUM|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NAME|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25178| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|STANDALONE|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|REGEX| :|READERS|
+    '(|CL-PPCRE|::|REGEX|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)) :|INITARGS| '(:|REGEX|)
+    :|DOCUMENTATION| '"The inner regex."))
+  :|METACLASS| #1# :|DOCUMENTATION| '"A standalone regular expression."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|REGEX|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25188| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|BACK-REFERENCE|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|NUM| :|READERS|
+    '(|CL-PPCRE|::|NUM|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|NUM|)) :|INITARGS| '(:|NUM|) :|TYPE|
+    '|COMMON-LISP|::|FIXNUM| :|DOCUMENTATION|
+    '"The number of the register this\n
+reference refers to.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|NAME| :|READERS|
+    '(|CL-PPCRE|::|NAME|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|NAME|)) :|INITARGS| '(:|NAME|)
+    :|DOCUMENTATION|
+    '"The name of the register this\n
+reference refers to or NIL.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|CASE-INSENSITIVE-P| :|READERS|
+    '(|CL-PPCRE|::|CASE-INSENSITIVE-P|) :|INITARGS| '(:|CASE-INSENSITIVE-P|)
+    :|DOCUMENTATION|
+    '"Whether we check\n
+case-insensitively."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"BACK-REFERENCE objects represent backreferences."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NUM|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|NUM|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NAME|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|NAME|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CASE-INSENSITIVE-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25208| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|CHAR-CLASS|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|HASH| :|READERS|
+    '(|CL-PPCRE|::|HASH|) :|INITARGS| '(:|HASH|) :|TYPE|
+    '(|COMMON-LISP|::|OR| |COMMON-LISP|::|HASH-TABLE| |COMMON-LISP|::|NULL|)
+    :|DOCUMENTATION|
+    '"A hash table the keys of which are the\n
+characters; the values are always T.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|CASE-INSENSITIVE-P| :|READERS|
+    '(|CL-PPCRE|::|CASE-INSENSITIVE-P|) :|INITARGS| '(:|CASE-INSENSITIVE-P|)
+    :|DOCUMENTATION|
+    '"If the char class\n
+case-insensitive.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|INVERTEDP| :|READERS|
+    '(|CL-PPCRE|::|INVERTEDP|) :|INITARGS| '(:|INVERTEDP|) :|DOCUMENTATION|
+    '"Whether we mean the inverse of\n
+the char class.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|WORD-CHAR-CLASS-P| :|READERS|
+    '(|CL-PPCRE|::|WORD-CHAR-CLASS-P|) :|INITARGS| '(:|WORD-CHAR-CLASS-P|)
+    :|DOCUMENTATION|
+    '"Whether this CHAR CLASS\n
+represents the special class WORD-CHAR-CLASS."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"CHAR-CLASS objects represent character classes."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|HASH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CASE-INSENSITIVE-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|INVERTEDP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|WORD-CHAR-CLASS-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25223| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|STR|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|STR| :|READERS|
+    '(|CL-PPCRE|::|STR|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|STR|)) :|INITARGS| '(:|STR|) :|TYPE|
+    '|COMMON-LISP|::|STRING| :|DOCUMENTATION| '"The actual string.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|LEN| :|READERS|
+    '(|CL-PPCRE|::|LEN|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|LEN|)) :|INITFORM| '0.
+    :|INITFUNCTION| (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| 0.) :|TYPE|
+    '|COMMON-LISP|::|FIXNUM| :|DOCUMENTATION| '"The length of the string.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|CASE-INSENSITIVE-P| :|READERS|
+    '(|CL-PPCRE|::|CASE-INSENSITIVE-P|) :|INITARGS| '(:|CASE-INSENSITIVE-P|)
+    :|DOCUMENTATION| '"If we match case-insensitively.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|OFFSET| :|READERS|
+    '(|CL-PPCRE|::|OFFSET|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|OFFSET|)) :|INITFORM|
+    '|COMMON-LISP|::|NIL| :|INITFUNCTION|
+    (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| |COMMON-LISP|::|NIL|)
+    :|DOCUMENTATION|
+    '"Offset from the left of the whole\n
+parse tree. The first regex has offset 0. NIL if unknown, i.e. behind\n
+a variable-length regex.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|SKIP| :|READERS|
+    '(|CL-PPCRE|::|SKIP|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|SKIP|)) :|INITARGS| '(:|SKIP|)
+    :|INITFORM| '|COMMON-LISP|::|NIL| :|INITFUNCTION|
+    (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| |COMMON-LISP|::|NIL|)
+    :|DOCUMENTATION|
+    '"If we can avoid testing for this\n
+string because the SCAN function has done this already.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|START-OF-END-STRING-P|
+    :|READERS| '(|CL-PPCRE|::|START-OF-END-STRING-P|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|START-OF-END-STRING-P|)) :|INITFORM|
+    '|COMMON-LISP|::|NIL| :|INITFUNCTION|
+    (|SYSTEM|::|MAKE-CONSTANT-INITFUNCTION| |COMMON-LISP|::|NIL|)
+    :|DOCUMENTATION|
+    '"If this is the unique\n
+STR which starts END-STRING (a slot of MATCHER)."))
+  :|METACLASS| #1# :|DOCUMENTATION| '"STR objects represent string."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|STR|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|STR|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|LEN|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|LEN|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CASE-INSENSITIVE-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|OFFSET|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|OFFSET|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SKIP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|SKIP|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|START-OF-END-STRING-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN|
+ '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|START-OF-END-STRING-P|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25264| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|ANCHOR|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|STARTP| :|READERS|
+    '(|CL-PPCRE|::|STARTP|) :|INITARGS| '(:|STARTP|) :|DOCUMENTATION|
+    '"Whether this is a \"start anchor\".")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|MULTI-LINE-P| :|READERS|
+    '(|CL-PPCRE|::|MULTI-LINE-P|) :|INITARGS| '(:|MULTI-LINE-P|)
+    :|DOCUMENTATION|
+    '"Whether we're in multi-line mode,\n
+i.e. whether each #\\Newline is surrounded by anchors.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|NO-NEWLINE-P| :|READERS|
+    '(|CL-PPCRE|::|NO-NEWLINE-P|) :|INITARGS| '(:|NO-NEWLINE-P|)
+    :|DOCUMENTATION| '"Whether we ignore #\\Newline at the end."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"ANCHOR objects represent anchors like \"^\" or \"$\"."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|STARTP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|MULTI-LINE-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NO-NEWLINE-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25276| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|EVERYTHING|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|SINGLE-LINE-P| :|READERS|
+    '(|CL-PPCRE|::|SINGLE-LINE-P|) :|INITARGS| '(:|SINGLE-LINE-P|)
+    :|DOCUMENTATION|
+    '"Whether we're in single-line mode,\n
+i.e. whether we also match #\\Newline."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"EVERYTHING objects represent regexes matching\n
+\"everything\", i.e. dots."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SINGLE-LINE-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25282| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|WORD-BOUNDARY|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|NEGATEDP| :|READERS|
+    '(|CL-PPCRE|::|NEGATEDP|) :|INITARGS| '(:|NEGATEDP|) :|DOCUMENTATION|
+    '"Whether we mean the opposite,\n
+i.e. no word-boundary."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"WORD-BOUNDARY objects represent word-boundary assertions."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|NEGATEDP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25288| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|BRANCH|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|TEST| :|READERS|
+    '(|CL-PPCRE|::|TEST|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|TEST|)) :|INITARGS| '(:|TEST|)
+    :|DOCUMENTATION|
+    '"The test of this branch, one of\n
+LOOKAHEAD, LOOKBEHIND, or a number.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|THEN-REGEX| :|READERS|
+    '(|CL-PPCRE|::|THEN-REGEX|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|THEN-REGEX|)) :|INITARGS|
+    '(:|THEN-REGEX|) :|DOCUMENTATION|
+    '"The regex that's to be matched if the\n
+test succeeds.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|ELSE-REGEX| :|READERS|
+    '(|CL-PPCRE|::|ELSE-REGEX|) :|WRITERS|
+    '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|ELSE-REGEX|)) :|INITARGS|
+    '(:|ELSE-REGEX|) :|INITFORM|
+    '#2=(|CLOS|::|MAKE-INSTANCE| '|CL-PPCRE|::|VOID|) :|INITFUNCTION|
+    (|COMMON-LISP|::|FUNCTION| |CL-PPCRE|::|DEFAULT-ELSE-REGEX|
+     (|COMMON-LISP|::|LAMBDA| |COMMON-LISP|::|NIL| #2#))
+    :|DOCUMENTATION|
+    '"The regex that's to be matched if the\n
+test fails."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"BRANCH objects represent Perl's conditional regular\n
+expressions."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|TEST|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|TEST|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|THEN-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|THEN-REGEX|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|ELSE-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|ELSE-REGEX|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25313| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|FILTER|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS|
+  (|COMMON-LISP|::|LIST|
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|FN| :|READERS|
+    '(|CL-PPCRE|::|FN|) :|WRITERS| '((|COMMON-LISP|::|SETF| |CL-PPCRE|::|FN|))
+    :|INITARGS| '(:|FN|) :|TYPE|
+    '(|COMMON-LISP|::|OR| |COMMON-LISP|::|FUNCTION| |COMMON-LISP|::|SYMBOL|)
+    :|DOCUMENTATION| '"The user-defined function.")
+   (|COMMON-LISP|::|LIST| :|NAME| '|CL-PPCRE|::|LEN| :|READERS|
+    '(|CL-PPCRE|::|LEN|) :|INITARGS| '(:|LEN|) :|DOCUMENTATION|
+    '"The fixed length of this filter or NIL."))
+  :|METACLASS| #1# :|DOCUMENTATION|
+  '"FILTER objects represent arbitrary functions\n
+defined by the user."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|FN|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '(|COMMON-LISP|::|SETF| |CL-PPCRE|::|FN|)
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|LEN|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|COMMON-LISP|::|LET*| ((#1=#:|G25326| |CLOS|::|<STANDARD-CLASS>|))
+ (|COMMON-LISP|::|APPLY| #'|CLOS|::|ENSURE-CLASS| '|CL-PPCRE|::|VOID|
+  :|DIRECT-SUPERCLASSES| (|COMMON-LISP|::|LIST| '|CL-PPCRE|::|REGEX|)
+  :|DIRECT-SLOTS| (|COMMON-LISP|::|LIST|) :|METACLASS| #1# :|DOCUMENTATION|
+  '"VOID objects represent empty regular expressions."
+  (|COMMON-LISP|::|APPEND| '(:|FIXED-SLOT-LOCATIONS| |COMMON-LISP|::|NIL|)
+   (|COMMON-LISP|::|LIST| :|DIRECT-DEFAULT-INITARGS| |COMMON-LISP|::|NIL|
+    :|GENERIC-ACCESSORS| '|COMMON-LISP|::|T|))))
+(|SYSTEM|::|C-DEFUN| '|CLOS|::|INITIALIZE-INSTANCE|
+ #(1. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CLOS|::|INITIALIZE-INSTANCE|
+ #(1. 0. |COMMON-LISP|::|T| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|LEN|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|STR|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|SKIP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|START-OF-END-STRING-P|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CASE-MODE|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CASE-MODE|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|CASE-MODE|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COPY-REGEX|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REMOVE-REGISTERS|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|EVERYTHINGP|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ '#(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|REGEX-MIN-LENGTH|
+ #(1. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ '#(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+    |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFGENERIC|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)
+(|SYSTEM|::|C-DEFUN| '|CL-PPCRE|::|COMPUTE-OFFSETS|
+ #(2. 0. |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL| |COMMON-LISP|::|NIL|
+   |COMMON-LISP|::|NIL|)
+ |COMMON-LISP|::|NIL| '|CLOS|::|DEFMETHOD|)

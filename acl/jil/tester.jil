@@ -1,0 +1,63 @@
+;; -*- mode: common-lisp; package: user -*-
+;;
+;; copyright (c) 1997 Franz Inc, Berkeley, CA
+;;
+;; The software, data and information contained herein are proprietary
+;; to, and comprise valuable trade secrets of, Franz, Inc.  They are
+;; given in confidence by Franz, Inc. pursuant to a written license
+;; agreement, and may be stored and used only in accordance with the terms
+;; of such license.
+;;
+;; Restricted Rights Legend
+;; ------------------------
+;; Use, duplication, and disclosure jof the software, data and information
+;; contained herein by any agency, department or entity of the U.S.
+;; Government are subject to restrictions of Restricted Rights for
+;; Commercial Software developed at private expense as specified in
+;; DOD FAR Supplement 52.227-7013 (c) (1) (ii), as applicable.
+
+;; $Id: tester.jil,v 2.1 2004/01/16 19:33:51 layer Exp $
+
+(def-java-class tester ()
+  :public
+  ((iii :type int :initform 12345) 
+   (sss :type int :initform 3241 
+	:flags (:static))
+   ))
+
+(def-java-macro failure (test want got)
+  `(progn (System.out.print "Failed! test ")
+	  (System.out.print ,test)
+	  (System.out.print " Wanted: ")
+	  (System.out.print ,want)
+	  (System.out.print " Got: ")
+	  (System.out.println ,got)))
+
+
+(def-java-method check ((testnum int) (shouldbe long) (result long)) void
+    :public :static
+    (if*  (= shouldbe result)
+        then (System.out.print "Ok ") (System.out.println testnum)
+       else (failure testnum shouldbe result)))
+
+(def-java-method check ((testnum int) (shouldbe int) (result int)) void
+    :public :static
+    (if*  (= shouldbe result)
+        then (System.out.print "Ok ") (System.out.println testnum)
+       else (failure testnum shouldbe result)))
+
+(def-java-method check ((testnum int) (shouldbe float) (result float)) void
+    :public :static
+    (if*  (= shouldbe result)
+       then (System.out.print "Ok ") (System.out.println testnum)
+       else (failure testnum shouldbe result)))
+
+(def-java-method check ((testnum int) (shouldbe double) (result double)) void
+    :public :static
+    (if* (= shouldbe result)
+       then  (System.out.print "Ok ") (System.out.println testnum)
+       else (failure testnum shouldbe result)))
+
+
+	    
+

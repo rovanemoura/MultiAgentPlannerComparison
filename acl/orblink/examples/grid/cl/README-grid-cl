@@ -1,0 +1,36 @@
+This directory contains a simple common Lisp client and server
+implementing the IDL code in ../idl/grid.idl.
+
+The file grid-implementation.cl contains the actual implementation
+code; it defines the class user::grid-implementation and the
+implementations of the methods in the file grid.idl.
+
+The file grid-invoke.cl contains functions that start a client or
+server and invoke the client.  These functions are sufficiently simple
+that they could be invoked interactively as well.
+
+To run the system:
+
+Start up a Lisp listener and load orblink.
+
+Load the grid system:
+
+:ld grid-invoke.cl ; You will have to give the full path of grid-system from the current working directory, or course
+
+; Now to create a Lisp server and publish its IOR for any client, just execute
+
+Choose a filename, say <filename>, that will be used to store the IOR of the grid server. 
+
+To run the server execute
+
+(grid-server <filename>)
+
+; To run a grid-client, execute
+
+(grid-client <filename>)
+
+These functions are documented more carefully in cl/grid-invoke.cl. 
+
+
+
+

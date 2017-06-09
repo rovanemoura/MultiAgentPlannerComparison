@@ -1,0 +1,1421 @@
+<html><head><title>Allegro Btrees</title></head><body>
+<center><h1>Allegro Btrees</h1></center>
+<small>copyright (c) 2012 Franz Inc</small>
+
+<p>
+This is the API for the Btree module.
+The symbols mentioned in this document are exported from the <b>db.btree</b> package.
+<p>
+<font size="+1"><a href="#2711">Background</a></font><br><font size="+1"><a href="#2712">Opening and Closing</a></font><br>&nbsp;&nbsp;<a href="#2713">open-btree</a><br>&nbsp;&nbsp;<a href="#2714">create-btree</a><br>&nbsp;&nbsp;<a href="#2715">create-memory-btree</a><br>&nbsp;&nbsp;<a href="#2716">close-btree</a><br>&nbsp;&nbsp;<a href="#2717">sync-btree</a><br><font size="+1"><a href="#2718">Storing and Retrieving data</a></font><br>&nbsp;&nbsp;<a href="#2719">get-btree</a><br>&nbsp;&nbsp;<a href="#271a">get-btree-ext</a><br>&nbsp;&nbsp;<a href="#271b">set-btree-ext</a><br><font size="+1"><a href="#271c">Cursors</a></font><br>&nbsp;&nbsp;<a href="#271d">create-cursor</a><br>&nbsp;&nbsp;<a href="#271e">position-cursor</a><br>&nbsp;&nbsp;<a href="#271f">position-cursor-ext</a><br>&nbsp;&nbsp;<a href="#2720">cursor-get</a><br>&nbsp;&nbsp;<a href="#2721">cursor-next</a><br>&nbsp;&nbsp;<a href="#2722">cursor-previous</a><br>&nbsp;&nbsp;<a href="#2723">cursor-get-ext</a><br>&nbsp;&nbsp;<a href="#2724">cursor-next-ext</a><br>&nbsp;&nbsp;<a href="#2725">cursor-previous-ext</a><br>&nbsp;&nbsp;<a href="#2726">cursor-delete</a><br>&nbsp;&nbsp;<a href="#2727">unbind-cursor</a><br><font size="+1"><a href="#2728">Miscellaneous</a></font><br>&nbsp;&nbsp;<a href="#2729">copy-btree</a><br>&nbsp;&nbsp;<a href="#272a">merge-btrees</a><br>&nbsp;&nbsp;<a href="#272b">analyze-btree</a><br>&nbsp;&nbsp;<a href="#272c">btree-user-data</a><br>&nbsp;&nbsp;<a href="#272d">dump-btree</a><br><font size="+1"><a href="#272e">Replace Hook</a></font><br><font size="+1"><a href="#272f">Encoding</a></font><br><font size="+1"><a href="#2730">Examples</a></font><br><font size="+1"><a href="#2731">Advanced Examples</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2732">Opening a Btree</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2733">Accessing data</a></font><br>&nbsp;&nbsp;<font size="+0"><a href="#2734">Large Btrees and Merging</a></font><br><font size="+1"><a href="#2735">Index</a></font><br>
+<p>
+<span id="2711"></span><h1>Background</h1>
+A btree is a data structure with the following properties
+<ul><li>you can associate a value with a key and later locate the value given the key in log(N) time.
+</li><li>The keys are stored sorted in the table so you can scan through all the keys (and retrieve their values) in order.
+</li></ul><p>
+Btrees are well suited for storage on disk and thus they are the basis for most
+database systems.
+<p>
+The format of a btree on disk is portable across all ACL platforms.
+<p>
+<p>
+The Allegro implementation of btrees has these properties
+<ul><li>The code is written completely in Lisp in order to get the best performance
+possible and the best integration into a Lisp program.
+</li><li>Keys and values are simple vectors of type (unsigned-byte 8).   If you wish
+to store other types of data you have to write encoder/decoders
+to/from (unsigned-byte 8) vectors.
+</li><li>There is extensive support for caching disk blocks to avoid disk I/O.
+</li></ul><p>
+In theory it's possible or more than once process to read the same btree.
+In practice it will only work on Unix since on the Windows operating
+system forbids multiple processes open the same file for read/write (and we
+don't yet suppport opening a btree file read-only).
+<p>
+If a process is modifying a btree then no other process should read it.
+On Unix there's nothing to prevent multiple writers or readers of the
+same file so it's the programmers responsibility to ensure that
+this does not occur.
+<p>
+<p>
+<span id="2712"></span><h1>Opening and Closing</h1>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2713"></span>(<b>open-btree</b> filename &amp;key (if-exists :open)
+                          (if-does-not-exist :error)
+                          (unique-keys nil)
+                          cache-size
+                          split
+                          compare-function
+                          buffer-pool
+                          large-block-allocator
+                          readahead
+                          partial-writes
+                          read-only)
+</pre></font></td></tr></table>
+<p>
+Opens an existing btree or creates a new btree.
+<p>
+<b>if-exists</b> determines what <b>open-btree</b> does if the btree named already exists
+<ul><li><b>:open</b> - open the existing btree (this is the default)
+</li><li><b>:supersede</b> - delete the existing btree and open a new one in its place.
+</li></ul><p>
+<b>if-does-not-exist</b> determines what is done if the btree named does not exist yet:
+<ul><li><b>:error</b> - signal an error (this is the default)
+</li><li><b>:create</b> - create a new btree
+</li></ul><p>
+Note that a btree can be opened by at most one process at a time.  The btree
+code does <i>not</i> do the file locking necessary to allow more than one
+reader or writer.
+<p>
+<p>
+If <b>unique-keys</b> is true then at most one value is associated with
+    a given key.  Attempting to store a second value for a given
+    key will cause the first value to be deleted.  You can only
+    specify the <b>unique-keys</b> behavior when you create a btree.
+    If you open an existing btree then the <b>unique-keys</b> argument
+    is ignored.
+<p>
+<p>
+If <b>cache-size</b> is given it should be an the integer number of
+  bytes of buffers that the btree code may maintain for this btree.
+  The actual number of bytes of buffers at any given time
+  may be larger than this maximum.  This number is used
+  as a general guide to the size of the buffer cache.
+  If <b>cache-size</b> is not given then the btree code will maintain
+  all blocks it encounters in the buffer cache.  This is undesirable
+if the btree is large.
+<p>
+When data is inserted into a btree it is placed inside the appropriate block.
+Eventually the block gets filled up and must be split into two blocks.
+If <b>split</b> is given it should be a floating point number between 0 and 1
+  and it specifies how much of a split block is left in the original
+  block (the rest being moved to the new block).  A value of 0.5 would
+  split the data evenly.  The default is 0.7.  You would choose a
+split value closer to 1.0 if you felt that it's likely that the next
+keys to be inserted will be larger than the previous keys inserted.
+<p>
+<p>
+<p>
+If <b>compare-function</b> is given it should be a function of six values
+<pre>        arr1 start1 end1  arr2 start2 end2
+</pre>
+   where arr1 and arr2 are (unsigned-byte 8) vectors and the start
+   and end values denote the range of the array to consider.
+<p>
+   This should compare the values and return
+<pre>        1  if arr2 &gt; arr1
+        0  if arr2 = arr1
+       -1  if arr2 &lt; arr1
+</pre>
+<p>
+The default comparison function is a simple lexicographic comparison
+function.  With that comparison function
+<ul><li>#(0) is less than #(1)
+</li><li>#(0 1 2) is less than #(0 1 2 3 4 5)
+</li><li>#(0 1 2 3 4 5) is less than #(0 1 3)
+</li></ul><p>
+<p>
+<p>
+The btree code caches disk blocks in buffers created from lisp vectors
+allocated in old space.  When the cache of buffers get too large
+the btree code frees buffer to reduce the cache size.  Normally
+<i>freeing a buffer</i> means eliminating pointers to it so
+it can be garbage collected.  However since the buffers are
+allocated in old space they only get garbage collected when
+a global gc is done.  Also after freeing a buffer the btree code
+will likely need to allocate a new buffer at some time in the future.
+Thus we have the buffer-pool object.  A buffer pool is a free list
+of buffers.  When the btree code wants to free a buffer from
+the cache and the btree has an associated buffer-pool, the buffer
+is added to the buffer pool rather than being left to be garbage collected.
+When the btree code needs a buffer it first checks the buffer pool
+and reuses a buffer from there instead.   A buffer-pool can be
+shared by multiple btrees thus ensuring that freed buffers soon
+find a new use.
+<p>
+The value of <b>buffer-pool</b> can be a buffer pool object.
+A buffer pool object is created by evaling <tt>(make-btree-buffer-pool)</tt>.
+That buffer pool will by used by this btree.  You share a buffer pool
+among btrees by passing in the same buffer pool object when
+the btrees are opened.
+<p>
+If <b>buffer-pool</b> is any other non-nil value then a buffer pool
+object will be created and used only by this btree.
+<p>
+<p>
+<b>large-block-allocator</b> is an optional function that the btree
+   code will call to allocate large simple vectors of (unsigned-byte 8).
+   The function takes two arguments
+<pre>      (lambda (kind size) ....)
+</pre>
+<table width="100%"><tr><td width="7"></td><td>   The value of  <i>kind</i> is
+<table width="100%"><tr><td width="7"></td><td>        <b>:read</b>  - we're about to read a very large value from the btree
+<br>
+        any other value - ignore this call and return nil
+</td></tr></table>
+<br>
+   <i>size</i> is the number of bytes needed (but returning a larger vector is ok.)
+   The function can return either a vector of at least the desired size or nil.
+If the function returns nil then the btree code will do the allocation.
+If a block is returned by the function it will <i>not</i> be cached in the btree's buffer cache.
+</td></tr></table>
+<p>
+<p>
+<b>readhead</b> if given should be an integer.   readahead is used to efficiently
+read the btree file into the operating system's file cache.   The fact
+that btree blocks are read somewhat randomly will fail to trigger the code
+in the operating system to automatically read the btree file into
+the cache in the background, thus the need for the readahead argument.
+The value of <b>readahead</b> specifies how many
+bytes are read into the file cache at a time.  A value such as 20,000,000 is
+reasonable.   Using readahead a file that's being merged has been seen
+to speed up the merging operation by a factor of 10.  Readahead is not so
+useful if the btree will be accessed infrequently or over a long period
+of time as the operating system's file cache will soon be replaced by
+other more active files.
+<p>
+<b>partial-writes</b> specifies whether the btree code can write out just
+some of the modified buffers when its forced to write out modified buffers
+due to the buffer cache filling up.   Normally all modified buffer are written
+out since that ensures that the btree on disk is valid most of the time.
+If you specify true for partial-writes then the btree on disk will be invalid
+most of the time and will only become valid when you call <b>sync-btree</b>.
+Specifying true for partial-writes does make the btree code faster as
+it eliminates many unnecessary writes.
+<p>
+<b>read-only</b> of true will cause the btree file to be opened for reading only.
+Any action that will cause a btree block to be written will signal an error.
+Reading objects from the btree is not a problem.  Adding new objects to
+the btree will work as well until a modified btree buffer needs to be
+written to the disk.
+<p>
+<p>
+  open-btree returns a btree object
+<p>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2714"></span>(<b>create-btree</b> filename &amp;key (if-exists :supersede)
+                            (if-does-not-exist :create)
+                            (unique-keys nil) split
+                            cache-size compare-function buffer-pool
+                            large-block-allocator
+                            partial-writes)
+</pre></font></td></tr></table>
+<p>
+<p>
+   Just like <b>open-btree</b> except that the defaults for the keyword
+   arguments are such that a new btree will be created whether
+   or not the btree already exists.
+<p>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2715"></span>(<b>create-memory-btree</b> &amp;key (unique-keys nil)
+			   split
+			   buffer-pool
+			   compare-function
+                           large-block-allocator
+                           partial-writes)
+</pre></font></td></tr></table>
+<p>
+    Create a btree in memory only.   This btree need not be closed as
+it doesn't have an associated file to close.
+<p>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2716"></span>(<b>close-btree</b> btree &amp;key abort)
+</pre></font></td></tr></table>
+calls <b>sync-btree</b> to write out all modified blocks and
+then closes down the connection to the btree file on disk.
+After the btree is closed no btree operations are possible
+other than <b>btree-user</b>.
+<p>
+If the value of <b>abort</b> is true then the <b>sync-btree</b> is <i>not</i> done.
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2717"></span>(<b>sync-btree</b> btree)
+</pre></font></td></tr></table>
+writes out all modified blocks to the disk.
+During normal btree operation a <b>sync-btree</b> will be done automatically
+if the size of the btree cache in memory exceeds the user-specified limit
+and cache space must be reclaimed.
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<p>
+<span id="2718"></span><h1>Storing and Retrieving data</h1>
+<p>
+Keys and values are always simple-vectors of type unsigned-byte 8.
+<br>
+<p>
+There are two types of functions in the API:
+<ul><li>simple ones that take and return keys and values as standalone vectors.
+</li><li>extended ones that take and return keys and values as subsequences
+        of larger (unsigned-byte 8) simple vectors.
+<br>
+<br>
+</li></ul><p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2719"></span>(<b>get-btree</b> btree key)
+</pre></font></td></tr></table>
+    return the value associated with the given <b>key</b> or nil if the given
+    key isn't present in the database.  If <b>unique-keys</b> is false for
+    this database then the value returned is <i>any one</i> of the values
+    associated with that key.  In this case if you wish to
+retrieve all the values
+associated with the key the program will need to use cursors.
+<p>
+<br>
+<br>
+<br>
+<br>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre>(setf (get-btree btree key) value)
+</pre></font></td></tr></table>
+    Store the given <b>value</b> in the <b>btree</b> under the given <b>key</b>.
+Both <b>key</b> and <b>value</b> are simple vectors of type (unsigned-byte 8).
+<p>
+    If <b>unique-keys</b> is true and if there is already a value for
+    the given key then that existing value is deleted before the
+    new value is stored.
+<p>
+<p>
+    returns: <b>value</b>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="271a"></span>(<b>get-btree-ext</b> btree key kstart kend)
+</pre></font></td></tr></table>
+    like <b>get-btree</b> except that the key is those bytes in the <b>key</b> vector
+    from index <b>kstart</b> up to but not including <b>kend</b>.
+<br>
+    <b>get-btree-ext</b> returns three values
+<ul><li>vector (or nil if no value is found)
+</li><li>start
+</li><li>end
+</li></ul><p>
+     the answer is in the returned vector from indicies start to end-1
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="271b"></span>(<b>set-btree-ext</b> btree key kstart kend value vstart vend)
+</pre></font></td></tr></table>
+    like (setf (get-btree ...) ...)  except that the key and value
+    used are the subsequences of the key and value vectors
+    within the given limits
+<p>
+    The return value is undefined.
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<p>
+<span id="271c"></span><h1>Cursors</h1>
+<p>
+ A cursor is an object that traverses a given btree.  Objects in a
+btree are sorted by key thus a cursor can give the user access to objects
+in the sorted order.
+<p>
+Cursors float with changes to the tree.
+If you position a cursor at an item and then insert or delete
+something in the btree before that item the cursor will continue
+to point at that item.  If you delete the item the cursor is pointing
+to it will then point to the following item
+<p>
+You do not have to call a function to close a cursor when
+you're finished with it but you should call
+<pre>    (unbind-cursor cursor)
+</pre>
+to disassociate the cursor from a particular spot in the btree.
+If that isn't done the cursor object will never be garbage
+collected until the btree is.
+Also it will mean that the btree has to perform work to
+keep the cursor floating correctly.
+<p>
+A cursor can be primed.  A primed cursor will treat a request for
+the <i>next</i> or <i>previous</i> item as a request for the <i>current</i> item at the cursor
+and will then set the cursor to not-primed mode.
+<p>
+The prime feature allows you to position the cursor and prime it
+and then use only <i>next</i> commands to read all the data beginning
+with the data found by the position command.  Below is
+a function to count the items in a btree.  If we had <i>not</i>
+specified :prime t in the call to position-cursor the code would
+have had to call <b>cursor-get</b> the first time around the loop and
+then <b>cursor-next</b> subsequently.   By priming the cursor
+we can write the loop using only <b>cursor-next</b>.
+<p>
+<p>
+<pre>(defun items-in-a-btree (btree)
+  (let ((cur (create-cursor btree)))
+    (position-cursor cur nil :kind :first :prime t)
+    (let ((count 0))
+      (loop
+        (if* (null (cursor-next cur)) then (return))
+        (incf count))
+      (unbind-cursor cur)
+      count)))
+<p>
+</pre>
+<p>
+<p>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="271d"></span>(<b>create-cursor</b> btree)
+</pre></font></td></tr></table>
+    returns a cursor for the btree.  The next function that should
+    be called is <b>position-cursor</b> or <b>position-cursor-ext</b> in order
+    to put the cursor at a particular spot in the btree.
+<p>
+    A program need not close a cursor when it's finished but it
+should call <b>unbind-cursor</b>.
+<p>
+<br>
+<br>
+<br>
+<br>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="271e"></span>(<b>position-cursor</b> cursor key &amp;key value kind prime)
+</pre></font></td></tr></table>
+  If kind is nil:
+<table width="100%"><tr><td width="7"></td><td>    If value is nil
+<table width="100%"><tr><td width="7"></td><td>        place the cursor in the btree at
+        the first occurrence of the given key, or, if
+        the key isn't present,
+        then at the first position after where the key would be placed if
+        the key were present.
+<p>
+        return true if the key is present in the btree, else nil.
+</td></tr></table>
+<br>
+    If value is given
+<table width="100%"><tr><td width="7"></td><td>        place the cursor at the entry position in the btree
+        where the key and value are as passed in.
+<p>
+        return true if a key, value entry was found else return nil.
+        If nil is returned, the location of the cursor is just after
+        the last item for the given key, or just after where an
+        item for the given key would be placed.
+</td></tr></table>
+</td></tr></table>
+  other values for kind
+<ul><li>:first  - position the cursor at the first value in the btree
+</li><li>:last   - position the cursor at the last value in the btree
+</li><li>:unbind - disassociate the cursor from a particular part of the btree.
+            It's imporant to do this when you're done using the
+            cursor for a while.  You can also call unbind-cursor
+            to do this.
+</li></ul><p>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="271f"></span>(<b>position-cursor-ext</b> cursor key kstart kend &amp;key value vstart vend prime)
+</pre></font></td></tr></table>
+    like position-cursor except that the key to search for is
+    the subsequence of key from kstart to kend.
+<p>
+    Also if value is given then this acts like position-cursor with
+    a value given.  In this case vstart defaults to 0 and vend defaults
+    to the length of value.
+<p>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2720"></span>(<b>cursor-get</b> cursor &amp;key (key t) (value t) (kind :get) prime)
+</pre></font></td></tr></table>
+<p>
+<p>
+    the keyword arguments <b>key</b> and <b>value</b> control whether the key and
+    value are returned (or if nil is returned in place of the key or value not
+returned).
+<p>
+If kind is
+<p>
+<ul><li><b>:get</b>  cursor-get returns the key and value at the current cursor location.
+</li><li><b>:next</b> then cursor-get acts like cursor-next, advancing to the
+        next object and returning that.
+</li><li><b>:previous</b> then cursor-get acts like cursor-previous, retreating to the
+        previous object and returning that.
+</li><li><b>:first</b> then the position is set to the first item
+        in the btree and then cursor-get acts like :get was specified
+</li></ul><p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2721"></span>(<b>cursor-next</b> cursor &amp;key (key t) (value t) prime)
+</pre></font></td></tr></table>
+    advance the cursor to the next position and return two values,
+    the key and the value, using the keyword arguments :key and :value
+    to determine what's returned.
+<p>
+    If the cursor was already at the last entry of the btree then nil
+    is returned.
+<p>
+<br>
+<br>
+<br>
+<br>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2722"></span>(<b>cursor-previous</b> cursor &amp;key (key t) (value t) prime)
+</pre></font></td></tr></table>
+    retreat the cursor to the previous position and return two values,
+    the key and the value, using the keyword arguments :key and :value
+    to determine what's returned.
+<p>
+    If the cursor was already at the first entry of the btree then nil
+    is returned.
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2723"></span>(<b>cursor-get-ext</b> cursor &amp;key (key t) (value t) (kind :get))
+</pre></font></td></tr></table>
+    this is just like cursor-get except that six values are returned
+<pre>    key kstart kend  value vstart vend
+</pre>
+    The key and value vectors returned are the buffers used by
+    the btree code, thus they should <i>not</i> be modified and they are
+    <i>subject to being changed</i> by subsequent btree operations.
+<p>
+    kind can be :get, :next, :previous or :first
+<p>
+<br>
+<br>
+<br>
+<br>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2724"></span>(<b>cursor-next-ext</b> cursor &amp;key (key t) (value t))
+</pre></font></td></tr></table>
+    Advance the cursor to the next entry and return values like
+    cursor-get-ext.
+<p>
+    Return nil if the cursor is already at the end of the btree.
+<p>
+<br>
+<br>
+<br>
+<br>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2725"></span>(<b>cursor-previous-ext</b> cursor &amp;key (key t) (value t))
+</pre></font></td></tr></table>
+    Retreat the cursor to the previous entry and return values like
+    cursor-get-ext.
+<p>
+    Return nil if the cursor is already at the beginning of the btree.
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2726"></span>(<b>cursor-delete</b> cursor &amp;key prime)
+</pre></font></td></tr></table>
+    Delete the key, value at the cursor.  This causes the cursor
+    to now point at what was the next item before the delete
+    as the btree automatically compresses to fill in gaps
+    from deleted objects.
+<p>
+    <b>prime</b>, if true, will prime the cursor after the delete
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2727"></span>(<b>unbind-cursor</b> cursor)
+</pre></font></td></tr></table>
+    disassociate the cursor from a particular part of the btree.
+    It's imporant to do this when you're done using the
+    cursor for a while.  You can also call
+    (position-cursor nil :kind :unbind) to do this.
+<p>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<span id="2728"></span><h1>Miscellaneous</h1>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="2729"></span>(<b>copy-btree</b> &amp;key from to)
+</pre></font></td></tr></table>
+    <b>from</b> and <b>to</b> should be open btrees.
+All the key value pairs from <b>from</b> will be inserted into <b>to</b>.
+<p>
+    The insertion is done via the set-btree-ext function so the
+    unique-keys value of the <b>to</b> btree will have an effect.
+<p>
+  This function is deprecated in favor of the more general <b>merge-btrees</b>
+function.
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="272a"></span>(<b>merge-btrees</b> target-btree source-btrees)
+</pre></font></td></tr></table>
+    All the items from the <b>source-btrees</b> will be
+stored in the <b>target-btree</b>.
+    Items will be added in order (using the comparison function for
+    the target-btree).  When two source btrees have the same key
+    the item from the btree earlier in the argument list will be
+    inserted first.
+    The <b>unique-keys</b> value for the <b>target-btree</b> will determine if
+    multiple entries with the same key will end up in the <b>target-btree</b>
+    or if only the last item inserted with the same key ends up
+    in the <b>target-btree</b>.
+<p>
+If you're merging btrees to create a btree that will never be modified
+it makes sense to specify a <b>split</b> value close to 1.0 for the target-btree.
+This is because the target-btree will be populated with keys in ascending order
+and thus the new key values will always be stored in the new block
+after the split.
+<p>
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="272b"></span>(<b>analyze-btree</b> btree)
+</pre></font></td></tr></table>
+    test the btree for internal errors and return a  structure describing
+    the contents of the btree and the btree cache.  Note that
+    running this function will change the btree cache, so running
+    it a second time will return different cache results
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="272c"></span>(<b>btree-user-data</b> btree)
+</pre></font></td></tr></table>
+<p>
+    This setf'able slot is a place for user code to store whatever
+data it wants in the btree object.
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<table bgcolor="#eedd82" width="100%"><tr><td><font size="+1"><pre><span id="272d"></span>(<b>dump-btree</b> btree &amp;optional filename)
+</pre></font></td></tr></table>
+    write out all the data in a btree in lisp and human readable
+    format.
+<p>
+<br>
+<br>
+<br>
+<br>
+<p>
+<p>
+<span id="272e"></span><h1>Replace Hook</h1>
+<p>
+  You can specify a hook function that gets called when a value
+associated with a key is going to be replaced with another value. This gives
+the program a chance to modify the old value to include the new value.
+<p>
+ You specify the hook function this way:
+<pre>    (setf (btree-replace-hook btree) 'my-hook-function)
+</pre>
+<p>
+<p>
+  Note that this hook function only gets called when a value
+is <i>replaced</i>.  A value can only be replaced when the btree is
+created with :unique-keys t specified.
+<p>
+ The hook function takes these seven arguments
+<table width="100%"><tr><td width="7"></td><td>  btree
+<br>
+  oldvalue oldvstart oldvend
+<br>
+  newvalue newvstart newvend
+</td></tr></table>
+<p>
+ where oldvalue and newvalue are (unsigned-byte 8) and vectors
+and the start and end values indicate a range of indicies inside
+those vectors  (i.e. all indicies beginning with Xstart and less
+than Xend).
+<p>
+ The hook function is called when the existing value (denoted by oldvalue)
+is going to be replaced with the new value (denoted by newvalue)
+<p>
+ The hook function can do one of three things.
+<p>
+<ol><li>Do nothing.  Let the replacement go as planned.
+    The hook function returns nil to specify this choice.
+</li><li>Modify the old value to include the new value.   The hook function
+   can modify the oldvalue  in any way it wants but only within
+   the given vector indicies.
+   The hook function returns  t  to indicate that it has already
+   replaced the value and the btree code should do no further work on this.
+</li><li>The hook function can specify an alternative value to store
+    instead of newvalue.   The btree code does the rest of the work.
+    The hook function returns four values to choose this option
+<table width="100%"><tr><td width="7"></td><td>        nil
+<br>
+        altvalue     - a usb8 vector
+<br>
+        altstart     - integer
+<br>
+        altend       - integer
+</td></tr></table>
+</li></ol><p>
+<br>
+<br>
+<p>
+<span id="272f"></span><h1>Encoding</h1>
+The btrees store only unsigned-byte 8 (usb8) vectors as keys and values.
+You'll need to encode whatever objects you choose to store as usb8 vectors.
+In this section we discuss various ways to encode lisp objects.
+<p>
+Lisp has a built-in function for encoding strings as usb8 vectors.
+<p>
+<pre>cl-user(7): (defun enc-string (str)
+                 (string-to-octets str :external-format :utf-8 :null-terminate nil))
+enc-string
+cl-user(8): (enc-string &quot;test&quot;)
+#(116 101 115 116)
+4
+cl-user(9):
+</pre>
+<p>
+The <b>utf-8</b> external format is a good general purpose encoding for
+any size character.
+<p>
+Since most lisp objects can be printed and then that printed form
+read by the lisp reader, one option is to print the object to encode
+as a string and then use <b>string-to-octets</b> to encode it.  This is
+a simple way to encode objects but not particularly fast.
+<p>
+<pre>cl-user(9): (defun enc-value (value) (enc-string (write-to-string value)))
+enc-value
+<p>
+cl-user(10): (enc-value '(a b c d))
+#(40 97 32 98 32 99 32 100 41)
+9
+</pre>
+<p>
+Decoding values is accomplished with <b>octets-to-string</b>:
+<p>
+<pre>cl-user(13): (defun dec-value (encoded)
+                   (read-from-string (octets-to-string encoded :external-format :utf-8)))
+dec-value
+<p>
+cl-user(14): (dec-value (enc-value '(a b c d)))
+(a b c d)
+9
+cl-user(15):
+</pre>
+<p>
+One word of caution: whenever you're reading forms which could have been
+modified by someone untrustworthy there's a chance that they introduced
+uses of the #. (sharp-period) reader macro to cause evaluation at
+read time.  In that case you'll want to bind <b>*read-eval*</b> to nil
+around the user of the read function.
+<p>
+<p>
+The <b>enc-value</b> function show above will work for integers but it's probably
+not the encoder you'll want to use.
+<ul><li>the encoding is larger than it has to be.  For example 255 would
+encoded as three bytes (#2 #5 and #5)  when it could be encoded in one byte
+</li><li>numbers as keys won't be sorted in the correct order in the btree when using
+the btree's built-in lexiographic sorting function.  For example 10 will sort before the numbers 2 thorugh 9.
+</li></ul><p>
+The following function encodes a non-negative integer in a fixed sized vector
+in big-endian format.
+<p>
+<pre>(defun enc-pos-int (value bytes &amp;optional arr)
+  (let ((res nil))
+    (loop
+      (if* (zerop value)
+         then (return)
+         else (push (logand #xff value) res)
+              (setq value (ash value -8))))
+<p>
+    (if* (&gt; bytes (length res))
+       then (dotimes (i (- bytes (length res)))
+              (push 0 res)))
+<p>
+    (if* (and arr (&gt;= (length arr) (length res)))
+       then (let ((i -1))
+              (dolist (val res)
+                (setf (aref arr (incf i)) val))
+              arr)
+       else
+            (make-array (length res)
+                        :element-type '(unsigned-byte 8)
+                        :initial-contents res))))
+</pre>
+<p>
+Here we try it out:
+<p>
+<pre>cl-user(12): (enc-pos-int 10 5)
+#(0 0 0 0 10)
+<p>
+cl-user(13): (enc-pos-int 23423410 5)
+#(0 1 101 105 178)
+<p>
+cl-user(14): (enc-pos-int (1- (expt 2 33)) 5)
+#(1 255 255 255 255)
+<p>
+</pre>
+<p>
+<p>
+If you want to do sorting using the btree's built-in comparison function
+then you must encode all integers into the same length vector.   This
+does waste space for small numbers.  If space is critical you could
+write an encoder that encoded each number in the fewest bytes
+and then write your own btree comparsion that understood this encoding.
+<p>
+<p>
+This function will decode an encoded value:
+<p>
+<pre>(defun dec-pos-int (val &amp;optional (start 0) (end (length val)))
+  (let ((res 0))
+    (dotimes (i (- end start))
+      (setq res (+ (aref val (+ start i)) (ash res 8))))
+<p>
+    res))
+</pre>
+<p>
+as demonstrated here:
+<p>
+<pre>cl-user(16): (dec-pos-int (enc-pos-int 21234 6))
+21234
+</pre>
+<p>
+<span id="2730"></span><h1>Examples</h1>
+<p>
+Using the encoding functions discussed in the previous section
+we'll show some examples of creating btrees.
+<p>
+Here we create a btree where we store for each number from 0 to 999
+their square:
+<p>
+<pre>cl-user(6): (use-package :db.btree)
+t
+cl-user(7): (setq bt (create-btree &quot;foo.bt&quot;))
+#&lt;db.btree::btree [1] foo.bt @ #x1001257ff2&gt;
+cl-user(8): (dotimes (i 1000)
+                 (setf (get-btree bt (enc-pos-int i 4))
+                       (enc-pos-int (* i i) 5)))
+nil
+</pre>
+<p>
+Now we use the btree to find the square of 25
+<p>
+<pre>cl-user(9): (get-btree bt (enc-pos-int 25 4))
+#(0 0 0 2 113)
+cl-user(10): (dec-pos-int *)
+625
+</pre>
+<p>
+A cursor is an object that can move through a btree allowing
+you to retrieve keys and values and to delete keys and values
+<p>
+When you create a cursor you specify the btree that it will scan.
+<p>
+<pre>cl-user(12): (setq cur (create-cursor bt))
+#&lt;db.btree::cursor  @ #x71c5d62a&gt;
+</pre>
+<p>
+When a cursor is first created it doesn't point anywhere in the
+btree.  Thus the operations on the cursor just return nil.
+<p>
+<pre>cl-user(13): (cursor-get cur)
+nil
+cl-user(14): (cursor-next cur)
+nil
+</pre>
+<p>
+You can specify where a cursor should point in a number of ways.
+Here we tell the cursor to point at the first element in the btree
+(and since keys are sorted, this will be a pointer to the lowest
+key in the key sorting order).
+<p>
+<pre>cl-user(15): (position-cursor cur nil :kind :first)
+nil
+</pre>
+<p>
+We can retrieve the key and value at the cursor with <b>cursor-get</b>.
+It returns the key and value as two values:
+<p>
+<pre>cl-user(16): (cursor-get cur)
+#(0 0 0 0)
+#(0 0 0 0 0)
+</pre>
+<p>
+We can tell even without decoding these usb8 arrays that the key and
+value are both 0.
+<p>
+To advance the cursor to the next value and retrieve
+it you use <b>cursor-next</b>:
+<p>
+<pre>cl-user(17): (cursor-next cur)
+#(0 0 0 1)
+#(0 0 0 0 1)
+cl-user(18): (cursor-next cur)
+#(0 0 0 2)
+#(0 0 0 0 4)
+cl-user(19): (cursor-next cur)
+#(0 0 0 3)
+#(0 0 0 0 9)
+cl-user(20): (cursor-next cur)
+#(0 0 0 4)
+#(0 0 0 0 16)
+</pre>
+<p>
+You'll note that after positioning the cursor we used <b>cursor-get</b>
+to retrieve the first value and <b>cursor-next</b> to retrieve subsequent ones.
+If you're writing a loop to retrieve values it's undesireable to
+have to call one function the first time through the loop and
+another function on subsequent calls.   Thus cursors can be <i>primed</i>
+which means that they are in a special state so that a <b>cursor-next</b>
+will <i>not</i> move the cursor before retrieving the value.
+Also calling <b>cursor-next</b> will un-prime the cursor.
+<p>
+Here we once again position the cursor at the first item but this
+time we prime it as well.  Then we can just use <b>cursor-next</b>
+to retrieve all the values:
+<p>
+<pre>cl-user(21): (position-cursor cur nil :kind :first :prime t)
+nil
+cl-user(22): (cursor-next cur)
+#(0 0 0 0)
+#(0 0 0 0 0)
+cl-user(23): (cursor-next cur)
+#(0 0 0 1)
+#(0 0 0 0 1)
+cl-user(24): (cursor-next cur)
+#(0 0 0 2)
+#(0 0 0 0 4)
+</pre>
+<p>
+<p>
+<p>
+You can position the cursor at the last item in the tree and then
+scan backwards with <b>cursor-previous</b>.
+<p>
+<pre>cl-user(25): (position-cursor cur nil :kind :last :prime t)
+nil
+cl-user(26): (cursor-previous cur)
+#(0 0 3 231)
+#(0 0 15 58 113)
+cl-user(27): (dec-pos-int *)
+999
+cl-user(28): (cursor-previous cur)
+#(0 0 3 230)
+#(0 0 15 50 164)
+cl-user(29): (dec-pos-int *)
+998
+</pre>
+<p>
+<p>
+You can position the cursor at a particular key.  Note
+that in this case position-cursor returns t indicating
+that it found the key in the table:
+<p>
+<pre>cl-user(36): (position-cursor cur (enc-pos-int 385 4))
+t
+cl-user(37): (cursor-get cur)
+#(0 0 1 129)
+#(0 0 2 67 1)
+</pre>
+cl-user(38): (dec-pos-int *)
+385
+
+<p>
+If you specify a key not in the btree then <b>position-cursor</b>
+returns nil and the cursor is set on the next item after the location
+where the key would have been found.  Here we choose a key value 2000
+which is bigger than the biggest key in the table: 999.  Thus
+<b>position-cursor</b> returns nil and sets the cursor after the end of the table.
+<b>cursor-previous</b> brings the cursor to the last key in the table: 999.
+<p>
+<pre>cl-user(39): (position-cursor cur (enc-pos-int 2000 4))
+nil
+<p>
+cl-user(40): (cursor-get cur)
+nil
+<p>
+cl-user(41): (cursor-previous cur)
+#(0 0 3 231)
+#(0 0 15 58 113)
+<p>
+cl-user(13): (dec-pos-int *)
+999
+<p>
+</pre>
+<p>
+<p>
+You can position the cursor at a particular key <i>and</i> value
+as well and position-cursor will return t if it found the pair
+and nil if it did not:
+<p>
+<pre>cl-user(41): (position-cursor cur (enc-pos-int 385 4)
+                                  :value (enc-pos-int (* 385 385) 5))
+t
+cl-user(42): (position-cursor cur (enc-pos-int 385 4)
+                                  :value (enc-pos-int (* 200 200) 5))
+nil
+</pre>
+<p>
+You use a cursor to specify which values to delete from the btree.
+In the example below we position the cursor at key value 5.
+We delete that value at which point the cursor moves to the next
+key value, 6.  We move the cursor back one value and we end
+up at key value 4 since key value 5 was deleted.
+<p>
+<pre>cl-user(47): (position-cursor cur (enc-pos-int 5 4))
+t
+cl-user(48): (cursor-get cur)
+#(0 0 0 5)
+#(0 0 0 0 25)
+cl-user(49): (cursor-delete cur)
+t
+cl-user(50): (cursor-get cur)
+#(0 0 0 6)
+#(0 0 0 0 36)
+cl-user(51): (cursor-previous cur)
+#(0 0 0 4)
+#(0 0 0 0 16)
+</pre>
+<p>
+<p>
+When you're finished using a cursor for a while it's best to unbind it.
+This disassociates it from any block in the btree and this allows
+the cursor
+to be garbage collected should no references exist to the cursor
+from the heap.
+<p>
+<pre>cl-user(52): (unbind-cursor cur)
+#&lt;db.btree::cursor  @ #x71b06c82&gt;
+</pre>
+<p>
+So far all the btree operations have been done on the copy of
+the btree in memory. In order to write the btree to the disk
+you must <b>sync-btree</b>:
+<p>
+<pre>cl-user(53): (sync-btree bt)
+nil
+</pre>
+<p>
+When you're finished with the btree you should close it.
+The <b>close-btree</b> function will call <b>sync-btree</b> to ensure
+that the btree is completely written to the disk before the
+btree file is closed.
+<p>
+<pre>cl-user(54): (close-btree bt)
+#&lt;db.btree::btree [1] foo.bt @ #x1001139632&gt;
+</pre>
+<p>
+<p>
+<span id="2731"></span><h1>Advanced Examples</h1>
+<p>
+If your btrees will have few items in them or will be rarely
+accessed then you can make use of the examples in the previous section
+to manipulate your btrees.
+However if you're going to be storing
+millions and even billions of items in your btrees or will
+be repeatedly accessing them then you'll want to program
+in a more space and time efficient manner.  This section
+will show you how to use the btrees in the most efficient manner.
+<p>
+<span id="2732"></span><h2>Opening a Btree</h2>
+A btree is stored on the disk and parts of it are kept in
+a cache in the Lisp heap.  When you open the btree you can
+specify the maximum size for the cache.  The bigger the cache
+the more likely the disk block the btree code needs will be in
+the cache but the less Lisp heap that is available to the rest
+of the application.
+<p>
+Here we ask for at most a one megabyte cache.  Since each
+btree block is 4096 bytes this cache can hold up to 256 blocks
+from the btree.
+<p>
+<pre>cl-user(16): (setq bt (create-btree &quot;bar.bt&quot; :cache-size (* 1024 1024)))
+#&lt;db.btree::btree [2] bar.bt @ #x1001225782&gt;
+</pre>
+<p>
+If you don't specify a cache size then there is no limit to the
+size of the cache.  This is ok for small btrees but if the btree is
+huge it could mean using up all of the Lisp heap for the btree cache.
+<p>
+The cache consists of lisp vectors with copies of blocks from the disk.
+When the
+cache gets larger than the limit specified some blocks are removed
+from the cache and allowed to be garbage collected.
+The garbage collection of these vectors
+can take some time to occur since the lisp vectors are all
+allocated in old space and
+only a global garbage collection will recover unused old space.
+<p>
+Rather than require a global garbage collection in order to recover
+and reuse a cache block you should specify that you want the
+btree to use a <i>buffer pool</i> to manage the reuse:
+<p>
+<pre>cl-user(18): (setq bt (create-btree &quot;bar.bt&quot; :cache-size (* 1024 1024)
+                                             :buffer-pool t))
+#&lt;db.btree::btree [3] bar.bt @ #x1001229ed2&gt;
+</pre>
+<p>
+If a btree uses a buffer pool then when blocks are freed from the
+cache they are put in the buffer pool and when a new block is
+needed the buffer pool is checked before allocating one from the heap.
+<p>
+You can even share a buffer pool between btrees.
+<p>
+<pre>cl-user(19): (let ((bp (make-btree-buffer-pool)))
+	       (setq bt (create-btree &quot;bar.bt&quot; :cache-size (* 1024 1024)
+                                               :buffer-pool bp))
+	       (setq bt2 (create-btree &quot;bar2.bt&quot; :cache-size (* 1024 1024)
+                                               :buffer-pool bp)))
+#&lt;db.btree::btree [5] bar2.bt @ #x1001236602&gt;
+</pre>
+<p>
+<span id="2733"></span><h2>Accessing data</h2>
+Many of the functions in the btree API have two versions: a
+normal version (e.g. <b>get-btree</b>) and an
+extended version (e.g. <b>get-btree-ext</b>).
+The normal version is easier to use but the extended version
+is faster and less wasteful of space.
+<p>
+Keys and values in the normal version are
+simple vectors of type (unsigned byte 8).
+In the extended version keys and values are subsequences of
+simple vectors of type (unsigned-byte 8).
+<p>
+One big caveat about the use of the extended version: any returned
+values are only valid until the next call to a btree function
+on that btree.  This is because the returned values are pointers
+to the btree buffers and on any btree call a given btree buffer may be
+used to store some other value.
+<p>
+The following example will compare the use of the normal and extended
+functions.
+We're going to open the same btree we built in the section above
+named &quot;Examples.&quot;
+We want to find the number of keys between 0 and 199 that have
+a given value in the btree.  First we'll show how to do this
+without a cursor and next we'll show how to write this using
+a cursor.
+<p>
+Using the normal functions we write it this way.
+<pre>(defun run-normal (bt checknum)
+  (let ((found 0))
+    (dotimes (keynum 200)
+      (let* ((key (enc-pos-int keynum 4))
+	     (val (get-btree bt key)))
+	(if* (and val
+		  (equal checknum (dec-pos-int val)))
+	   then (incf found))))
+    found))
+</pre>
+<p>
+We're aware that a given key may not appear in the btree so we
+only call our <b>dec-pos-int</b> function if an actual value was returned.
+In this function we're allocating a new usb8 vector when we
+call our <b>enc-pos-int</b> function and the btree <b>get-btree</b> function
+(should there be a value at that key).
+<p>
+If we use the extended functions we would write it this way:
+<p>
+<pre>(defun run-ext (bt checknum)
+  (let ((kbuf (make-array 10 :element-type '(unsigned-byte 8)))
+	(found 0))
+    (dotimes (keynum 200)
+      (let* ((key (enc-pos-int keynum 4 kbuf)))
+	(multiple-value-bind (value vstart vend)
+	    (get-btree-ext bt key 0 4)
+	  (if* (and value (equal checknum (dec-pos-int value vstart vend)))
+	     then (incf found)))))
+    found))
+</pre>
+<p>
+Since our goal is to minimize allocation we've passed a vector to
+<b>enc-pos-int</b> for it to fill with the encoded value.  We call
+<b>get-btree-ext</b> and tell it the bounds with the vector that
+contain the key. It returns nil or a vector and the start and end
+indicies showing where the value is located in the returned vector.
+<b>dec-pos-int</b> is able to decode just that region of the vector.
+<p>
+When you run the two functions you  see that the extended
+version does a lot less allocation (32 bytes of other bytes
+vrs 9600, and 802 cons bytes vrs 1802.)
+<p>
+<pre>cl-user(14): (time (run-normal bt 16))
+; cpu time (non-gc) 10 msec user, 0 msec system
+; cpu time (gc)     0 msec user, 0 msec system
+; cpu time (total)  10 msec user, 0 msec system
+; real time  1 msec
+; space allocation:
+;  <b>1,802</b> cons cells, <b>9,600</b> other bytes, 0 static bytes
+1
+<p>
+<p>
+cl-user(15): (time (run-ext bt 16))
+; cpu time (non-gc) 0 msec user, 0 msec system
+; cpu time (gc)     0 msec user, 0 msec system
+; cpu time (total)  0 msec user, 0 msec system
+; real time  1 msec
+; space allocation:
+;  <b>802</b> cons cells, <b>32</b> other bytes, 0 static bytes
+1
+cl-user(16):
+</pre>
+<p>
+<p>
+If you are scanning a btree through a  range of key values it's
+usually more efficient to scan the values in the btree using
+a cursor.
+<p>
+Using normal functions the code is as follows.  We create
+a cursor and set it at the first key value greater than
+or equal to zero.  Then we scan through the btree until
+there are no more keys or the key is greater or equal to  200.
+Each time <b>cursor-next</b> is called two usb8 vectors must
+be allocated to hold the key and value vectors returned.
+<p>
+<pre><p>
+(defun cursor-normal (bt checknum)
+  (let ((found 0)
+	(cursor (create-cursor bt)))
+    (position-cursor cursor (enc-pos-int 0 4) :prime t)
+    (loop
+      (multiple-value-bind (key value)
+	  (cursor-next cursor)
+<p>
+	(if* (or (null key)
+		 (&gt;= (dec-pos-int key) 200))
+	   then (return))
+<p>
+	(if* (equal checknum (dec-pos-int value))
+	   then (incf found))))
+    found))
+</pre>
+<p>
+<p>
+The extended function <b>cursor-next-ext</b> returns pointers
+to the btree buffers and thus doesn't need to allocate new vectors.
+<p>
+<pre>(defun cursor-extended (bt checknum)
+  (let ((found 0)
+	(cursor (create-cursor bt)))
+    (position-cursor cursor (enc-pos-int 0 4) :prime t)
+    (loop
+      (multiple-value-bind (key kstart kend value vstart vend)
+	  (cursor-next-ext cursor)
+	(if* (or (null key)
+		 (&gt;= (dec-pos-int key kstart kend) 200))
+	   then (return))
+	(if* (equal checknum (dec-pos-int value vstart vend))
+	   then (incf found))))
+    found))
+</pre>
+<p>
+<p>
+The difference in space allocation in the two cases is apparent
+from the <b>time</b> macro:
+<p>
+<pre>cl-user(23): (time (cursor-normal bt 16))
+; cpu time (non-gc) 0 msec user, 0 msec system
+; cpu time (gc)     0 msec user, 0 msec system
+; cpu time (total)  0 msec user, 0 msec system
+; real time  1 msec
+; space allocation:
+;  <b>12</b> cons cells, <b>9,760</b> other bytes, 0 static bytes
+1
+<p>
+cl-user(24): (time (cursor-extended bt 16))
+; cpu time (non-gc) 0 msec user, 0 msec system
+; cpu time (gc)     0 msec user, 0 msec system
+; cpu time (total)  0 msec user, 0 msec system
+; real time  1 msec
+; space allocation:
+;  <b>12</b> cons cells, <b>64</b> other bytes, 0 static bytes
+1
+cl-user(25):
+</pre>
+<p>
+<span id="2734"></span><h2>Large Btrees and Merging</h2>
+<p>
+Btrees can exhibit poor performance when the size of the btree
+on disk is much larger than the size of memory cache and
+random keys are accessed.  When this occurs
+most of the time in the btree code is spent waiting to read
+a block from the disk.
+<p>
+This test program illustrates the problem.
+In this test we build a btree of 10,000,000 randomly chosen keys.
+We allocate a 1 MB cache and the btree file grows to 175 MB
+when it reaches 10,000,000 keys.
+<p>
+<p>
+<pre>(defun build-random-btree (size)
+  (let ((bt (create-btree &quot;random.bt&quot;
+			  :cache-size (* 1024 1024)
+			  :buffer-pool t))
+	(kbuf (make-array 10 :element-type '(unsigned-byte 8)))
+	(value (enc-pos-int 222 3))
+	(last-time (get-universal-time))
+	(key))
+    (dotimes (i size)
+      (setq key (enc-pos-int (random 10000000) 4 kbuf))
+      (set-btree-ext bt key 0 4 value 0 (length value))
+      (if* (zerop (mod (1+ i) 1000000))
+	 then (sync-btree bt)
+	      (let ((time (get-universal-time)))
+		(format t &quot;~12d  ~d secs~%&quot; (1+ i) (- time last-time))
+		(setq last-time time))))
+    (close-btree bt)))
+</pre>
+<p>
+In the test program we print the amount of time it took for each 1,000,000
+keys we added to the btree.  The time printed isn't cumulative - it's
+just the time to insert the most recent 1,000,0000 entries.
+<p>
+<pre>cl-user(4): (build-random-btree 10000000)
+     1000000  24 secs
+     2000000  76 secs
+     3000000  130 secs
+     4000000  165 secs
+     5000000  254 secs
+     6000000  291 secs
+     7000000  395 secs
+     8000000  344 secs
+     9000000  445 secs
+    10000000  496 secs
+#&lt;db.btree::btree [1] random.bt @ #x10012f48b2&gt;
+cl-user(5):
+</pre>
+<p>
+It's pretty clear that the cost per insert is growing quite a bit
+as the btree grows.
+<p>
+There are a few ways to ease this problem.  One would be to
+allocate as big a cache as you can when you're doing a large
+number of inserts.
+<p>
+The second method is to sort the keys before you insert them.
+Then instead of randomly inserting into the btree you'll insert
+in a way that the btree code is more likely to find the block it needs
+in the cache.
+<p>
+You can sort the keys in a variety of ways, one of them to
+use another btree.  If you put the new keys in an empty
+btree they can be inserted quickly.  Then you can use the btree
+merge function to add them to the big btree you're building.
+<p>
+This procedure is shown in this function, where we put
+each 1,000,000 keys in a btree and then merge it into the big btree.
+We could put the first 1,000,000 keys in the destination
+btree right away but for simplicity we insert the first 1,000,000
+keys just like the other 9,000,000 keys.
+<p>
+<p>
+<pre>(defun build-merge-random-btree (millions)
+  (let* ((bp (make-btree-buffer-pool))
+	 (bt (create-btree &quot;random.bt&quot;
+			   :cache-size (* 1024 1024)
+			   :buffer-pool bp))
+	 (kbuf (make-array 10 :element-type '(unsigned-byte 8)))
+	 (value (enc-pos-int 222 3))
+	 (last-time (get-universal-time))
+	 (key))
+    (dotimes (i millions)
+      (let ((newbt (create-btree &quot;scratch.bt&quot;
+				 :cache-size (* 40 1024 1024)
+				 :buffer-pool bp
+				 :partial-writes t)))
+	(dotimes (j 1000000)
+		(setq key (enc-pos-int (random 10000000) 4 kbuf))
+		(set-btree-ext newbt key 0 4 value 0 (length value)))
+	(merge-btrees bt (list newbt))
+	(close-btree newbt :abort t))
+      (sync-btree bt)
+      (let ((time (get-universal-time)))
+	(format t &quot;~12d  ~d secs~%&quot; (* (1+ i) 1000000)
+		(- time last-time))
+	(setq last-time time)))))
+</pre>
+<p>
+<p>
+Here are the timing for this method. It's dramatically better
+than the first method.  In fact we barely see a slow down
+as we reach 10,000,000 keys.
+<p>
+<pre>cl-user(4): (build-merge-random-btree 10)
+     1000000  11 secs
+     2000000  16 secs
+     3000000  16 secs
+     4000000  16 secs
+     5000000  17 secs
+     6000000  17 secs
+     7000000  17 secs
+     8000000  17 secs
+     9000000  17 secs
+    10000000  18 secs
+nil
+cl-user(5):
+</pre>
+<p>
+<span id="2735"></span><h1>Index</h1>
+<a href="#272b">analyze-btree</a><br><a href="#272c">btree-user-data</a><br><a href="#2716">close-btree</a><br><a href="#2729">copy-btree</a><br><a href="#2714">create-btree</a><br><a href="#271d">create-cursor</a><br><a href="#2715">create-memory-btree</a><br><a href="#2726">cursor-delete</a><br><a href="#2720">cursor-get</a><br><a href="#2723">cursor-get-ext</a><br><a href="#2721">cursor-next</a><br><a href="#2724">cursor-next-ext</a><br><a href="#2722">cursor-previous</a><br><a href="#2725">cursor-previous-ext</a><br><a href="#272d">dump-btree</a><br><a href="#2719">get-btree</a><br><a href="#271a">get-btree-ext</a><br><a href="#272a">merge-btrees</a><br><a href="#2713">open-btree</a><br><a href="#271e">position-cursor</a><br><a href="#271f">position-cursor-ext</a><br><a href="#271b">set-btree-ext</a><br><a href="#2717">sync-btree</a><br><a href="#2727">unbind-cursor</a><br>
+<p>
+<p>
+<p>
+<p>
+<p>
+<p>
+<p>
+<p>
+<p>
+<p>
+</body></html>

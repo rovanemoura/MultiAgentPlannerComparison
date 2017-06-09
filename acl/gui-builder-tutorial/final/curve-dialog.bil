@@ -1,0 +1,87 @@
+;; -*- lisp-version: "7.0.pre-beta.8 [Windows] (Feb 19, 2004 17:18)"; cg: "1.41"; form: curve-dialog; -*-
+;;;
+;;; Define :curve-dialog
+ 
+(in-package :common-graphics-user)
+
+;; The finder-function, which returns the window if it already
+;; exists, and otherwise creates and returns it.
+;; Call this function if you need only one copy of this window,
+;; and that window is a non-owned top-level window.
+(defun curve-dialog ()
+  (find-or-make-application-window :curve-dialog 'make-curve-dialog))
+ 
+;; The maker-function, which always creates a new window.
+;; Call this function if you need more than one copy,
+;; or the single copy should have a parent or owner window.
+;; (Pass :owner to this function; :parent is for compatibility.)
+(defun make-curve-dialog
+    (&key parent (owner (or parent (screen *system*)))
+     (exterior (make-box 174 168 609 409)) (name :curve-dialog)
+     (title "Curves") (border :frame) (child-p nil) form-p)
+  (let ((owner
+         (make-window name :owner owner
+           :class 'curve-dialog
+           :exterior exterior
+           :border border
+           :child-p child-p
+           :close-button t
+           :cursor-name :arrow-cursor
+           :font (make-font-ex :swiss "MS Sans Serif / ANSI" 13 nil)
+           :form-package-name :cg-user
+           :form-state :normal
+           :maximize-button t
+           :minimize-button nil
+           :name :curve-dialog
+           :pop-up nil
+           :resizable nil
+           :scrollbars nil
+           :state :shrunk
+           :system-menu t
+           :title title
+           :title-bar t
+           :dialog-items (make-curve-dialog-widgets)
+           :form-p form-p
+           :form-package-name :cg-user)))
+    owner))
+
+(defun make-curve-dialog-widgets ()
+  (list (make-instance 'default-button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 320 :name :edit-button :on-change
+                       'curve-dialog-edit-button-on-change :title
+                       "~Edit..." :top 21)
+        (make-instance 'button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 320 :name :draw-all-button :on-change
+                       'curve-dialog-draw-all-button-on-change :title
+                       "~Draw All" :top 136)
+        (make-instance 'button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 320 :name :delete :on-change
+                       'curve-dialog-delete-on-change :title "De~lete"
+                       :top 96)
+        (make-instance 'button :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :left 320 :name :add-button :on-change
+                       'curve-dialog-add-button-on-change :title
+                       "~Add..." :top 56)
+        (make-instance 'single-item-list :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :height 171 :left 21 :name :curve-list
+                       :on-double-click
+                       'curve-dialog-curve-list-on-double-click
+                       :scrollbars :vertical :top 21 :width 283)
+        (make-instance 'lisp-group-box :contained-widgets
+                       '(:default-button-3 :draw-all-button :delete
+                         :add-button :curve-list)
+                       :font
+                       (make-font-ex nil "Microsoft Sans Serif / ANSI"
+                                     14 nil)
+                       :height 191 :left 10 :name :group-box :top 9
+                       :width 406)))

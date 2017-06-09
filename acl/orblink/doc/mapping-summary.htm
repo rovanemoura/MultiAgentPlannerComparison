@@ -1,0 +1,277 @@
+<html>
+  <head>
+    <title>Summary of the IDL/Common Lisp Mapping</title>
+  </head>
+
+  <body>
+    <h1>Summary of the IDL/Common Lisp Mapping</h1>
+<hr>
+This document summarizes highlights and key features of the <a href="mapping.htm">IDL to Common Lisp mapping</a> for the
+ORBLink programmer.
+
+Each IDL type is mapped to a corresponding Lisp type:
+<ul>
+<li><a href="#primitive">Primitive types</a>
+<li><a href="#sequence">Sequences</a>
+<li><a href="#interface">Interfaces</a>
+<li><a href="#operation">Operations </a>
+<li><a href="#struct">Structs</a>
+<li><a href="#union">Unions</a>
+<li><a href="#exception">Exceptions</a>
+<li><a href="#typedefandconst">Typedefs and const definitions</a>
+<li><a href="#mnemonic">Understanding the type rules</a>
+</ul>
+
+<a name="primitive"></a><h2>Mapping for primitive types</h2>
+The mapping for primitive types is straightforward:
+<ul>
+<li>
+IDL boolean maps to Lisp boolean
+<li>
+IDL short, long, octet, unsigned short and unsigned long map to Lisp sub-types of integer containing
+the appropriate integers. For example, the lisp type 
+<code>corba:short</code> describes 16-bit Lisp integers.
+<li>string maps to Lisp string; char maps to Lisp character.
+<li>wstring maps to Lisp string; wchar maps to Lisp character.</li>
+<li>arrays maps to Lisp array of the same rank.
+</ul>
+As a practical matter, this means that you can pass a value of the  expected Lisp primitive type as a parameter to any
+IDL operation declared to accept that type. We will see some more examples below.
+
+<a  name="sequence"></a><h2>Mapping for sequences</h2>
+An IDL sequence is mapped to a Lisp sequence, that is, to a vector or to a list.
+<p>
+This can cause confusion: when is a vector allowed or required? when is a list allowed or required?
+<p>
+The general rule is: if an IDL operation expects a parameter that is a sequence, either a vector or a list may be passed
+to that operation.
+<p>
+If an IDL operation returns a sequence parameter, it may be either a vector or a list. ORBLink guarantees that if the invocation
+was remote then the returned sequence value will be a vector, not a list.
+
+<a name="interface"></a><h2>Mapping for interfaces</h2>
+The most important mapping to know is that of interfaces. 
+<p>
+Consider the following interface named I defined in module M:
+
+<pre>
+module M { 
+   interface I { attribute long a1;
+                 readonly attribute string a2;}
+ }
+</pre>
+When compiled via <code>corba:idl</code> three classes are created in the Lisp:
+
+<ol>
+<li>A Lisp class
+named M:I (that is, the symbol named "I" in package M).
+<li> A Lisp class named M:I-servant, inheriting from M:I and from corba:servant
+<li> A Lisp class named M:I-proxy, inheriting from M:I and from corba:proxy.
+</ol>
+
+Instances of M:I-proxy are proxies: methods invoked on them are marshalled and forwarded to remote implementations.
+
+Instances of M:I-servant are servants: these are normal Lisp classes that implement various methods. They can
+receive remote invocations. When a method is invoked on a servant no marshalling is done: the servant implementation code
+is invoked directly.
+
+Now suppose an interface named J extends I:
+
+<pre>
+module M { //We are reopening the module M 
+  interface K {;};
+  interface J (I, K) {;};
+  }
+</pre>
+
+When compiled, the Lisp classes corresponding to J will have the following inheritance structure:
+<ol>
+<li>
+M:J inherits from M:I and M:K
+<li>
+M:J-servant inherits from M:I-servant and M:J-servant
+<li>
+M:J-proxy inherits from M:I-proxy and M:K-proxy
+</ol>
+
+Attributes are mapped to slots in the generated -servant class. For an attribute a:
+<ol>
+<li>
+The slotname is op:a
+<li> The reader name is op:a
+<li> The writer name is (setf op:a) - unless the attribute is readonly, in which case no writer is generated.
+<li> The initarg is :a
+</ol>
+
+For example, M:J-servant inherits a slot named op:a1 from M:I-servant. An instance of M:J-servant can
+be created via
+<pre>
+(setq j-serv (make-instance 'M:J-servant :a1 3958810))
+</pre>
+
+The value of the attribute a1 of j-serv can be retrieved via:
+
+<pre>
+(op:a1 j-serv)
+----> 3958810
+</pre>
+
+The value of the attribute can be changed via:
+
+<pre>
+(setf (op:a1 j-serv) -3)
+(op:a1 j-serv)
+---> -3
+</pre>
+
+The readers and writers can also be invoked on proxies. However, the initarg cannot be used for a proxy.
+
+<a name="operation"></a><h2>Mapping for operations</h2>
+The mapping for operations is quite simple: if foo is an operation defined in some interface, then
+there is a corresponding Lisp method named op:foo. 
+
+If foo is declared to return void and has no out arguments, then op:foo returns no values.
+<p>
+If foo is not declared to return void and has no out arguments, it returns a single value.
+<p>
+If foo is declared to return out arguments then they are returned as multiple values after whatever
+values foo would have returned without those out arguments.
+<p>
+The first argument to op:foo is the object on which it is invoked. The remaining arguments are the parameters of the operation.
+
+Consider the following IDL:
+
+<pre>
+module M {
+ interface optest {
+   void testvoid (in long a);
+   long testlong (in string b);
+   long testmultiple (in string b, out char c);
+   void testvoidmultiple (out char c1, out string s, out float f3);
+};
+};
+</pre>
+
+Suppose that m is an object of type M:optest. 
+
+Then an invocation sequence might look like:
+
+<pre>
+(op:testvoid m -100000)
+--->[No values returned]
+
+(op:testlong m "hello")
+--->599934
+
+(op:testmultiple  m "goodbye")
+---> 3000 #\G
+
+(multiple-value-bind (a b c) ;Get the returned values
+  (op:testvoidmultiple m)
+ (list "The values returned are:" a b c))
+---> ("The values returned are" #\Y "hurdle" 1.87)
+</pre>
+
+Everything that "looks like a method" in Lisp is mapped to the op package, notably struct member accessors, union member accessors,
+attribute accessors, and so on. 
+
+<a  name="struct"></a><h2>structs</h2>
+A struct follows the same naming rules as an interface. A struct named S defined in module M maps to a Lisp class
+named M:S. If S has a member named mem, then the Lisp class has a slot named op:mem with initarg :mem and 
+accessor op:mem. The constructor for a struct has the same name as the struct.
+
+For example from the IDL:
+<pre>
+module M {
+  struct S {long foo; string fum;};};
+</pre>
+
+You can create a new instance of the class M:S via
+
+<pre>
+(setq struct (m:s :foo 300 :fum "test"))
+---> #&lt M:S :FOO 300 :FUM "TEST">
+
+(op:foo struct)
+---> 300
+
+(setf (op:fum struct) "passed")
+---> "passed"
+
+(op:fum struct)
+---> "passed"
+</pre>
+
+
+<a name="union"></a><h2>unions</h2>
+A union follows the same naming rules as interfaces and structs. The member accessors and member initargs follow the usual pattern, except that 
+of course only one initarg can be used in the initialization (since only one member can have a value). A union has two slots named op:union-value and op:union-discriminator.
+
+The name of the constructor for the union is the name of the union.
+
+Consider for example the following IDL:
+<pre>
+module M { interface IU 
+           { union V switch (long) {
+               case 3: string foo;
+               case 5: long fum;};};};
+</pre>
+
+The name of the corresponding Lisp class is M:IU/V. (The "/" is a scoping separator).
+You can create a union with label 3 and value "echo" in the foo member via:
+<pre>
+(setq u (M:IU/V :foo "echo"))
+</pre>
+
+The value can be retrieved via:
+
+<pre>
+(op:foo u)
+----> "echo"
+
+(op:union-value u)
+---->"echo"
+
+(op:union-discriminator u)
+---->3
+</pre>
+
+<a name="exception"></a><h2> Exceptions</h2>
+The mapping for exceptions is exactly like the mapping for structs, except that an IDL user-defined
+exception is a subclass of the Lisp condition class CORBA:userexception, which
+inherits from CORBA:exception, which inherits from condition.
+
+<a name="typedefandconst"></a><h2>Typedef and const definitions</h2>
+You can define a named type or a named constant in IDL. As would be expected, these
+are mapped to Lisp types and constants respectively, following the usual naming rules:
+<pre>
+module M {
+ typedef string foo;
+ const long r = 1 + 3;
+  };
+</pre>
+
+From the above IDL, we get:
+<pre>
+(typep "hello" 'M:foo)
+---->T
+(typep 3 'M:foo)
+---->nil
+M:r
+---->4
+</pre>
+
+
+<a name="mnemonic"></a><h1> Understanding the rules for constructed types</h2> The mapping
+rules were constructed with the primary goal of uniformity and ease of
+learning.
+<p>
+The fundamental abstraction used is that of a "type" with some kind of
+"named members". Insofar as possible, in each case such a type maps to
+a Lisp type of the same name, with a keyword initarg corresponding to
+each named member, and readers and writers for each named member. Each
+reader is in the op: package; the writer is formed via (setf
+reader). The constructor is simply the name of the type.
+
+  </body>
+</html>

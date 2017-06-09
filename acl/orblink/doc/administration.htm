@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Using the IDL Administrative interfaces</title>
+  </head>
+
+  <body>
+    <h1>Using the IDL Administrative interfaces</h1>
+<hr>
+ORBLink ORB administrative interfaces are themselves specified in IDL, or more 
+technically in <em>pseudo-IDL</em>. Pseudo-IDL is like IDL except that:
+<ol>
+<li>
+A pseudo-interface, an interface specified in pseudo-IDL, does not generate <code>-servant</code>
+or <code>-stub</code> classes, and 
+<li> a pseudo-object may not be passed remotely.
+</ol>
+
+Most of the pseudo-interfaces defined by the <a href="orblink-idl.htm">IDL for the administration of the ORB</a> are
+defined in the <a name="moduleorblink"></a><a href="orblink-idl.htm#moduleorblink">ORBLink module</a>. The associated symbols are thus interned as external
+symbols in the <code>orblink</code> package.
+<p>
+Except for this all of the mapping is done as specified in the <a href="mapping.htm">official mapping document</a>.
+<p>
+All of the ORB pseudo-interfaces in excess of what is specified by CORBA itself are defined in 
+<a href="orblink-idl.htm">IDL itself</a>. Interface definitions in this file are hyperlinked to their semantic definition.
+<p>
+Thus, the Lisp calling sequence for any particular API can be determined directly from the pseudo-IDL. 
+<p>
+For example, some of the IDL for message looks like:
+<p>
+<pre>
+module ORBLink {...
+  pseudo interface Message {
+     ...
+    enum MessageDirection {incoming,outgoing,unknown}; 
+    readonly attribute MessageDirection direction;     
+  };
+};
+</pre>
+<p>
+This is shorthand for the following:
+<ul>
+<li>
+There is a Lisp class named by the Lisp symbol <code>orblink:message</code>.
+<li> 
+There is a Lisp type named by the Lisp symbol <code>orblink:message/messagedirection</code> which
+denotes the type comprising the three keywords <code>:incoming</code>, <code>:outgoing</code> and <code>:unknown</code>.
+<li>
+If 
+<code>m</code>
+is a Lisp symbol bound to an instance of <code>orblink:message</code>, then
+the invocation:
+<pre>
+(op:direction m)
+</pre>
+<p>
+will return a value of type <code>orblink:message/messagedirection</code>.
+</ul>
+<p>
+Note that this API gives no way actually to create a new message. 
+<p>
+It is important remember that the variable <code>corba:orb</code> is always bound to an instance of the ORB pseudo-interface.
+<p>
+  </body>
+</html>

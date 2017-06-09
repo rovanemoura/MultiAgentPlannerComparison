@@ -1,0 +1,190 @@
+GTKGL - OpenGL Hooks for GTK
+
+GTKGL allows you to draw OpenGL graphics on any drawable GTK widget.
+GTKGL itself has a very small API that lets you establish a GTK widget
+as the current OpenGL drawing destination.  Then you can insert pure
+OpenGL code into expose-event callback functions to do the actual
+drawing.  You can also add methods on button-press-event and
+key-press-event callbacks, for example, just as you would for any
+other GTK widget, except adding OpenGL code to them for rotating the
+image and so on.
+
+The GTKGL code is written on top of the GLX facility for doing OpenGL
+in X Windows, so you shouldn't need to call GLX functions directly.
+And the file opengl.cl (included with GTKGL) defines foreign functions
+for the entire OpenGL API, so you can call OpenGL functions as lisp
+functions directly.
+
+To load GTKGL, simply load the file load.cl into ACL 6.2 or 7.0.
+This will load GTK if needed, followed by GTKGL.
+
+Two examples are included (and are loaded by load.cl).  gtkgltest.cl
+contains a very basic example that draws a multicolored triangle; this
+provides a small code example to point out what the various pieces of
+code are that you need to write.  gtkteapot.cl is a much fancier
+example that draws a three-dimensional teapot that rotates when you
+press the arrow keys on the keyboard.  You can run these examples with
+the forms (color-triangle) and (red-teapot).
+
+The rest of this document describes the several exported GTKGL
+symbols.  The symbols are in the gtkgl package, and the user package
+will use the gtkgl package when GTKGL is loaded.  If you find the
+GTKGL API to be insufficient, you can modify the GTKGL source code in
+gtkgl.cl yourself; it's rather small and fairly well documented
+internally.  We do not supply any documentation for OpenGL itself.
+
+Of the GTKGL symbols below, you likely will need only the functions
+(setf current-gtkgl-widget) and swap-buffers.
+
+------------------------------------------------------------
+current-gtkgl-widget ()
+
+[function]
+
+Returns the GTK widget that is the current OpenGL drawing destination,
+or nil if no destination has been set or the current destination is
+something other than a GTK widget.
+
+------------------------------------------------------------
+(setf current-gtkgl-widget)(value)
+
+[function]
+  
+Call this function to specify that a particular GTK widget should
+start receiving all OpenGL output.  Typically you would call this at
+the top of any expose-event callback function that calls OpenGL
+functions.  (This function does nothing if the stream is already the
+current OpenGL destination.)
+
+Example:
+
+(setf (current-gtkgl-widget) my-gtk-widget)
+
+------------------------------------------------------------
+swap-buffers (gtk-widget)
+
+When using the GTK_DOUBLE_BUFFERED option (included by default), call
+this at the end of your OpenGL code (in your expose-event callback
+function) to copy the image from GLX's memory bitmap for the widget to
+the visible GTK widget.
+
+------------------------------------------------------------
+exit-gtkgl ()
+
+[function]
+  
+Call this function if desired to clean up all OpenGL resources that
+have been used in GTK widgets that were created in the current
+process.  We expect that it's not necessary to call this function.
+
+------------------------------------------------------------
+*use-direct-x-connection*
+
+[global variable]
+
+This variable could be set to true if your X server is on the host
+computer, which may achieve much faster drawing.  The default value is
+nil for the more typical case of a remote X server.  Setting this to
+true has not been tested.
+
+------------------------------------------------------------
+*gtkgl-visual-attributes*
+
+[global variable]
+
+GTKGL internally calls the GLX function glXChooseVisual, passing a set
+of attributes for the X visual to use for OpenGL drawing.  The
+attributes that are passed are the ones in a list that is the value of
+the global variable *gtkgl-visual-attributes*.  By default this list
+contains GLX_RGBA to request true color, and GLX_DOUBLEBUFFER to
+request double-buffering.  This list is likely adequate for most
+applications, but if you need to specify different attributes, then
+you can modify this list to contain other constants as they would be
+passed in the attributes vector that is passed to glXChooseVisual.
+
+Here is the definition of this variable with its default value:
+
+(defparameter *gtkgl-visual-attributes*
+    
+    ;; Modify this variable if needed to specify the desired
+    ;; attributes for the X visual to be used by OpenGL.
+    (list
+     
+     ;; Ask for a true-color visual rather than using palettes.
+     GLX_RGBA
+     
+     ;; Specify double-buffering to eliminate flashing during
+     ;; animation updates by first drawing on a memory bitmap.
+     ;; (On my machine, glxChooseVisual fails without this.)
+     GLX_DOUBLEBUFFER))
+
+With the GXL_DOUBLEBUFFER attribute, any GTK widget that is visible on
+the screen will use GLX's double-buffering option.  This eliminates
+flashing by drawing all content on a memory bitmap (the "second
+buffer") and then copying to the visible GTK widget at the end.  This
+could be overridden by removing GLX_DOUBLEBUFFER from
+*gtkgl-visual-attributes*.
+
+When using the GLX_DOUBLEBUFFER option, you will need to turn off
+GTK's double-buffering for any GTK widget that is used for OpenGL.
+GTK does its own double-buffering by default, and that gets confused
+if used along with GLX's double-buffering in the same GTK widget.  You
+can turn off GTK's double-buffering with a form like this one:
+
+(gtk_widget_set_double_buffered gtk-widget FALSE)
+
+------------------------------------------------------------
+glx-extension ()
+
+[function]
+  
+If this returns NIL, then the X server does not support the GLX
+extensions.  Otherwise it returns two values indicating the error-base
+and the event-base, whatever those are.
+
+------------------------------------------------------------
+glx-version ()
+  
+[function]
+
+If this returns NIL, then the X server does not support the GLX
+extensions.  Otherwise it returns the major and minor versions of the
+X server's GLX support as two multiple values.
+
+------------------------------------------------------------
+gtk-widget-size (gtk-widget)
+
+[function]
+
+A GTK convenience function that returns the current width and height
+of a GTK widget.  Two values are returned, the first being the width
+and the second the height.  These values could be passed to the OpenGL
+function glViewport to make the drawing fill the GTK widget.
+
+------------------------------------------------------------
+invalidate-whole-gtk-widget (gtk-widget)
+  
+[function]
+
+A GTK convenience function that invalidates the entire area in a GTK
+widget.  This could be called to cause an OpenGL GTK widget to be
+redrawn after you have (for example) changed the current drawing
+angle.  See gtkteapot.cl for an example.
+
+------------------------------------------------------------
+gdk-window-of-gtk-widget (gtk-widget)
+
+[function]
+  
+A GTK convenience function that returns the GdkWindow of a GtkWidget,
+or nil if it has no GdkWindow.  This could be used, for example, to
+find the object that you need to pass to GDK drawing functions.  See
+gtkgltest.cl for an example.
+
+------------------------------------------------------------
+
+That's it!  Refer to the examples in gtkgltest.cl and gtkteapot.cl to
+see how to integrate calls to the above functions with OpenGL code in
+a CG application.
+
+------------------------------------------------------------

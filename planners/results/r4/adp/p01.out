@@ -1,0 +1,774 @@
+rm: cannot remove 'out/domain.pddl': No such file or directory
+rm: cannot remove 'out/problem.pddl': No such file or directory
+./plan.sh: line 29: ./ma-to-pddl.py: Permission denied
+./plan.sh: line 30: ./fast-downward.py: Permission denied
+cp: cannot stat 'sas_plan': No such file or directory
+
+real	0m0.004s
+user	0m0.000s
+sys	0m0.000s
+
+Traceback (most recent call last):
+  File "./fast-downward.py", line 5, in <module>
+    from driver.main import main
+ValueError: bad marshal data (unknown type code)
+cp: cannot stat 'sas_plan': No such file or directory
+
+real	0m0.035s
+user	0m0.020s
+sys	0m0.004s
+
+Traceback (most recent call last):
+  File "./fast-downward.py", line 5, in <module>
+    from driver.main import main
+ValueError: bad marshal data (unknown type code)
+cp: cannot stat 'sas_plan': No such file or directory
+
+real	0m0.028s
+user	0m0.012s
+sys	0m0.008s
+
+INFO     Running translator.
+INFO     translator inputs: ['out/domain.pddl', 'out/problem.pddl']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.010s CPU, 0.005s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.002s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.005s wall-clock]
+Preparing model... [0.010s CPU, 0.004s wall-clock]
+Generated 66 rules.
+Computing model... [0.060s CPU, 0.068s wall-clock]
+1697 relevant atoms
+2416 auxiliary atoms
+4113 final queue length
+5293 total queue pushes
+Completing instantiation... [0.060s CPU, 0.050s wall-clock]
+Instantiating: [0.130s CPU, 0.129s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.000s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.002s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+116 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.010s CPU, 0.001s wall-clock]
+Computing fact groups: [0.010s CPU, 0.011s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.002s wall-clock]
+Translating task: [0.040s CPU, 0.043s wall-clock]
+468 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+11 propositions removed
+Detecting unreachable propositions: [0.010s CPU, 0.008s wall-clock]
+Translator variables: 127
+Translator derived variables: 0
+Translator facts: 381
+Translator goal facts: 9
+Translator mutex groups: 13
+Translator total mutex groups size: 157
+Translator operators: 1197
+Translator axioms: 0
+Translator task size: 5321
+Translator peak memory: 33072 KB
+Writing output... [0.010s CPU, 0.010s wall-clock]
+Done! [0.210s CPU, 0.209s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+99 variables of 127 necessary
+0 of 13 mutex groups necessary.
+1197 of 1197 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 325
+Preprocessor derived variables: 0
+Preprocessor task size: 4828
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/planners/adp/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=adp(cost_type=1)', '--search', 'lazy_greedy(hff, preferred=hff)', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=0.04s]
+building causal graph...done! [t=0.04s]
+packing state variables...done! [t=0.04s]
+Variables: 99
+Facts: 325
+Bytes per state: 20
+done initalizing global data [t=0.04s]
+Conducting lazy best first search, (real) bound = 2147483647
+Initializing ADP heuristic...
+Initializing additive heuristic...
+Calculating Agents...
+Extending agent variables...
+Combining...
+Refining agents by joint action space...
+9->9 agents left
+9 agents left!
+Building propositions...
+Simplifying 1599 unary operators... done! [1599 unary operators]
+Creating agent operator sets...
+Best heuristic value: 909 [g=0, 1 evaluated, 0 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 908 [g=2, 8 evaluated, 7 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 907 [g=3, 11 evaluated, 10 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 906 [g=4, 12 evaluated, 11 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 904 [g=7, 17 evaluated, 16 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 903 [g=8, 19 evaluated, 18 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 902 [g=10, 22 evaluated, 21 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 901 [g=11, 23 evaluated, 22 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 609 [g=12, 24 evaluated, 23 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 608 [g=13, 26 evaluated, 25 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 607 [g=14, 27 evaluated, 26 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 606 [g=15, 29 evaluated, 28 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 605 [g=16, 31 evaluated, 30 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 604 [g=17, 32 evaluated, 31 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 603 [g=18, 33 evaluated, 32 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 602 [g=19, 34 evaluated, 33 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 601 [g=20, 35 evaluated, 34 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 404 [g=21, 36 evaluated, 35 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 403 [g=24, 39 evaluated, 38 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 402 [g=25, 40 evaluated, 39 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 401 [g=26, 41 evaluated, 40 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 305 [g=27, 42 evaluated, 41 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 304 [g=31, 46 evaluated, 45 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 303 [g=32, 47 evaluated, 46 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 302 [g=33, 48 evaluated, 47 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 301 [g=34, 49 evaluated, 48 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 206 [g=35, 50 evaluated, 49 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 205 [g=39, 55 evaluated, 54 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 204 [g=40, 56 evaluated, 55 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 203 [g=41, 57 evaluated, 56 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 202 [g=42, 58 evaluated, 57 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 201 [g=43, 59 evaluated, 58 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 102 [g=44, 60 evaluated, 59 expanded, t=0.04s, 4120 KB]
+Best heuristic value: 101 [g=45, 61 evaluated, 60 expanded, t=0.04s, 4120 KB]
+Solution found!
+Actual search time: 0.00s [t=0.04s]
+navigate_uav uav3 area13 area8 (1)
+take_picture uav3 area8 disaster1 (1)
+navigate_uav uav3 area8 area9 (1)
+communicate_data uav3 cdm2 disaster1 area9 area13 (1)
+navigate_uav uav3 area9 area12 (1)
+take_picture uav3 area12 disaster2 (1)
+navigate_uav uav3 area12 area1 (1)
+communicate_data uav3 cdm1 disaster2 area1 area1 (1)
+navigate_uav uav3 area1 area7 (1)
+take_picture uav3 area7 disaster4 (1)
+navigate_uav uav3 area7 area3 (1)
+communicate_data uav3 cdm1 disaster4 area3 area1 (1)
+pickup_box ugv3 ugv3store cdm2 area13 box2 (1)
+navigate_ugv ugv3 area13 area10 (1)
+take_picture ugv3 area10 disaster3 (1)
+communicate_data ugv3 cdm2 disaster3 area10 area13 (1)
+navigate_ugv ugv3 area10 area4 (1)
+navigate_ugv ugv3 area4 area3 (1)
+navigate_ugv ugv3 area3 area5 (1)
+navigate_ugv ugv3 area5 area11 (1)
+drop_box ugv3 ugv3store area11 box2 (1)
+navigate_usv usv3 area13 area9 (1)
+navigate_usv usv3 area9 area8 (1)
+sample_water usv3 usv3store area8 (1)
+navigate_usv usv3 area8 area9 (1)
+navigate_usv usv3 area9 area13 (1)
+drop_sample usv3 usv3store area13 area8 cdm2 (1)
+navigate_usv usv2 area1 area2 (1)
+navigate_usv usv2 area2 area4 (1)
+navigate_usv usv2 area4 area9 (1)
+sample_water usv2 usv2store area9 (1)
+navigate_usv usv2 area9 area4 (1)
+navigate_usv usv2 area4 area2 (1)
+navigate_usv usv2 area2 area1 (1)
+drop_sample usv2 usv2store area1 area9 cdm1 (1)
+navigate_ugv ugv3 area11 area5 (1)
+navigate_ugv ugv3 area5 area3 (1)
+navigate_ugv ugv3 area3 area1 (1)
+pickup_box ugv3 ugv3store cdm1 area1 box1 (1)
+navigate_ugv ugv3 area1 area3 (1)
+navigate_ugv ugv3 area3 area5 (1)
+navigate_ugv ugv3 area5 area11 (1)
+navigate_ugv ugv3 area11 area9 (1)
+drop_box ugv3 ugv3store area9 box1 (1)
+take_picture uav3 area3 disaster5 (1)
+communicate_data uav3 cdm1 disaster5 area3 area1 (1)
+Plan length: 46 step(s).
+Plan cost: 46
+Initial state h value: 909.
+Expanded 61 state(s).
+Reopened 0 state(s).
+Evaluated 62 state(s).
+Evaluations: 62
+Generated 3385 state(s).
+Dead ends: 0 state(s).
+Search time: 0.00s
+Total time: 0.04s
+Solution found.
+Peak memory: 4120 KB
+
+real	0m0.455s
+user	0m0.372s
+sys	0m0.064s
+
+(navigate_uav uav3 area13 area8)
+(take_picture uav3 area8 disaster1)
+(navigate_uav uav3 area8 area9)
+(communicate_data uav3 cdm2 disaster1 area9 area13)
+(navigate_uav uav3 area9 area12)
+(take_picture uav3 area12 disaster2)
+(navigate_uav uav3 area12 area1)
+(communicate_data uav3 cdm1 disaster2 area1 area1)
+(navigate_uav uav3 area1 area7)
+(take_picture uav3 area7 disaster4)
+(navigate_uav uav3 area7 area3)
+(communicate_data uav3 cdm1 disaster4 area3 area1)
+(pickup_box ugv3 ugv3store cdm2 area13 box2)
+(navigate_ugv ugv3 area13 area10)
+(take_picture ugv3 area10 disaster3)
+(communicate_data ugv3 cdm2 disaster3 area10 area13)
+(navigate_ugv ugv3 area10 area4)
+(navigate_ugv ugv3 area4 area3)
+(navigate_ugv ugv3 area3 area5)
+(navigate_ugv ugv3 area5 area11)
+(drop_box ugv3 ugv3store area11 box2)
+(navigate_usv usv3 area13 area9)
+(navigate_usv usv3 area9 area8)
+(sample_water usv3 usv3store area8)
+(navigate_usv usv3 area8 area9)
+(navigate_usv usv3 area9 area13)
+(drop_sample usv3 usv3store area13 area8 cdm2)
+(navigate_usv usv2 area1 area2)
+(navigate_usv usv2 area2 area4)
+(navigate_usv usv2 area4 area9)
+(sample_water usv2 usv2store area9)
+(navigate_usv usv2 area9 area4)
+(navigate_usv usv2 area4 area2)
+(navigate_usv usv2 area2 area1)
+(drop_sample usv2 usv2store area1 area9 cdm1)
+(navigate_ugv ugv3 area11 area5)
+(navigate_ugv ugv3 area5 area3)
+(navigate_ugv ugv3 area3 area1)
+(pickup_box ugv3 ugv3store cdm1 area1 box1)
+(navigate_ugv ugv3 area1 area3)
+(navigate_ugv ugv3 area3 area5)
+(navigate_ugv ugv3 area5 area11)
+(navigate_ugv ugv3 area11 area9)
+(drop_box ugv3 ugv3store area9 box1)
+(take_picture uav3 area3 disaster5)
+(communicate_data uav3 cdm1 disaster5 area3 area1)
+; cost = 46 (unit cost)
+
+INFO     Running translator.
+INFO     translator inputs: ['out/domain.pddl', 'out/problem.pddl']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.000s CPU, 0.005s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.010s CPU, 0.002s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.006s wall-clock]
+Preparing model... [0.000s CPU, 0.004s wall-clock]
+Generated 66 rules.
+Computing model... [0.080s CPU, 0.070s wall-clock]
+1697 relevant atoms
+2416 auxiliary atoms
+4113 final queue length
+5293 total queue pushes
+Completing instantiation... [0.040s CPU, 0.050s wall-clock]
+Instantiating: [0.130s CPU, 0.132s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.010s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.002s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+116 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.000s CPU, 0.001s wall-clock]
+Computing fact groups: [0.020s CPU, 0.011s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.002s wall-clock]
+Translating task: [0.040s CPU, 0.043s wall-clock]
+468 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+11 propositions removed
+Detecting unreachable propositions: [0.010s CPU, 0.008s wall-clock]
+Translator variables: 127
+Translator derived variables: 0
+Translator facts: 381
+Translator goal facts: 9
+Translator mutex groups: 13
+Translator total mutex groups size: 157
+Translator operators: 1197
+Translator axioms: 0
+Translator task size: 5321
+Translator peak memory: 33072 KB
+Writing output... [0.010s CPU, 0.010s wall-clock]
+Done! [0.210s CPU, 0.212s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+99 variables of 127 necessary
+0 of 13 mutex groups necessary.
+1197 of 1197 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 325
+Preprocessor derived variables: 0
+Preprocessor task size: 4828
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/planners/adp/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=adp(cost_type=1)', '--search', 'lazy_greedy(hff, preferred=hff)', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=0.02s]
+building causal graph...done! [t=0.02s]
+packing state variables...done! [t=0.02s]
+Variables: 99
+Facts: 325
+Bytes per state: 20
+done initalizing global data [t=0.02s]
+Conducting lazy best first search, (real) bound = 2147483647
+Initializing ADP heuristic...
+Initializing additive heuristic...
+Calculating Agents...
+Extending agent variables...
+Combining...
+Refining agents by joint action space...
+9->9 agents left
+9 agents left!
+Building propositions...
+Simplifying 1599 unary operators... done! [1599 unary operators]
+Creating agent operator sets...
+Best heuristic value: 909 [g=0, 1 evaluated, 0 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 907 [g=3, 7 evaluated, 6 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 906 [g=4, 10 evaluated, 9 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 905 [g=6, 14 evaluated, 13 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 904 [g=7, 15 evaluated, 14 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 903 [g=8, 17 evaluated, 16 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 902 [g=9, 18 evaluated, 17 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 901 [g=10, 19 evaluated, 18 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 609 [g=11, 20 evaluated, 19 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 608 [g=12, 22 evaluated, 21 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 607 [g=13, 23 evaluated, 22 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 606 [g=14, 25 evaluated, 24 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 605 [g=15, 26 evaluated, 25 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 604 [g=16, 27 evaluated, 26 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 603 [g=17, 29 evaluated, 28 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 602 [g=18, 30 evaluated, 29 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 601 [g=19, 31 evaluated, 30 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 404 [g=20, 32 evaluated, 31 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 403 [g=23, 35 evaluated, 34 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 402 [g=24, 36 evaluated, 35 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 401 [g=25, 37 evaluated, 36 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 305 [g=26, 38 evaluated, 37 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 304 [g=30, 42 evaluated, 41 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 303 [g=31, 43 evaluated, 42 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 302 [g=32, 44 evaluated, 43 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 301 [g=33, 45 evaluated, 44 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 206 [g=34, 46 evaluated, 45 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 205 [g=38, 51 evaluated, 50 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 204 [g=39, 52 evaluated, 51 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 203 [g=40, 53 evaluated, 52 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 202 [g=41, 54 evaluated, 53 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 201 [g=42, 55 evaluated, 54 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 102 [g=43, 56 evaluated, 55 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 101 [g=44, 57 evaluated, 56 expanded, t=0.02s, 4120 KB]
+Solution found!
+Actual search time: 0.00s [t=0.02s]
+navigate_uav uav3 area13 area12 (1)
+take_picture uav3 area12 disaster2 (1)
+navigate_uav uav3 area12 area13 (1)
+communicate_data uav3 cdm2 disaster2 area13 area13 (1)
+navigate_uav uav3 area13 area7 (1)
+take_picture uav3 area7 disaster4 (1)
+navigate_uav uav3 area7 area8 (1)
+take_picture uav3 area8 disaster1 (1)
+navigate_uav uav3 area8 area3 (1)
+communicate_data uav3 cdm1 disaster1 area3 area1 (1)
+communicate_data uav3 cdm1 disaster4 area3 area1 (1)
+pickup_box ugv3 ugv3store cdm2 area13 box2 (1)
+navigate_ugv ugv3 area13 area10 (1)
+take_picture ugv3 area10 disaster3 (1)
+navigate_ugv ugv3 area10 area4 (1)
+navigate_ugv ugv3 area4 area3 (1)
+communicate_data ugv3 cdm1 disaster3 area3 area1 (1)
+navigate_ugv ugv3 area3 area5 (1)
+navigate_ugv ugv3 area5 area11 (1)
+drop_box ugv3 ugv3store area11 box2 (1)
+navigate_usv usv3 area13 area9 (1)
+navigate_usv usv3 area9 area8 (1)
+sample_water usv3 usv3store area8 (1)
+navigate_usv usv3 area8 area9 (1)
+navigate_usv usv3 area9 area13 (1)
+drop_sample usv3 usv3store area13 area8 cdm2 (1)
+navigate_usv usv2 area1 area2 (1)
+navigate_usv usv2 area2 area4 (1)
+navigate_usv usv2 area4 area9 (1)
+sample_water usv2 usv2store area9 (1)
+navigate_usv usv2 area9 area4 (1)
+navigate_usv usv2 area4 area2 (1)
+navigate_usv usv2 area2 area1 (1)
+drop_sample usv2 usv2store area1 area9 cdm1 (1)
+navigate_ugv ugv3 area11 area5 (1)
+navigate_ugv ugv3 area5 area3 (1)
+navigate_ugv ugv3 area3 area1 (1)
+pickup_box ugv3 ugv3store cdm1 area1 box1 (1)
+navigate_ugv ugv3 area1 area3 (1)
+navigate_ugv ugv3 area3 area5 (1)
+navigate_ugv ugv3 area5 area11 (1)
+navigate_ugv ugv3 area11 area9 (1)
+drop_box ugv3 ugv3store area9 box1 (1)
+take_picture uav3 area3 disaster5 (1)
+communicate_data uav3 cdm1 disaster5 area3 area1 (1)
+Plan length: 45 step(s).
+Plan cost: 45
+Initial state h value: 909.
+Expanded 57 state(s).
+Reopened 0 state(s).
+Evaluated 58 state(s).
+Evaluations: 58
+Generated 3170 state(s).
+Dead ends: 0 state(s).
+Search time: 0.00s
+Total time: 0.02s
+Solution found.
+Peak memory: 4120 KB
+
+real	0m0.432s
+user	0m0.372s
+sys	0m0.044s
+
+(navigate_uav uav3 area13 area12)
+(take_picture uav3 area12 disaster2)
+(navigate_uav uav3 area12 area13)
+(communicate_data uav3 cdm2 disaster2 area13 area13)
+(navigate_uav uav3 area13 area7)
+(take_picture uav3 area7 disaster4)
+(navigate_uav uav3 area7 area8)
+(take_picture uav3 area8 disaster1)
+(navigate_uav uav3 area8 area3)
+(communicate_data uav3 cdm1 disaster1 area3 area1)
+(communicate_data uav3 cdm1 disaster4 area3 area1)
+(pickup_box ugv3 ugv3store cdm2 area13 box2)
+(navigate_ugv ugv3 area13 area10)
+(take_picture ugv3 area10 disaster3)
+(navigate_ugv ugv3 area10 area4)
+(navigate_ugv ugv3 area4 area3)
+(communicate_data ugv3 cdm1 disaster3 area3 area1)
+(navigate_ugv ugv3 area3 area5)
+(navigate_ugv ugv3 area5 area11)
+(drop_box ugv3 ugv3store area11 box2)
+(navigate_usv usv3 area13 area9)
+(navigate_usv usv3 area9 area8)
+(sample_water usv3 usv3store area8)
+(navigate_usv usv3 area8 area9)
+(navigate_usv usv3 area9 area13)
+(drop_sample usv3 usv3store area13 area8 cdm2)
+(navigate_usv usv2 area1 area2)
+(navigate_usv usv2 area2 area4)
+(navigate_usv usv2 area4 area9)
+(sample_water usv2 usv2store area9)
+(navigate_usv usv2 area9 area4)
+(navigate_usv usv2 area4 area2)
+(navigate_usv usv2 area2 area1)
+(drop_sample usv2 usv2store area1 area9 cdm1)
+(navigate_ugv ugv3 area11 area5)
+(navigate_ugv ugv3 area5 area3)
+(navigate_ugv ugv3 area3 area1)
+(pickup_box ugv3 ugv3store cdm1 area1 box1)
+(navigate_ugv ugv3 area1 area3)
+(navigate_ugv ugv3 area3 area5)
+(navigate_ugv ugv3 area5 area11)
+(navigate_ugv ugv3 area11 area9)
+(drop_box ugv3 ugv3store area9 box1)
+(take_picture uav3 area3 disaster5)
+(communicate_data uav3 cdm1 disaster5 area3 area1)
+; cost = 45 (unit cost)
+
+INFO     Running translator.
+INFO     translator inputs: ['out/domain.pddl', 'out/problem.pddl']
+INFO     translator arguments: []
+Parsing...
+Parsing: [0.000s CPU, 0.004s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.010s CPU, 0.003s wall-clock]
+Generated 66 rules.
+Computing model... [0.050s CPU, 0.058s wall-clock]
+1697 relevant atoms
+2416 auxiliary atoms
+4113 final queue length
+5293 total queue pushes
+Completing instantiation... [0.040s CPU, 0.043s wall-clock]
+Instantiating: [0.100s CPU, 0.110s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.010s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.002s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+116 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.010s CPU, 0.001s wall-clock]
+Computing fact groups: [0.020s CPU, 0.010s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.002s wall-clock]
+Translating task: [0.040s CPU, 0.041s wall-clock]
+468 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+11 propositions removed
+Detecting unreachable propositions: [0.000s CPU, 0.008s wall-clock]
+Translator variables: 127
+Translator derived variables: 0
+Translator facts: 381
+Translator goal facts: 9
+Translator mutex groups: 13
+Translator total mutex groups size: 157
+Translator operators: 1197
+Translator axioms: 0
+Translator task size: 5321
+Translator peak memory: 33072 KB
+Writing output... [0.010s CPU, 0.011s wall-clock]
+Done! [0.180s CPU, 0.187s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+99 variables of 127 necessary
+0 of 13 mutex groups necessary.
+1197 of 1197 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 325
+Preprocessor derived variables: 0
+Preprocessor task size: 4828
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/planners/adp/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=adp(cost_type=1)', '--search', 'lazy_greedy(hff, preferred=hff)', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=0.00s]
+building causal graph...done! [t=0.00s]
+packing state variables...done! [t=0.00s]
+Variables: 99
+Facts: 325
+Bytes per state: 20
+done initalizing global data [t=0.00s]
+Conducting lazy best first search, (real) bound = 2147483647
+Initializing ADP heuristic...
+Initializing additive heuristic...
+Calculating Agents...
+Extending agent variables...
+Combining...
+Refining agents by joint action space...
+9->9 agents left
+9 agents left!
+Building propositions...
+Simplifying 1599 unary operators... done! [1599 unary operators]
+Creating agent operator sets...
+Best heuristic value: 909 [g=0, 1 evaluated, 0 expanded, t=0.00s, 4120 KB]
+Best heuristic value: 907 [g=3, 7 evaluated, 6 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 906 [g=4, 10 evaluated, 9 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 904 [g=7, 16 evaluated, 15 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 903 [g=8, 18 evaluated, 17 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 902 [g=10, 21 evaluated, 20 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 901 [g=11, 22 evaluated, 21 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 609 [g=12, 23 evaluated, 22 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 608 [g=13, 25 evaluated, 24 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 607 [g=14, 26 evaluated, 25 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 606 [g=15, 28 evaluated, 27 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 605 [g=16, 30 evaluated, 29 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 604 [g=17, 31 evaluated, 30 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 603 [g=18, 32 evaluated, 31 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 602 [g=19, 33 evaluated, 32 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 601 [g=20, 34 evaluated, 33 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 404 [g=21, 35 evaluated, 34 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 403 [g=24, 38 evaluated, 37 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 402 [g=25, 39 evaluated, 38 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 401 [g=26, 40 evaluated, 39 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 305 [g=27, 41 evaluated, 40 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 304 [g=31, 45 evaluated, 44 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 303 [g=32, 46 evaluated, 45 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 302 [g=33, 47 evaluated, 46 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 301 [g=34, 48 evaluated, 47 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 206 [g=35, 49 evaluated, 48 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 205 [g=39, 54 evaluated, 53 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 204 [g=40, 55 evaluated, 54 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 203 [g=41, 56 evaluated, 55 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 202 [g=42, 57 evaluated, 56 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 201 [g=43, 58 evaluated, 57 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 103 [g=44, 59 evaluated, 58 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 102 [g=45, 60 evaluated, 59 expanded, t=0.02s, 4120 KB]
+Best heuristic value: 101 [g=46, 61 evaluated, 60 expanded, t=0.02s, 4120 KB]
+Solution found!
+Actual search time: 0.02s [t=0.02s]
+navigate_uav uav3 area13 area7 (1)
+take_picture uav3 area7 disaster4 (1)
+navigate_uav uav3 area7 area1 (1)
+communicate_data uav3 cdm1 disaster4 area1 area1 (1)
+navigate_uav uav3 area1 area12 (1)
+take_picture uav3 area12 disaster2 (1)
+navigate_uav uav3 area12 area13 (1)
+communicate_data uav3 cdm2 disaster2 area13 area13 (1)
+navigate_uav uav3 area13 area8 (1)
+take_picture uav3 area8 disaster1 (1)
+navigate_uav uav3 area8 area2 (1)
+communicate_data uav3 cdm1 disaster1 area2 area1 (1)
+pickup_box ugv3 ugv3store cdm2 area13 box2 (1)
+navigate_ugv ugv3 area13 area10 (1)
+take_picture ugv3 area10 disaster3 (1)
+communicate_data ugv3 cdm2 disaster3 area10 area13 (1)
+navigate_ugv ugv3 area10 area4 (1)
+navigate_ugv ugv3 area4 area3 (1)
+navigate_ugv ugv3 area3 area5 (1)
+navigate_ugv ugv3 area5 area11 (1)
+drop_box ugv3 ugv3store area11 box2 (1)
+navigate_usv usv3 area13 area9 (1)
+navigate_usv usv3 area9 area8 (1)
+sample_water usv3 usv3store area8 (1)
+navigate_usv usv3 area8 area9 (1)
+navigate_usv usv3 area9 area13 (1)
+drop_sample usv3 usv3store area13 area8 cdm2 (1)
+navigate_usv usv2 area1 area2 (1)
+navigate_usv usv2 area2 area4 (1)
+navigate_usv usv2 area4 area9 (1)
+sample_water usv2 usv2store area9 (1)
+navigate_usv usv2 area9 area4 (1)
+navigate_usv usv2 area4 area2 (1)
+navigate_usv usv2 area2 area1 (1)
+drop_sample usv2 usv2store area1 area9 cdm1 (1)
+navigate_ugv ugv3 area11 area5 (1)
+navigate_ugv ugv3 area5 area3 (1)
+navigate_ugv ugv3 area3 area1 (1)
+pickup_box ugv3 ugv3store cdm1 area1 box1 (1)
+navigate_ugv ugv3 area1 area3 (1)
+navigate_ugv ugv3 area3 area5 (1)
+navigate_ugv ugv3 area5 area11 (1)
+navigate_ugv ugv3 area11 area9 (1)
+drop_box ugv3 ugv3store area9 box1 (1)
+navigate_ugv ugv2 area1 area3 (1)
+take_picture ugv2 area3 disaster5 (1)
+communicate_data ugv2 cdm1 disaster5 area3 area1 (1)
+Plan length: 47 step(s).
+Plan cost: 47
+Initial state h value: 909.
+Expanded 61 state(s).
+Reopened 0 state(s).
+Evaluated 62 state(s).
+Evaluations: 62
+Generated 3348 state(s).
+Dead ends: 0 state(s).
+Search time: 0.02s
+Total time: 0.02s
+Solution found.
+Peak memory: 4120 KB
+
+real	0m0.364s
+user	0m0.304s
+sys	0m0.044s
+
+(navigate_uav uav3 area13 area7)
+(take_picture uav3 area7 disaster4)
+(navigate_uav uav3 area7 area1)
+(communicate_data uav3 cdm1 disaster4 area1 area1)
+(navigate_uav uav3 area1 area12)
+(take_picture uav3 area12 disaster2)
+(navigate_uav uav3 area12 area13)
+(communicate_data uav3 cdm2 disaster2 area13 area13)
+(navigate_uav uav3 area13 area8)
+(take_picture uav3 area8 disaster1)
+(navigate_uav uav3 area8 area2)
+(communicate_data uav3 cdm1 disaster1 area2 area1)
+(pickup_box ugv3 ugv3store cdm2 area13 box2)
+(navigate_ugv ugv3 area13 area10)
+(take_picture ugv3 area10 disaster3)
+(communicate_data ugv3 cdm2 disaster3 area10 area13)
+(navigate_ugv ugv3 area10 area4)
+(navigate_ugv ugv3 area4 area3)
+(navigate_ugv ugv3 area3 area5)
+(navigate_ugv ugv3 area5 area11)
+(drop_box ugv3 ugv3store area11 box2)
+(navigate_usv usv3 area13 area9)
+(navigate_usv usv3 area9 area8)
+(sample_water usv3 usv3store area8)
+(navigate_usv usv3 area8 area9)
+(navigate_usv usv3 area9 area13)
+(drop_sample usv3 usv3store area13 area8 cdm2)
+(navigate_usv usv2 area1 area2)
+(navigate_usv usv2 area2 area4)
+(navigate_usv usv2 area4 area9)
+(sample_water usv2 usv2store area9)
+(navigate_usv usv2 area9 area4)
+(navigate_usv usv2 area4 area2)
+(navigate_usv usv2 area2 area1)
+(drop_sample usv2 usv2store area1 area9 cdm1)
+(navigate_ugv ugv3 area11 area5)
+(navigate_ugv ugv3 area5 area3)
+(navigate_ugv ugv3 area3 area1)
+(pickup_box ugv3 ugv3store cdm1 area1 box1)
+(navigate_ugv ugv3 area1 area3)
+(navigate_ugv ugv3 area3 area5)
+(navigate_ugv ugv3 area5 area11)
+(navigate_ugv ugv3 area11 area9)
+(drop_box ugv3 ugv3store area9 box1)
+(navigate_ugv ugv2 area1 area3)
+(take_picture ugv2 area3 disaster5)
+(communicate_data ugv2 cdm1 disaster5 area3 area1)
+; cost = 47 (unit cost)
+

@@ -1,0 +1,161 @@
+! Sample .Xdefaults
+! $Header: /repo/cvs.copy/cl/sample-files/dot-Xdefaults,v 1.8 1994/06/08 05:57:37 duane Exp $
+! (All lines that begin with '!' are comments)
+
+!
+! Motif Window Manager
+!
+mwm*ButtonBindings:		normal
+mwm*SaveUnder:			on
+mwm*IconBoxGeometry:		7x2-3+123
+mwm*UseIconBox:			on
+mwm*InteractivePlacement:	on
+mwm*KeyboardFocusPolicy: 	pointer
+
+!
+! XTerm class
+!
+XTerm.vt100.eightBitInput:	true
+XTerm.vt100.curses:		true
+XTerm.vt100.geometry:		80x32
+XTerm.vt100.saveLines:		256
+XTerm.vt100.scrollBar:		true
+XTerm.vt100.scrollTtyOutput:	false
+! This next allows you to also use Shift-Ctrl-click instead of just Ctrl-click
+! to bring up the three xterm menus.
+XTerm.vt100.translations:	#override \
+	~Shift ~Ctrl ~Meta <BtnDown>:	bell(0) \n\
+	~Shift ~Ctrl ~Meta <BtnUp>:	bell(0) \n\
+	Shift Ctrl <Btn1Down>:		popup-menu(mainMenu) \n\
+	Shift Ctrl <Btn2Down>:		popup-menu(vtMenu) \n\
+	Shift Ctrl <Btn3Down>:		popup-menu(fontMenu)
+
+!
+! Emacs class
+!
+Emacs*borderWidth:		3
+Emacs*font:			-*-courier-medium-r-*-*-12-*
+Emacs*menubar*font:    -adobe-times-bold-r-normal--14-140-75-75-p-77-iso8859-1
+
+!
+! Gnu Emacs
+!
+Emacs.Geometry:			=84x62+3-3
+
+!
+! Epoch
+!
+epoch*screen.font:		-*-courier-medium-r-*-*-12-*
+epoch*screen.geometry:		=84x60+3+3
+epoch*minibuf.geometry:		=84x2+3-3
+
+!
+! Clocks
+!
+xclock*Geometry:		105x105-3+3
+oclock*Geometry:		105x105-3+3
+
+!
+! Composer 2
+!
+Composer.geometry:		-125+3
+Composer.Debugger*font:		-*-courier-medium-r-*-*-14-*
+Composer*Debugger*baseColor:	LightGoldenrod
+Composer*Inspector*baseColor:	LightCoral
+Composer*Grapher*baseColor:	PaleGreen
+
+! Other examples follow.
+
+! Composer.Debugger.geometry:	+200+500
+! Composer.Debugger.foreground:	DarkGreen
+! Composer.Inspector.geometry:	+10+10
+! composer*classGraph*geometry:	+100+100
+! Composer.Debugger.frameLines:	3
+! composer*classGraph*geometry:	100+100
+! Composer.Inspector.font:	-*-courier-medium-r-*-*-18-*
+
+*defaultVirtualBindings: \
+	osfBackSpace	: <Key>Delete\n\
+	osfDelete	: <Key>BackSpace\n\
+	osfUndo		: Ctrl<Key>underscore\n\
+	osfEndLine	: Ctrl<Key>e\n\
+	osfBeginLine	: Ctrl<Key>a\n\
+	osfCopy		: Mod1<Key>w\n\
+	osfCut		: Ctrl<Key>w\n\
+	osfLeft		: Ctrl<Key>b\n\
+	osfRight	: Ctrl<Key>f\n\
+	osfDown		: Ctrl<Key>n\n\
+	osfUp		: Ctrl<Key>p\n\
+	osfPageDown	: Ctrl<Key>v\n\
+	osfPageUp	: Mod1<Key>v\n\
+	osfPaste 	: Ctrl<Key>y
+
+! The following gives motif widgets emacs-like keybindings:
+
+*XmText.translations: #override\n\
+        Ctrl <Key>b:            backward-character()\n\
+        Alt <Key>b:             backward-word()\n\
+        Meta <Key>b:            backward-word()\n\
+        Shift Alt <Key>b:       backward-word(extend)\n\
+        Shift Meta <Key>b:      backward-word(extend)\n\
+        Alt <Key>[:             backward-paragraph()\n\
+        Meta <Key>[:            backward-paragraph()\n\
+        Shift Alt <Key>[:       backward-paragraph(extend)\n\
+        Shift Meta <Key>[:      backward-paragraph(extend)\n\
+        Alt <Key><:             beginning-of-file()\n\
+        Meta <Key><:            beginning-of-file()\n\
+        Ctrl <Key>a:            beginning-of-line()\n\
+        Shift Ctrl <Key>a:      beginning-of-line(extend)\n\
+        Ctrl <Key>osfInsert:    copy-clipboard()\n\
+        Shift <Key>osfDelete:   cut-clipboard()\n\
+        Shift <Key>osfInsert:   paste-clipboard()\n\
+        Alt <Key>>:             end-of-file()\n\
+        Meta <Key>>:            end-of-file()\n\
+        Ctrl <Key>e:            end-of-line()\n\
+        Shift Ctrl <Key>e:      end-of-line(extend)\n\
+        Ctrl <Key>f:            forward-character()\n\
+        Alt <Key>]:             forward-paragraph()\n\
+        Meta <Key>]:            forward-paragraph()\n\
+        Shift Alt <Key>]:       forward-paragraph(extend)\n\
+        Shift Meta <Key>]:      forward-paragraph(extend)\n\
+        Ctrl Alt <Key>f:        forward-word()\n\
+        Ctrl Meta <Key>f:       forward-word()\n\
+        Ctrl <Key>d:            kill-next-character()\n\
+        Alt <Key>BackSpace:     kill-previous-word()\n\
+        Meta <Key>BackSpace:    kill-previous-word()\n\
+        Ctrl <Key>w:            key-select() kill-selection()\n\
+        Ctrl <Key>y:            unkill()\n\
+        Ctrl <Key>k:            kill-to-end-of-line()\n\
+        Alt <Key>Delete:        kill-to-start-of-line()\n\
+        Meta <Key>Delete:       kill-to-start-of-line()\n\
+        Ctrl <Key>o:            newline-and-backup()\n\
+        Ctrl <Key>j:            newline-and-indent()\n\
+        Ctrl <Key>n:            next-line()\n\
+        Ctrl <Key>osfLeft:      page-left()\n\
+        Ctrl <Key>osfRight:     page-right()\n\
+        Ctrl <Key>p:            previous-line()\n\
+        Ctrl <Key>g:            process-cancel()\n\
+        Ctrl <Key>l:            redraw-display()\n\
+        Ctrl <Key>osfDown:      next-page()\n\
+        Ctrl <Key>osfUp:        previous-page()\n\
+        Ctrl <Key>space:        set-anchor()\n
+
+*XmTextField.translations: #override\n\
+        Ctrl <Key>b:            backward-character()\n\
+        Alt <Key>b:             backward-word()\n\
+        Meta <Key>b:            backward-word()\n\
+        Shift Alt <Key>b:       backward-word(extend)\n\
+        Shift Meta <Key>b:      backward-word(extend)\n\
+        Shift Ctrl <Key>a:      beginning-of-line(extend)\n\
+        Ctrl <Key>osfInsert:    copy-clipboard()\n\
+        Shift <Key>osfDelete:   cut-clipboard()\n\
+        Shift <Key>osfInsert:   paste-clipboard()\n\
+        Ctrl <Key>e:            end-of-line()\n\
+        Shift Ctrl <Key>e:      end-of-line(extend)\n\
+        Ctrl <Key>f:            forward-character()\n\
+        Ctrl Alt <Key>f:        forward-word()\n\
+        Ctrl Meta <Key>f:       forward-word()\n\
+        Ctrl <Key>osfLeft:      page-left()\n\
+        Ctrl <Key>osfRight:     page-right()\n\
+        Ctrl <Key>g:            process-cancel()\n\
+        Ctrl <Key>space:        set-anchor()\n

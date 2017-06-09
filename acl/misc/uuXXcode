@@ -1,0 +1,452 @@
+$Id: uuXXcode,v 1.5 1997/05/23 20:39:01 layer Exp $
+
+Submitted by: Mark Horton <cbosgd!mark>
+Mod.sources: Volume 7, Issue 15
+Archive-name: uuencode
+
+[  These programs have been part of the Berkeley distributions for
+   quite some time.  Although they have always been in the public
+   domain, they have not always been readily available.  I wrote
+   the Makefile, and repacked what Mark sent me to include it.
+   --r$  ]
+
+#!/bin/sh
+# This is a shell archive.  Remove anything before this line,
+# then unpack it by saving it in a file and typing "sh file".
+
+# Exit status; set to 1 on "wc" errors or if would overwrite.
+STATUS=0
+# Contents:  Makefile uuencode.1 uudecode.c uuencode.c
+ 
+echo x - Makefile
+if test -f Makefile ; then
+    echo Makefile exists, putting output in $$Makefile
+    OUT=$$Makefile
+    STATUS=1
+else
+    OUT=Makefile
+fi
+sed 's/^XX//' > $OUT <<'@//E*O*F Makefile//'
+XXCFLAGS	= -O
+
+XXall:	uuencode uudecode
+XXinstall:	all
+XX	cp uuencode uudecode /usr/bin
+XX	strip /usr/bin/uuencode
+XX	strip /usr/bin/uudecode
+XX	cp uuencode.1 /usr/man/man1/uuencode.1
+
+XXuuencode:	uuencode.c	;	cc -o $@ $(CFLAGS) $?
+XXuudecode:	uudecode.c	;	cc -o $@ $(CFLAGS) $?
+@//E*O*F Makefile//
+chmod u=rw,g=rw,o=rw $OUT
+ 
+echo x - uuencode.1
+if test -f uuencode.1 ; then
+    echo uuencode.1 exists, putting output in $$uuencode.1
+    OUT=$$uuencode.1
+    STATUS=1
+else
+    OUT=uuencode.1
+fi
+sed 's/^XX//' > $OUT <<'@//E*O*F uuencode.1//'
+XX.TH UUENCODE 1 "1 June 1980"
+XX.UC 4
+XX.SH NAME
+XXuuencode,uudecode \- encode/decode a binary file for transmission via mail
+XX.SH SYNOPSIS
+XX.B uuencode
+XX[ source ] remotedest |
+XX.B mail
+XXsys1!sys2!..!decode
+XX.br
+XX.B uudecode
+XX[ file ]
+XX.SH DESCRIPTION
+XX.I Uuencode
+XXand
+XX.I uudecode
+XXare used to send a binary file via uucp (or other) mail.
+XXThis combination can be used over indirect mail links
+XXeven when
+XX.IR uusend (1C)
+XXis not available.
+XX.PP
+XX.I Uuencode
+XXtakes the named source file (default standard input) and
+XXproduces an encoded version on the standard output.
+XXThe encoding uses only printing ASCII characters,
+XXand includes the mode of the file and the
+XX.I remotedest
+XXfor recreation on the remote system.
+XX.PP
+XX.I Uudecode
+XXreads an encoded file,
+XXstrips off any leading and trailing lines added by mailers,
+XXand recreates the original file with the specified mode and name.
+XX.PP
+XXThe intent is that all mail to the user ``decode'' should be filtered
+XXthrough the uudecode program.  This way the file is created automatically
+XXwithout human intervention.
+XXThis is possible on the uucp network by either using
+XX.I sendmail
+XXor by making
+XX.I rmail
+XXbe a link to
+XX.I Mail
+XXinstead of
+XX.I mail.
+XXIn each case, an alias must be created in a master file to get
+XXthe automatic invocation of uudecode.
+XX.PP
+XXIf these facilities are not available, the file can be sent to a
+XXuser on the remote machine who can uudecode it manually.
+XX.PP
+XXThe encode file has an ordinary text form and can be edited
+XXby any text editor to change the mode or remote name.
+XX.SH SEE\ ALSO
+XXuuencode(5), uusend(1C), uucp(1C), uux(1C), mail(1)
+XX.SH AUTHOR
+XXMark Horton
+XX.SH BUGS
+XXThe file is expanded by 35% (3 bytes become 4 plus control information)
+XXcausing it to take longer to transmit.
+XX.PP
+XXThe user on the remote system who is invoking
+XX.I uudecode
+XX(often
+XX.I uucp)
+XXmust have write permission on the specified file.
+@//E*O*F uuencode.1//
+chmod u=rw,g=r,o=r $OUT
+ 
+echo x - uudecode.c
+if test -f uudecode.c ; then
+    echo uudecode.c exists, putting output in $$uudecode.c
+    OUT=$$uudecode.c
+    STATUS=1
+else
+    OUT=uudecode.c
+fi
+sed 's/^XX//' > $OUT <<'@//E*O*F uudecode.c//'
+XX/*
+XX * uudecode [input]
+XX *
+XX * create the specified file, decoding as you go.
+XX * used with uuencode.
+XX */
+XX#include <stdio.h>
+XX#include <pwd.h>
+XX#include <sys/types.h>
+XX#include <sys/stat.h>
+
+XX/* single character decode */
+XX#define DEC(c)	(((c) - ' ') & 077)
+
+XXmain(argc, argv)
+XXchar **argv;
+XX{
+XX	FILE *in, *out;
+XX	struct stat sbuf;
+XX	int mode;
+XX	char dest[128];
+XX	char buf[80];
+
+XX	/* optional input arg */
+XX	if (argc > 1) {
+XX		if ((in = fopen(argv[1], "r")) == NULL) {
+XX			perror(argv[1]);
+XX			exit(1);
+XX		}
+XX		argv++; argc--;
+XX	} else
+XX		in = stdin;
+
+XX	if (argc != 1) {
+XX		printf("Usage: uudecode [infile]\n");
+XX		exit(2);
+XX	}
+
+XX	/* search for header line */
+XX	for (;;) {
+XX		if (fgets(buf, sizeof buf, in) == NULL) {
+XX			fprintf(stderr, "No begin line\n");
+XX			exit(3);
+XX		}
+XX		if (strncmp(buf, "begin ", 6) == 0)
+XX			break;
+XX	}
+XX	sscanf(buf, "begin %o %s", &mode, dest);
+
+XX	/* handle ~user/file format */
+XX	if (dest[0] == '~') {
+XX		char *sl;
+XX		struct passwd *getpwnam();
+XX		char *index();
+XX		struct passwd *user;
+XX		char dnbuf[100];
+
+XX		sl = index(dest, '/');
+XX		if (sl == NULL) {
+XX			fprintf(stderr, "Illegal ~user\n");
+XX			exit(3);
+XX		}
+XX		*sl++ = 0;
+XX		user = getpwnam(dest+1);
+XX		if (user == NULL) {
+XX			fprintf(stderr, "No such user as %s\n", dest);
+XX			exit(4);
+XX		}
+XX		strcpy(dnbuf, user->pw_dir);
+XX		strcat(dnbuf, "/");
+XX		strcat(dnbuf, sl);
+XX		strcpy(dest, dnbuf);
+XX	}
+
+XX	/* create output file */
+XX	out = fopen(dest, "w");
+XX	if (out == NULL) {
+XX		perror(dest);
+XX		exit(4);
+XX	}
+XX	chmod(dest, mode);
+
+XX	decode(in, out);
+
+XX	if (fgets(buf, sizeof buf, in) == NULL || strcmp(buf, "end\n")) {
+XX		fprintf(stderr, "No end line\n");
+XX		exit(5);
+XX	}
+XX	exit(0);
+XX}
+
+XX/*
+XX * copy from in to out, decoding as you go along.
+XX */
+XXdecode(in, out)
+XXFILE *in;
+XXFILE *out;
+XX{
+XX	char buf[80];
+XX	char *bp;
+XX	int n;
+
+XX	for (;;) {
+XX		/* for each input line */
+XX		if (fgets(buf, sizeof buf, in) == NULL) {
+XX			printf("Short file\n");
+XX			exit(10);
+XX		}
+XX		n = DEC(buf[0]);
+XX		if (n <= 0)
+XX			break;
+
+XX		bp = &buf[1];
+XX		while (n > 0) {
+XX			outdec(bp, out, n);
+XX			bp += 4;
+XX			n -= 3;
+XX		}
+XX	}
+XX}
+
+XX/*
+XX * output a group of 3 bytes (4 input characters).
+XX * the input chars are pointed to by p, they are to
+XX * be output to file f.  n is used to tell us not to
+XX * output all of them at the end of the file.
+XX */
+XXoutdec(p, f, n)
+XXchar *p;
+XXFILE *f;
+XX{
+XX	int c1, c2, c3;
+
+XX	c1 = DEC(*p) << 2 | DEC(p[1]) >> 4;
+XX	c2 = DEC(p[1]) << 4 | DEC(p[2]) >> 2;
+XX	c3 = DEC(p[2]) << 6 | DEC(p[3]);
+XX	if (n >= 1)
+XX		putc(c1, f);
+XX	if (n >= 2)
+XX		putc(c2, f);
+XX	if (n >= 3)
+XX		putc(c3, f);
+XX}
+
+
+XX/* fr: like read but stdio */
+XXint
+XXfr(fd, buf, cnt)
+XXFILE *fd;
+XXchar *buf;
+XXint cnt;
+XX{
+XX	int c, i;
+
+XX	for (i=0; i<cnt; i++) {
+XX		c = getc(fd);
+XX		if (c == EOF)
+XX			return(i);
+XX		buf[i] = c;
+XX	}
+XX	return (cnt);
+XX}
+
+XX/*
+XX * Return the ptr in sp at which the character c appears;
+XX * NULL if not found
+XX */
+
+XX#define	NULL	0
+
+XXchar *
+XXindex(sp, c)
+XXregister char *sp, c;
+XX{
+XX	do {
+XX		if (*sp == c)
+XX			return(sp);
+XX	} while (*sp++);
+XX	return(NULL);
+XX}
+@//E*O*F uudecode.c//
+chmod u=rw,g=r,o=r $OUT
+ 
+echo x - uuencode.c
+if test -f uuencode.c ; then
+    echo uuencode.c exists, putting output in $$uuencode.c
+    OUT=$$uuencode.c
+    STATUS=1
+else
+    OUT=uuencode.c
+fi
+sed 's/^XX//' > $OUT <<'@//E*O*F uuencode.c//'
+XX/*
+XX * uuencode [input] output
+XX *
+XX * Encode a file so it can be mailed to a remote system.
+XX */
+XX#include <stdio.h>
+XX#include <sys/types.h>
+XX#include <sys/stat.h>
+
+XX/* ENC is the basic 1 character encoding function to make a char printing */
+XX#define ENC(c) (((c) & 077) + ' ')
+
+XXmain(argc, argv)
+XXchar **argv;
+XX{
+XX	FILE *in;
+XX	struct stat sbuf;
+XX	int mode;
+
+XX	/* optional 1st argument */
+XX	if (argc > 2) {
+XX		if ((in = fopen(argv[1], "r")) == NULL) {
+XX			perror(argv[1]);
+XX			exit(1);
+XX		}
+XX		argv++; argc--;
+XX	} else
+XX		in = stdin;
+
+XX	if (argc != 2) {
+XX		printf("Usage: uuencode [infile] remotefile\n");
+XX		exit(2);
+XX	}
+
+XX	/* figure out the input file mode */
+XX	fstat(fileno(in), &sbuf);
+XX	mode = sbuf.st_mode & 0777;
+XX	printf("begin %o %s\n", mode, argv[1]);
+
+XX	encode(in, stdout);
+
+XX	printf("end\n");
+XX	exit(0);
+XX}
+
+XX/*
+XX * copy from in to out, encoding as you go along.
+XX */
+XXencode(in, out)
+XXFILE *in;
+XXFILE *out;
+XX{
+XX	char buf[80];
+XX	int i, n;
+
+XX	for (;;) {
+XX		/* 1 (up to) 45 character line */
+XX		n = fr(in, buf, 45);
+XX		putc(ENC(n), out);
+
+XX		for (i=0; i<n; i += 3)
+XX			outdec(&buf[i], out);
+
+XX		putc('\n', out);
+XX		if (n <= 0)
+XX			break;
+XX	}
+XX}
+
+XX/*
+XX * output one group of 3 bytes, pointed at by p, on file f.
+XX */
+XXoutdec(p, f)
+XXchar *p;
+XXFILE *f;
+XX{
+XX	int c1, c2, c3, c4;
+
+XX	c1 = *p >> 2;
+XX	c2 = (*p << 4) & 060 | (p[1] >> 4) & 017;
+XX	c3 = (p[1] << 2) & 074 | (p[2] >> 6) & 03;
+XX	c4 = p[2] & 077;
+XX	putc(ENC(c1), f);
+XX	putc(ENC(c2), f);
+XX	putc(ENC(c3), f);
+XX	putc(ENC(c4), f);
+XX}
+
+XX/* fr: like read but stdio */
+XXint
+XXfr(fd, buf, cnt)
+XXFILE *fd;
+XXchar *buf;
+XXint cnt;
+XX{
+XX	int c, i;
+
+XX	for (i=0; i<cnt; i++) {
+XX		c = getc(fd);
+XX		if (c == EOF)
+XX			return(i);
+XX		buf[i] = c;
+XX	}
+XX	return (cnt);
+XX}
+@//E*O*F uuencode.c//
+chmod u=rw,g=r,o=r $OUT
+ 
+echo Inspecting for damage in transit...
+temp=/tmp/sharin$$; dtemp=/tmp/sharout$$
+trap "rm -f $temp $dtemp; exit" 0 1 2 3 15
+cat > $temp <<\!!!
+      11      35     261 Makefile
+      67     325    1839 uuencode.1
+     180     502    2865 uudecode.c
+     105     299    1623 uuencode.c
+     363    1161    6588 total
+!!!
+wc  Makefile uuencode.1 uudecode.c uuencode.c | sed 's=[^ ]*/==' | diff -b $temp - >$dtemp
+if test -s $dtemp ; then
+    echo "Ouch [diff of wc output]:"
+    cat $dtemp
+    STATUS=1
+elif test $STATUS = 0 ; then
+    echo "No problems found."
+else
+    echo "WARNING -- PROBLEMS WERE FOUND..."
+fi
+exit $STATUS

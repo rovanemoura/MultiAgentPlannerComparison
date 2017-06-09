@@ -1,0 +1,17 @@
+module chart{
+  typedef long index;
+  typedef double value ;
+  interface datasetlistener;
+  interface dataset{
+    long number_entries();
+    void adjust_requested (in index i, in value v);
+    void register_listener (in datasetlistener d);
+    value get(in index i);
+  };
+
+  interface datasetlistener{
+    void dataset_was_adjusted(in long entry, in double value);
+  };
+    
+};
+    

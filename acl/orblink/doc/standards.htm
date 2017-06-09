@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>The IDL/Lisp Standard and ORBLink</title>
+  </head>
+
+  <body>
+    <h1>The IDL/Lisp Standard and ORBLink</h1>
+<hr>
+The CORBA IDL/LISP proposed standard mapping allows the implementor
+flexibility in the implementation of various types and functions. The
+purpose of this document is to describe the choices we have made.
+
+<h2>Sequence handling</h2>
+
+This ORB always unmarshals values corresponding to the IDL sequence
+type as vectors. However, a list may be used anywhere a sequence is
+expected.
+
+<h2>float and double types</h2>
+
+<code>corba:float</code>, 
+corresponding to the IDL 
+<code>float</code> type, denotes the type
+<code>single-float</code>.
+<p>
+<code>corba:double</code>, corresponding to the IDL <code>double</code> type,
+denotes the type 
+<code>double-float</code>.
+<p>
+<h2>Operation mapping</h2>
+<p>
+ORBLink implements CORBA operations as generic functions. An operation
+named "foo" will be mapped to a method on a standard generic function
+named <code>OP:FOO</code>. 
+<p>
+The signature of the generic function is <code>(T &REST ARGS)</code>.
+<p>
+User code may rely on the fact that 
+<code>OP:FOO</code>
+is a funcallable object and
+may freely use auxiliary methods with such objects. However, Franz may
+change the low-level implementation of such functions in the future
+and user code should not rely on the metaclass or the signature of
+such generic functions.
+<p>
+<h2>Unimplemented features</h2>
+The following aspects of the CORBA Core are unimplemented:
+<ol>
+<li>DII/DSI
+<li><strike>Wide strings, wide characters</strike>
+<i>[no longer true as of Orblink 2.2.03]</i>
+<li>Extended numeric types (long double, long long)
+<li>Fixed types
+<li><strike>POA</strike>
+<i>[no longer true]</i>
+<li>Contexts
+</ol>
+<h2>Note on on enum types</h2>
+According to the CORBA 2.2 specification, an enum type does not begin a new naming scope. This means that enum members themselves define
+a new type in the namespace of the IDL construct containing the enum type definition. The CORBA 2.3 specification may change this counter-intuitive rule. In any case, we follow the CORBA 2.2 specification so that users must make sure that enum members do not conflict with names in a containing scope.
+
+<p>
+</body>
+</html>
