@@ -1,1 +1,1 @@
-# MultiAgentPlannerCOmparison
+# MultiAgentPlannerComparison
