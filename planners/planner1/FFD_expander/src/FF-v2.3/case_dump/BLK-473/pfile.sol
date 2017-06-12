@@ -1,6 +1,0 @@
-# Domain file: zeno.pddl
-# Problem file: zeno243_2.pddl
-3
-BOARD PERSON2 PLANE2 CITY1
-FLY PLANE2 CITY1 CITY3 FL1 FL0
-DEBARK PERSON2 PLANE2 CITY3

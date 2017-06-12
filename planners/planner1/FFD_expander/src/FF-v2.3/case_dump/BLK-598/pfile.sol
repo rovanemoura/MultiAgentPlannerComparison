@@ -1,6 +1,0 @@
-# Domain file: zeno.pddl
-# Problem file: zeno56_3.pddl
-3
-FLY PLANE1 CITY3 CITY2 FL4 FL3
-FLY PLANE2 CITY1 CITY2 FL4 FL3
-FLY PLANE3 CITY1 CITY3 FL5 FL4

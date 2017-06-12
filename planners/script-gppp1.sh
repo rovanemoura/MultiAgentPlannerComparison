@@ -1,4 +1,4 @@
-cd planner1
+cd marc
 { time timeout 60m ./plan.sh floods p01 ; } 2>&1 | cat > ../p01temp.out
 for f in ../*.out; do ( cat "${f}"; echo) >> ../results/r1/marc/p01-gppp1.out; done
 rm ../*.out

@@ -1,2 +1,0 @@
-   1 into depth [1]
-FLY PLANE1 CITY2 CITY6 FL2 FL1
