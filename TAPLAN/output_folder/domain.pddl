@@ -1,26 +1,26 @@
 (define (domain Floods)
 	(:requirements :typing)
 (:types
-	usv ugv uav - robot
 	robot area disaster store cdm box - object
+	usv ugv uav - robot
 )
 (:predicates
-	(communicated_data ?d - disaster)
-	(visible_from ?d - disaster ?a - area)
-	(have_water_sample_cdm ?c - cdm ?a - area)
 	(box_at_area ?b - box ?a - area)
-	(have_picture ?r - robot ?d - disaster)
-	(empty ?s - store)
-	(store_of ?s - store ?r - robot)
-	(in_range ?a1 - area ?a2 - area)
-	(box_at_cdm ?b - box ?c - cdm)
-	(ground_path ?a1 - area ?a2 - area)
 	(cdm_at ?c - cdm ?a - area)
-	(box_at ?b - box ?r - ugv)
-	(at ?r - robot ?a - area)
-	(have_water_sample ?r - usv ?a - area)
 	(water_path ?a1 - area ?a2 - area)
+	(visible_from ?d - disaster ?a - area)
+	(in_range ?a1 - area ?a2 - area)
+	(box_at ?b - box ?r - ugv)
+	(have_water_sample ?r - usv ?a - area)
+	(empty ?s - store)
+	(have_water_sample_cdm ?c - cdm ?a - area)
+	(ground_path ?a1 - area ?a2 - area)
 	(full ?s - store)
+	(communicated_data ?d - disaster)
+	(have_picture ?r - robot ?d - disaster)
+	(at ?r - robot ?a - area)
+	(box_at_cdm ?b - box ?c - cdm)
+	(store_of ?s - store ?r - robot)
 )
 
 (:action navigate_usv

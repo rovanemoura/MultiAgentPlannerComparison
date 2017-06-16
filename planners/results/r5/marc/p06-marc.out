@@ -1,0 +1,1681 @@
+{'?r': ['at']}
+{'?r': ['at']}
+{'?r': ['at']}
+{'?r': ['at']}
+{'?r': ['at']}
+{'?r': ['at']}
+{'?r': ['at']}
+{'?r': ['at']}
+{'?r': ['at']}
+{'robot': True, 'usv': True, 'ugv': True, 'uav': True}
+{}
+['usv1', 'usv2', 'usv3', 'usv4', 'usv5', 'usv6', 'usv7', 'usv8', 'ugv1', 'ugv2', 'ugv3', 'ugv4', 'ugv5', 'ugv6', 'ugv7', 'ugv8', 'uav1', 'uav2', 'uav3', 'uav4', 'uav5', 'uav6', 'uav7', 'uav8', 'usv1', 'usv2', 'usv3', 'usv4', 'usv5', 'usv6', 'usv7', 'usv8', 'ugv1', 'ugv2', 'ugv3', 'ugv4', 'ugv5', 'ugv6', 'ugv7', 'ugv8', 'uav1', 'uav2', 'uav3', 'uav4', 'uav5', 'uav6', 'uav7', 'uav8']
+~/TAPLAN/FFD/src ~/planners/marc
+INFO     Running translator.
+INFO     translator inputs: ['/home/rovane/TAPLAN/output_folder/domain.pddl', '/home/rovane/TAPLAN/output_folder/problem_ta.pddl']
+INFO     translator arguments: []
+['/home/rovane/TAPLAN/FFD/src/translate/translate.py', '/home/rovane/TAPLAN/output_folder/domain.pddl', '/home/rovane/TAPLAN/output_folder/problem_ta.pddl']
+Parsing...
+Parsing: [0.000s CPU, 0.006s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.002s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.010s CPU, 0.004s wall-clock]
+Preparing model... [0.000s CPU, 0.005s wall-clock]
+Generated 66 rules.
+Computing model... [0.470s CPU, 0.459s wall-clock]
+10698 relevant atoms
+29306 auxiliary atoms
+40004 final queue length
+57071 total queue pushes
+Completing instantiation... [0.540s CPU, 0.540s wall-clock]
+Instantiating: [1.030s CPU, 1.020s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.010s CPU, 0.009s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.010s CPU, 0.008s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+292 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.000s CPU, 0.002s wall-clock]
+Computing fact groups: [0.020s CPU, 0.026s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.001s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.001s wall-clock]
+Building mutex information...
+Building mutex information: [0.010s CPU, 0.001s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.010s CPU, 0.017s wall-clock]
+Translating task: [0.610s CPU, 0.615s wall-clock]
+12184 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+7 propositions removed
+Detecting unreachable propositions: [0.110s CPU, 0.109s wall-clock]
+Translator variables: 299
+Translator derived variables: 0
+Translator facts: 878
+Translator goal facts: 24
+Translator mutex groups: 14
+Translator total mutex groups size: 308
+Translator operators: 9634
+Translator axioms: 0
+Translator task size: 58411
+Translator peak memory: 68564 KB
+Writing output... [0.200s CPU, 0.197s wall-clock]
+Done! [2.010s CPU, 2.002s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+130 variables of 299 necessary
+0 of 14 mutex groups necessary.
+9634 of 9634 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 540
+Preprocessor derived variables: 0
+Preprocessor task size: 47356
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/TAPLAN/FFD/src/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=ff()', '--heuristic', 'hcea=cea()', '--search', 'lazy_greedy([hff, hcea], preferred=[hff, hcea])', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=0.10s]
+building causal graph...done! [t=0.11s]
+packing state variables...done! [t=0.11s]
+Variables: 130
+Facts: 540
+Bytes per state: 24
+done initalizing global data [t=0.11s]
+Conducting lazy best first search, (real) bound = 2147483647
+Initializing context-enhanced additive heuristic...
+Initializing FF heuristic...
+Initializing additive heuristic...
+Simplifying 19370 unary operators... done! [10729 unary operators]
+Best heuristic value: 70/66 [g=0, 1 evaluated, 0 expanded, t=0.12s, 31060 KB]
+Best heuristic value: 69/65 [g=1, 20 evaluated, 19 expanded, t=0.12s, 31060 KB]
+Best heuristic value: 68/64 [g=2, 39 evaluated, 38 expanded, t=0.13s, 31060 KB]
+Best heuristic value: 67/63 [g=3, 60 evaluated, 59 expanded, t=0.14s, 31060 KB]
+Best heuristic value: 66/62 [g=4, 91 evaluated, 90 expanded, t=0.15s, 31060 KB]
+Best heuristic value: 65/61 [g=5, 110 evaluated, 109 expanded, t=0.15s, 31060 KB]
+Best heuristic value: 64/60 [g=6, 141 evaluated, 140 expanded, t=0.16s, 31060 KB]
+Best heuristic value: 63/59 [g=7, 172 evaluated, 171 expanded, t=0.17s, 31060 KB]
+Best heuristic value: 62/58 [g=8, 204 evaluated, 203 expanded, t=0.18s, 31060 KB]
+Best heuristic value: 61/57 [g=9, 237 evaluated, 236 expanded, t=0.20s, 31116 KB]
+Best heuristic value: 60/56 [g=10, 271 evaluated, 270 expanded, t=0.20s, 31784 KB]
+Best heuristic value: 60/55 [g=12, 308 evaluated, 307 expanded, t=0.22s, 32576 KB]
+Best heuristic value: 59/54 [g=13, 310 evaluated, 309 expanded, t=0.22s, 32576 KB]
+Best heuristic value: 58/54 [g=14, 311 evaluated, 310 expanded, t=0.22s, 32708 KB]
+Best heuristic value: 57/53 [g=15, 343 evaluated, 342 expanded, t=0.23s, 33372 KB]
+Best heuristic value: 56/52 [g=16, 363 evaluated, 362 expanded, t=0.24s, 33776 KB]
+Best heuristic value: 55/51 [g=17, 381 evaluated, 380 expanded, t=0.24s, 34176 KB]
+Best heuristic value: 54/51 [g=18, 389 evaluated, 388 expanded, t=0.24s, 34312 KB]
+Best heuristic value: 54/50 [g=18, 409 evaluated, 408 expanded, t=0.25s, 34844 KB]
+Best heuristic value: 53/49 [g=19, 413 evaluated, 412 expanded, t=0.25s, 34844 KB]
+Best heuristic value: 52/48 [g=20, 415 evaluated, 414 expanded, t=0.25s, 34976 KB]
+Best heuristic value: 51/47 [g=21, 445 evaluated, 444 expanded, t=0.26s, 35636 KB]
+Best heuristic value: 51/46 [g=23, 487 evaluated, 486 expanded, t=0.28s, 36440 KB]
+Best heuristic value: 50/46 [g=24, 488 evaluated, 487 expanded, t=0.28s, 36440 KB]
+Best heuristic value: 49/45 [g=25, 489 evaluated, 488 expanded, t=0.28s, 36572 KB]
+Best heuristic value: 49/44 [g=27, 543 evaluated, 542 expanded, t=0.30s, 37500 KB]
+Best heuristic value: 48/44 [g=27, 544 evaluated, 543 expanded, t=0.30s, 37632 KB]
+Best heuristic value: 47/43 [g=28, 570 evaluated, 569 expanded, t=0.31s, 38028 KB]
+Best heuristic value: 46/43 [g=29, 583 evaluated, 582 expanded, t=0.31s, 38292 KB]
+Best heuristic value: 46/42 [g=29, 597 evaluated, 596 expanded, t=0.32s, 38556 KB]
+Best heuristic value: 45/41 [g=30, 623 evaluated, 622 expanded, t=0.32s, 39084 KB]
+Best heuristic value: 44/41 [g=31, 629 evaluated, 628 expanded, t=0.33s, 39216 KB]
+Best heuristic value: 43/41 [g=32, 640 evaluated, 639 expanded, t=0.33s, 39348 KB]
+Best heuristic value: 41/40 [g=33, 642 evaluated, 641 expanded, t=0.33s, 39480 KB]
+Best heuristic value: 40/39 [g=34, 648 evaluated, 647 expanded, t=0.33s, 39480 KB]
+Best heuristic value: 39/38 [g=35, 654 evaluated, 653 expanded, t=0.34s, 39612 KB]
+Best heuristic value: 38/37 [g=36, 660 evaluated, 659 expanded, t=0.34s, 39744 KB]
+Best heuristic value: 37/36 [g=37, 666 evaluated, 665 expanded, t=0.34s, 39876 KB]
+Best heuristic value: 36/35 [g=38, 685 evaluated, 684 expanded, t=0.35s, 40276 KB]
+Best heuristic value: 35/34 [g=39, 691 evaluated, 690 expanded, t=0.35s, 40408 KB]
+Best heuristic value: 34/34 [g=40, 708 evaluated, 707 expanded, t=0.36s, 40672 KB]
+Best heuristic value: 34/33 [g=40, 712 evaluated, 711 expanded, t=0.36s, 40804 KB]
+Best heuristic value: 33/32 [g=41, 721 evaluated, 720 expanded, t=0.36s, 40936 KB]
+Best heuristic value: 32/32 [g=42, 732 evaluated, 731 expanded, t=0.36s, 41200 KB]
+Best heuristic value: 31/31 [g=43, 750 evaluated, 749 expanded, t=0.37s, 41464 KB]
+Best heuristic value: 30/30 [g=44, 759 evaluated, 758 expanded, t=0.37s, 41732 KB]
+Best heuristic value: 29/29 [g=45, 780 evaluated, 779 expanded, t=0.38s, 42128 KB]
+Best heuristic value: 28/28 [g=46, 789 evaluated, 788 expanded, t=0.38s, 42260 KB]
+Best heuristic value: 27/27 [g=47, 790 evaluated, 789 expanded, t=0.38s, 42260 KB]
+Best heuristic value: 26/26 [g=48, 796 evaluated, 795 expanded, t=0.39s, 42392 KB]
+Best heuristic value: 25/25 [g=49, 816 evaluated, 815 expanded, t=0.39s, 42788 KB]
+Best heuristic value: 24/24 [g=50, 827 evaluated, 826 expanded, t=0.40s, 42920 KB]
+Best heuristic value: 23/23 [g=51, 844 evaluated, 843 expanded, t=0.40s, 43316 KB]
+Best heuristic value: 22/22 [g=52, 854 evaluated, 853 expanded, t=0.41s, 43448 KB]
+Best heuristic value: 21/21 [g=53, 865 evaluated, 864 expanded, t=0.41s, 43580 KB]
+Best heuristic value: 20/20 [g=54, 868 evaluated, 867 expanded, t=0.41s, 43712 KB]
+Best heuristic value: 19/19 [g=55, 882 evaluated, 881 expanded, t=0.42s, 43844 KB]
+Best heuristic value: 18/18 [g=56, 890 evaluated, 889 expanded, t=0.42s, 43976 KB]
+Best heuristic value: 17/17 [g=57, 897 evaluated, 896 expanded, t=0.42s, 44108 KB]
+Best heuristic value: 16/16 [g=58, 904 evaluated, 903 expanded, t=0.42s, 44240 KB]
+Best heuristic value: 15/15 [g=59, 916 evaluated, 915 expanded, t=0.43s, 44372 KB]
+Best heuristic value: 14/14 [g=60, 923 evaluated, 922 expanded, t=0.43s, 44504 KB]
+Best heuristic value: 13/13 [g=61, 929 evaluated, 928 expanded, t=0.44s, 44504 KB]
+Best heuristic value: 12/12 [g=62, 935 evaluated, 934 expanded, t=0.44s, 44636 KB]
+Best heuristic value: 11/11 [g=63, 941 evaluated, 940 expanded, t=0.44s, 44636 KB]
+Best heuristic value: 10/10 [g=64, 947 evaluated, 946 expanded, t=0.44s, 44768 KB]
+Best heuristic value: 9/9 [g=65, 949 evaluated, 948 expanded, t=0.44s, 44768 KB]
+Best heuristic value: 8/8 [g=66, 956 evaluated, 955 expanded, t=0.44s, 44900 KB]
+Best heuristic value: 7/7 [g=67, 960 evaluated, 959 expanded, t=0.44s, 44900 KB]
+Best heuristic value: 6/6 [g=68, 961 evaluated, 960 expanded, t=0.44s, 44900 KB]
+Best heuristic value: 5/5 [g=69, 962 evaluated, 961 expanded, t=0.44s, 44900 KB]
+Best heuristic value: 4/4 [g=70, 964 evaluated, 963 expanded, t=0.44s, 44900 KB]
+Best heuristic value: 3/3 [g=71, 965 evaluated, 964 expanded, t=0.44s, 45032 KB]
+Best heuristic value: 2/2 [g=72, 966 evaluated, 965 expanded, t=0.44s, 45032 KB]
+Best heuristic value: 1/1 [g=73, 967 evaluated, 966 expanded, t=0.45s, 45032 KB]
+Solution found!
+Actual search time: 0.34s [t=0.45s]
+pickup_box usv1 usv7store cdm1 area1 box1 (1)
+pickup_box usv1 usv6store cdm1 area1 box3 (1)
+pickup_box usv1 usv8store cdm2 area13 box2 (1)
+take_picture usv1 area21 disaster10 (1)
+communicate_data usv1 cdm1 disaster10 area1 area1 (1)
+drop_box usv1 ugv1store area21 box1 (1)
+pickup_box usv1 usv5store cdm3 area21 box5 (1)
+pickup_box usv1 usv4store cdm3 area21 box7 (1)
+pickup_box usv1 usv2store cdm4 area33 box4 (1)
+pickup_box usv1 usv1store cdm4 area33 box6 (1)
+navigate_uav usv1 area1 area10 (1)
+take_picture usv1 area10 disaster3 (1)
+navigate_uav usv1 area10 area2 (1)
+navigate_uav usv1 area13 area1 (1)
+communicate_data usv1 cdm1 disaster3 area1 area1 (1)
+sample_water usv1 usv3store area2 (1)
+navigate_uav usv1 area2 area17 (1)
+take_picture usv1 area17 disaster6 (1)
+communicate_data usv1 cdm1 disaster6 area1 area1 (1)
+navigate_uav usv1 area17 area13 (1)
+drop_sample usv1 ugv1store area33 area2 cdm4 (1)
+navigate_uav usv1 area1 area20 (1)
+drop_box usv1 ugv1store area20 box5 (1)
+navigate_uav usv1 area13 area1 (1)
+navigate_uav usv1 area20 area13 (1)
+navigate_uav usv1 area1 area28 (1)
+take_picture usv1 area28 disaster4 (1)
+communicate_data usv1 cdm3 disaster4 area21 area21 (1)
+sample_water usv1 ugv8store area28 (1)
+drop_sample usv1 ugv1store area21 area28 cdm3 (1)
+navigate_uav usv1 area21 area32 (1)
+navigate_uav usv1 area13 area40 (1)
+navigate_uav usv1 area28 area1 (1)
+take_picture usv1 area32 disaster2 (1)
+communicate_data usv1 cdm1 disaster2 area1 area1 (1)
+sample_water usv1 ugv6store area32 (1)
+drop_sample usv1 ugv1store area1 area32 cdm1 (1)
+take_picture usv1 area40 disaster7 (1)
+communicate_data usv1 cdm1 disaster7 area1 area1 (1)
+sample_water usv1 ugv5store area40 (1)
+navigate_uav usv1 area40 area13 (1)
+navigate_uav usv1 area1 area7 (1)
+take_picture usv1 area7 disaster8 (1)
+communicate_data usv1 cdm4 disaster8 area33 area33 (1)
+sample_water usv1 ugv4store area7 (1)
+drop_sample usv1 ugv1store area13 area7 cdm2 (1)
+navigate_uav usv1 area13 area1 (1)
+navigate_uav usv1 area7 area21 (1)
+drop_sample usv1 ugv1store area21 area40 cdm3 (1)
+navigate_uav usv1 area21 area24 (1)
+drop_box usv1 ugv1store area24 box4 (1)
+navigate_uav usv1 area24 area27 (1)
+drop_box usv1 ugv1store area27 box2 (1)
+navigate_uav usv1 area27 area22 (1)
+sample_water usv1 ugv2store area22 (1)
+navigate_uav usv1 area22 area3 (1)
+take_picture usv1 area3 disaster5 (1)
+communicate_data usv1 cdm1 disaster5 area1 area1 (1)
+drop_sample usv1 ugv1store area33 area22 cdm4 (1)
+navigate_uav usv1 area33 area31 (1)
+take_picture usv1 area31 disaster1 (1)
+communicate_data usv1 cdm1 disaster1 area1 area1 (1)
+navigate_uav usv1 area32 area35 (1)
+drop_box usv1 ugv1store area35 box7 (1)
+navigate_uav usv1 area35 area26 (1)
+sample_water usv1 ugv7store area26 (1)
+drop_sample usv1 ugv1store area1 area26 cdm1 (1)
+navigate_uav usv1 area1 area39 (1)
+navigate_uav usv1 area26 area6 (1)
+drop_box usv1 ugv1store area39 box3 (1)
+navigate_uav usv1 area39 area9 (1)
+drop_box usv1 ugv1store area6 box6 (1)
+take_picture usv1 area9 disaster9 (1)
+communicate_data usv1 cdm1 disaster9 area3 area1 (1)
+Plan length: 74 step(s).
+Plan cost: 74
+Initial state h value: 70/66.
+Expanded 967 state(s).
+Reopened 0 state(s).
+Evaluated 968 state(s).
+Evaluations: 1936
+Generated 484866 state(s).
+Dead ends: 0 state(s).
+Search time: 0.34s
+Total time: 0.45s
+Solution found.
+Peak memory: 45032 KB
+~/planners/marc
+~/TAPLAN/FFD_expander/src ~/planners/marc
+PLAN EXPANSION...
+Generating Datalog program... [0.010s CPU, 0.002s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.010s CPU, 0.006s wall-clock]
+Generated 66 rules.
+Computing model... [0.750s CPU, 0.755s wall-clock]
+22487 relevant atoms
+35950 auxiliary atoms
+58437 final queue length
+80159 total queue pushes
+Completing instantiation... [0.930s CPU, 0.943s wall-clock]
+Started planning Thread with id 0
+Started planning Thread with id 1
+Started planning Thread with id 2
+Started planning Thread with id 3
+Started planning Thread with id 4
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_0_0.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+
+warning: empty con/disjunction in domain definition. simplifying.
+
+OPTION2   
+
+ff: goal can be simplified to TRUE. The empty plan solves it
+
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.010s CPU, 0.011s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.020s CPU, 0.015s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.002s wall-clock]
+Choosing groups...
+690 uncovered facts
+Choosing groups: [0.010s CPU, 0.004s wall-clock]
+Building translation key... [0.010s CPU, 0.007s wall-clock]
+Computing fact groups: [0.070s CPU, 0.060s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.002s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.002s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.002s wall-clock]
+Translating task...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.960s CPU, 0.961s wall-clock]
+6984 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+Goals 31 propositions removed
+Detecting unreachable propositions: [0.140s CPU, 0.133s wall-clock]
+Goals []
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+0 variables of 721 necessary
+0 of 38 mutex groups necessary.
+0 of 19744 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 0
+Preprocessor derived variables: 0
+Preprocessor task size: 0
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/TAPLAN/FFD_expander/src/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=ff()', '--heuristic', 'hcea=cea()', '--search', 'lazy_greedy([hff, hcea], preferred=[hff, hcea])', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Task has no goal condition!
+Usage error occurred.
+Peak memory: 18964 KB
+unable to expand to this action (communicate_data usv1 cdm1 disaster9 area3 area1)
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_1_0.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+
+warning: empty con/disjunction in domain definition. simplifying.
+
+OPTION2   
+
+ff: goal can be simplified to TRUE. The empty plan solves it
+
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.020s CPU, 0.011s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.010s CPU, 0.015s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.002s wall-clock]
+Choosing groups...
+690 uncovered facts
+Choosing groups: [0.000s CPU, 0.004s wall-clock]
+Building translation key... [0.010s CPU, 0.007s wall-clock]
+Computing fact groups: [0.070s CPU, 0.060s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.002s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.002s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.002s wall-clock]
+Translating task...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.860s CPU, 0.861s wall-clock]
+13968 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+Goals 31 propositions removed
+Detecting unreachable propositions: [0.130s CPU, 0.126s wall-clock]
+Goals []
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+0 variables of 721 necessary
+0 of 38 mutex groups necessary.
+0 of 19744 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 0
+Preprocessor derived variables: 0
+Preprocessor task size: 0
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/TAPLAN/FFD_expander/src/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=ff()', '--heuristic', 'hcea=cea()', '--search', 'lazy_greedy([hff, hcea], preferred=[hff, hcea])', '--internal-plan-file', 'sas_plan', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Task has no goal condition!
+Usage error occurred.
+Peak memory: 18964 KB
+unable to expand to this action (communicate_data usv1 cdm1 disaster9 area3 area1)
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_2_0.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+
+warning: empty con/disjunction in domain definition. simplifying.
+
+OPTION2   
+
+ff: goal can be simplified to TRUE. The empty plan solves it
+
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.010s CPU, 0.010s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.010s CPU, 0.014s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.002s wall-clock]
+Choosing groups...
+690 uncovered facts
+Choosing groups: [0.000s CPU, 0.004s wall-clock]
+Building translation key... [0.000s CPU, 0.007s wall-clock]
+Computing fact groups: [0.050s CPU, 0.056s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.002s wall-clock]
+Building dictionary for full mutex groups... [0.010s CPU, 0.002s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.002s wall-clock]
+Translating task...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.880s CPU, 0.887s wall-clock]
+20952 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+Goals 31 propositions removed
+Detecting unreachable propositions: [0.130s CPU, 0.123s wall-clock]
+Goals []
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+0 variables of 721 necessary
+0 of 38 mutex groups necessary.
+0 of 19744 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 0
+Preprocessor derived variables: 0
+Preprocessor task size: 0
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/TAPLAN/FFD_expander/src/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=ff()', '--heuristic', 'hcea=cea()', '--search', 'lazy_greedy([hff, hcea], preferred=[hff, hcea])', '--internal-plan-file', 'sas_plan', '--internal-plan-file', 'sas_plan', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Task has no goal condition!
+Usage error occurred.
+Peak memory: 18964 KB
+unable to expand to this action (communicate_data usv1 cdm1 disaster9 area3 area1)
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_3_0.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+
+warning: empty con/disjunction in domain definition. simplifying.
+
+OPTION2   
+
+ff: goal can be simplified to TRUE. The empty plan solves it
+
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.010s CPU, 0.011s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.020s CPU, 0.014s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.002s wall-clock]
+Choosing groups...
+690 uncovered facts
+Choosing groups: [0.010s CPU, 0.004s wall-clock]
+Building translation key... [0.010s CPU, 0.006s wall-clock]
+Computing fact groups: [0.060s CPU, 0.056s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.002s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.002s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.002s wall-clock]
+Translating task...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.920s CPU, 0.907s wall-clock]
+27936 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+Goals 31 propositions removed
+Detecting unreachable propositions: [0.120s CPU, 0.123s wall-clock]
+Goals []
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+Building causal graph...
+The causal graph is not acyclic.
+0 variables of 721 necessary
+0 of 38 mutex groups necessary.
+0 of 19744 operators necessary.
+0 of 0 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 0
+Preprocessor derived variables: 0
+Preprocessor task size: 0
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search executable: /home/rovane/TAPLAN/FFD_expander/src/search/downward-release
+INFO     search arguments: ['--heuristic', 'hff=ff()', '--heuristic', 'hcea=cea()', '--search', 'lazy_greedy([hff, hcea], preferred=[hff, hcea])', '--internal-plan-file', 'sas_plan', '--internal-plan-file', 'sas_plan', '--internal-plan-file', 'sas_plan', '--internal-plan-file', 'sas_plan']
+reading input... [t=0.00s]
+Task has no goal condition!
+Usage error occurred.
+Peak memory: 18964 KB
+unable to expand to this action (communicate_data usv1 cdm1 disaster9 area3 area1)
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_4_0.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    2 into depth [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1901 facts and 20064 actions
+               0.00 seconds creating final representation with 1901 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.01 seconds searching, evaluating 3 states, to a max depth of 1
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_0_1.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    8 into depth [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1901 facts and 20064 actions
+               0.00 seconds creating final representation with 1900 relevant facts, 0 relevant fluents
+               0.04 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.01 seconds searching, evaluating 10 states, to a max depth of 1
+               0.06 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_1_1.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1849 facts and 19508 actions
+               0.01 seconds creating final representation with 1847 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 4 states, to a max depth of 1
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_2_1.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1][2]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1849 facts and 19508 actions
+               0.01 seconds creating final representation with 1846 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 6 states, to a max depth of 2
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_3_1.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:   10 into depth [1]
+                                   9            [1][2][3][4][5][6]
+                                   8            [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1849 facts and 19508 actions
+               0.00 seconds creating final representation with 1845 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.03 seconds searching, evaluating 27 states, to a max depth of 6
+               0.08 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_4_1.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    6 into depth [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1849 facts and 19508 actions
+               0.00 seconds creating final representation with 1844 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 8 states, to a max depth of 1
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_0_2.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1][2]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.01 seconds creating final representation with 1799 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.01 seconds searching, evaluating 5 states, to a max depth of 2
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_1_2.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    7 into depth [1]
+                                   6            [1][2]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.01 seconds creating final representation with 1798 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 11 states, to a max depth of 2
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_2_2.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1][2]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.00 seconds creating final representation with 1797 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 5 states, to a max depth of 2
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_3_2.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:   13 into depth [1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20][21]
+                                  12            [1]
+                                  11            [1]
+                                  10            [1]
+                                   9            [1]
+                                   8            [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.00 seconds creating final representation with 1796 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.02 seconds building connectivity graph
+               1.14 seconds searching, evaluating 737 states, to a max depth of 21
+               1.19 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_4_2.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1][2]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.01 seconds creating final representation with 1795 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 5 states, to a max depth of 2
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_0_3.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1][2]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.01 seconds creating final representation with 1794 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.00 seconds searching, evaluating 5 states, to a max depth of 2
+               0.04 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_1_3.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    8 into depth [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1][2][3]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.01 seconds creating final representation with 1793 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 12 states, to a max depth of 3
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_2_3.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    8 into depth [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1][2][3][4]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.00 seconds creating final representation with 1792 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.01 seconds searching, evaluating 12 states, to a max depth of 4
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_3_3.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    4 into depth [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1805 facts and 19212 actions
+               0.01 seconds creating final representation with 1791 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.00 seconds searching, evaluating 6 states, to a max depth of 1
+               0.04 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_4_3.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    6 into depth [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1761 facts and 18916 actions
+               0.01 seconds creating final representation with 1746 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 8 states, to a max depth of 1
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_0_4.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1717 facts and 18620 actions
+               0.01 seconds creating final representation with 1701 relevant facts, 0 relevant fluents
+               0.01 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 4 states, to a max depth of 1
+               0.04 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_1_4.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    6 into depth [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1717 facts and 18620 actions
+               0.01 seconds creating final representation with 1700 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 8 states, to a max depth of 1
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_2_4.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1][2]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1717 facts and 18620 actions
+               0.01 seconds creating final representation with 1699 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 6 states, to a max depth of 2
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_3_4.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    4 into depth [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1717 facts and 18620 actions
+               0.01 seconds creating final representation with 1698 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 6 states, to a max depth of 1
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_4_4.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:   13 into depth [1]
+                                  12            [1][2][3][4][5][6][7][8]
+                                  11            [1]
+                                  10            [1]
+                                   9            [1]
+                                   8            [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1673 facts and 18324 actions
+               0.01 seconds creating final representation with 1653 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.05 seconds searching, evaluating 41 states, to a max depth of 8
+               0.10 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_0_5.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:   11 into depth [1][2][3][4][5][6][7][8][9][10][11][12][13]
+                                  10            [1]
+                                   9            [1]
+                                   8            [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 21200 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1673 facts and 18324 actions
+               0.00 seconds creating final representation with 1652 relevant facts, 0 relevant fluents
+               0.02 seconds computing LNF
+               0.03 seconds building connectivity graph
+               0.23 seconds searching, evaluating 209 states, to a max depth of 13
+               0.28 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/pfile_1_5.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    8 into depth [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 20976 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1622 facts and 18028 actions
+               0.00 seconds creating final representation with 1593 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.01 seconds building connectivity graph
+               0.01 seconds searching, evaluating 9 states, to a max depth of 1
+               0.05 seconds total time
+
+OPTION 0 
+/home/rovane/TAPLAN/FFD_expander/src/small_problems/small_prob_0.sol
+ff: parsing domain file
+domain 'FLOODS' defined
+ ... done.
+ff: parsing problem file
+problem 'TINY_PROBLEM' defined
+ ... done.
+
+OPTION2   
+
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    3 into depth [1]
+                                   2            [1]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step 
+
+time spent:    0.00 seconds instantiating 20976 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 1585 facts and 17992 actions
+               0.00 seconds creating final representation with 1554 relevant facts, 0 relevant fluents
+               0.03 seconds computing LNF
+               0.02 seconds building connectivity graph
+               0.00 seconds searching, evaluating 4 states, to a max depth of 1
+               0.05 seconds total time
+
+PLAN EXPANSION: [8.100s CPU, 11.695s wall-clock]
+~/planners/marc
+
+real	0m14.826s
+user	0m13.832s
+sys	0m0.848s
+
+(TAKE_PICTURE USV5 AREA21 DISASTER10)
+(COMMUNICATE_DATA USV5 CDM3 DISASTER10 AREA21 AREA21)
+(PICKUP_BOX UGV2 UGV2STORE CDM1 AREA1 BOX1)
+(NAVIGATE_UGV UGV2 AREA1 AREA3)
+(NAVIGATE_UGV UGV2 AREA3 AREA15)
+(NAVIGATE_UGV UGV2 AREA15 AREA18)
+(NAVIGATE_UGV UGV2 AREA18 AREA37)
+(NAVIGATE_UGV UGV2 AREA37 AREA36)
+(NAVIGATE_UGV UGV2 AREA36 AREA21)
+(DROP_BOX UGV2 UGV2STORE AREA21 BOX1)
+(pickup_box ugv7 ugv7store cdm4 area33 box6)
+(NAVIGATE_UAV UAV8 AREA33 AREA10)
+(TAKE_PICTURE UAV8 AREA10 DISASTER3)
+(COMMUNICATE_DATA UAV8 CDM2 DISASTER3 AREA10 AREA13)
+(NAVIGATE_UAV UAV7 AREA33 AREA17)
+(TAKE_PICTURE UAV7 AREA17 DISASTER6)
+(NAVIGATE_UAV UAV7 AREA17 AREA22)
+(COMMUNICATE_DATA UAV7 CDM3 DISASTER6 AREA22 AREA21)
+(NAVIGATE_USV USV3 AREA13 AREA9)
+(NAVIGATE_USV USV3 AREA9 AREA4)
+(NAVIGATE_USV USV3 AREA4 AREA2)
+(NAVIGATE_USV USV4 AREA13 AREA9)
+(NAVIGATE_USV USV4 AREA9 AREA4)
+(NAVIGATE_USV USV4 AREA4 AREA2)
+(SAMPLE_WATER USV3 USV3STORE AREA2)
+(NAVIGATE_USV USV3 AREA2 AREA4)
+(NAVIGATE_USV USV3 AREA4 AREA9)
+(NAVIGATE_USV USV3 AREA9 AREA8)
+(NAVIGATE_USV USV3 AREA8 AREA27)
+(NAVIGATE_USV USV3 AREA27 AREA28)
+(NAVIGATE_USV USV3 AREA28 AREA29)
+(NAVIGATE_USV USV3 AREA29 AREA33)
+(DROP_SAMPLE USV3 USV3STORE AREA33 AREA2 CDM4)
+(PICKUP_BOX UGV2 UGV2STORE CDM3 AREA21 BOX5)
+(NAVIGATE_UGV UGV2 AREA21 AREA36)
+(NAVIGATE_UGV UGV2 AREA36 AREA37)
+(NAVIGATE_UGV UGV2 AREA37 AREA18)
+(NAVIGATE_UGV UGV2 AREA18 AREA20)
+(DROP_BOX UGV2 UGV2STORE AREA20 BOX5)
+(NAVIGATE_UAV UAV7 AREA22 AREA28)
+(TAKE_PICTURE UAV7 AREA28 DISASTER4)
+(NAVIGATE_UAV UAV7 AREA28 AREA22)
+(COMMUNICATE_DATA UAV7 CDM3 DISASTER4 AREA22 AREA21)
+(NAVIGATE_USV USV8 AREA33 AREA29)
+(NAVIGATE_USV USV8 AREA29 AREA28)
+(SAMPLE_WATER USV8 USV8STORE AREA28)
+(NAVIGATE_USV USV8 AREA28 AREA29)
+(NAVIGATE_USV USV8 AREA29 AREA24)
+(NAVIGATE_USV USV8 AREA24 AREA22)
+(NAVIGATE_USV USV8 AREA22 AREA21)
+(DROP_SAMPLE USV8 USV8STORE AREA21 AREA28 CDM3)
+(NAVIGATE_UAV UAV7 AREA22 AREA32)
+(TAKE_PICTURE UAV7 AREA32 DISASTER2)
+(NAVIGATE_UAV UAV7 AREA32 AREA22)
+(COMMUNICATE_DATA UAV7 CDM3 DISASTER2 AREA22 AREA21)
+(NAVIGATE_USV USV5 AREA21 AREA22)
+(NAVIGATE_USV USV8 AREA21 AREA22)
+(NAVIGATE_USV USV6 AREA21 AREA22)
+(NAVIGATE_USV USV3 AREA33 AREA29)
+(NAVIGATE_USV USV3 AREA29 AREA24)
+(NAVIGATE_USV USV3 AREA24 AREA22)
+(NAVIGATE_USV USV7 AREA33 AREA29)
+(NAVIGATE_USV USV7 AREA29 AREA24)
+(NAVIGATE_USV USV7 AREA24 AREA22)
+(NAVIGATE_USV USV5 AREA22 AREA26)
+(NAVIGATE_USV USV8 AREA22 AREA26)
+(NAVIGATE_USV USV6 AREA22 AREA26)
+(NAVIGATE_USV USV3 AREA22 AREA26)
+(NAVIGATE_USV USV7 AREA22 AREA26)
+(NAVIGATE_USV USV5 AREA26 AREA32)
+(NAVIGATE_USV USV8 AREA26 AREA32)
+(NAVIGATE_USV USV6 AREA26 AREA32)
+(NAVIGATE_USV USV3 AREA26 AREA32)
+(NAVIGATE_USV USV7 AREA26 AREA32)
+(NAVIGATE_USV USV4 AREA2 AREA1)
+(SAMPLE_WATER USV5 USV5STORE AREA32)
+(NAVIGATE_USV USV5 AREA32 AREA26)
+(NAVIGATE_USV USV5 AREA26 AREA22)
+(NAVIGATE_USV USV5 AREA22 AREA34)
+(NAVIGATE_USV USV5 AREA34 AREA36)
+(NAVIGATE_USV USV5 AREA36 AREA38)
+(NAVIGATE_USV USV5 AREA38 AREA17)
+(NAVIGATE_USV USV5 AREA17 AREA19)
+(NAVIGATE_USV USV5 AREA19 AREA20)
+(NAVIGATE_USV USV5 AREA20 AREA18)
+(NAVIGATE_USV USV5 AREA18 AREA16)
+(NAVIGATE_USV USV5 AREA16 AREA1)
+(DROP_SAMPLE USV5 USV5STORE AREA1 AREA32 CDM1)
+(NAVIGATE_UAV UAV7 AREA22 AREA40)
+(TAKE_PICTURE UAV7 AREA40 DISASTER7)
+(NAVIGATE_UAV UAV7 AREA40 AREA22)
+(COMMUNICATE_DATA UAV7 CDM3 DISASTER7 AREA22 AREA21)
+(NAVIGATE_UAV UAV7 AREA22 AREA7)
+(TAKE_PICTURE UAV7 AREA7 DISASTER8)
+(NAVIGATE_UAV UAV7 AREA7 AREA22)
+(COMMUNICATE_DATA UAV7 CDM3 DISASTER8 AREA22 AREA21)
+(NAVIGATE_USV USV5 AREA1 AREA2)
+(NAVIGATE_USV USV5 AREA2 AREA4)
+(NAVIGATE_USV USV5 AREA4 AREA9)
+(NAVIGATE_USV USV5 AREA9 AREA8)
+(NAVIGATE_USV USV5 AREA8 AREA7)
+(SAMPLE_WATER USV5 USV5STORE AREA7)
+(NAVIGATE_USV USV5 AREA7 AREA8)
+(NAVIGATE_USV USV5 AREA8 AREA9)
+(NAVIGATE_USV USV5 AREA9 AREA13)
+(DROP_SAMPLE USV5 USV5STORE AREA13 AREA7 CDM2)
+(NAVIGATE_USV USV8 AREA32 AREA26)
+(NAVIGATE_USV USV8 AREA26 AREA22)
+(NAVIGATE_USV USV8 AREA22 AREA21)
+(NAVIGATE_USV USV8 AREA21 AREA36)
+(NAVIGATE_USV USV8 AREA36 AREA38)
+(NAVIGATE_USV USV8 AREA38 AREA40)
+(SAMPLE_WATER USV8 USV8STORE AREA40)
+(NAVIGATE_USV USV8 AREA40 AREA38)
+(NAVIGATE_USV USV8 AREA38 AREA36)
+(NAVIGATE_USV USV8 AREA36 AREA21)
+(DROP_SAMPLE USV8 USV8STORE AREA21 AREA40 CDM3)
+(PICKUP_BOX UGV8 UGV8STORE CDM4 AREA33 BOX4)
+(NAVIGATE_UGV UGV8 AREA33 AREA30)
+(NAVIGATE_UGV UGV8 AREA30 AREA24)
+(DROP_BOX UGV8 UGV8STORE AREA24 BOX4)
+(PICKUP_BOX UGV4 UGV4STORE CDM2 AREA13 BOX2)
+(NAVIGATE_UGV UGV4 AREA13 AREA10)
+(NAVIGATE_UGV UGV4 AREA10 AREA7)
+(NAVIGATE_UGV UGV4 AREA7 AREA28)
+(NAVIGATE_UGV UGV4 AREA28 AREA27)
+(DROP_BOX UGV4 UGV4STORE AREA27 BOX2)
+(NAVIGATE_UAV UAV7 AREA22 AREA3)
+(TAKE_PICTURE UAV7 AREA3 DISASTER5)
+(COMMUNICATE_DATA UAV7 CDM1 DISASTER5 AREA3 AREA1)
+(NAVIGATE_USV USV8 AREA21 AREA22)
+(SAMPLE_WATER USV8 USV8STORE AREA22)
+(NAVIGATE_USV USV8 AREA22 AREA24)
+(NAVIGATE_USV USV8 AREA24 AREA29)
+(NAVIGATE_USV USV8 AREA29 AREA33)
+(DROP_SAMPLE USV8 USV8STORE AREA33 AREA22 CDM4)
+(NAVIGATE_UAV UAV5 AREA21 AREA31)
+(TAKE_PICTURE UAV5 AREA31 DISASTER1)
+(NAVIGATE_UAV UAV5 AREA31 AREA22)
+(COMMUNICATE_DATA UAV5 CDM3 DISASTER1 AREA22 AREA21)
+(PICKUP_BOX UGV6 UGV6STORE CDM3 AREA21 BOX7)
+(NAVIGATE_UGV UGV6 AREA21 AREA23)
+(NAVIGATE_UGV UGV6 AREA23 AREA35)
+(DROP_BOX UGV6 UGV6STORE AREA35 BOX7)
+(NAVIGATE_USV USV8 AREA33 AREA29)
+(NAVIGATE_USV USV8 AREA29 AREA24)
+(NAVIGATE_USV USV8 AREA24 AREA22)
+(NAVIGATE_USV USV8 AREA22 AREA26)
+(NAVIGATE_USV USV5 AREA13 AREA9)
+(NAVIGATE_USV USV5 AREA9 AREA4)
+(NAVIGATE_USV USV5 AREA4 AREA2)
+(NAVIGATE_USV USV5 AREA2 AREA1)
+(SAMPLE_WATER USV8 USV8STORE AREA26)
+(NAVIGATE_USV USV8 AREA26 AREA22)
+(NAVIGATE_USV USV8 AREA22 AREA34)
+(NAVIGATE_USV USV8 AREA34 AREA36)
+(NAVIGATE_USV USV8 AREA36 AREA38)
+(NAVIGATE_USV USV8 AREA38 AREA17)
+(NAVIGATE_USV USV8 AREA17 AREA19)
+(NAVIGATE_USV USV8 AREA19 AREA20)
+(NAVIGATE_USV USV8 AREA20 AREA18)
+(NAVIGATE_USV USV8 AREA18 AREA16)
+(NAVIGATE_USV USV8 AREA16 AREA1)
+(DROP_SAMPLE USV8 USV8STORE AREA1 AREA26 CDM1)
+(NAVIGATE_UGV UGV6 AREA35 AREA38)
+(NAVIGATE_UGV UGV2 AREA20 AREA18)
+(NAVIGATE_UGV UGV2 AREA18 AREA15)
+(NAVIGATE_UGV UGV2 AREA15 AREA3)
+(NAVIGATE_UGV UGV5 AREA21 AREA36)
+(NAVIGATE_UGV UGV5 AREA36 AREA35)
+(NAVIGATE_UGV UGV5 AREA35 AREA38)
+(NAVIGATE_UGV UGV4 AREA27 AREA28)
+(NAVIGATE_UGV UGV2 AREA3 AREA1)
+(NAVIGATE_UGV UGV6 AREA38 AREA40)
+(NAVIGATE_UGV UGV5 AREA38 AREA40)
+(NAVIGATE_UGV UGV4 AREA28 AREA7)
+(PICKUP_BOX UGV1 UGV1STORE CDM1 AREA1 BOX3)
+(NAVIGATE_UGV UGV1 AREA1 AREA3)
+(NAVIGATE_UGV UGV1 AREA3 AREA15)
+(NAVIGATE_UGV UGV1 AREA15 AREA18)
+(NAVIGATE_UGV UGV1 AREA18 AREA37)
+(NAVIGATE_UGV UGV1 AREA37 AREA36)
+(NAVIGATE_UGV UGV1 AREA36 AREA35)
+(NAVIGATE_UGV UGV1 AREA35 AREA38)
+(NAVIGATE_UGV UGV1 AREA38 AREA40)
+(NAVIGATE_UGV UGV1 AREA40 AREA39)
+(DROP_BOX UGV1 UGV1STORE AREA39 BOX3)
+(NAVIGATE_UGV UGV7 AREA33 AREA30)
+(NAVIGATE_UGV UGV7 AREA30 AREA27)
+(NAVIGATE_UGV UGV7 AREA27 AREA28)
+(NAVIGATE_UGV UGV7 AREA28 AREA7)
+(NAVIGATE_UGV UGV7 AREA7 AREA10)
+(NAVIGATE_UGV UGV7 AREA10 AREA4)
+(NAVIGATE_UGV UGV7 AREA4 AREA6)
+(DROP_BOX UGV7 UGV7STORE AREA6 BOX6)
+(NAVIGATE_UAV UAV5 AREA22 AREA9)
+(TAKE_PICTURE UAV5 AREA9 DISASTER9)
+(COMMUNICATE_DATA UAV5 CDM2 DISASTER9 AREA9 AREA13)
+
