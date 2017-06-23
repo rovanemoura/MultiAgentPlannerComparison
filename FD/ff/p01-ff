@@ -1,0 +1,223 @@
+rovane@SamsungS5:~/downward$ ./fast-downward.py ./domain.pddl ../unfactored\ \(Single-Agent\ Floods\)/p01.pddl \
+>     --heuristic "hff=ff()" \
+>     --search "lazy_greedy([hff], preferred=[hff])" \
+> 
+INFO     Running translator.
+INFO     translator input: ['./domain.pddl', '../unfactored (Single-Agent Floods)/p01.pddl']
+INFO     translator arguments: []
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     callstring: /usr/bin/python /home/rovane/downward/builds/release32/bin/translate/translate.py ./domain.pddl '../unfactored (Single-Agent Floods)/p01.pddl'
+Parsing...
+Parsing: [0.010s CPU, 0.005s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.000s CPU, 0.003s wall-clock]
+Generated 66 rules.
+Computing model... [0.060s CPU, 0.053s wall-clock]
+1697 relevant atoms
+2416 auxiliary atoms
+4113 final queue length
+5293 total queue pushes
+Completing instantiation... [0.040s CPU, 0.047s wall-clock]
+Instantiating: [0.100s CPU, 0.108s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.000s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.002s wall-clock]
+Collecting mutex groups... [0.010s CPU, 0.000s wall-clock]
+Choosing groups...
+116 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.000s CPU, 0.001s wall-clock]
+Computing fact groups: [0.010s CPU, 0.011s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.002s wall-clock]
+Translating task: [0.050s CPU, 0.051s wall-clock]
+468 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+11 propositions removed
+Detecting unreachable propositions: [0.030s CPU, 0.029s wall-clock]
+Reordering and filtering variables...
+99 of 127 variables necessary.
+0 of 13 mutex groups necessary.
+1197 of 1197 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.010s CPU, 0.007s wall-clock]
+Translator variables: 99
+Translator derived variables: 0
+Translator facts: 325
+Translator goal facts: 9
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 1197
+Translator axioms: 0
+Translator task size: 4828
+Translator peak memory: 34404 KB
+Writing output... [0.010s CPU, 0.009s wall-clock]
+Done! [0.220s CPU, 0.224s wall-clock]
+INFO     Running search (release32).
+INFO     search input: output.sas
+INFO     search arguments: ['--heuristic', 'hff=ff()', '--search', 'lazy_greedy([hff], preferred=[hff])']
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search executable: /home/rovane/downward/builds/release32/bin/downward
+INFO     callstring: /home/rovane/downward/builds/release32/bin/downward --heuristic 'hff=ff()' --search 'lazy_greedy([hff], preferred=[hff])' --internal-plan-file sas_plan < output.sas
+reading input... [t=2.5111e-05s]
+done reading input! [t=0.00682722s]
+packing state variables...done! [t=0.0068516s]
+Variables: 99
+FactPairs: 325
+Bytes per state: 20
+Building successor generator...done! [t=0.010096s]
+done initializing global data [t=0.0101009s]
+Simplifying 1599 unary operators... done! [1599 unary operators]
+Initializing additive heuristic...
+Initializing FF heuristic...
+Conducting lazy best first search, (real) bound = 2147483647
+New best heuristic value for ff: 37
+[g=0, 1 evaluated, 0 expanded, t=0.0114355s, 4948 KB]
+Initial heuristic value for ff: 37
+New best heuristic value for ff: 36
+[g=1, 6 evaluated, 5 expanded, t=0.0117326s, 4948 KB]
+New best heuristic value for ff: 35
+[g=2, 10 evaluated, 9 expanded, t=0.0119542s, 4948 KB]
+New best heuristic value for ff: 34
+[g=3, 15 evaluated, 14 expanded, t=0.0122175s, 4948 KB]
+New best heuristic value for ff: 31
+[g=4, 20 evaluated, 19 expanded, t=0.0124742s, 4948 KB]
+New best heuristic value for ff: 30
+[g=5, 25 evaluated, 24 expanded, t=0.0127382s, 4948 KB]
+New best heuristic value for ff: 29
+[g=6, 31 evaluated, 30 expanded, t=0.0130448s, 4948 KB]
+New best heuristic value for ff: 28
+[g=8, 41 evaluated, 40 expanded, t=0.0135277s, 4948 KB]
+New best heuristic value for ff: 27
+[g=9, 42 evaluated, 41 expanded, t=0.0136047s, 4948 KB]
+New best heuristic value for ff: 26
+[g=10, 44 evaluated, 43 expanded, t=0.0137272s, 4948 KB]
+New best heuristic value for ff: 25
+[g=11, 45 evaluated, 44 expanded, t=0.0138013s, 4948 KB]
+New best heuristic value for ff: 24
+[g=12, 46 evaluated, 45 expanded, t=0.0138761s, 4948 KB]
+New best heuristic value for ff: 23
+[g=13, 47 evaluated, 46 expanded, t=0.0139515s, 4948 KB]
+New best heuristic value for ff: 22
+[g=14, 48 evaluated, 47 expanded, t=0.0140244s, 4948 KB]
+New best heuristic value for ff: 21
+[g=16, 66 evaluated, 65 expanded, t=0.0148593s, 4948 KB]
+New best heuristic value for ff: 20
+[g=17, 72 evaluated, 71 expanded, t=0.0151536s, 4948 KB]
+New best heuristic value for ff: 19
+[g=18, 78 evaluated, 77 expanded, t=0.0154484s, 4948 KB]
+New best heuristic value for ff: 18
+[g=20, 92 evaluated, 91 expanded, t=0.0160869s, 4948 KB]
+New best heuristic value for ff: 17
+[g=21, 97 evaluated, 96 expanded, t=0.0163361s, 4948 KB]
+New best heuristic value for ff: 16
+[g=22, 102 evaluated, 101 expanded, t=0.0165838s, 4948 KB]
+New best heuristic value for ff: 15
+[g=26, 115 evaluated, 114 expanded, t=0.0171781s, 4948 KB]
+New best heuristic value for ff: 14
+[g=27, 116 evaluated, 115 expanded, t=0.0172527s, 4948 KB]
+New best heuristic value for ff: 13
+[g=28, 117 evaluated, 116 expanded, t=0.0173266s, 4948 KB]
+New best heuristic value for ff: 12
+[g=29, 118 evaluated, 117 expanded, t=0.0174004s, 4948 KB]
+New best heuristic value for ff: 11
+[g=30, 119 evaluated, 118 expanded, t=0.0174727s, 4948 KB]
+New best heuristic value for ff: 10
+[g=34, 137 evaluated, 136 expanded, t=0.0182701s, 4948 KB]
+New best heuristic value for ff: 9
+[g=35, 140 evaluated, 139 expanded, t=0.0184251s, 4948 KB]
+New best heuristic value for ff: 8
+[g=36, 143 evaluated, 142 expanded, t=0.0185818s, 4948 KB]
+New best heuristic value for ff: 7
+[g=37, 146 evaluated, 145 expanded, t=0.0187331s, 4948 KB]
+New best heuristic value for ff: 6
+[g=39, 149 evaluated, 148 expanded, t=0.0188808s, 4948 KB]
+New best heuristic value for ff: 5
+[g=40, 150 evaluated, 149 expanded, t=0.0189475s, 4948 KB]
+New best heuristic value for ff: 4
+[g=41, 151 evaluated, 150 expanded, t=0.0190126s, 4948 KB]
+New best heuristic value for ff: 3
+[g=42, 152 evaluated, 151 expanded, t=0.0190756s, 4948 KB]
+New best heuristic value for ff: 2
+[g=43, 153 evaluated, 152 expanded, t=0.0191369s, 4948 KB]
+New best heuristic value for ff: 1
+[g=44, 154 evaluated, 153 expanded, t=0.0191956s, 4948 KB]
+Solution found!
+Actual search time: 0.00786491s [t=0.0192526s]
+navigate_ugv ugv3 area13 area10 (1)
+take_picture ugv3 area10 disaster3 (1)
+communicate_data ugv3 cdm2 disaster3 area10 area13 (1)
+navigate_ugv ugv1 area1 area3 (1)
+take_picture ugv1 area3 disaster5 (1)
+communicate_data ugv1 cdm1 disaster5 area3 area1 (1)
+navigate_usv usv3 area13 area9 (1)
+navigate_usv usv3 area9 area8 (1)
+take_picture usv3 area8 disaster1 (1)
+sample_water usv3 usv3store area8 (1)
+navigate_usv usv3 area8 area9 (1)
+navigate_usv usv3 area9 area13 (1)
+communicate_data usv3 cdm2 disaster1 area13 area13 (1)
+drop_sample usv3 usv3store area13 area8 cdm2 (1)
+navigate_uav uav1 area1 area12 (1)
+take_picture uav1 area12 disaster2 (1)
+navigate_uav uav1 area12 area9 (1)
+communicate_data uav1 cdm2 disaster2 area9 area13 (1)
+navigate_uav uav1 area9 area7 (1)
+take_picture uav1 area7 disaster4 (1)
+navigate_uav uav1 area7 area9 (1)
+communicate_data uav1 cdm2 disaster4 area9 area13 (1)
+navigate_usv usv1 area1 area2 (1)
+navigate_usv usv1 area2 area4 (1)
+navigate_usv usv1 area4 area9 (1)
+sample_water usv1 usv1store area9 (1)
+navigate_usv usv1 area9 area4 (1)
+navigate_usv usv1 area4 area2 (1)
+navigate_usv usv1 area2 area1 (1)
+drop_sample usv1 usv1store area1 area9 cdm1 (1)
+navigate_ugv ugv1 area3 area1 (1)
+pickup_box ugv1 ugv1store cdm1 area1 box1 (1)
+navigate_ugv ugv1 area1 area3 (1)
+navigate_ugv ugv1 area3 area5 (1)
+navigate_ugv ugv1 area5 area11 (1)
+navigate_ugv ugv1 area11 area9 (1)
+drop_box ugv1 ugv1store area9 box1 (1)
+navigate_ugv ugv3 area10 area13 (1)
+pickup_box ugv3 ugv3store cdm2 area13 box2 (1)
+navigate_ugv ugv3 area13 area10 (1)
+navigate_ugv ugv3 area10 area4 (1)
+navigate_ugv ugv3 area4 area3 (1)
+navigate_ugv ugv3 area3 area5 (1)
+navigate_ugv ugv3 area5 area11 (1)
+drop_box ugv3 ugv3store area11 box2 (1)
+Plan length: 45 step(s).
+Plan cost: 45
+Expanded 154 state(s).
+Reopened 0 state(s).
+Evaluated 155 state(s).
+Evaluations: 155
+Generated 8928 state(s).
+Dead ends: 0 state(s).
+Number of registered states: 155
+Search time: 0.0078754s
+Total time: 0.0192555s
+Solution found.
+Peak memory: 4948 KB
+

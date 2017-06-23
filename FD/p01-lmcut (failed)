@@ -1,0 +1,133 @@
+rovane@SamsungS5:~/downward$ ./fast-downward.py ./domain.pddl ../unfactored\ \(Single-Agent\ Floods\)/p01.pddl --search "astar(lmcut())"
+INFO     Running translator.
+INFO     translator input: ['./domain.pddl', '../unfactored (Single-Agent Floods)/p01.pddl']
+INFO     translator arguments: []
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     callstring: /usr/bin/python /home/rovane/downward/builds/release32/bin/translate/translate.py ./domain.pddl '../unfactored (Single-Agent Floods)/p01.pddl'
+Parsing...
+Parsing: [0.010s CPU, 0.005s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.010s CPU, 0.003s wall-clock]
+Generated 66 rules.
+Computing model... [0.050s CPU, 0.051s wall-clock]
+1697 relevant atoms
+2416 auxiliary atoms
+4113 final queue length
+5293 total queue pushes
+Completing instantiation... [0.040s CPU, 0.046s wall-clock]
+Instantiating: [0.100s CPU, 0.107s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.000s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.002s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+116 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.000s CPU, 0.001s wall-clock]
+Computing fact groups: [0.010s CPU, 0.010s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.002s wall-clock]
+Translating task: [0.050s CPU, 0.051s wall-clock]
+468 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+11 propositions removed
+Detecting unreachable propositions: [0.030s CPU, 0.030s wall-clock]
+Reordering and filtering variables...
+99 of 127 variables necessary.
+0 of 13 mutex groups necessary.
+1197 of 1197 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.010s CPU, 0.007s wall-clock]
+Translator variables: 99
+Translator derived variables: 0
+Translator facts: 325
+Translator goal facts: 9
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 1197
+Translator axioms: 0
+Translator task size: 4828
+Translator peak memory: 34404 KB
+Writing output... [0.000s CPU, 0.009s wall-clock]
+Done! [0.220s CPU, 0.222s wall-clock]
+INFO     Running search (release32).
+INFO     search input: output.sas
+INFO     search arguments: ['--search', 'astar(lmcut())']
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search executable: /home/rovane/downward/builds/release32/bin/downward
+INFO     callstring: /home/rovane/downward/builds/release32/bin/downward --search 'astar(lmcut())' --internal-plan-file sas_plan < output.sas
+reading input... [t=4.7193e-05s]
+done reading input! [t=0.0179265s]
+packing state variables...done! [t=0.0179718s]
+Variables: 99
+FactPairs: 325
+Bytes per state: 20
+Building successor generator...done! [t=0.0255909s]
+done initializing global data [t=0.0256098s]
+Initializing landmark cut heuristic...
+Conducting best first search with reopening closed nodes, (real) bound = 2147483647
+New best heuristic value for lmcut: 31
+[g=0, 1 evaluated, 0 expanded, t=0.0280058s, 4928 KB]
+f = 31 [1 evaluated, 0 expanded, t=0.028117s, 4928 KB]
+Initial heuristic value for lmcut: 31
+pruning method: none
+New best heuristic value for lmcut: 29
+[g=1, 2 evaluated, 1 expanded, t=0.0290122s, 4928 KB]
+New best heuristic value for lmcut: 28
+[g=2, 63 evaluated, 2 expanded, t=0.0721558s, 4928 KB]
+New best heuristic value for lmcut: 27
+[g=3, 120 evaluated, 3 expanded, t=0.104072s, 4928 KB]
+New best heuristic value for lmcut: 26
+[g=4, 178 evaluated, 4 expanded, t=0.132042s, 4928 KB]
+New best heuristic value for lmcut: 25
+[g=6, 640 evaluated, 15 expanded, t=0.303815s, 4928 KB]
+New best heuristic value for lmcut: 24
+[g=7, 1332 evaluated, 27 expanded, t=0.505157s, 4928 KB]
+New best heuristic value for lmcut: 23
+[g=8, 1391 evaluated, 28 expanded, t=0.522131s, 4928 KB]
+New best heuristic value for lmcut: 22
+[g=9, 13255 evaluated, 327 expanded, t=3.98528s, 5720 KB]
+New best heuristic value for lmcut: 21
+[g=10, 13312 evaluated, 328 expanded, t=4.00082s, 5720 KB]
+New best heuristic value for lmcut: 20
+[g=11, 13371 evaluated, 329 expanded, t=4.01615s, 5720 KB]
+New best heuristic value for lmcut: 19
+[g=12, 83554 evaluated, 1971 expanded, t=23.0891s, 10264 KB]
+New best heuristic value for lmcut: 18
+[g=13, 83614 evaluated, 1972 expanded, t=23.1028s, 10264 KB]
+f = 32 [120483 evaluated, 2880 expanded, t=32.9712s, 12384 KB]
+New best heuristic value for lmcut: 17
+[g=15, 787736 evaluated, 27456 expanded, 45 reopened, t=197.895s, 55424 KB]
+New best heuristic value for lmcut: 16
+[g=16, 3217612 evaluated, 107062 expanded, 295 reopened, t=826.01s, 211728 KB]
+New best heuristic value for lmcut: 15
+[g=17, 3217672 evaluated, 107063 expanded, 295 reopened, t=826.021s, 211728 KB]
+New best heuristic value for lmcut: 14
+[g=18, 3217732 evaluated, 107064 expanded, 295 reopened, t=826.032s, 211728 KB]
+f = 33 [9262704 evaluated, 343250 expanded, 4856 reopened, t=2473.34s, 633188 KB]
+New best heuristic value for lmcut: 13
+[g=19, 9271865 evaluated, 343562 expanded, 4856 reopened, t=2474.88s, 633188 KB]
+New best heuristic value for lmcut: 12
+[g=20, 9271945 evaluated, 343563 expanded, 4856 reopened, t=2474.9s, 633188 KB]
+Failed to allocate memory.
+Memory limit has been reached.
+Peak memory: 4193036 KB
+

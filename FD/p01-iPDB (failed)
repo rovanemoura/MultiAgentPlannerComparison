@@ -1,0 +1,151 @@
+rovane@SamsungS5:~/downward$ ./fast-downward.py ./domain.pddl ../unfactored\ \(Single-Agent\ Floods\)/p01.pddl --search "astar(ipdb())"
+INFO     Running translator.
+INFO     translator input: ['./domain.pddl', '../unfactored (Single-Agent Floods)/p01.pddl']
+INFO     translator arguments: []
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     callstring: /usr/bin/python /home/rovane/downward/builds/release32/bin/translate/translate.py ./domain.pddl '../unfactored (Single-Agent Floods)/p01.pddl'
+Parsing...
+Parsing: [0.010s CPU, 0.005s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.010s CPU, 0.003s wall-clock]
+Generated 66 rules.
+Computing model... [0.050s CPU, 0.054s wall-clock]
+1697 relevant atoms
+2416 auxiliary atoms
+4113 final queue length
+5293 total queue pushes
+Completing instantiation... [0.050s CPU, 0.048s wall-clock]
+Instantiating: [0.110s CPU, 0.111s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.010s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.002s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+116 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.000s CPU, 0.001s wall-clock]
+Computing fact groups: [0.010s CPU, 0.011s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.003s wall-clock]
+Translating task: [0.050s CPU, 0.051s wall-clock]
+468 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+11 propositions removed
+Detecting unreachable propositions: [0.030s CPU, 0.030s wall-clock]
+Reordering and filtering variables...
+99 of 127 variables necessary.
+0 of 13 mutex groups necessary.
+1197 of 1197 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.010s CPU, 0.007s wall-clock]
+Translator variables: 99
+Translator derived variables: 0
+Translator facts: 325
+Translator goal facts: 9
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 1197
+Translator axioms: 0
+Translator task size: 4828
+Translator peak memory: 34404 KB
+Writing output... [0.010s CPU, 0.010s wall-clock]
+Done! [0.230s CPU, 0.229s wall-clock]
+INFO     Running search (release32).
+INFO     search input: output.sas
+INFO     search arguments: ['--search', 'astar(ipdb())']
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search executable: /home/rovane/downward/builds/release32/bin/downward
+INFO     callstring: /home/rovane/downward/builds/release32/bin/downward --search 'astar(ipdb())' --internal-plan-file sas_plan < output.sas
+reading input... [t=5.7735e-05s]
+done reading input! [t=0.0163741s]
+packing state variables...done! [t=0.0164109s]
+Variables: 99
+FactPairs: 325
+Bytes per state: 20
+Building successor generator...done! [t=0.0234052s]
+done initializing global data [t=0.0234452s]
+PDB collection construction time: 0.00366866s
+Done calculating initial PDB collection
+Average operator cost: 1
+building causal graph...done! [t=0.00074496s]
+Done calculating initial candidate PDBs
+current collection size is 46
+current initial h value: 11
+pattern: [61, 74] - improvement: 211
+pattern: [66, 74] - improvement: 214
+pattern: [56, 75] - improvement: 222
+found a better pattern with improvement 222
+pattern: [56, 75]
+Hill climbing time so far: 0.111572s
+current collection size is 238
+current initial h value: 11
+pattern: [61, 74] - improvement: 198
+pattern: [66, 74] - improvement: 208
+found a better pattern with improvement 208
+pattern: [66, 74]
+Hill climbing time so far: 0.178451s
+current collection size is 430
+current initial h value: 11
+pattern: [61, 74] - improvement: 198
+pattern: [61, 66, 74] - improvement: 198
+found a better pattern with improvement 198
+pattern: [61, 74]
+Hill climbing time so far: 0.258576s
+current collection size is 622
+current initial h value: 11
+Improvement below threshold. Stop hill climbing.
+iPDB: iterations = 4
+iPDB: number of patterns = 12
+iPDB: size = 622
+iPDB: generated = 116
+iPDB: rejected = 0
+iPDB: maximum pdb size = 2304
+iPDB: hill climbing time: 0.358325s
+Pattern generation (hill climbing) time: 0.362231s
+PDB collection construction time: 0.362245s
+Pruned 4 of 6 maximal additive subsets
+Pruned 2 of 12 PDBs
+Dominance pruning took 3.2131e-05s
+Conducting best first search with reopening closed nodes, (real) bound = 2147483647
+New best heuristic value for <missing>: 11
+[g=0, 1 evaluated, 0 expanded, t=0.386391s, 5312 KB]
+f = 11 [1 evaluated, 0 expanded, t=0.386462s, 5312 KB]
+Initial heuristic value for <missing>: 11
+pruning method: none
+f = 12 [55 evaluated, 1 expanded, t=0.386664s, 5312 KB]
+f = 13 [1244 evaluated, 52 expanded, t=0.389256s, 5312 KB]
+New best heuristic value for <missing>: 10
+[g=3, 7943 evaluated, 351 expanded, t=0.404761s, 5312 KB]
+f = 14 [16230 evaluated, 1100 expanded, t=0.428588s, 5828 KB]
+f = 15 [146857 evaluated, 13145 expanded, t=0.79989s, 14380 KB]
+New best heuristic value for <missing>: 9
+[g=6, 156683 evaluated, 13604 expanded, t=0.823667s, 14912 KB]
+f = 16 [1071347 evaluated, 111370 expanded, t=4.03658s, 79252 KB]
+New best heuristic value for <missing>: 8
+[g=8, 6654802 evaluated, 788575 expanded, t=24.8482s, 429836 KB]
+f = 17 [6658126 evaluated, 788790 expanded, t=24.858s, 429968 KB]
+f = 18 [36461266 evaluated, 4764220 expanded, t=149.677s, 2286140 KB]
+New best heuristic value for <missing>: 7
+[g=11, 36467363 evaluated, 4764519 expanded, t=149.694s, 2286404 KB]
+Failed to allocate memory.
+Memory limit has been reached.
+Peak memory: 4192556 KB
+

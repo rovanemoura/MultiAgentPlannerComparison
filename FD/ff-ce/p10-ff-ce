@@ -1,0 +1,1093 @@
+rovane@SamsungS5:~/downward$ ./fast-downward.py ./domain.pddl ../unfactored\ \(Single-Agent\ Floods\)/p10.pddl --heuristic "hff=ff()" --heuristic "hcea=cea()" \
+>     --search "lazy_greedy([hff, hcea], preferred=[hff, hcea])" \
+> 
+INFO     Running translator.
+INFO     translator input: ['./domain.pddl', '../unfactored (Single-Agent Floods)/p10.pddl']
+INFO     translator arguments: []
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     callstring: /usr/bin/python /home/rovane/downward/builds/release32/bin/translate/translate.py ./domain.pddl '../unfactored (Single-Agent Floods)/p10.pddl'
+Parsing...
+Parsing: [0.010s CPU, 0.010s wall-clock]
+Normalizing task... [0.000s CPU, 0.001s wall-clock]
+Instantiating...
+Generating Datalog program... [0.010s CPU, 0.004s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.010s CPU, 0.008s wall-clock]
+Generated 66 rules.
+Computing model... [2.480s CPU, 2.482s wall-clock]
+71795 relevant atoms
+117294 auxiliary atoms
+189089 final queue length
+262729 total queue pushes
+Completing instantiation... [3.090s CPU, 3.081s wall-clock]
+Instantiating: [5.630s CPU, 5.627s wall-clock]
+Computing fact groups...
+Finding invariants...
+27 initial candidates
+Finding invariants: [0.020s CPU, 0.029s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.040s CPU, 0.030s wall-clock]
+Collecting mutex groups... [0.010s CPU, 0.005s wall-clock]
+Choosing groups...
+1600 uncovered facts
+Choosing groups: [0.010s CPU, 0.010s wall-clock]
+Building translation key... [0.020s CPU, 0.016s wall-clock]
+Computing fact groups: [0.150s CPU, 0.143s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.005s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.004s wall-clock]
+Building mutex information...
+Building mutex information: [0.010s CPU, 0.005s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.100s CPU, 0.102s wall-clock]
+Translating task: [2.920s CPU, 2.919s wall-clock]
+24060 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+46 propositions removed
+Detecting unreachable propositions: [1.720s CPU, 1.723s wall-clock]
+Reordering and filtering variables...
+1308 of 1646 variables necessary.
+0 of 56 mutex groups necessary.
+66000 of 66000 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.310s CPU, 0.311s wall-clock]
+Translator variables: 1308
+Translator derived variables: 0
+Translator facts: 5210
+Translator goal facts: 36
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 66000
+Translator axioms: 0
+Translator task size: 245138
+Translator peak memory: 364164 KB
+Writing output... [0.450s CPU, 0.443s wall-clock]
+Done! [11.310s CPU, 11.301s wall-clock]
+INFO     Running search (release32).
+INFO     search input: output.sas
+INFO     search arguments: ['--heuristic', 'hff=ff()', '--heuristic', 'hcea=cea()', '--search', 'lazy_greedy([hff, hcea], preferred=[hff, hcea])']
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search executable: /home/rovane/downward/builds/release32/bin/downward
+INFO     callstring: /home/rovane/downward/builds/release32/bin/downward --heuristic 'hff=ff()' --heuristic 'hcea=cea()' --search 'lazy_greedy([hff, hcea], preferred=[hff, hcea])' --internal-plan-file sas_plan < output.sas
+reading input... [t=2.4499e-05s]
+done reading input! [t=0.344058s]
+packing state variables...done! [t=0.344156s]
+Variables: 1308
+FactPairs: 5210
+Bytes per state: 196
+Building successor generator...done! [t=2.64842s]
+done initializing global data [t=2.64844s]
+Simplifying 86292 unary operators... done! [86292 unary operators]
+Initializing additive heuristic...
+Initializing FF heuristic...
+Initializing context-enhanced additive heuristic...
+Conducting lazy best first search, (real) bound = 2147483647
+New best heuristic value for cea: 215
+New best heuristic value for ff: 190
+[g=0, 1 evaluated, 0 expanded, t=2.80579s, 48588 KB]
+Initial heuristic value for cea: 215
+Initial heuristic value for ff: 190
+New best heuristic value for cea: 214
+New best heuristic value for ff: 189
+[g=1, 3 evaluated, 2 expanded, t=2.81563s, 48588 KB]
+New best heuristic value for cea: 213
+New best heuristic value for ff: 188
+[g=2, 4 evaluated, 3 expanded, t=2.82005s, 48588 KB]
+New best heuristic value for cea: 212
+New best heuristic value for ff: 187
+[g=3, 9 evaluated, 8 expanded, t=2.84282s, 48588 KB]
+New best heuristic value for cea: 211
+New best heuristic value for ff: 186
+[g=4, 14 evaluated, 13 expanded, t=2.86662s, 48676 KB]
+New best heuristic value for ff: 184
+[g=5, 19 evaluated, 18 expanded, t=2.88835s, 48676 KB]
+New best heuristic value for cea: 210
+[g=5, 25 evaluated, 24 expanded, t=2.91646s, 48808 KB]
+New best heuristic value for ff: 183
+[g=6, 42 evaluated, 41 expanded, t=2.99027s, 49204 KB]
+New best heuristic value for cea: 209
+[g=6, 43 evaluated, 42 expanded, t=2.99461s, 49204 KB]
+New best heuristic value for cea: 208
+[g=7, 63 evaluated, 62 expanded, t=3.08267s, 49468 KB]
+New best heuristic value for ff: 182
+[g=7, 71 evaluated, 70 expanded, t=3.11897s, 49600 KB]
+New best heuristic value for cea: 207
+[g=8, 88 evaluated, 87 expanded, t=3.19173s, 49864 KB]
+New best heuristic value for ff: 181
+[g=8, 97 evaluated, 96 expanded, t=3.23316s, 49996 KB]
+New best heuristic value for cea: 206
+[g=9, 114 evaluated, 113 expanded, t=3.30537s, 50268 KB]
+New best heuristic value for ff: 180
+[g=9, 126 evaluated, 125 expanded, t=3.35905s, 50400 KB]
+New best heuristic value for cea: 205
+[g=10, 139 evaluated, 138 expanded, t=3.41596s, 50668 KB]
+New best heuristic value for ff: 179
+[g=10, 156 evaluated, 155 expanded, t=3.49065s, 50932 KB]
+New best heuristic value for cea: 204
+[g=11, 165 evaluated, 164 expanded, t=3.53256s, 51064 KB]
+New best heuristic value for ff: 178
+[g=11, 186 evaluated, 185 expanded, t=3.62175s, 51336 KB]
+New best heuristic value for cea: 203
+[g=12, 191 evaluated, 190 expanded, t=3.64441s, 51468 KB]
+New best heuristic value for ff: 177
+[g=12, 216 evaluated, 215 expanded, t=3.75258s, 51736 KB]
+New best heuristic value for cea: 202
+[g=13, 217 evaluated, 216 expanded, t=3.75691s, 51736 KB]
+New best heuristic value for cea: 201
+[g=14, 243 evaluated, 242 expanded, t=3.86809s, 52132 KB]
+New best heuristic value for ff: 176
+[g=13, 246 evaluated, 245 expanded, t=3.88102s, 52264 KB]
+New best heuristic value for cea: 200
+[g=15, 269 evaluated, 268 expanded, t=3.98229s, 52532 KB]
+New best heuristic value for ff: 175
+[g=14, 276 evaluated, 275 expanded, t=4.01534s, 52664 KB]
+New best heuristic value for cea: 199
+[g=16, 296 evaluated, 295 expanded, t=4.10204s, 52928 KB]
+New best heuristic value for ff: 174
+[g=15, 305 evaluated, 304 expanded, t=4.14372s, 53060 KB]
+New best heuristic value for cea: 198
+[g=17, 324 evaluated, 323 expanded, t=4.22509s, 53324 KB]
+New best heuristic value for ff: 173
+[g=16, 336 evaluated, 335 expanded, t=4.28042s, 53588 KB]
+New best heuristic value for cea: 197
+[g=18, 349 evaluated, 348 expanded, t=4.34004s, 53724 KB]
+New best heuristic value for ff: 172
+[g=17, 366 evaluated, 365 expanded, t=4.41165s, 53988 KB]
+New best heuristic value for ff: 171
+[g=19, 367 evaluated, 366 expanded, t=4.41587s, 53988 KB]
+New best heuristic value for ff: 169
+[g=20, 376 evaluated, 375 expanded, t=4.45642s, 54120 KB]
+New best heuristic value for cea: 196
+[g=19, 379 evaluated, 378 expanded, t=4.46881s, 54120 KB]
+New best heuristic value for ff: 168
+[g=21, 401 evaluated, 400 expanded, t=4.5624s, 54516 KB]
+New best heuristic value for cea: 195
+[g=20, 408 evaluated, 407 expanded, t=4.59348s, 54516 KB]
+New best heuristic value for ff: 167
+[g=22, 426 evaluated, 425 expanded, t=4.66873s, 54780 KB]
+New best heuristic value for cea: 194
+[g=21, 439 evaluated, 438 expanded, t=4.72475s, 55044 KB]
+New best heuristic value for ff: 166
+[g=23, 453 evaluated, 452 expanded, t=4.78305s, 55176 KB]
+New best heuristic value for cea: 193
+[g=22, 471 evaluated, 470 expanded, t=4.85837s, 55440 KB]
+New best heuristic value for ff: 165
+[g=24, 478 evaluated, 477 expanded, t=4.8894s, 55572 KB]
+New best heuristic value for ff: 164
+[g=25, 507 evaluated, 506 expanded, t=5.00641s, 56104 KB]
+New best heuristic value for cea: 192
+[g=23, 512 evaluated, 511 expanded, t=5.02807s, 56240 KB]
+New best heuristic value for ff: 163
+[g=26, 537 evaluated, 536 expanded, t=5.12688s, 56504 KB]
+New best heuristic value for cea: 191
+[g=24, 550 evaluated, 549 expanded, t=5.18209s, 56768 KB]
+New best heuristic value for ff: 162
+[g=27, 567 evaluated, 566 expanded, t=5.24991s, 56900 KB]
+New best heuristic value for cea: 190
+[g=25, 589 evaluated, 588 expanded, t=5.33888s, 57296 KB]
+New best heuristic value for ff: 161
+[g=28, 596 evaluated, 595 expanded, t=5.36854s, 57428 KB]
+New best heuristic value for ff: 160
+[g=29, 626 evaluated, 625 expanded, t=5.48851s, 57824 KB]
+New best heuristic value for cea: 189
+[g=26, 627 evaluated, 626 expanded, t=5.49256s, 57824 KB]
+New best heuristic value for ff: 159
+[g=30, 656 evaluated, 655 expanded, t=5.60704s, 58220 KB]
+New best heuristic value for cea: 188
+[g=27, 665 evaluated, 664 expanded, t=5.64737s, 58352 KB]
+New best heuristic value for ff: 158
+[g=31, 686 evaluated, 685 expanded, t=5.73171s, 58616 KB]
+New best heuristic value for cea: 187
+[g=28, 703 evaluated, 702 expanded, t=5.80287s, 58888 KB]
+New best heuristic value for ff: 157
+[g=32, 717 evaluated, 716 expanded, t=5.86286s, 59156 KB]
+New best heuristic value for cea: 186
+[g=29, 740 evaluated, 739 expanded, t=5.95658s, 59420 KB]
+New best heuristic value for ff: 156
+[g=33, 747 evaluated, 746 expanded, t=5.98744s, 59552 KB]
+New best heuristic value for cea: 185
+[g=34, 773 evaluated, 772 expanded, t=6.09156s, 59952 KB]
+New best heuristic value for ff: 155
+[g=34, 777 evaluated, 776 expanded, t=6.10918s, 59952 KB]
+New best heuristic value for cea: 184
+[g=35, 801 evaluated, 800 expanded, t=6.20606s, 60352 KB]
+New best heuristic value for ff: 154
+[g=35, 806 evaluated, 805 expanded, t=6.22701s, 60352 KB]
+New best heuristic value for cea: 183
+[g=36, 831 evaluated, 830 expanded, t=6.3257s, 60748 KB]
+New best heuristic value for ff: 148
+[g=36, 838 evaluated, 837 expanded, t=6.36361s, 60880 KB]
+New best heuristic value for cea: 182
+[g=37, 861 evaluated, 860 expanded, t=6.48205s, 61144 KB]
+New best heuristic value for ff: 147
+[g=37, 873 evaluated, 872 expanded, t=6.54713s, 61408 KB]
+New best heuristic value for cea: 181
+[g=38, 890 evaluated, 889 expanded, t=6.63788s, 61672 KB]
+New best heuristic value for ff: 146
+[g=38, 911 evaluated, 910 expanded, t=6.74968s, 62068 KB]
+New best heuristic value for cea: 180
+[g=39, 924 evaluated, 923 expanded, t=6.8192s, 62204 KB]
+New best heuristic value for ff: 145
+[g=39, 949 evaluated, 948 expanded, t=6.9453s, 62600 KB]
+New best heuristic value for cea: 179
+[g=40, 954 evaluated, 953 expanded, t=6.97168s, 62600 KB]
+New best heuristic value for cea: 178
+[g=41, 985 evaluated, 984 expanded, t=7.12825s, 63136 KB]
+New best heuristic value for ff: 144
+[g=40, 986 evaluated, 985 expanded, t=7.13342s, 63136 KB]
+New best heuristic value for cea: 177
+[g=42, 1015 evaluated, 1014 expanded, t=7.27869s, 63532 KB]
+New best heuristic value for ff: 143
+[g=41, 1024 evaluated, 1023 expanded, t=7.32755s, 63668 KB]
+New best heuristic value for cea: 176
+[g=43, 1045 evaluated, 1044 expanded, t=7.43215s, 63936 KB]
+New best heuristic value for ff: 142
+[g=42, 1074 evaluated, 1073 expanded, t=7.57875s, 64596 KB]
+New best heuristic value for cea: 175
+[g=44, 1075 evaluated, 1074 expanded, t=7.58383s, 64596 KB]
+New best heuristic value for cea: 174
+[g=45, 1105 evaluated, 1104 expanded, t=7.73254s, 64992 KB]
+New best heuristic value for ff: 141
+[g=43, 1120 evaluated, 1119 expanded, t=7.81012s, 65260 KB]
+New best heuristic value for cea: 173
+[g=46, 1135 evaluated, 1134 expanded, t=7.88843s, 65396 KB]
+New best heuristic value for cea: 172
+[g=47, 1165 evaluated, 1164 expanded, t=8.03513s, 65928 KB]
+New best heuristic value for ff: 139
+[g=44, 1166 evaluated, 1165 expanded, t=8.04035s, 65928 KB]
+New best heuristic value for cea: 171
+[g=48, 1199 evaluated, 1198 expanded, t=8.20194s, 66324 KB]
+New best heuristic value for ff: 138
+[g=45, 1214 evaluated, 1213 expanded, t=8.27779s, 66588 KB]
+New best heuristic value for cea: 170
+[g=49, 1233 evaluated, 1232 expanded, t=8.3725s, 66852 KB]
+New best heuristic value for ff: 137
+[g=46, 1260 evaluated, 1259 expanded, t=8.50469s, 67248 KB]
+New best heuristic value for cea: 169
+[g=50, 1267 evaluated, 1266 expanded, t=8.54198s, 67380 KB]
+New best heuristic value for cea: 167
+[g=51, 1301 evaluated, 1300 expanded, t=8.70306s, 67780 KB]
+New best heuristic value for ff: 136
+[g=47, 1306 evaluated, 1305 expanded, t=8.72825s, 67912 KB]
+New best heuristic value for cea: 166
+[g=52, 1335 evaluated, 1334 expanded, t=8.86743s, 68312 KB]
+New best heuristic value for ff: 135
+[g=48, 1352 evaluated, 1351 expanded, t=8.94942s, 68576 KB]
+New best heuristic value for cea: 165
+[g=53, 1365 evaluated, 1364 expanded, t=9.01373s, 68708 KB]
+New best heuristic value for cea: 164
+[g=54, 1395 evaluated, 1394 expanded, t=9.15775s, 69108 KB]
+New best heuristic value for ff: 134
+[g=49, 1398 evaluated, 1397 expanded, t=9.17297s, 69240 KB]
+New best heuristic value for cea: 163
+[g=55, 1425 evaluated, 1424 expanded, t=9.30174s, 69636 KB]
+New best heuristic value for ff: 133
+[g=50, 1448 evaluated, 1447 expanded, t=9.41169s, 69904 KB]
+New best heuristic value for cea: 162
+[g=56, 1455 evaluated, 1454 expanded, t=9.44832s, 70036 KB]
+New best heuristic value for cea: 161
+[g=57, 1485 evaluated, 1484 expanded, t=9.58745s, 70432 KB]
+New best heuristic value for ff: 132
+[g=51, 1494 evaluated, 1493 expanded, t=9.63347s, 70564 KB]
+New best heuristic value for cea: 160
+[g=58, 1515 evaluated, 1514 expanded, t=9.73418s, 70828 KB]
+New best heuristic value for ff: 131
+[g=52, 1540 evaluated, 1539 expanded, t=9.84713s, 71228 KB]
+New best heuristic value for cea: 159
+[g=59, 1547 evaluated, 1546 expanded, t=9.87387s, 71360 KB]
+New best heuristic value for cea: 158
+[g=60, 1577 evaluated, 1576 expanded, t=9.98122s, 71756 KB]
+New best heuristic value for ff: 130
+[g=53, 1586 evaluated, 1585 expanded, t=10.0158s, 71888 KB]
+New best heuristic value for cea: 157
+[g=61, 1607 evaluated, 1606 expanded, t=10.0906s, 72156 KB]
+New best heuristic value for ff: 129
+[g=54, 1632 evaluated, 1631 expanded, t=10.1806s, 72556 KB]
+New best heuristic value for cea: 156
+[g=62, 1637 evaluated, 1636 expanded, t=10.1992s, 72556 KB]
+New best heuristic value for cea: 155
+[g=63, 1667 evaluated, 1666 expanded, t=10.3048s, 73092 KB]
+New best heuristic value for cea: 154
+[g=64, 1697 evaluated, 1696 expanded, t=10.4123s, 74284 KB]
+New best heuristic value for cea: 153
+[g=65, 1728 evaluated, 1727 expanded, t=10.5219s, 74680 KB]
+New best heuristic value for cea: 152
+[g=66, 1758 evaluated, 1757 expanded, t=10.628s, 75076 KB]
+New best heuristic value for cea: 151
+New best heuristic value for ff: 128
+[g=67, 1787 evaluated, 1786 expanded, t=10.7299s, 75608 KB]
+New best heuristic value for cea: 150
+New best heuristic value for ff: 127
+[g=68, 1802 evaluated, 1801 expanded, t=10.7834s, 75744 KB]
+New best heuristic value for cea: 149
+New best heuristic value for ff: 126
+[g=69, 1817 evaluated, 1816 expanded, t=10.8344s, 76008 KB]
+New best heuristic value for cea: 148
+[g=70, 1834 evaluated, 1833 expanded, t=10.8927s, 76276 KB]
+New best heuristic value for ff: 125
+[g=70, 1838 evaluated, 1837 expanded, t=10.9063s, 76276 KB]
+New best heuristic value for cea: 147
+[g=71, 1863 evaluated, 1862 expanded, t=10.9872s, 76676 KB]
+New best heuristic value for ff: 124
+[g=71, 1872 evaluated, 1871 expanded, t=11.0192s, 76812 KB]
+New best heuristic value for cea: 146
+[g=72, 1893 evaluated, 1892 expanded, t=11.0886s, 77076 KB]
+New best heuristic value for ff: 122
+[g=72, 1906 evaluated, 1905 expanded, t=11.1343s, 77208 KB]
+New best heuristic value for cea: 145
+[g=73, 1923 evaluated, 1922 expanded, t=11.1908s, 77472 KB]
+New best heuristic value for ff: 121
+[g=73, 1942 evaluated, 1941 expanded, t=11.2552s, 77736 KB]
+New best heuristic value for cea: 144
+[g=74, 1953 evaluated, 1952 expanded, t=11.2943s, 77872 KB]
+New best heuristic value for cea: 143
+New best heuristic value for ff: 120
+[g=74, 1976 evaluated, 1975 expanded, t=11.3688s, 78268 KB]
+New best heuristic value for cea: 142
+[g=75, 1991 evaluated, 1990 expanded, t=11.419s, 78400 KB]
+New best heuristic value for ff: 119
+[g=75, 1995 evaluated, 1994 expanded, t=11.4333s, 78532 KB]
+New best heuristic value for cea: 141
+[g=76, 2020 evaluated, 2019 expanded, t=11.5118s, 78796 KB]
+New best heuristic value for ff: 118
+[g=76, 2029 evaluated, 2028 expanded, t=11.5411s, 78928 KB]
+New best heuristic value for cea: 140
+[g=77, 2050 evaluated, 2049 expanded, t=11.6075s, 79196 KB]
+New best heuristic value for ff: 117
+[g=77, 2063 evaluated, 2062 expanded, t=11.6516s, 79460 KB]
+New best heuristic value for cea: 139
+[g=78, 2080 evaluated, 2079 expanded, t=11.7065s, 79724 KB]
+New best heuristic value for ff: 116
+[g=78, 2099 evaluated, 2098 expanded, t=11.7695s, 79988 KB]
+New best heuristic value for cea: 138
+[g=79, 2110 evaluated, 2109 expanded, t=11.8075s, 80120 KB]
+New best heuristic value for ff: 115
+[g=79, 2133 evaluated, 2132 expanded, t=11.8795s, 80392 KB]
+New best heuristic value for cea: 137
+[g=80, 2140 evaluated, 2139 expanded, t=11.9027s, 80524 KB]
+New best heuristic value for ff: 114
+[g=80, 2167 evaluated, 2166 expanded, t=11.9856s, 80928 KB]
+New best heuristic value for cea: 136
+[g=81, 2170 evaluated, 2169 expanded, t=11.9947s, 80928 KB]
+New best heuristic value for cea: 135
+[g=82, 2200 evaluated, 2199 expanded, t=12.0893s, 81332 KB]
+New best heuristic value for ff: 113
+[g=81, 2201 evaluated, 2200 expanded, t=12.0924s, 81332 KB]
+New best heuristic value for cea: 134
+[g=83, 2226 evaluated, 2225 expanded, t=12.1738s, 81728 KB]
+New best heuristic value for ff: 112
+[g=82, 2235 evaluated, 2234 expanded, t=12.2031s, 81864 KB]
+New best heuristic value for cea: 133
+[g=84, 2252 evaluated, 2251 expanded, t=12.2555s, 82128 KB]
+New best heuristic value for ff: 111
+[g=83, 2269 evaluated, 2268 expanded, t=12.3107s, 82260 KB]
+New best heuristic value for cea: 132
+[g=85, 2278 evaluated, 2277 expanded, t=12.3398s, 82392 KB]
+New best heuristic value for ff: 110
+[g=84, 2299 evaluated, 2298 expanded, t=12.403s, 82788 KB]
+New best heuristic value for cea: 131
+[g=86, 2304 evaluated, 2303 expanded, t=12.4189s, 82788 KB]
+New best heuristic value for ff: 109
+[g=85, 2329 evaluated, 2328 expanded, t=12.4945s, 83184 KB]
+New best heuristic value for cea: 130
+[g=87, 2330 evaluated, 2329 expanded, t=12.4977s, 83184 KB]
+New best heuristic value for cea: 129
+[g=88, 2356 evaluated, 2355 expanded, t=12.5773s, 83584 KB]
+New best heuristic value for ff: 108
+[g=86, 2359 evaluated, 2358 expanded, t=12.586s, 83584 KB]
+New best heuristic value for cea: 128
+[g=89, 2382 evaluated, 2381 expanded, t=12.6573s, 83848 KB]
+New best heuristic value for ff: 107
+[g=87, 2389 evaluated, 2388 expanded, t=12.6794s, 83980 KB]
+New best heuristic value for cea: 127
+[g=90, 2408 evaluated, 2407 expanded, t=12.7389s, 84252 KB]
+New best heuristic value for ff: 106
+[g=88, 2419 evaluated, 2418 expanded, t=12.7755s, 84384 KB]
+New best heuristic value for cea: 126
+[g=91, 2434 evaluated, 2433 expanded, t=12.8213s, 84648 KB]
+New best heuristic value for ff: 105
+[g=89, 2449 evaluated, 2448 expanded, t=12.8672s, 84780 KB]
+New best heuristic value for cea: 125
+[g=92, 2460 evaluated, 2459 expanded, t=12.9031s, 85048 KB]
+New best heuristic value for ff: 104
+[g=90, 2479 evaluated, 2478 expanded, t=12.9608s, 85312 KB]
+New best heuristic value for cea: 124
+[g=93, 2488 evaluated, 2487 expanded, t=12.9888s, 85312 KB]
+New best heuristic value for ff: 103
+[g=91, 2509 evaluated, 2508 expanded, t=13.0548s, 85712 KB]
+New best heuristic value for cea: 123
+[g=94, 2514 evaluated, 2513 expanded, t=13.0705s, 85712 KB]
+New best heuristic value for ff: 102
+[g=92, 2539 evaluated, 2538 expanded, t=13.1452s, 86108 KB]
+New best heuristic value for cea: 122
+[g=95, 2540 evaluated, 2539 expanded, t=13.1483s, 86108 KB]
+New best heuristic value for cea: 121
+[g=96, 2566 evaluated, 2565 expanded, t=13.2262s, 86508 KB]
+New best heuristic value for ff: 101
+[g=93, 2569 evaluated, 2568 expanded, t=13.2348s, 86508 KB]
+New best heuristic value for cea: 120
+[g=97, 2592 evaluated, 2591 expanded, t=13.3047s, 86772 KB]
+New best heuristic value for ff: 100
+[g=94, 2599 evaluated, 2598 expanded, t=13.3263s, 86904 KB]
+New best heuristic value for cea: 119
+[g=98, 2618 evaluated, 2617 expanded, t=13.3819s, 87168 KB]
+New best heuristic value for cea: 118
+[g=99, 2640 evaluated, 2639 expanded, t=13.4473s, 87564 KB]
+New best heuristic value for cea: 117
+New best heuristic value for ff: 99
+[g=100, 2661 evaluated, 2660 expanded, t=13.5103s, 87828 KB]
+New best heuristic value for cea: 116
+New best heuristic value for ff: 98
+[g=101, 2672 evaluated, 2671 expanded, t=13.5435s, 88092 KB]
+New best heuristic value for cea: 115
+New best heuristic value for ff: 97
+[g=102, 2683 evaluated, 2682 expanded, t=13.5756s, 88228 KB]
+New best heuristic value for cea: 114
+New best heuristic value for ff: 96
+[g=103, 2694 evaluated, 2693 expanded, t=13.6077s, 88360 KB]
+New best heuristic value for cea: 113
+New best heuristic value for ff: 95
+[g=104, 2705 evaluated, 2704 expanded, t=13.6396s, 88492 KB]
+New best heuristic value for cea: 112
+New best heuristic value for ff: 94
+[g=105, 2716 evaluated, 2715 expanded, t=13.6717s, 88624 KB]
+New best heuristic value for cea: 111
+New best heuristic value for ff: 93
+[g=106, 2727 evaluated, 2726 expanded, t=13.7036s, 88756 KB]
+New best heuristic value for cea: 110
+New best heuristic value for ff: 92
+[g=107, 2738 evaluated, 2737 expanded, t=13.7354s, 88888 KB]
+New best heuristic value for cea: 109
+New best heuristic value for ff: 91
+[g=108, 2749 evaluated, 2748 expanded, t=13.7676s, 89020 KB]
+New best heuristic value for cea: 108
+New best heuristic value for ff: 90
+[g=109, 2760 evaluated, 2759 expanded, t=13.7994s, 89284 KB]
+New best heuristic value for cea: 107
+[g=111, 2823 evaluated, 2822 expanded, t=13.9676s, 90084 KB]
+New best heuristic value for cea: 106
+New best heuristic value for ff: 88
+[g=112, 2829 evaluated, 2828 expanded, t=13.9851s, 90216 KB]
+New best heuristic value for cea: 105
+New best heuristic value for ff: 87
+[g=113, 2831 evaluated, 2830 expanded, t=13.9906s, 90216 KB]
+New best heuristic value for cea: 104
+[g=115, 2963 evaluated, 2962 expanded, t=14.3135s, 92076 KB]
+New best heuristic value for cea: 103
+[g=116, 2965 evaluated, 2964 expanded, t=14.3188s, 92076 KB]
+New best heuristic value for cea: 102
+[g=117, 2967 evaluated, 2966 expanded, t=14.324s, 92076 KB]
+New best heuristic value for cea: 101
+[g=118, 2968 evaluated, 2967 expanded, t=14.3272s, 92076 KB]
+New best heuristic value for cea: 100
+[g=119, 2969 evaluated, 2968 expanded, t=14.3309s, 92076 KB]
+New best heuristic value for cea: 99
+[g=120, 2970 evaluated, 2969 expanded, t=14.3339s, 92076 KB]
+New best heuristic value for cea: 98
+[g=121, 2972 evaluated, 2971 expanded, t=14.3396s, 92208 KB]
+New best heuristic value for ff: 85
+[g=122, 2976 evaluated, 2975 expanded, t=14.3527s, 92472 KB]
+New best heuristic value for ff: 83
+[g=123, 2977 evaluated, 2976 expanded, t=14.3556s, 92472 KB]
+New best heuristic value for ff: 78
+[g=125, 3082 evaluated, 3081 expanded, t=14.6163s, 93928 KB]
+New best heuristic value for cea: 97
+New best heuristic value for ff: 77
+[g=127, 3200 evaluated, 3199 expanded, t=14.9077s, 96048 KB]
+New best heuristic value for cea: 96
+New best heuristic value for ff: 76
+[g=128, 3216 evaluated, 3215 expanded, t=14.9532s, 96316 KB]
+New best heuristic value for cea: 95
+New best heuristic value for ff: 75
+[g=129, 3232 evaluated, 3231 expanded, t=14.9963s, 96448 KB]
+New best heuristic value for cea: 94
+New best heuristic value for ff: 74
+[g=131, 3331 evaluated, 3330 expanded, t=15.2389s, 97780 KB]
+New best heuristic value for cea: 93
+New best heuristic value for ff: 73
+[g=132, 3346 evaluated, 3345 expanded, t=15.2805s, 98044 KB]
+New best heuristic value for cea: 92
+New best heuristic value for ff: 72
+[g=133, 3361 evaluated, 3360 expanded, t=15.3202s, 98312 KB]
+New best heuristic value for cea: 91
+New best heuristic value for ff: 71
+[g=135, 3452 evaluated, 3451 expanded, t=15.5298s, 99504 KB]
+New best heuristic value for cea: 90
+New best heuristic value for ff: 70
+[g=136, 3466 evaluated, 3465 expanded, t=15.5664s, 99640 KB]
+New best heuristic value for cea: 89
+New best heuristic value for ff: 69
+[g=137, 3480 evaluated, 3479 expanded, t=15.6018s, 99908 KB]
+New best heuristic value for cea: 88
+New best heuristic value for ff: 68
+[g=139, 3564 evaluated, 3563 expanded, t=15.7915s, 100964 KB]
+New best heuristic value for cea: 87
+New best heuristic value for ff: 67
+[g=140, 3577 evaluated, 3576 expanded, t=15.8248s, 101228 KB]
+New best heuristic value for cea: 86
+New best heuristic value for ff: 66
+[g=141, 3590 evaluated, 3589 expanded, t=15.8569s, 101364 KB]
+New best heuristic value for cea: 85
+New best heuristic value for ff: 65
+[g=143, 3667 evaluated, 3666 expanded, t=16.0231s, 102424 KB]
+New best heuristic value for cea: 84
+New best heuristic value for ff: 64
+[g=144, 3679 evaluated, 3678 expanded, t=16.0517s, 102556 KB]
+New best heuristic value for cea: 83
+New best heuristic value for ff: 63
+[g=145, 3691 evaluated, 3690 expanded, t=16.0804s, 102688 KB]
+New best heuristic value for cea: 82
+New best heuristic value for ff: 62
+[g=147, 3760 evaluated, 3759 expanded, t=16.2273s, 103752 KB]
+New best heuristic value for cea: 81
+New best heuristic value for ff: 61
+[g=148, 3771 evaluated, 3770 expanded, t=16.2523s, 103884 KB]
+New best heuristic value for cea: 80
+New best heuristic value for ff: 60
+[g=149, 3782 evaluated, 3781 expanded, t=16.2779s, 104016 KB]
+New best heuristic value for cea: 79
+New best heuristic value for ff: 59
+[g=151, 3844 evaluated, 3843 expanded, t=16.4055s, 104812 KB]
+New best heuristic value for cea: 78
+New best heuristic value for ff: 58
+[g=152, 3854 evaluated, 3853 expanded, t=16.4274s, 104948 KB]
+New best heuristic value for cea: 77
+New best heuristic value for ff: 57
+[g=153, 3864 evaluated, 3863 expanded, t=16.4504s, 105080 KB]
+New best heuristic value for cea: 76
+New best heuristic value for ff: 56
+[g=155, 3920 evaluated, 3919 expanded, t=16.5593s, 106012 KB]
+New best heuristic value for cea: 75
+New best heuristic value for ff: 55
+[g=156, 3929 evaluated, 3928 expanded, t=16.5783s, 106012 KB]
+New best heuristic value for cea: 74
+New best heuristic value for ff: 54
+[g=157, 3938 evaluated, 3937 expanded, t=16.5983s, 106148 KB]
+New best heuristic value for cea: 73
+[g=160, 4095 evaluated, 4094 expanded, t=16.8077s, 108400 KB]
+New best heuristic value for cea: 72
+[g=161, 4096 evaluated, 4095 expanded, t=16.8095s, 108400 KB]
+New best heuristic value for cea: 71
+New best heuristic value for ff: 53
+[g=162, 4098 evaluated, 4097 expanded, t=16.8123s, 108400 KB]
+New best heuristic value for cea: 70
+New best heuristic value for ff: 52
+[g=163, 4099 evaluated, 4098 expanded, t=16.8138s, 108400 KB]
+New best heuristic value for cea: 69
+[g=164, 4100 evaluated, 4099 expanded, t=16.8152s, 108400 KB]
+New best heuristic value for ff: 51
+[g=165, 4101 evaluated, 4100 expanded, t=16.8166s, 108400 KB]
+New best heuristic value for cea: 68
+New best heuristic value for ff: 50
+[g=176, 6016 evaluated, 6015 expanded, t=19.3191s, 134252 KB]
+New best heuristic value for cea: 67
+New best heuristic value for ff: 49
+[g=177, 6019 evaluated, 6018 expanded, t=19.3233s, 134384 KB]
+New best heuristic value for cea: 66
+New best heuristic value for ff: 48
+[g=178, 6022 evaluated, 6021 expanded, t=19.3275s, 134384 KB]
+New best heuristic value for cea: 65
+New best heuristic value for ff: 47
+[g=179, 6025 evaluated, 6024 expanded, t=19.3316s, 134384 KB]
+New best heuristic value for cea: 64
+New best heuristic value for ff: 46
+[g=180, 6028 evaluated, 6027 expanded, t=19.3357s, 134520 KB]
+New best heuristic value for cea: 63
+[g=181, 6031 evaluated, 6030 expanded, t=19.3398s, 134520 KB]
+New best heuristic value for ff: 45
+[g=183, 6094 evaluated, 6093 expanded, t=19.4247s, 135320 KB]
+New best heuristic value for cea: 62
+[g=184, 6364 evaluated, 6363 expanded, t=19.7767s, 139084 KB]
+New best heuristic value for cea: 61
+[g=185, 6370 evaluated, 6369 expanded, t=19.7847s, 139084 KB]
+New best heuristic value for cea: 60
+[g=186, 6374 evaluated, 6373 expanded, t=19.7912s, 139084 KB]
+New best heuristic value for cea: 59
+[g=187, 6379 evaluated, 6378 expanded, t=19.7988s, 139216 KB]
+New best heuristic value for cea: 58
+New best heuristic value for ff: 44
+[g=188, 6382 evaluated, 6381 expanded, t=19.803s, 139216 KB]
+New best heuristic value for cea: 57
+New best heuristic value for ff: 43
+[g=189, 6385 evaluated, 6384 expanded, t=19.8086s, 139348 KB]
+New best heuristic value for cea: 56
+New best heuristic value for ff: 42
+[g=190, 6388 evaluated, 6387 expanded, t=19.8136s, 139348 KB]
+New best heuristic value for cea: 55
+New best heuristic value for ff: 41
+[g=191, 6391 evaluated, 6390 expanded, t=19.818s, 139348 KB]
+New best heuristic value for cea: 54
+New best heuristic value for ff: 40
+[g=192, 6394 evaluated, 6393 expanded, t=19.8221s, 139480 KB]
+New best heuristic value for cea: 53
+New best heuristic value for ff: 39
+[g=197, 6653 evaluated, 6652 expanded, t=20.1583s, 142936 KB]
+New best heuristic value for cea: 52
+New best heuristic value for ff: 38
+[g=198, 6654 evaluated, 6653 expanded, t=20.1597s, 142936 KB]
+New best heuristic value for cea: 51
+New best heuristic value for ff: 37
+[g=199, 6655 evaluated, 6654 expanded, t=20.1612s, 142936 KB]
+New best heuristic value for cea: 50
+New best heuristic value for ff: 36
+[g=200, 6656 evaluated, 6655 expanded, t=20.1626s, 142936 KB]
+New best heuristic value for cea: 49
+New best heuristic value for ff: 35
+[g=201, 6657 evaluated, 6656 expanded, t=20.164s, 142936 KB]
+New best heuristic value for cea: 48
+New best heuristic value for ff: 34
+[g=202, 6658 evaluated, 6657 expanded, t=20.1654s, 143068 KB]
+New best heuristic value for cea: 47
+[g=203, 6659 evaluated, 6658 expanded, t=20.1668s, 143068 KB]
+New best heuristic value for ff: 33
+[g=204, 6660 evaluated, 6659 expanded, t=20.1682s, 143068 KB]
+New best heuristic value for ff: 32
+[g=210, 6776 evaluated, 6775 expanded, t=20.3202s, 144656 KB]
+New best heuristic value for cea: 46
+[g=208, 6827 evaluated, 6826 expanded, t=20.3896s, 145316 KB]
+New best heuristic value for cea: 45
+[g=209, 6839 evaluated, 6838 expanded, t=20.4066s, 145448 KB]
+New best heuristic value for cea: 44
+[g=210, 6850 evaluated, 6849 expanded, t=20.4238s, 145580 KB]
+New best heuristic value for cea: 43
+[g=211, 6863 evaluated, 6862 expanded, t=20.4417s, 145844 KB]
+New best heuristic value for cea: 42
+[g=212, 6873 evaluated, 6872 expanded, t=20.457s, 145976 KB]
+New best heuristic value for ff: 30
+[g=215, 6973 evaluated, 6972 expanded, t=20.5909s, 147296 KB]
+New best heuristic value for cea: 41
+[g=231, 15965 evaluated, 15964 expanded, t=31.9436s, 268632 KB]
+New best heuristic value for cea: 40
+[g=232, 15966 evaluated, 15965 expanded, t=31.9451s, 268632 KB]
+New best heuristic value for cea: 39
+[g=233, 15968 evaluated, 15967 expanded, t=31.9478s, 268764 KB]
+New best heuristic value for cea: 38
+[g=234, 15970 evaluated, 15969 expanded, t=31.9505s, 268764 KB]
+New best heuristic value for cea: 37
+[g=235, 15972 evaluated, 15971 expanded, t=31.9532s, 268764 KB]
+New best heuristic value for cea: 36
+[g=236, 15973 evaluated, 15972 expanded, t=31.9547s, 268764 KB]
+New best heuristic value for cea: 35
+[g=237, 15975 evaluated, 15974 expanded, t=31.9581s, 268764 KB]
+New best heuristic value for cea: 34
+New best heuristic value for ff: 29
+[g=238, 15977 evaluated, 15976 expanded, t=31.9618s, 268896 KB]
+New best heuristic value for cea: 33
+New best heuristic value for ff: 28
+[g=239, 15978 evaluated, 15977 expanded, t=31.9633s, 268896 KB]
+New best heuristic value for cea: 32
+New best heuristic value for ff: 27
+[g=244, 16047 evaluated, 16046 expanded, t=32.053s, 269828 KB]
+New best heuristic value for cea: 31
+New best heuristic value for ff: 26
+[g=245, 16048 evaluated, 16047 expanded, t=32.0546s, 269828 KB]
+New best heuristic value for cea: 30
+New best heuristic value for ff: 25
+[g=246, 16049 evaluated, 16048 expanded, t=32.0561s, 269828 KB]
+New best heuristic value for cea: 29
+New best heuristic value for ff: 24
+[g=247, 16050 evaluated, 16049 expanded, t=32.0577s, 269828 KB]
+New best heuristic value for cea: 28
+New best heuristic value for ff: 23
+[g=248, 16051 evaluated, 16050 expanded, t=32.0592s, 269828 KB]
+New best heuristic value for cea: 27
+New best heuristic value for ff: 22
+[g=249, 16052 evaluated, 16051 expanded, t=32.0608s, 269828 KB]
+New best heuristic value for cea: 26
+New best heuristic value for ff: 21
+[g=250, 16053 evaluated, 16052 expanded, t=32.0623s, 269960 KB]
+New best heuristic value for cea: 25
+New best heuristic value for ff: 20
+[g=251, 16054 evaluated, 16053 expanded, t=32.0639s, 269960 KB]
+New best heuristic value for cea: 24
+New best heuristic value for ff: 19
+[g=252, 16055 evaluated, 16054 expanded, t=32.0657s, 269960 KB]
+New best heuristic value for cea: 23
+New best heuristic value for ff: 18
+[g=253, 16056 evaluated, 16055 expanded, t=32.068s, 269960 KB]
+New best heuristic value for cea: 22
+New best heuristic value for ff: 17
+[g=254, 16057 evaluated, 16056 expanded, t=32.0698s, 269960 KB]
+New best heuristic value for cea: 21
+[g=262, 17327 evaluated, 17326 expanded, t=33.6968s, 287000 KB]
+New best heuristic value for cea: 20
+[g=263, 17330 evaluated, 17329 expanded, t=33.7013s, 287000 KB]
+New best heuristic value for cea: 19
+[g=264, 17333 evaluated, 17332 expanded, t=33.7058s, 287000 KB]
+New best heuristic value for cea: 18
+[g=265, 17336 evaluated, 17335 expanded, t=33.7113s, 287000 KB]
+New best heuristic value for cea: 17
+[g=266, 17339 evaluated, 17338 expanded, t=33.7163s, 287136 KB]
+New best heuristic value for cea: 16
+New best heuristic value for ff: 16
+[g=267, 17342 evaluated, 17341 expanded, t=33.721s, 287136 KB]
+New best heuristic value for cea: 15
+New best heuristic value for ff: 15
+[g=268, 17345 evaluated, 17344 expanded, t=33.7271s, 287136 KB]
+New best heuristic value for cea: 14
+New best heuristic value for ff: 14
+[g=269, 17348 evaluated, 17347 expanded, t=33.7321s, 287268 KB]
+New best heuristic value for cea: 13
+New best heuristic value for ff: 13
+[g=270, 17351 evaluated, 17350 expanded, t=33.7365s, 287268 KB]
+New best heuristic value for cea: 12
+New best heuristic value for ff: 12
+[g=271, 17354 evaluated, 17353 expanded, t=33.7409s, 287268 KB]
+New best heuristic value for cea: 11
+New best heuristic value for ff: 11
+[g=272, 17357 evaluated, 17356 expanded, t=33.7453s, 287400 KB]
+New best heuristic value for cea: 10
+New best heuristic value for ff: 10
+[g=292, 21277 evaluated, 21276 expanded, t=38.9896s, 339524 KB]
+New best heuristic value for cea: 9
+New best heuristic value for ff: 9
+[g=293, 21278 evaluated, 21277 expanded, t=38.991s, 339524 KB]
+New best heuristic value for cea: 8
+New best heuristic value for ff: 8
+[g=294, 21279 evaluated, 21278 expanded, t=38.9923s, 339524 KB]
+New best heuristic value for cea: 7
+New best heuristic value for ff: 7
+[g=295, 21280 evaluated, 21279 expanded, t=38.9936s, 339524 KB]
+New best heuristic value for cea: 6
+New best heuristic value for ff: 6
+[g=296, 21281 evaluated, 21280 expanded, t=38.995s, 339524 KB]
+New best heuristic value for cea: 5
+New best heuristic value for ff: 5
+[g=297, 21282 evaluated, 21281 expanded, t=38.9962s, 339524 KB]
+New best heuristic value for cea: 4
+New best heuristic value for ff: 4
+[g=298, 21283 evaluated, 21282 expanded, t=38.9973s, 339524 KB]
+New best heuristic value for cea: 3
+New best heuristic value for ff: 3
+[g=299, 21284 evaluated, 21283 expanded, t=38.9984s, 339656 KB]
+New best heuristic value for cea: 2
+New best heuristic value for ff: 2
+[g=300, 21285 evaluated, 21284 expanded, t=38.9995s, 339656 KB]
+New best heuristic value for cea: 1
+New best heuristic value for ff: 1
+[g=301, 21286 evaluated, 21285 expanded, t=39.0003s, 339656 KB]
+Solution found!
+Actual search time: 36.2044s [t=39.0012s]
+take_picture usv9 area41 disaster9 (1)
+communicate_data usv9 cdm5 disaster9 area41 area41 (1)
+take_picture usv4 area13 disaster5 (1)
+communicate_data usv4 cdm2 disaster5 area13 area13 (1)
+navigate_usv usv11 area53 area49 (1)
+take_picture usv11 area49 disaster3 (1)
+communicate_data usv11 cdm6 disaster3 area49 area53 (1)
+pickup_box ugv9 ugv9store cdm5 area41 box7 (1)
+navigate_ugv ugv9 area41 area43 (1)
+navigate_ugv ugv9 area43 area44 (1)
+navigate_ugv ugv9 area44 area50 (1)
+navigate_ugv ugv9 area50 area53 (1)
+navigate_ugv ugv9 area53 area13 (1)
+navigate_ugv ugv9 area13 area10 (1)
+navigate_ugv ugv9 area10 area7 (1)
+take_picture ugv9 area7 disaster6 (1)
+drop_box ugv9 ugv9store area7 box7 (1)
+navigate_ugv ugv9 area7 area10 (1)
+navigate_usv usv11 area49 area53 (1)
+navigate_usv usv12 area53 area13 (1)
+communicate_data ugv9 cdm2 disaster6 area10 area13 (1)
+navigate_ugv ugv8 area33 area30 (1)
+take_picture ugv8 area30 disaster12 (1)
+navigate_ugv ugv8 area30 area24 (1)
+take_picture ugv8 area24 disaster11 (1)
+pickup_box ugv7 ugv7store cdm4 area33 box4 (1)
+navigate_ugv ugv7 area33 area53 (1)
+navigate_ugv ugv7 area53 area50 (1)
+navigate_ugv ugv7 area50 area44 (1)
+navigate_ugv ugv7 area44 area43 (1)
+navigate_ugv ugv7 area43 area55 (1)
+navigate_ugv ugv7 area55 area56 (1)
+navigate_ugv ugv7 area56 area57 (1)
+navigate_ugv ugv8 area24 area23 (1)
+communicate_data ugv8 cdm3 disaster12 area23 area21 (1)
+communicate_data ugv8 cdm3 disaster11 area23 area21 (1)
+navigate_ugv ugv7 area57 area54 (1)
+drop_box ugv7 ugv7store area54 box4 (1)
+pickup_box ugv6 ugv6store cdm3 area21 box5 (1)
+navigate_ugv ugv6 area21 area36 (1)
+navigate_ugv ugv6 area36 area37 (1)
+navigate_ugv ugv6 area37 area18 (1)
+navigate_ugv ugv6 area18 area15 (1)
+navigate_ugv ugv6 area15 area3 (1)
+navigate_ugv ugv6 area3 area4 (1)
+navigate_ugv ugv6 area4 area6 (1)
+drop_box ugv6 ugv6store area6 box5 (1)
+pickup_box ugv3 ugv3store cdm2 area13 box2 (1)
+navigate_ugv ugv3 area13 area53 (1)
+navigate_ugv ugv3 area53 area33 (1)
+drop_box ugv3 ugv3store area33 box2 (1)
+pickup_box ugv3 ugv3store cdm4 area33 box6 (1)
+navigate_ugv ugv3 area33 area30 (1)
+navigate_ugv ugv3 area30 area24 (1)
+navigate_ugv ugv3 area24 area23 (1)
+navigate_ugv ugv3 area23 area25 (1)
+navigate_ugv ugv3 area25 area31 (1)
+drop_box ugv3 ugv3store area31 box6 (1)
+pickup_box ugv2 ugv2store cdm1 area1 box3 (1)
+navigate_ugv ugv2 area1 area3 (1)
+navigate_ugv ugv2 area3 area15 (1)
+navigate_ugv ugv2 area15 area18 (1)
+navigate_ugv ugv2 area18 area37 (1)
+navigate_ugv ugv2 area37 area36 (1)
+navigate_ugv ugv2 area36 area35 (1)
+navigate_ugv ugv2 area35 area38 (1)
+navigate_ugv ugv2 area38 area40 (1)
+navigate_ugv ugv2 area40 area39 (1)
+drop_box ugv2 ugv2store area39 box3 (1)
+pickup_box ugv10 ugv10store cdm5 area41 box8 (1)
+navigate_ugv ugv10 area41 area43 (1)
+navigate_ugv ugv10 area43 area44 (1)
+take_picture ugv10 area44 disaster13 (1)
+navigate_ugv ugv10 area44 area50 (1)
+pickup_box ugv12 ugv12store cdm6 area53 box9 (1)
+navigate_ugv ugv12 area53 area13 (1)
+navigate_ugv ugv12 area13 area10 (1)
+navigate_ugv ugv12 area10 area4 (1)
+navigate_ugv ugv12 area4 area3 (1)
+navigate_ugv ugv12 area3 area15 (1)
+drop_box ugv12 ugv12store area15 box9 (1)
+pickup_box ugv11 ugv11store cdm6 area53 box10 (1)
+navigate_ugv ugv11 area53 area13 (1)
+navigate_ugv ugv11 area13 area10 (1)
+navigate_ugv ugv11 area10 area4 (1)
+navigate_ugv ugv11 area4 area3 (1)
+navigate_ugv ugv11 area3 area15 (1)
+navigate_ugv ugv11 area15 area18 (1)
+drop_box ugv11 ugv11store area18 box10 (1)
+navigate_ugv ugv10 area50 area53 (1)
+navigate_ugv ugv10 area53 area33 (1)
+navigate_ugv ugv10 area33 area30 (1)
+communicate_data ugv10 cdm4 disaster13 area30 area33 (1)
+navigate_ugv ugv10 area30 area24 (1)
+navigate_ugv ugv10 area24 area23 (1)
+navigate_ugv ugv10 area23 area21 (1)
+drop_box ugv10 ugv10store area21 box8 (1)
+pickup_box ugv1 ugv1store cdm1 area1 box1 (1)
+navigate_ugv ugv1 area1 area3 (1)
+navigate_ugv ugv1 area3 area15 (1)
+navigate_ugv ugv1 area15 area18 (1)
+navigate_ugv ugv1 area18 area37 (1)
+navigate_ugv ugv1 area37 area36 (1)
+navigate_ugv ugv1 area36 area21 (1)
+navigate_ugv ugv1 area21 area23 (1)
+navigate_ugv ugv1 area23 area25 (1)
+navigate_ugv ugv1 area25 area31 (1)
+navigate_ugv ugv1 area31 area29 (1)
+drop_box ugv1 ugv1store area29 box1 (1)
+navigate_usv usv5 area21 area36 (1)
+take_picture usv5 area36 disaster4 (1)
+navigate_usv usv5 area36 area21 (1)
+communicate_data usv5 cdm3 disaster4 area21 area21 (1)
+navigate_usv usv11 area53 area13 (1)
+sample_water usv8 usv8store area33 (1)
+navigate_usv usv8 area33 area53 (1)
+navigate_usv usv8 area53 area49 (1)
+navigate_usv usv8 area49 area44 (1)
+navigate_usv usv8 area44 area42 (1)
+navigate_usv usv8 area42 area41 (1)
+drop_sample usv8 usv8store area41 area33 cdm5 (1)
+navigate_usv usv7 area33 area53 (1)
+navigate_usv usv7 area53 area13 (1)
+navigate_usv usv1 area1 area16 (1)
+navigate_usv usv1 area16 area18 (1)
+navigate_uav uav1 area1 area11 (1)
+take_picture uav1 area11 disaster8 (1)
+navigate_uav uav1 area11 area9 (1)
+communicate_data uav1 cdm2 disaster8 area9 area13 (1)
+navigate_uav uav1 area9 area20 (1)
+take_picture uav1 area20 disaster15 (1)
+navigate_uav uav1 area20 area9 (1)
+communicate_data uav1 cdm2 disaster15 area9 area13 (1)
+navigate_uav uav1 area9 area27 (1)
+take_picture uav1 area27 disaster2 (1)
+navigate_uav uav1 area27 area9 (1)
+communicate_data uav1 cdm2 disaster2 area9 area13 (1)
+navigate_uav uav1 area9 area28 (1)
+take_picture uav1 area28 disaster16 (1)
+navigate_uav uav1 area28 area9 (1)
+communicate_data uav1 cdm2 disaster16 area9 area13 (1)
+navigate_uav uav1 area9 area37 (1)
+take_picture uav1 area37 disaster10 (1)
+navigate_uav uav1 area37 area9 (1)
+communicate_data uav1 cdm2 disaster10 area9 area13 (1)
+navigate_uav uav1 area9 area38 (1)
+take_picture uav1 area38 disaster14 (1)
+navigate_uav uav1 area38 area9 (1)
+communicate_data uav1 cdm2 disaster14 area9 area13 (1)
+navigate_uav uav1 area9 area55 (1)
+take_picture uav1 area55 disaster7 (1)
+navigate_uav uav1 area55 area9 (1)
+communicate_data uav1 cdm2 disaster7 area9 area13 (1)
+navigate_uav uav1 area9 area58 (1)
+take_picture uav1 area58 disaster1 (1)
+navigate_uav uav1 area58 area9 (1)
+communicate_data uav1 cdm2 disaster1 area9 area13 (1)
+navigate_usv usv7 area13 area9 (1)
+navigate_usv usv7 area9 area4 (1)
+sample_water usv7 usv7store area4 (1)
+navigate_usv usv7 area4 area9 (1)
+navigate_usv usv7 area9 area13 (1)
+navigate_usv usv7 area13 area53 (1)
+drop_sample usv7 usv7store area53 area4 cdm6 (1)
+navigate_usv usv7 area53 area13 (1)
+navigate_usv usv7 area13 area9 (1)
+navigate_usv usv7 area9 area8 (1)
+navigate_usv usv4 area13 area9 (1)
+navigate_usv usv4 area9 area8 (1)
+navigate_usv usv3 area13 area9 (1)
+navigate_usv usv3 area9 area8 (1)
+navigate_usv usv12 area13 area9 (1)
+navigate_usv usv12 area9 area8 (1)
+navigate_usv usv11 area13 area9 (1)
+navigate_usv usv11 area9 area8 (1)
+sample_water usv11 usv11store area8 (1)
+navigate_usv usv11 area8 area9 (1)
+navigate_usv usv11 area9 area13 (1)
+navigate_usv usv11 area13 area53 (1)
+navigate_usv usv11 area53 area33 (1)
+drop_sample usv11 usv11store area33 area8 cdm4 (1)
+navigate_usv usv11 area33 area29 (1)
+navigate_usv usv11 area29 area28 (1)
+sample_water usv11 usv11store area28 (1)
+navigate_usv usv11 area28 area29 (1)
+navigate_usv usv11 area29 area33 (1)
+navigate_usv usv11 area33 area53 (1)
+navigate_usv usv11 area53 area49 (1)
+navigate_usv usv11 area49 area44 (1)
+navigate_usv usv11 area44 area42 (1)
+navigate_usv usv11 area42 area41 (1)
+drop_sample usv11 usv11store area41 area28 cdm5 (1)
+navigate_usv usv10 area41 area56 (1)
+navigate_usv usv11 area41 area56 (1)
+navigate_usv usv9 area41 area56 (1)
+navigate_usv usv8 area41 area56 (1)
+sample_water usv9 usv9store area56 (1)
+navigate_usv usv9 area56 area54 (1)
+navigate_usv usv9 area54 area42 (1)
+navigate_usv usv9 area42 area44 (1)
+navigate_usv usv9 area44 area49 (1)
+navigate_usv usv9 area49 area53 (1)
+drop_sample usv9 usv9store area53 area56 cdm6 (1)
+navigate_usv usv9 area53 area13 (1)
+navigate_usv usv1 area18 area20 (1)
+navigate_usv usv1 area20 area19 (1)
+navigate_usv usv1 area19 area17 (1)
+sample_water usv1 usv1store area17 (1)
+navigate_usv usv1 area17 area38 (1)
+navigate_usv usv1 area38 area36 (1)
+navigate_usv usv1 area36 area21 (1)
+drop_sample usv1 usv1store area21 area17 cdm3 (1)
+navigate_usv usv2 area1 area16 (1)
+navigate_usv usv2 area16 area18 (1)
+navigate_usv usv12 area8 area9 (1)
+navigate_usv usv2 area18 area20 (1)
+navigate_usv usv2 area20 area19 (1)
+navigate_usv usv1 area21 area22 (1)
+navigate_usv usv1 area22 area24 (1)
+navigate_usv usv1 area24 area29 (1)
+navigate_usv usv5 area21 area36 (1)
+navigate_usv usv6 area21 area36 (1)
+navigate_usv usv6 area36 area38 (1)
+navigate_usv usv5 area36 area38 (1)
+navigate_usv usv1 area29 area33 (1)
+navigate_usv usv2 area19 area17 (1)
+navigate_usv usv2 area17 area38 (1)
+navigate_usv usv2 area38 area40 (1)
+navigate_usv usv5 area38 area40 (1)
+navigate_usv usv6 area38 area40 (1)
+sample_water usv6 usv6store area40 (1)
+navigate_usv usv6 area40 area38 (1)
+navigate_usv usv6 area38 area17 (1)
+navigate_usv usv6 area17 area19 (1)
+navigate_usv usv6 area19 area20 (1)
+navigate_usv usv6 area20 area18 (1)
+navigate_usv usv6 area18 area16 (1)
+navigate_usv usv6 area16 area1 (1)
+drop_sample usv6 usv6store area1 area40 cdm1 (1)
+navigate_usv usv5 area40 area39 (1)
+navigate_usv usv2 area40 area39 (1)
+navigate_usv usv2 area39 area37 (1)
+navigate_usv usv5 area39 area37 (1)
+sample_water usv5 usv5store area37 (1)
+navigate_usv usv5 area37 area39 (1)
+navigate_usv usv5 area39 area40 (1)
+navigate_usv usv5 area40 area38 (1)
+navigate_usv usv5 area38 area17 (1)
+navigate_usv usv5 area17 area19 (1)
+navigate_usv usv5 area19 area20 (1)
+navigate_usv usv5 area20 area18 (1)
+navigate_usv usv5 area18 area16 (1)
+navigate_usv usv5 area16 area1 (1)
+drop_sample usv5 usv5store area1 area37 cdm1 (1)
+navigate_usv usv1 area33 area29 (1)
+navigate_usv usv1 area29 area24 (1)
+navigate_usv usv1 area24 area22 (1)
+navigate_usv usv1 area22 area34 (1)
+navigate_usv usv1 area34 area36 (1)
+navigate_usv usv1 area36 area38 (1)
+navigate_usv usv1 area38 area35 (1)
+sample_water usv1 usv1store area35 (1)
+navigate_usv usv1 area35 area38 (1)
+navigate_usv usv1 area38 area36 (1)
+navigate_usv usv1 area36 area34 (1)
+navigate_usv usv1 area34 area22 (1)
+navigate_usv usv1 area22 area24 (1)
+navigate_usv usv1 area24 area29 (1)
+navigate_usv usv1 area29 area33 (1)
+navigate_usv usv1 area33 area53 (1)
+navigate_usv usv1 area53 area13 (1)
+drop_sample usv1 usv1store area13 area35 cdm2 (1)
+navigate_usv usv1 area13 area9 (1)
+navigate_usv usv3 area8 area9 (1)
+navigate_usv usv9 area13 area9 (1)
+navigate_usv usv7 area8 area9 (1)
+navigate_usv usv4 area8 area9 (1)
+navigate_usv usv9 area9 area4 (1)
+navigate_usv usv7 area9 area4 (1)
+navigate_usv usv4 area9 area4 (1)
+navigate_usv usv3 area9 area4 (1)
+navigate_usv usv12 area9 area4 (1)
+navigate_usv usv1 area9 area4 (1)
+navigate_usv usv1 area4 area2 (1)
+navigate_usv usv3 area4 area2 (1)
+navigate_usv usv9 area4 area2 (1)
+navigate_usv usv12 area4 area2 (1)
+navigate_usv usv7 area4 area2 (1)
+navigate_usv usv4 area4 area2 (1)
+navigate_usv usv5 area1 area2 (1)
+navigate_usv usv6 area1 area2 (1)
+sample_water usv9 usv9store area2 (1)
+navigate_usv usv9 area2 area14 (1)
+navigate_usv usv9 area14 area16 (1)
+navigate_usv usv9 area16 area18 (1)
+navigate_usv usv9 area18 area20 (1)
+navigate_usv usv9 area20 area19 (1)
+navigate_usv usv9 area19 area17 (1)
+navigate_usv usv9 area17 area38 (1)
+navigate_usv usv9 area38 area36 (1)
+navigate_usv usv9 area36 area21 (1)
+drop_sample usv9 usv9store area21 area2 cdm3 (1)
+Plan length: 302 step(s).
+Plan cost: 302
+Expanded 21286 state(s).
+Reopened 0 state(s).
+Evaluated 21287 state(s).
+Evaluations: 42574
+Generated 16738582 state(s).
+Dead ends: 0 state(s).
+Number of registered states: 21287
+Search time: 36.2044s
+Total time: 39.0012s
+Solution found.
+Peak memory: 339656 KB
+
